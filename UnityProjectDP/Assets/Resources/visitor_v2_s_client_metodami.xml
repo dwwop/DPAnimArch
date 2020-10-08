@@ -1,0 +1,1575 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<xmi:XMI xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:thecustomprofile="http://www.sparxsystems.com/profiles/thecustomprofile/1.0">
+	<xmi:Documentation exporter="Enterprise Architect" exporterVersion="6.5"/>
+	<uml:Model xmi:type="uml:Model" name="EA_Model" visibility="public">
+		<packagedElement xmi:type="uml:Package" xmi:id="EAPK_AC0F50CD_D6CE_454a_8DD3_B4F955A0ADE5" name="visitor" visibility="public">
+			<packagedElement xmi:type="uml:Class" xmi:id="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83" name="BronzeCreditCard" visibility="public">
+				<ownedOperation xmi:id="EAID_B9718398_A63B_4539_B028_F7E673DD7EEE" name="accept" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_3618EE98_5B2C_47ad_ACC7_AECBC6D48152" name="Visitor" direction="in" isStream="false" isException="false" isOrdered="false" isUnique="true" type="EAJava_OfferVisitor"/>
+					<ownedParameter xmi:id="EAID_RT000000_A63B_4539_B028_F7E673DD7EEE" name="return" direction="return" type="EAJava_void"/>
+				</ownedOperation>
+				<ownedOperation xmi:id="EAID_C71949FD_008F_4300_9296_048BF39E42A9" name="getBronzeCardValue" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_RT000000_008F_4300_9296_048BF39E42A9" name="return" direction="return" type="EAJava_int"/>
+				</ownedOperation>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Association" xmi:id="EAID_81252E77_001B_4d2f_A21F_C4CA29D81FE4" visibility="public">
+				<memberEnd xmi:idref="EAID_dst252E77_001B_4d2f_A21F_C4CA29D81FE4"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_dst252E77_001B_4d2f_A21F_C4CA29D81FE4" visibility="public" association="EAID_81252E77_001B_4d2f_A21F_C4CA29D81FE4" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+				</ownedEnd>
+				<memberEnd xmi:idref="EAID_src252E77_001B_4d2f_A21F_C4CA29D81FE4"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src252E77_001B_4d2f_A21F_C4CA29D81FE4" visibility="public" association="EAID_81252E77_001B_4d2f_A21F_C4CA29D81FE4" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83"/>
+				</ownedEnd>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Realization" xmi:id="EAID_B85E2C16_8F48_4984_9B4E_8482AE2DADEA" visibility="public" supplier="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB" client="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83"/>
+			<packagedElement xmi:type="uml:Association" xmi:id="EAID_76AAC14D_B909_4c07_9560_73FF5E7176A9" visibility="public">
+				<memberEnd xmi:idref="EAID_dstAAC14D_B909_4c07_9560_73FF5E7176A9"/>
+				<memberEnd xmi:idref="EAID_srcAAC14D_B909_4c07_9560_73FF5E7176A9"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_srcAAC14D_B909_4c07_9560_73FF5E7176A9" visibility="public" association="EAID_76AAC14D_B909_4c07_9560_73FF5E7176A9" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42"/>
+				</ownedEnd>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Association" xmi:id="EAID_E3C42018_FB92_4630_99B5_4AF8F37B2EDA" visibility="public">
+				<memberEnd xmi:idref="EAID_dstC42018_FB92_4630_99B5_4AF8F37B2EDA"/>
+				<memberEnd xmi:idref="EAID_srcC42018_FB92_4630_99B5_4AF8F37B2EDA"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_srcC42018_FB92_4630_99B5_4AF8F37B2EDA" visibility="public" association="EAID_E3C42018_FB92_4630_99B5_4AF8F37B2EDA" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1"/>
+				</ownedEnd>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Class" xmi:id="EAID_FB9AF69B_EB4E_4345_8346_8F0B96DE0524" name="Client" visibility="public">
+				<ownedOperation xmi:id="EAID_D0EB2E03_EF6E_48b6_8F43_BA59D39F1465" name="CommenceVisiting" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_RT000000_EF6E_48b6_8F43_BA59D39F1465" name="return" direction="return" type="EAJava_void"/>
+				</ownedOperation>
+				<ownedOperation xmi:id="EAID_51413B45_19E6_478d_8E60_8023224B9035" name="PrepareVisitors" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_RT000000_19E6_478d_8E60_8023224B9035" name="return" direction="return" type="EAJava_Visitor__"/>
+				</ownedOperation>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst74E043_0896_4f32_B663_902BD7B93BB1" visibility="public" association="EAID_2474E043_0896_4f32_B663_902BD7B93BB1" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dstFC084A_4965_404d_BB66_68AC5EBFCDAE" visibility="public" association="EAID_DEFC084A_4965_404d_BB66_68AC5EBFCDAE" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB"/>
+				</ownedAttribute>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Association" xmi:id="EAID_2474E043_0896_4f32_B663_902BD7B93BB1" visibility="public">
+				<memberEnd xmi:idref="EAID_dst74E043_0896_4f32_B663_902BD7B93BB1"/>
+				<memberEnd xmi:idref="EAID_src74E043_0896_4f32_B663_902BD7B93BB1"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src74E043_0896_4f32_B663_902BD7B93BB1" visibility="public" association="EAID_2474E043_0896_4f32_B663_902BD7B93BB1" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_FB9AF69B_EB4E_4345_8346_8F0B96DE0524"/>
+				</ownedEnd>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Association" xmi:id="EAID_DEFC084A_4965_404d_BB66_68AC5EBFCDAE" visibility="public">
+				<memberEnd xmi:idref="EAID_dstFC084A_4965_404d_BB66_68AC5EBFCDAE"/>
+				<memberEnd xmi:idref="EAID_srcFC084A_4965_404d_BB66_68AC5EBFCDAE"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_srcFC084A_4965_404d_BB66_68AC5EBFCDAE" visibility="public" association="EAID_DEFC084A_4965_404d_BB66_68AC5EBFCDAE" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_FB9AF69B_EB4E_4345_8346_8F0B96DE0524"/>
+				</ownedEnd>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Class" xmi:id="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42" name="GasOfferVisitor" visibility="public">
+				<ownedOperation xmi:id="EAID_9DD59D8E_313B_46ff_BA32_0940B263B5D3" name="visitBronzeCreditCard" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_1C21171E_A759_4a4f_9851_7609374212C7" name="BronzeCreditCard" direction="in" isStream="false" isException="false" isOrdered="false" isUnique="true" type="EAJava_BronzeCreditCard"/>
+					<ownedParameter xmi:id="EAID_RT000000_313B_46ff_BA32_0940B263B5D3" name="return" direction="return" type="EAJava_void"/>
+				</ownedOperation>
+				<ownedOperation xmi:id="EAID_7CC5A5B6_ABCD_4075_8BC4_250413613D73" name="visitGoldCreditCard" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_51D5C17E_DEBA_4bb5_A7BB_703E0F7485DC" name="GoldCreditCard" direction="in" isStream="false" isException="false" isOrdered="false" isUnique="true" type="EAJava_GoldCreditCard"/>
+					<ownedParameter xmi:id="EAID_RT000000_ABCD_4075_8BC4_250413613D73" name="return" direction="return" type="EAJava_void"/>
+				</ownedOperation>
+				<ownedOperation xmi:id="EAID_E88C99C5_8CDB_429c_AC4C_001B2B443C3F" name="visitSilverCreditCard" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_2726C24D_A460_40ab_9D5C_A49B4527FD97" name="SilverCreditCard" direction="in" isStream="false" isException="false" isOrdered="false" isUnique="true" type="EAJava_SilverCreditCard"/>
+					<ownedParameter xmi:id="EAID_RT000000_8CDB_429c_AC4C_001B2B443C3F" name="return" direction="return" type="EAJava_void"/>
+				</ownedOperation>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dstAAC14D_B909_4c07_9560_73FF5E7176A9" visibility="public" association="EAID_76AAC14D_B909_4c07_9560_73FF5E7176A9" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst0C4AE1_8E57_4dae_B664_CFF187896737" visibility="public" association="EAID_E40C4AE1_8E57_4dae_B664_CFF187896737" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dstFA7DBE_1636_4766_B5B3_53CD7DA8FCC5" visibility="public" association="EAID_EDFA7DBE_1636_4766_B5B3_53CD7DA8FCC5" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0"/>
+				</ownedAttribute>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Association" xmi:id="EAID_E40C4AE1_8E57_4dae_B664_CFF187896737" visibility="public">
+				<memberEnd xmi:idref="EAID_dst0C4AE1_8E57_4dae_B664_CFF187896737"/>
+				<memberEnd xmi:idref="EAID_src0C4AE1_8E57_4dae_B664_CFF187896737"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src0C4AE1_8E57_4dae_B664_CFF187896737" visibility="public" association="EAID_E40C4AE1_8E57_4dae_B664_CFF187896737" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42"/>
+				</ownedEnd>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Realization" xmi:id="EAID_E82BEDAF_879E_4e11_A2FA_CE474F8429B9" visibility="public" supplier="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C" client="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42"/>
+			<packagedElement xmi:type="uml:Association" xmi:id="EAID_EDFA7DBE_1636_4766_B5B3_53CD7DA8FCC5" visibility="public">
+				<memberEnd xmi:idref="EAID_dstFA7DBE_1636_4766_B5B3_53CD7DA8FCC5"/>
+				<memberEnd xmi:idref="EAID_srcFA7DBE_1636_4766_B5B3_53CD7DA8FCC5"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_srcFA7DBE_1636_4766_B5B3_53CD7DA8FCC5" visibility="public" association="EAID_EDFA7DBE_1636_4766_B5B3_53CD7DA8FCC5" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42"/>
+				</ownedEnd>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Class" xmi:id="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B" name="GoldCreditCard" visibility="public">
+				<ownedOperation xmi:id="EAID_34BBD667_F92F_45a7_9CF2_78243B4B76E2" name="accept" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_EE49D412_DB6C_4f25_9C8A_5711BC57A302" name="Visitor" direction="in" isStream="false" isException="false" isOrdered="false" isUnique="true" type="EAJava_OfferVisitor"/>
+					<ownedParameter xmi:id="EAID_RT000000_F92F_45a7_9CF2_78243B4B76E2" name="return" direction="return" type="EAJava_void"/>
+				</ownedOperation>
+				<ownedOperation xmi:id="EAID_A4EED285_14BC_4fc1_A0FB_0A35B85E9A24" name="getGoldCardValue" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_RT000000_14BC_4fc1_A0FB_0A35B85E9A24" name="return" direction="return" type="EAJava_int"/>
+				</ownedOperation>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Realization" xmi:id="EAID_3CF4165A_7329_4230_902A_01DC77B1D764" visibility="public" supplier="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB" client="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B"/>
+			<packagedElement xmi:type="uml:Association" xmi:id="EAID_92E29C9A_3490_4978_82F0_22B21FDDFE1C" visibility="public">
+				<memberEnd xmi:idref="EAID_dstE29C9A_3490_4978_82F0_22B21FDDFE1C"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_dstE29C9A_3490_4978_82F0_22B21FDDFE1C" visibility="public" association="EAID_92E29C9A_3490_4978_82F0_22B21FDDFE1C" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+				</ownedEnd>
+				<memberEnd xmi:idref="EAID_srcE29C9A_3490_4978_82F0_22B21FDDFE1C"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_srcE29C9A_3490_4978_82F0_22B21FDDFE1C" visibility="public" association="EAID_92E29C9A_3490_4978_82F0_22B21FDDFE1C" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B"/>
+				</ownedEnd>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Association" xmi:id="EAID_645F93AA_1ABC_4a41_B747_B76347EC47C3" visibility="public">
+				<memberEnd xmi:idref="EAID_dst5F93AA_1ABC_4a41_B747_B76347EC47C3"/>
+				<memberEnd xmi:idref="EAID_src5F93AA_1ABC_4a41_B747_B76347EC47C3"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src5F93AA_1ABC_4a41_B747_B76347EC47C3" visibility="public" association="EAID_645F93AA_1ABC_4a41_B747_B76347EC47C3" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1"/>
+				</ownedEnd>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Class" xmi:id="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1" name="HotelOfferVisitor" visibility="public">
+				<ownedOperation xmi:id="EAID_100EE81E_987A_4e90_AA7B_EF78E0C8105F" name="visitBronzeCreditCard" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_DCAB680A_7749_4851_A188_DBE43A736503" name="BronzeCreditCard" direction="in" isStream="false" isException="false" isOrdered="false" isUnique="true" type="EAJava_BronzeCreditCard"/>
+					<ownedParameter xmi:id="EAID_RT000000_987A_4e90_AA7B_EF78E0C8105F" name="return" direction="return" type="EAJava_void"/>
+				</ownedOperation>
+				<ownedOperation xmi:id="EAID_CA5E5EE5_593D_4f02_A8DE_B0ECEE92C118" name="visitGoldCreditCard" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_6F92F851_EE6B_42ab_9CC3_69F0AA2715BB" name="GoldCreditCard" direction="in" isStream="false" isException="false" isOrdered="false" isUnique="true" type="EAJava_GoldCreditCard"/>
+					<ownedParameter xmi:id="EAID_RT000000_593D_4f02_A8DE_B0ECEE92C118" name="return" direction="return" type="EAJava_void"/>
+				</ownedOperation>
+				<ownedOperation xmi:id="EAID_C55AF25A_AA0F_45d8_9D24_84BD051B10A4" name="visitSilverCreditCard" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_68A0D228_1B38_4154_8B26_760ED3B4DBAB" name="SilverCreditCard" direction="in" isStream="false" isException="false" isOrdered="false" isUnique="true" type="EAJava_SilverCreditCard"/>
+					<ownedParameter xmi:id="EAID_RT000000_AA0F_45d8_9D24_84BD051B10A4" name="return" direction="return" type="EAJava_void"/>
+				</ownedOperation>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst3E34E7_C795_487c_9775_C60BCE836B57" visibility="public" association="EAID_263E34E7_C795_487c_9775_C60BCE836B57" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst5F93AA_1ABC_4a41_B747_B76347EC47C3" visibility="public" association="EAID_645F93AA_1ABC_4a41_B747_B76347EC47C3" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dstC42018_FB92_4630_99B5_4AF8F37B2EDA" visibility="public" association="EAID_E3C42018_FB92_4630_99B5_4AF8F37B2EDA" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83"/>
+				</ownedAttribute>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Association" xmi:id="EAID_263E34E7_C795_487c_9775_C60BCE836B57" visibility="public">
+				<memberEnd xmi:idref="EAID_dst3E34E7_C795_487c_9775_C60BCE836B57"/>
+				<memberEnd xmi:idref="EAID_src3E34E7_C795_487c_9775_C60BCE836B57"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src3E34E7_C795_487c_9775_C60BCE836B57" visibility="public" association="EAID_263E34E7_C795_487c_9775_C60BCE836B57" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1"/>
+				</ownedEnd>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Realization" xmi:id="EAID_E4276129_09D9_4cfd_9BB1_8103ED1AEDD9" visibility="public" supplier="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C" client="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1"/>
+			<packagedElement xmi:type="uml:Class" xmi:id="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0" name="SilverCreditCard" visibility="public">
+				<ownedOperation xmi:id="EAID_518710DE_1535_4347_AD86_D057C4DBCA8D" name="accept" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_E7F438CE_BF23_43d2_AA0C_B0ED7E01E66E" name="Visitor" direction="in" isStream="false" isException="false" isOrdered="false" isUnique="true" type="EAJava_OfferVisitor"/>
+					<ownedParameter xmi:id="EAID_RT000000_1535_4347_AD86_D057C4DBCA8D" name="return" direction="return" type="EAJava_void"/>
+				</ownedOperation>
+				<ownedOperation xmi:id="EAID_348A90F4_9A9F_440c_B050_27C27643CA0C" name="getSilverCardValue" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_RT000000_9A9F_440c_B050_27C27643CA0C" name="return" direction="return" type="EAJava_int"/>
+				</ownedOperation>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Realization" xmi:id="EAID_80F62407_8E49_4321_AA3E_F77BD1E0D213" visibility="public" supplier="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB" client="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0"/>
+			<packagedElement xmi:type="uml:Association" xmi:id="EAID_8E94A11B_8E0B_4daa_A700_FC9458AE0338" visibility="public">
+				<memberEnd xmi:idref="EAID_dst94A11B_8E0B_4daa_A700_FC9458AE0338"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_dst94A11B_8E0B_4daa_A700_FC9458AE0338" visibility="public" association="EAID_8E94A11B_8E0B_4daa_A700_FC9458AE0338" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+				</ownedEnd>
+				<memberEnd xmi:idref="EAID_src94A11B_8E0B_4daa_A700_FC9458AE0338"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src94A11B_8E0B_4daa_A700_FC9458AE0338" visibility="public" association="EAID_8E94A11B_8E0B_4daa_A700_FC9458AE0338" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+					<type xmi:idref="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0"/>
+				</ownedEnd>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Interface" xmi:id="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB" name="CreditCard" visibility="public" isAbstract="true">
+				<ownedOperation xmi:id="EAID_D4D23067_CE04_4cd9_8269_F30998CC5E50" name="accept" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_16A8E897_BCEF_401d_A47E_4208550AF37D" name="Visitor" direction="in" isStream="false" isException="false" isOrdered="false" isUnique="true" type="EAJava_OfferVisitor"/>
+					<ownedParameter xmi:id="EAID_RT000000_CE04_4cd9_8269_F30998CC5E50" name="return" direction="return" type="EAJava_void"/>
+				</ownedOperation>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Interface" xmi:id="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C" name="OfferVisitor" visibility="public" isAbstract="true">
+				<ownedOperation xmi:id="EAID_A7493832_C28B_4427_A4C3_CA0D6986317D" name="visitBronzeCreditCard" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_2168E797_6A93_4508_A09D_A3D9DBAFB04C" name="BronzeCreditCard" direction="in" isStream="false" isException="false" isOrdered="false" isUnique="true" type="EAJava_BronzeCreditCard"/>
+					<ownedParameter xmi:id="EAID_RT000000_C28B_4427_A4C3_CA0D6986317D" name="return" direction="return" type="EAJava_void"/>
+				</ownedOperation>
+				<ownedOperation xmi:id="EAID_905DCE39_648A_47d5_A0B2_E868E126A6B4" name="visitGoldCreditCard" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_041CF290_291E_43b8_989C_37E465A09112" name="GoldCreditCard" direction="in" isStream="false" isException="false" isOrdered="false" isUnique="true" type="EAJava_GoldCreditCard"/>
+					<ownedParameter xmi:id="EAID_RT000000_648A_47d5_A0B2_E868E126A6B4" name="return" direction="return" type="EAJava_void"/>
+				</ownedOperation>
+				<ownedOperation xmi:id="EAID_E13E58E7_3C12_4918_AE49_C3F242D249E3" name="visitSilverCreditCard" visibility="public" concurrency="sequential">
+					<ownedParameter xmi:id="EAID_FEF008FA_CA1F_42c1_8B5F_EF3782F9C4B7" name="SilverCreditCard" direction="in" isStream="false" isException="false" isOrdered="false" isUnique="true" type="EAJava_SilverCreditCard"/>
+					<ownedParameter xmi:id="EAID_RT000000_3C12_4918_AE49_C3F242D249E3" name="return" direction="return" type="EAJava_void"/>
+				</ownedOperation>
+			</packagedElement>
+		</packagedElement>
+		<thecustomprofile:ImplementsGuid base_Operation="EAID_B9718398_A63B_4539_B028_F7E673DD7EEE" ImplementsGuid="{D4D23067-CE04-4cd9-8269-F30998CC5E50}"/>
+		<thecustomprofile:Implements base_Operation="EAID_B9718398_A63B_4539_B028_F7E673DD7EEE" Implements="CreditCard.accept"/>
+		<thecustomprofile:ImplementsGuid base_Operation="EAID_9DD59D8E_313B_46ff_BA32_0940B263B5D3" ImplementsGuid="{A7493832-C28B-4427-A4C3-CA0D6986317D}"/>
+		<thecustomprofile:Implements base_Operation="EAID_9DD59D8E_313B_46ff_BA32_0940B263B5D3" Implements="OfferVisitor.visitBronzeCreditCard"/>
+		<thecustomprofile:ImplementsGuid base_Operation="EAID_7CC5A5B6_ABCD_4075_8BC4_250413613D73" ImplementsGuid="{905DCE39-648A-47d5-A0B2-E868E126A6B4}"/>
+		<thecustomprofile:Implements base_Operation="EAID_7CC5A5B6_ABCD_4075_8BC4_250413613D73" Implements="OfferVisitor.visitGoldCreditCard"/>
+		<thecustomprofile:ImplementsGuid base_Operation="EAID_E88C99C5_8CDB_429c_AC4C_001B2B443C3F" ImplementsGuid="{E13E58E7-3C12-4918-AE49-C3F242D249E3}"/>
+		<thecustomprofile:Implements base_Operation="EAID_E88C99C5_8CDB_429c_AC4C_001B2B443C3F" Implements="OfferVisitor.visitSilverCreditCard"/>
+		<thecustomprofile:ImplementsGuid base_Operation="EAID_34BBD667_F92F_45a7_9CF2_78243B4B76E2" ImplementsGuid="{D4D23067-CE04-4cd9-8269-F30998CC5E50}"/>
+		<thecustomprofile:Implements base_Operation="EAID_34BBD667_F92F_45a7_9CF2_78243B4B76E2" Implements="CreditCard.accept"/>
+		<thecustomprofile:ImplementsGuid base_Operation="EAID_100EE81E_987A_4e90_AA7B_EF78E0C8105F" ImplementsGuid="{A7493832-C28B-4427-A4C3-CA0D6986317D}"/>
+		<thecustomprofile:Implements base_Operation="EAID_100EE81E_987A_4e90_AA7B_EF78E0C8105F" Implements="OfferVisitor.visitBronzeCreditCard"/>
+		<thecustomprofile:ImplementsGuid base_Operation="EAID_CA5E5EE5_593D_4f02_A8DE_B0ECEE92C118" ImplementsGuid="{905DCE39-648A-47d5-A0B2-E868E126A6B4}"/>
+		<thecustomprofile:Implements base_Operation="EAID_CA5E5EE5_593D_4f02_A8DE_B0ECEE92C118" Implements="OfferVisitor.visitGoldCreditCard"/>
+		<thecustomprofile:ImplementsGuid base_Operation="EAID_C55AF25A_AA0F_45d8_9D24_84BD051B10A4" ImplementsGuid="{E13E58E7-3C12-4918-AE49-C3F242D249E3}"/>
+		<thecustomprofile:Implements base_Operation="EAID_C55AF25A_AA0F_45d8_9D24_84BD051B10A4" Implements="OfferVisitor.visitSilverCreditCard"/>
+		<thecustomprofile:ImplementsGuid base_Operation="EAID_518710DE_1535_4347_AD86_D057C4DBCA8D" ImplementsGuid="{D4D23067-CE04-4cd9-8269-F30998CC5E50}"/>
+		<thecustomprofile:Implements base_Operation="EAID_518710DE_1535_4347_AD86_D057C4DBCA8D" Implements="CreditCard.accept"/>
+	</uml:Model>
+	<xmi:Extension extender="Enterprise Architect" extenderID="6.5">
+		<elements>
+			<element xmi:idref="EAPK_AC0F50CD_D6CE_454a_8DD3_B4F955A0ADE5" xmi:type="uml:Package" name="visitor" scope="public">
+				<model package2="EAID_AC0F50CD_D6CE_454a_8DD3_B4F955A0ADE5" package="EAPK_8C2412FD_17D5_4db6_A165_921ADE1511D4" tpos="1" ea_localid="3" ea_eleType="package"/>
+				<properties isSpecification="false" sType="Package" nType="0" scope="public"/>
+				<project author="Lukawh59" version="1.0" phase="1.0" created="2020-04-21 14:06:33" modified="2020-04-21 14:55:45" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Model"/>
+				<packageproperties version="1.0" tpos="1"/>
+				<paths/>
+				<times created="2020-04-21 14:06:33" modified="2020-04-21 14:55:45"/>
+				<flags iscontrolled="FALSE" isprotected="FALSE" usedtd="FALSE" logxml="FALSE" packageFlags="isModel=1;VICON=3;"/>
+			</element>
+			<element xmi:idref="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83" xmi:type="uml:Class" name="BronzeCreditCard" scope="public">
+				<model package="EAPK_AC0F50CD_D6CE_454a_8DD3_B4F955A0ADE5" tpos="0" ea_localid="32" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="Lukawh59" version="1.0" phase="1.0" created="2020-04-21 14:07:27" modified="2020-04-21 14:07:35" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="visitor"/>
+				<operations>
+					<operation xmi:idref="EAID_B9718398_A63B_4539_B028_F7E673DD7EEE" name="accept" scope="Public">
+						<properties position="0"/>
+						<stereotype/>
+						<model ea_guid="{B9718398-A63B-4539-B028-F7E673DD7EEE}" ea_localid="20"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags>
+							<tag xmi:id="EAID_360B178E_B669_42a9_A268_766652B767F6" name="Implements" value="CreditCard.accept" notes="Qualified name for the interface operation"/>
+							<tag xmi:id="EAID_680B4729_423B_4aa6_9BBB_8C355F486162" name="ImplementsGuid" value="{D4D23067-CE04-4cd9-8269-F30998CC5E50}" notes="Identifies the interface operation"/>
+						</tags>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_A63B_4539_B028_F7E673DD7EEE" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-A63B-4539-B028-F7E673DD7EEE}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+							<parameter xmi:idref="EAID_3618EE98_5B2C_47ad_ACC7_AECBC6D48152" visibility="public">
+								<properties pos="0" type="OfferVisitor" const="false" ea_guid="{3618EE98-5B2C-47ad-ACC7-AECBC6D48152}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+					<operation xmi:idref="EAID_C71949FD_008F_4300_9296_048BF39E42A9" name="getBronzeCardValue" scope="Public">
+						<properties position="1"/>
+						<stereotype/>
+						<model ea_guid="{C71949FD-008F-4300-9296-048BF39E42A9}" ea_localid="32"/>
+						<type type="int" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags/>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_008F_4300_9296_048BF39E42A9" visibility="public">
+								<properties pos="0" type="int" const="false" ea_guid="{RETURNID-008F-4300-9296-048BF39E42A9}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+				</operations>
+				<links>
+					<Association xmi:id="EAID_81252E77_001B_4d2f_A21F_C4CA29D81FE4" start="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83" end="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+					<Realisation xmi:id="EAID_B85E2C16_8F48_4984_9B4E_8482AE2DADEA" start="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83" end="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB"/>
+					<Association xmi:id="EAID_76AAC14D_B909_4c07_9560_73FF5E7176A9" start="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42" end="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83"/>
+					<Association xmi:id="EAID_E3C42018_FB92_4630_99B5_4AF8F37B2EDA" start="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1" end="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_FB9AF69B_EB4E_4345_8346_8F0B96DE0524" xmi:type="uml:Class" name="Client" scope="public">
+				<model package="EAPK_AC0F50CD_D6CE_454a_8DD3_B4F955A0ADE5" tpos="0" ea_localid="30" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="Lukawh59" version="1.0" phase="1.0" created="2020-04-21 14:06:58" modified="2020-04-21 14:07:01" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="visitor"/>
+				<operations>
+					<operation xmi:idref="EAID_D0EB2E03_EF6E_48b6_8F43_BA59D39F1465" name="CommenceVisiting" scope="Public">
+						<properties position="1"/>
+						<stereotype/>
+						<model ea_guid="{D0EB2E03-EF6E-48b6-8F43-BA59D39F1465}" ea_localid="36"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags/>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_EF6E_48b6_8F43_BA59D39F1465" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-EF6E-48b6-8F43-BA59D39F1465}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+					<operation xmi:idref="EAID_51413B45_19E6_478d_8E60_8023224B9035" name="PrepareVisitors" scope="Public">
+						<properties position="0"/>
+						<stereotype/>
+						<model ea_guid="{51413B45-19E6-478d-8E60-8023224B9035}" ea_localid="35"/>
+						<type type="Visitor[]" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags/>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_19E6_478d_8E60_8023224B9035" visibility="public">
+								<properties pos="0" type="Visitor[]" const="false" ea_guid="{RETURNID-19E6-478d-8E60-8023224B9035}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+				</operations>
+				<links>
+					<Association xmi:id="EAID_2474E043_0896_4f32_B663_902BD7B93BB1" start="EAID_FB9AF69B_EB4E_4345_8346_8F0B96DE0524" end="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+					<Association xmi:id="EAID_DEFC084A_4965_404d_BB66_68AC5EBFCDAE" start="EAID_FB9AF69B_EB4E_4345_8346_8F0B96DE0524" end="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42" xmi:type="uml:Class" name="GasOfferVisitor" scope="public">
+				<model package="EAPK_AC0F50CD_D6CE_454a_8DD3_B4F955A0ADE5" tpos="0" ea_localid="34" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="Lukawh59" version="1.0" phase="1.0" created="2020-04-21 14:12:58" modified="2020-04-21 14:13:10" complexity="1" status="Proposed"/>
+				<code product_name="Java" gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="visitor"/>
+				<operations>
+					<operation xmi:idref="EAID_9DD59D8E_313B_46ff_BA32_0940B263B5D3" name="visitBronzeCreditCard" scope="Public">
+						<properties position="0"/>
+						<stereotype/>
+						<model ea_guid="{9DD59D8E-313B-46ff-BA32-0940B263B5D3}" ea_localid="26"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags>
+							<tag xmi:id="EAID_0D7D6DF3_BA4D_4636_9AAC_3404D80BF8BE" name="ImplementsGuid" value="{A7493832-C28B-4427-A4C3-CA0D6986317D}" notes="Identifies the interface operation"/>
+							<tag xmi:id="EAID_955FF79F_F19E_482f_BFD9_F22DA638030D" name="Implements" value="OfferVisitor.visitBronzeCreditCard" notes="Qualified name for the interface operation"/>
+						</tags>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_313B_46ff_BA32_0940B263B5D3" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-313B-46ff-BA32-0940B263B5D3}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+							<parameter xmi:idref="EAID_1C21171E_A759_4a4f_9851_7609374212C7" visibility="public">
+								<properties pos="0" type="BronzeCreditCard" const="false" ea_guid="{1C21171E-A759-4a4f-9851-7609374212C7}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+					<operation xmi:idref="EAID_7CC5A5B6_ABCD_4075_8BC4_250413613D73" name="visitGoldCreditCard" scope="Public">
+						<properties position="2"/>
+						<stereotype/>
+						<model ea_guid="{7CC5A5B6-ABCD-4075-8BC4-250413613D73}" ea_localid="27"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags>
+							<tag xmi:id="EAID_A1D516F9_F670_4e6f_B453_E04E3EB5B0BD" name="Implements" value="OfferVisitor.visitGoldCreditCard" notes="Qualified name for the interface operation"/>
+							<tag xmi:id="EAID_EF82A7C0_B808_4098_BCAC_4324B35BD3FE" name="ImplementsGuid" value="{905DCE39-648A-47d5-A0B2-E868E126A6B4}" notes="Identifies the interface operation"/>
+						</tags>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_ABCD_4075_8BC4_250413613D73" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-ABCD-4075-8BC4-250413613D73}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+							<parameter xmi:idref="EAID_51D5C17E_DEBA_4bb5_A7BB_703E0F7485DC" visibility="public">
+								<properties pos="0" type="GoldCreditCard" const="false" ea_guid="{51D5C17E-DEBA-4bb5-A7BB-703E0F7485DC}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+					<operation xmi:idref="EAID_E88C99C5_8CDB_429c_AC4C_001B2B443C3F" name="visitSilverCreditCard" scope="Public">
+						<properties position="1"/>
+						<stereotype/>
+						<model ea_guid="{E88C99C5-8CDB-429c-AC4C-001B2B443C3F}" ea_localid="28"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags>
+							<tag xmi:id="EAID_B81A5C83_8048_4b64_A81C_CC7B23B94399" name="ImplementsGuid" value="{E13E58E7-3C12-4918-AE49-C3F242D249E3}" notes="Identifies the interface operation"/>
+							<tag xmi:id="EAID_EEEE62BB_85BC_419b_9FF2_80F4FA4C1F56" name="Implements" value="OfferVisitor.visitSilverCreditCard" notes="Qualified name for the interface operation"/>
+						</tags>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_8CDB_429c_AC4C_001B2B443C3F" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-8CDB-429c-AC4C-001B2B443C3F}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+							<parameter xmi:idref="EAID_2726C24D_A460_40ab_9D5C_A49B4527FD97" visibility="public">
+								<properties pos="0" type="SilverCreditCard" const="false" ea_guid="{2726C24D-A460-40ab-9D5C-A49B4527FD97}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+				</operations>
+				<links>
+					<Association xmi:id="EAID_76AAC14D_B909_4c07_9560_73FF5E7176A9" start="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42" end="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83"/>
+					<Association xmi:id="EAID_E40C4AE1_8E57_4dae_B664_CFF187896737" start="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42" end="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B"/>
+					<Realisation xmi:id="EAID_E82BEDAF_879E_4e11_A2FA_CE474F8429B9" start="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42" end="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+					<Association xmi:id="EAID_EDFA7DBE_1636_4766_B5B3_53CD7DA8FCC5" start="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42" end="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B" xmi:type="uml:Class" name="GoldCreditCard" scope="public">
+				<model package="EAPK_AC0F50CD_D6CE_454a_8DD3_B4F955A0ADE5" tpos="0" ea_localid="28" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="Lukawh59" version="1.0" phase="1.0" created="2020-04-21 14:06:39" modified="2020-04-21 14:06:47" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="visitor"/>
+				<operations>
+					<operation xmi:idref="EAID_34BBD667_F92F_45a7_9CF2_78243B4B76E2" name="accept" scope="Public">
+						<properties position="0"/>
+						<stereotype/>
+						<model ea_guid="{34BBD667-F92F-45a7-9CF2-78243B4B76E2}" ea_localid="22"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags>
+							<tag xmi:id="EAID_7AB9C593_FB69_49ad_9833_87D1F72AF8E8" name="Implements" value="CreditCard.accept" notes="Qualified name for the interface operation"/>
+							<tag xmi:id="EAID_F9412BAD_D45E_4c85_B2C4_0F114C448470" name="ImplementsGuid" value="{D4D23067-CE04-4cd9-8269-F30998CC5E50}" notes="Identifies the interface operation"/>
+						</tags>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_F92F_45a7_9CF2_78243B4B76E2" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-F92F-45a7-9CF2-78243B4B76E2}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+							<parameter xmi:idref="EAID_EE49D412_DB6C_4f25_9C8A_5711BC57A302" visibility="public">
+								<properties pos="0" type="OfferVisitor" const="false" ea_guid="{EE49D412-DB6C-4f25-9C8A-5711BC57A302}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+					<operation xmi:idref="EAID_A4EED285_14BC_4fc1_A0FB_0A35B85E9A24" name="getGoldCardValue" scope="Public">
+						<properties position="1"/>
+						<stereotype/>
+						<model ea_guid="{A4EED285-14BC-4fc1-A0FB-0A35B85E9A24}" ea_localid="34"/>
+						<type type="int" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags/>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_14BC_4fc1_A0FB_0A35B85E9A24" visibility="public">
+								<properties pos="0" type="int" const="false" ea_guid="{RETURNID-14BC-4fc1-A0FB-0A35B85E9A24}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+				</operations>
+				<links>
+					<Realisation xmi:id="EAID_3CF4165A_7329_4230_902A_01DC77B1D764" start="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B" end="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB"/>
+					<Association xmi:id="EAID_92E29C9A_3490_4978_82F0_22B21FDDFE1C" start="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B" end="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+					<Association xmi:id="EAID_645F93AA_1ABC_4a41_B747_B76347EC47C3" start="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1" end="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B"/>
+					<Association xmi:id="EAID_E40C4AE1_8E57_4dae_B664_CFF187896737" start="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42" end="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1" xmi:type="uml:Class" name="HotelOfferVisitor" scope="public">
+				<model package="EAPK_AC0F50CD_D6CE_454a_8DD3_B4F955A0ADE5" tpos="0" ea_localid="36" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="Lukawh59" version="1.0" phase="1.0" created="2020-04-21 14:15:56" modified="2020-04-21 14:16:03" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="visitor"/>
+				<operations>
+					<operation xmi:idref="EAID_100EE81E_987A_4e90_AA7B_EF78E0C8105F" name="visitBronzeCreditCard" scope="Public">
+						<properties position="0"/>
+						<stereotype/>
+						<model ea_guid="{100EE81E-987A-4e90-AA7B-EF78E0C8105F}" ea_localid="29"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags>
+							<tag xmi:id="EAID_631E49BB_E7CD_4881_8672_046618C2B921" name="Implements" value="OfferVisitor.visitBronzeCreditCard" notes="Qualified name for the interface operation"/>
+							<tag xmi:id="EAID_7FCFDF9F_D10C_4a47_994C_84F2BE2C0A34" name="ImplementsGuid" value="{A7493832-C28B-4427-A4C3-CA0D6986317D}" notes="Identifies the interface operation"/>
+						</tags>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_987A_4e90_AA7B_EF78E0C8105F" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-987A-4e90-AA7B-EF78E0C8105F}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+							<parameter xmi:idref="EAID_DCAB680A_7749_4851_A188_DBE43A736503" visibility="public">
+								<properties pos="0" type="BronzeCreditCard" const="false" ea_guid="{DCAB680A-7749-4851-A188-DBE43A736503}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+					<operation xmi:idref="EAID_CA5E5EE5_593D_4f02_A8DE_B0ECEE92C118" name="visitGoldCreditCard" scope="Public">
+						<properties position="2"/>
+						<stereotype/>
+						<model ea_guid="{CA5E5EE5-593D-4f02-A8DE-B0ECEE92C118}" ea_localid="30"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags>
+							<tag xmi:id="EAID_23FD764C_6B12_4baa_AF97_85425E8EAC89" name="Implements" value="OfferVisitor.visitGoldCreditCard" notes="Qualified name for the interface operation"/>
+							<tag xmi:id="EAID_F2C209EC_002A_4621_A250_12506AA19C0A" name="ImplementsGuid" value="{905DCE39-648A-47d5-A0B2-E868E126A6B4}" notes="Identifies the interface operation"/>
+						</tags>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_593D_4f02_A8DE_B0ECEE92C118" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-593D-4f02-A8DE-B0ECEE92C118}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+							<parameter xmi:idref="EAID_6F92F851_EE6B_42ab_9CC3_69F0AA2715BB" visibility="public">
+								<properties pos="0" type="GoldCreditCard" const="false" ea_guid="{6F92F851-EE6B-42ab-9CC3-69F0AA2715BB}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+					<operation xmi:idref="EAID_C55AF25A_AA0F_45d8_9D24_84BD051B10A4" name="visitSilverCreditCard" scope="Public">
+						<properties position="1"/>
+						<stereotype/>
+						<model ea_guid="{C55AF25A-AA0F-45d8-9D24-84BD051B10A4}" ea_localid="31"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags>
+							<tag xmi:id="EAID_47B57C78_488B_4b9a_8F2F_1DFF901EF2B3" name="ImplementsGuid" value="{E13E58E7-3C12-4918-AE49-C3F242D249E3}" notes="Identifies the interface operation"/>
+							<tag xmi:id="EAID_D2057299_3767_42eb_9F9C_CE25AD1D7A38" name="Implements" value="OfferVisitor.visitSilverCreditCard" notes="Qualified name for the interface operation"/>
+						</tags>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_AA0F_45d8_9D24_84BD051B10A4" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-AA0F-45d8-9D24-84BD051B10A4}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+							<parameter xmi:idref="EAID_68A0D228_1B38_4154_8B26_760ED3B4DBAB" visibility="public">
+								<properties pos="0" type="SilverCreditCard" const="false" ea_guid="{68A0D228-1B38-4154-8B26-760ED3B4DBAB}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+				</operations>
+				<links>
+					<Association xmi:id="EAID_263E34E7_C795_487c_9775_C60BCE836B57" start="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1" end="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0"/>
+					<Association xmi:id="EAID_645F93AA_1ABC_4a41_B747_B76347EC47C3" start="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1" end="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B"/>
+					<Association xmi:id="EAID_E3C42018_FB92_4630_99B5_4AF8F37B2EDA" start="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1" end="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83"/>
+					<Realisation xmi:id="EAID_E4276129_09D9_4cfd_9BB1_8103ED1AEDD9" start="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1" end="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0" xmi:type="uml:Class" name="SilverCreditCard" scope="public">
+				<model package="EAPK_AC0F50CD_D6CE_454a_8DD3_B4F955A0ADE5" tpos="0" ea_localid="31" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="Lukawh59" version="1.0" phase="1.0" created="2020-04-21 14:07:16" modified="2020-04-21 14:07:21" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="visitor"/>
+				<operations>
+					<operation xmi:idref="EAID_518710DE_1535_4347_AD86_D057C4DBCA8D" name="accept" scope="Public">
+						<properties position="0"/>
+						<stereotype/>
+						<model ea_guid="{518710DE-1535-4347-AD86-D057C4DBCA8D}" ea_localid="21"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags>
+							<tag xmi:id="EAID_0A6833F4_DA96_42cf_951E_06BED8B70C49" name="ImplementsGuid" value="{D4D23067-CE04-4cd9-8269-F30998CC5E50}" notes="Identifies the interface operation"/>
+							<tag xmi:id="EAID_48F6015D_3CD9_4ddb_86F9_BD0687247727" name="Implements" value="CreditCard.accept" notes="Qualified name for the interface operation"/>
+						</tags>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_1535_4347_AD86_D057C4DBCA8D" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-1535-4347-AD86-D057C4DBCA8D}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+							<parameter xmi:idref="EAID_E7F438CE_BF23_43d2_AA0C_B0ED7E01E66E" visibility="public">
+								<properties pos="0" type="OfferVisitor" const="false" ea_guid="{E7F438CE-BF23-43d2-AA0C-B0ED7E01E66E}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+					<operation xmi:idref="EAID_348A90F4_9A9F_440c_B050_27C27643CA0C" name="getSilverCardValue" scope="Public">
+						<properties position="1"/>
+						<stereotype/>
+						<model ea_guid="{348A90F4-9A9F-440c-B050-27C27643CA0C}" ea_localid="33"/>
+						<type type="int" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags/>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_9A9F_440c_B050_27C27643CA0C" visibility="public">
+								<properties pos="0" type="int" const="false" ea_guid="{RETURNID-9A9F-440c-B050-27C27643CA0C}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+				</operations>
+				<links>
+					<Realisation xmi:id="EAID_80F62407_8E49_4321_AA3E_F77BD1E0D213" start="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0" end="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB"/>
+					<Association xmi:id="EAID_8E94A11B_8E0B_4daa_A700_FC9458AE0338" start="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0" end="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+					<Association xmi:id="EAID_263E34E7_C795_487c_9775_C60BCE836B57" start="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1" end="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0"/>
+					<Association xmi:id="EAID_EDFA7DBE_1636_4766_B5B3_53CD7DA8FCC5" start="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42" end="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB" xmi:type="uml:Interface" name="CreditCard" scope="public">
+				<model package="EAPK_AC0F50CD_D6CE_454a_8DD3_B4F955A0ADE5" tpos="0" ea_localid="33" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Interface" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="true"/>
+				<project author="Lukawh59" version="1.0" phase="1.0" created="2020-04-21 14:08:16" modified="2020-04-21 14:08:24" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="visitor"/>
+				<operations>
+					<operation xmi:idref="EAID_D4D23067_CE04_4cd9_8269_F30998CC5E50" name="accept" scope="Public">
+						<properties position="0"/>
+						<stereotype/>
+						<model ea_guid="{D4D23067-CE04-4cd9-8269-F30998CC5E50}" ea_localid="19"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags/>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_CE04_4cd9_8269_F30998CC5E50" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-CE04-4cd9-8269-F30998CC5E50}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+							<parameter xmi:idref="EAID_16A8E897_BCEF_401d_A47E_4208550AF37D" visibility="public">
+								<properties pos="0" type="OfferVisitor" const="false" ea_guid="{16A8E897-BCEF-401d-A47E-4208550AF37D}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+				</operations>
+				<links>
+					<Realisation xmi:id="EAID_3CF4165A_7329_4230_902A_01DC77B1D764" start="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B" end="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB"/>
+					<Realisation xmi:id="EAID_80F62407_8E49_4321_AA3E_F77BD1E0D213" start="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0" end="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB"/>
+					<Realisation xmi:id="EAID_B85E2C16_8F48_4984_9B4E_8482AE2DADEA" start="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83" end="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB"/>
+					<Association xmi:id="EAID_DEFC084A_4965_404d_BB66_68AC5EBFCDAE" start="EAID_FB9AF69B_EB4E_4345_8346_8F0B96DE0524" end="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C" xmi:type="uml:Interface" name="OfferVisitor" scope="public">
+				<model package="EAPK_AC0F50CD_D6CE_454a_8DD3_B4F955A0ADE5" tpos="0" ea_localid="35" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Interface" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="true"/>
+				<project author="Lukawh59" version="1.0" phase="1.0" created="2020-04-21 14:13:19" modified="2020-04-21 14:13:31" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="visitor"/>
+				<operations>
+					<operation xmi:idref="EAID_A7493832_C28B_4427_A4C3_CA0D6986317D" name="visitBronzeCreditCard" scope="Public">
+						<properties position="0"/>
+						<stereotype/>
+						<model ea_guid="{A7493832-C28B-4427-A4C3-CA0D6986317D}" ea_localid="23"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags/>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_C28B_4427_A4C3_CA0D6986317D" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-C28B-4427-A4C3-CA0D6986317D}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+							<parameter xmi:idref="EAID_2168E797_6A93_4508_A09D_A3D9DBAFB04C" visibility="public">
+								<properties pos="0" type="BronzeCreditCard" const="false" ea_guid="{2168E797-6A93-4508-A09D-A3D9DBAFB04C}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+					<operation xmi:idref="EAID_905DCE39_648A_47d5_A0B2_E868E126A6B4" name="visitGoldCreditCard" scope="Public">
+						<properties position="2"/>
+						<stereotype/>
+						<model ea_guid="{905DCE39-648A-47d5-A0B2-E868E126A6B4}" ea_localid="25"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags/>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_648A_47d5_A0B2_E868E126A6B4" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-648A-47d5-A0B2-E868E126A6B4}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+							<parameter xmi:idref="EAID_041CF290_291E_43b8_989C_37E465A09112" visibility="public">
+								<properties pos="0" type="GoldCreditCard" const="false" ea_guid="{041CF290-291E-43b8-989C-37E465A09112}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+					<operation xmi:idref="EAID_E13E58E7_3C12_4918_AE49_C3F242D249E3" name="visitSilverCreditCard" scope="Public">
+						<properties position="1"/>
+						<stereotype/>
+						<model ea_guid="{E13E58E7-3C12-4918-AE49-C3F242D249E3}" ea_localid="24"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags/>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_3C12_4918_AE49_C3F242D249E3" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-3C12-4918-AE49-C3F242D249E3}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+							<parameter xmi:idref="EAID_FEF008FA_CA1F_42c1_8B5F_EF3782F9C4B7" visibility="public">
+								<properties pos="0" type="SilverCreditCard" const="false" ea_guid="{FEF008FA-CA1F-42c1-8B5F-EF3782F9C4B7}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+				</operations>
+				<links>
+					<Association xmi:id="EAID_2474E043_0896_4f32_B663_902BD7B93BB1" start="EAID_FB9AF69B_EB4E_4345_8346_8F0B96DE0524" end="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+					<Association xmi:id="EAID_81252E77_001B_4d2f_A21F_C4CA29D81FE4" start="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83" end="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+					<Association xmi:id="EAID_8E94A11B_8E0B_4daa_A700_FC9458AE0338" start="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0" end="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+					<Association xmi:id="EAID_92E29C9A_3490_4978_82F0_22B21FDDFE1C" start="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B" end="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+					<Realisation xmi:id="EAID_E4276129_09D9_4cfd_9BB1_8103ED1AEDD9" start="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1" end="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+					<Realisation xmi:id="EAID_E82BEDAF_879E_4e11_A2FA_CE474F8429B9" start="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42" end="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C"/>
+				</links>
+			</element>
+		</elements>
+		<connectors>
+			<connector xmi:idref="EAID_81252E77_001B_4d2f_A21F_C4CA29D81FE4">
+				<source xmi:idref="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83">
+					<model ea_localid="32" type="Class" name="BronzeCreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C">
+					<model ea_localid="35" type="Interface" name="OfferVisitor"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="44"/>
+				<properties ea_type="Association" direction="Unspecified"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_B85E2C16_8F48_4984_9B4E_8482AE2DADEA">
+				<source xmi:idref="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83">
+					<model ea_localid="32" type="Class" name="BronzeCreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB">
+					<model ea_localid="33" type="Interface" name="CreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="37"/>
+				<properties ea_type="Realisation" direction="Source -&gt; Destination"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_76AAC14D_B909_4c07_9560_73FF5E7176A9">
+				<source xmi:idref="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42">
+					<model ea_localid="34" type="Class" name="GasOfferVisitor"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83">
+					<model ea_localid="32" type="Class" name="BronzeCreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="47"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_E3C42018_FB92_4630_99B5_4AF8F37B2EDA">
+				<source xmi:idref="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1">
+					<model ea_localid="36" type="Class" name="HotelOfferVisitor"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83">
+					<model ea_localid="32" type="Class" name="BronzeCreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="50"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_2474E043_0896_4f32_B663_902BD7B93BB1">
+				<source xmi:idref="EAID_FB9AF69B_EB4E_4345_8346_8F0B96DE0524">
+					<model ea_localid="30" type="Class" name="Client"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C">
+					<model ea_localid="35" type="Interface" name="OfferVisitor"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="52"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_DEFC084A_4965_404d_BB66_68AC5EBFCDAE">
+				<source xmi:idref="EAID_FB9AF69B_EB4E_4345_8346_8F0B96DE0524">
+					<model ea_localid="30" type="Class" name="Client"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB">
+					<model ea_localid="33" type="Interface" name="CreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="51"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_E40C4AE1_8E57_4dae_B664_CFF187896737">
+				<source xmi:idref="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42">
+					<model ea_localid="34" type="Class" name="GasOfferVisitor"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B">
+					<model ea_localid="28" type="Class" name="GoldCreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="45"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_E82BEDAF_879E_4e11_A2FA_CE474F8429B9">
+				<source xmi:idref="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42">
+					<model ea_localid="34" type="Class" name="GasOfferVisitor"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C">
+					<model ea_localid="35" type="Interface" name="OfferVisitor"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="40"/>
+				<properties ea_type="Realisation" direction="Source -&gt; Destination"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_EDFA7DBE_1636_4766_B5B3_53CD7DA8FCC5">
+				<source xmi:idref="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42">
+					<model ea_localid="34" type="Class" name="GasOfferVisitor"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0">
+					<model ea_localid="31" type="Class" name="SilverCreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="46"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_3CF4165A_7329_4230_902A_01DC77B1D764">
+				<source xmi:idref="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B">
+					<model ea_localid="28" type="Class" name="GoldCreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB">
+					<model ea_localid="33" type="Interface" name="CreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="39"/>
+				<properties ea_type="Realisation" direction="Source -&gt; Destination"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_92E29C9A_3490_4978_82F0_22B21FDDFE1C">
+				<source xmi:idref="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B">
+					<model ea_localid="28" type="Class" name="GoldCreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C">
+					<model ea_localid="35" type="Interface" name="OfferVisitor"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="42"/>
+				<properties ea_type="Association" direction="Unspecified"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_645F93AA_1ABC_4a41_B747_B76347EC47C3">
+				<source xmi:idref="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1">
+					<model ea_localid="36" type="Class" name="HotelOfferVisitor"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B">
+					<model ea_localid="28" type="Class" name="GoldCreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="48"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_263E34E7_C795_487c_9775_C60BCE836B57">
+				<source xmi:idref="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1">
+					<model ea_localid="36" type="Class" name="HotelOfferVisitor"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0">
+					<model ea_localid="31" type="Class" name="SilverCreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="49"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_E4276129_09D9_4cfd_9BB1_8103ED1AEDD9">
+				<source xmi:idref="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1">
+					<model ea_localid="36" type="Class" name="HotelOfferVisitor"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C">
+					<model ea_localid="35" type="Interface" name="OfferVisitor"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="41"/>
+				<properties ea_type="Realisation" direction="Source -&gt; Destination"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_80F62407_8E49_4321_AA3E_F77BD1E0D213">
+				<source xmi:idref="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0">
+					<model ea_localid="31" type="Class" name="SilverCreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB">
+					<model ea_localid="33" type="Interface" name="CreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="38"/>
+				<properties ea_type="Realisation" direction="Source -&gt; Destination"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_8E94A11B_8E0B_4daa_A700_FC9458AE0338">
+				<source xmi:idref="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0">
+					<model ea_localid="31" type="Class" name="SilverCreditCard"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C">
+					<model ea_localid="35" type="Interface" name="OfferVisitor"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="43"/>
+				<properties ea_type="Association" direction="Unspecified"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+		</connectors>
+		<primitivetypes>
+			<packagedElement xmi:type="uml:Package" xmi:id="EAPrimitiveTypesPackage" name="EA_PrimitiveTypes_Package" visibility="public">
+				<packagedElement xmi:type="uml:Package" xmi:id="EAJavaTypesPackage" name="EA_Java_Types_Package" visibility="public">
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_OfferVisitor" name="OfferVisitor" visibility="public"/>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_void" name="void" visibility="public"/>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_int" name="int" visibility="public">
+						<generalization xmi:type="uml:Generalization" xmi:id="EAJava_int_General">
+							<general href="http://schema.omg.org/spec/UML/2.1/uml.xml#Integer"/>
+						</generalization>
+					</packagedElement>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_Visitor__" name="Visitor[]" visibility="public"/>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_BronzeCreditCard" name="BronzeCreditCard" visibility="public"/>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_GoldCreditCard" name="GoldCreditCard" visibility="public"/>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_SilverCreditCard" name="SilverCreditCard" visibility="public"/>
+				</packagedElement>
+			</packagedElement>
+		</primitivetypes>
+		<profiles>
+			<uml:Profile xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.1/" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmi:id="thecustomprofile" nsPrefix="thecustomprofile" name="thecustomprofile" metamodelReference="mmref01">
+				<ownedComment xmi:type="uml:Comment" xmi:id="comment01" annotatedElement="thecustomprofile">
+					<body> Version:1.0</body>
+				</ownedComment>
+				<packageImport xmi:id="mmref01">
+					<importedPackage href="http://schema.omg.org/spec/UML/2.1/"/>
+				</packageImport>
+				<packagedElement xmi:type="uml:Stereotype" xmi:id="ImplementsGuid" name="ImplementsGuid">
+					<ownedAttribute xmi:type="uml:Property" xmi:id="ImplementsGuid-base_Operation" name="base_Operation" association="Operation_ImplementsGuid">
+						<type href="http://schema.omg.org/spec/UML/2.1/Operation"/>
+					</ownedAttribute>
+					<ownedAttribute xmi:type="uml:Property" xmi:id="ImplementsGuid-ImplementsGuid" name="ImplementsGuid">
+						<type href="http://schema.omg.org/spec/UML/2.1/String"/>
+					</ownedAttribute>
+				</packagedElement>
+				<packagedElement xmi:type="uml:Extension" xmi:id="Operation_ImplementsGuid" name="A_Operation_ImplementsGuid" memberEnd="extension_ImplementsGuid ImplementsGuid-base_Operation">
+					<ownedEnd xmi:id="extension_ImplementsGuid" name="extension_ImplementsGuid" type="ImplementsGuid" isComposite="true" lower="0" upper="1" memberEnd="extension_ImplementsGuid ImplementsGuid-base_Operation"/>
+				</packagedElement>
+				<packagedElement xmi:type="uml:Stereotype" xmi:id="Implements" name="Implements">
+					<ownedAttribute xmi:type="uml:Property" xmi:id="Implements-base_Operation" name="base_Operation" association="Operation_Implements">
+						<type href="http://schema.omg.org/spec/UML/2.1/Operation"/>
+					</ownedAttribute>
+					<ownedAttribute xmi:type="uml:Property" xmi:id="Implements-Implements" name="Implements">
+						<type href="http://schema.omg.org/spec/UML/2.1/String"/>
+					</ownedAttribute>
+				</packagedElement>
+				<packagedElement xmi:type="uml:Extension" xmi:id="Operation_Implements" name="A_Operation_Implements" memberEnd="extension_Implements Implements-base_Operation">
+					<ownedEnd xmi:id="extension_Implements" name="extension_Implements" type="Implements" isComposite="true" lower="0" upper="1" memberEnd="extension_Implements Implements-base_Operation"/>
+				</packagedElement>
+			</uml:Profile>
+		</profiles>
+		<diagrams>
+			<diagram xmi:id="EAID_DD1D0A14_31C1_400a_97B4_00B32E39523C">
+				<model package="EAPK_AC0F50CD_D6CE_454a_8DD3_B4F955A0ADE5" localID="4" owner="EAPK_AC0F50CD_D6CE_454a_8DD3_B4F955A0ADE5"/>
+				<properties name="visitor" type="Logical"/>
+				<project author="Lukawh59" version="1.0" created="2020-04-21 14:06:35" modified="2020-04-21 18:15:51"/>
+				<style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=0;PPgs.cy=0;DocSize.cx=780;DocSize.cy=1134;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AllDockable=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;SPT=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+				<style2 value="ExcludeRTF=0;DocAll=0;HideQuals=0;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=1;MatrixActive=0;SwimlanesActive=1;KanbanActive=0;MatrixLineWidth=1;MatrixLineClr=0;MatrixLocked=0;TConnectorNotation=UML 2.1;TExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;SPT=1;MDGDgm=;STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;SuppressedCompartments=;Theme=:119;SaveTag=2F218905;"/>
+				<swimlanes value="locked=false;orientation=0;width=0;inbar=false;names=false;color=-1;bold=false;fcol=0;tcol=-1;ofCol=-1;ufCol=-1;hl=0;ufh=0;hh=0;cls=0;bw=0;hli=0;SwimlaneFont=lfh:-10,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;"/>
+				<matrixitems value="locked=false;matrixactive=false;swimlanesactive=true;kanbanactive=false;width=1;clrLine=0;"/>
+				<extendedProperties/>
+				<elements>
+					<element geometry="Left=1070;Top=215;Right=1275;Bottom=285;" subject="EAID_550A5F95_6617_47e8_A10E_333B9C6DFCB1" seqno="1" style="DUID=B8B34CB0;"/>
+					<element geometry="Left=979;Top=54;Right=1184;Bottom=144;" subject="EAID_7C22EDCC_BBB6_45be_A28C_88DCF623C39C" seqno="2" style="DUID=C853FDC1;"/>
+					<element geometry="Left=822;Top=214;Right=1027;Bottom=284;" subject="EAID_3D2D6AFD_F95E_46b6_B901_E10CDCD67F42" seqno="3" style="DUID=2F75015F;"/>
+					<element geometry="Left=186;Top=74;Right=311;Bottom=164;" subject="EAID_9408594B_A23D_4a3e_BF8D_80296682A5DB" seqno="4" style="DUID=E3B9021C;"/>
+					<element geometry="Left=286;Top=285;Right=420;Bottom=355;" subject="EAID_DDC94AEF_5E76_4bbe_89A5_D63CD722FF83" seqno="5" style="DUID=52BE8851;"/>
+					<element geometry="Left=403;Top=206;Right=532;Bottom=276;" subject="EAID_FD70FED8_15CE_4985_A94B_EAA2160D35D0" seqno="6" style="DUID=7D4E7AD5;"/>
+					<element geometry="Left=37;Top=37;Right=166;Bottom=107;" subject="EAID_FB9AF69B_EB4E_4345_8346_8F0B96DE0524" seqno="7" style="DUID=B6247F55;"/>
+					<element geometry="Left=570;Top=144;Right=695;Bottom=214;" subject="EAID_7B7FD7BD_0414_4a18_A5CC_DA8FA6B4716B" seqno="8" style="DUID=C142DB7A;"/>
+					<element geometry="SX=-82;SY=-2;EX=40;EY=-6;EDGE=3;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=841:-320$671:-320$;" subject="EAID_E40C4AE1_8E57_4dae_B664_CFF187896737" style="Mode=3;EOID=C142DB7A;SOID=2F75015F;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=-1;EY=-38;EDGE=4;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=246:-240$;" subject="EAID_80F62407_8E49_4321_AA3E_F77BD1E0D213" style="Mode=3;EOID=E3B9021C;SOID=7D4E7AD5;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=-61;SY=-14;EX=16;EY=-2;EDGE=4;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=264:-193$;" subject="EAID_3CF4165A_7329_4230_902A_01DC77B1D764" style="Mode=3;EOID=E3B9021C;SOID=C142DB7A;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_E82BEDAF_879E_4e11_A2FA_CE474F8429B9" style="Mode=3;EOID=C853FDC1;SOID=2F75015F;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_E4276129_09D9_4cfd_9BB1_8103ED1AEDD9" style="Mode=3;EOID=C853FDC1;SOID=B8B34CB0;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=-101;EY=-16;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=632:-115$;" subject="EAID_92E29C9A_3490_4978_82F0_22B21FDDFE1C" style="Mode=3;EOID=C853FDC1;SOID=C142DB7A;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=-61;SY=7;EX=-30;EY=5;EDGE=4;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=217:-312$;" subject="EAID_B85E2C16_8F48_4984_9B4E_8482AE2DADEA" style="Mode=3;EOID=E3B9021C;SOID=52BE8851;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=9;SY=34;EX=-101;EY=12;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=362:-87$;" subject="EAID_81252E77_001B_4d2f_A21F_C4CA29D81FE4" style="Mode=3;EOID=C853FDC1;SOID=52BE8851;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=6;SY=4;EX=-101;EY=31;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_2474E043_0896_4f32_B663_902BD7B93BB1" style="Mode=3;EOID=C853FDC1;SOID=B6247F55;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=-47;SY=-34;EX=50;EY=-4;EDGE=3;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=876:-348$515:-348$;" subject="EAID_EDFA7DBE_1636_4766_B5B3_53CD7DA8FCC5" style="Mode=3;EOID=7D4E7AD5;SOID=2F75015F;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=-31;SY=-34;EX=36;EY=-34;EDGE=3;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=893:-390$389:-390$;" subject="EAID_76AAC14D_B909_4c07_9560_73FF5E7176A9" style="Mode=3;EOID=52BE8851;SOID=2F75015F;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=-78;SY=13;EX=0;EY=0;EDGE=3;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=1093:-329$631:-329$;" subject="EAID_645F93AA_1ABC_4a41_B747_B76347EC47C3" style="Mode=3;EOID=C142DB7A;SOID=B8B34CB0;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=-28;SY=-34;EX=0;EY=0;EDGE=3;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=1143:-376$465:-376$;" subject="EAID_263E34E7_C795_487c_9775_C60BCE836B57" style="Mode=3;EOID=7D4E7AD5;SOID=B8B34CB0;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=7;EY=-34;EDGE=3;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=1171:-432$360:-432$;" subject="EAID_E3C42018_FB92_4630_99B5_4AF8F37B2EDA" style="Mode=3;EOID=52BE8851;SOID=B8B34CB0;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_DEFC084A_4965_404d_BB66_68AC5EBFCDAE" style="Mode=3;EOID=E3B9021C;SOID=B6247F55;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=6;SY=32;EX=0;EY=0;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=470:-98$;" subject="EAID_8E94A11B_8E0B_4daa_A700_FC9458AE0338" style="Mode=3;EOID=C853FDC1;SOID=7D4E7AD5;Color=-1;LWidth=0;Hidden=0;"/>
+				</elements>
+			</diagram>
+		</diagrams>
+	</xmi:Extension>
+</xmi:XMI>

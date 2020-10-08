@@ -1,0 +1,9 @@
+create object instance obj of Class1;
+obj.a = 5;
+obj.b = FALSE;
+obj.c = 16;
+obj.d = 1.12;
+call from OfferVisitor::visitSilverCreditCard() to HotelOfferVisitor::visitSilverCreditCard() across R14;
+call from GasOfferVisitor::visitBronzeCreditCard() to GoldCreditCard::accept() across R7;
+
+asd

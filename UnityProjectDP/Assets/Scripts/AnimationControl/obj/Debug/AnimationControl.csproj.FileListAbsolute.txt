@@ -1,0 +1,7 @@
+C:\Users\Drizzt\Documents\AnimControl\AnimArch\AnimationControl\bin\Debug\AnimationControl.exe.config
+C:\Users\Drizzt\Documents\AnimControl\AnimArch\AnimationControl\bin\Debug\AnimationControl.exe
+C:\Users\Drizzt\Documents\AnimControl\AnimArch\AnimationControl\bin\Debug\AnimationControl.pdb
+C:\Users\Drizzt\Documents\AnimControl\AnimArch\AnimationControl\obj\Debug\AnimationControl.csprojAssemblyReference.cache
+C:\Users\Drizzt\Documents\AnimControl\AnimArch\AnimationControl\obj\Debug\AnimationControl.csproj.CoreCompileInputs.cache
+C:\Users\Drizzt\Documents\AnimControl\AnimArch\AnimationControl\obj\Debug\AnimationControl.exe
+C:\Users\Drizzt\Documents\AnimControl\AnimArch\AnimationControl\obj\Debug\AnimationControl.pdb

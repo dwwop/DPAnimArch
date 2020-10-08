@@ -1,0 +1,9 @@
+x = 0;
+while x < 2
+	call from GoldCreditCard::accept() to OfferVisitor::visitGoldCreditCard() across R8;
+
+	x = x + 1;
+
+end while;
+
+

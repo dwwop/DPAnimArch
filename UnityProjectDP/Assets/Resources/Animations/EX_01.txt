@@ -1,0 +1,2 @@
+call from GoldCreditCard::accept() to OfferVisitor::visitGoldCreditCard() across R8;
+

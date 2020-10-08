@@ -1,0 +1,12 @@
+x = 0;
+while x < 2
+	call from GoldCreditCard::accept() to OfferVisitor::visitGoldCreditCard() across R8;
+
+	x = x + 1;
+
+end while;
+
+call from BronzeCreditCard::accept() to OfferVisitor::visitBronzeCreditCard() across R2;
+call from SilverCreditCard::accept() to OfferVisitor::visitSilverCreditCard() across R14;
+
+

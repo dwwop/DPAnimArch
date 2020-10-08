@@ -1,0 +1,5 @@
+call from OfferVisitor::visitSilverCreditCard() to HotelOfferVisitor::visitGoldCreditCard() across R14;
+call from GasOfferVisitor::visitBronzeCreditCard() to GoldCreditCard::accept() across R7;
+call from SilverCreditCard::getSilverCardValue() to GasOfferVisitor::visitSilverCreditCard() across R9;
+call from SilverCreditCard::getSilverCardValue() to GasOfferVisitor::visitGoldCreditCard() across R9;
+

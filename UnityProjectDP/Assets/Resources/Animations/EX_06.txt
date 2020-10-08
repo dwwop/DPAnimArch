@@ -1,0 +1,8 @@
+create object instance Gold_Credit_Card of GoldCreditCard;
+create object instance Offer_Visitor of OfferVisitor;
+relate Gold_Credit_Card to Offer_Visitor across R8;
+call from GoldCreditCard::accept() to OfferVisitor::visitGoldCreditCard() across R8;
+create object instance Gas_Offer_Visitor of GasOfferVisitor;
+relate Gas_Offer_Visitor to Gold_Credit_Card across R6;
+call from GasOfferVisitor::visitGoldCreditCard() to GoldCreditCard::accept() across R6;
+

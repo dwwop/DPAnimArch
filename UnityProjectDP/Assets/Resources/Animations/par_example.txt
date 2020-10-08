@@ -1,0 +1,24 @@
+par
+thread
+call from OfferVisitor::visitBronzeCreditCard() to BronzeCreditCard::accept() across R1;
+end thread;
+thread
+call from OfferVisitor::visitSilverCreditCard() to SilverCreditCard::accept() across R16;
+end thread;
+thread
+call from OfferVisitor::visitGoldCreditCard() to GoldCreditCard::accept() across R11;
+end thread;
+end par;
+par
+thread
+call from OfferVisitor::visitBronzeCreditCard() to BronzeCreditCard::accept() across R1;
+end thread;
+thread
+call from OfferVisitor::visitSilverCreditCard() to SilverCreditCard::accept() across R16;
+end thread;
+thread
+call from OfferVisitor::visitGoldCreditCard() to GoldCreditCard::accept() across R11;
+end thread;
+end par;
+
+

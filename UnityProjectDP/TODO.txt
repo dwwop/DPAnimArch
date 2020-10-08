@@ -1,0 +1,4 @@
+TODO do konca 16.2
+Opravit proces ukladania animacie, spravit funkcny chceck
+Spravit nacitanie animacie zo suboru
+Vylepsit play a stop funkciu animacie

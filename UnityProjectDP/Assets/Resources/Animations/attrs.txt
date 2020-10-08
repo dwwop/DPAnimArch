@@ -1,0 +1,12 @@
+create object instance obj of Class1;
+obj.a = 5;
+obj.b = false;
+obj.long = 19;
+obj.double = 1.12;
+
+create object instance obj of Class1;
+obj.a = 5;
+obj.b = false;
+obj.c = 19;
+obj.d = 1.12;
+
