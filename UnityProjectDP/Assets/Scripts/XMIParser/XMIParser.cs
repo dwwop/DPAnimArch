@@ -8,21 +8,20 @@ using System.Text;
 
 public static class XMIParser
 {
-    static String path = @"C:/AnimArch/exportedXMI.xml";
+    //static String path = "C:/AnimArch/exportedXMI.xml";
     //static String path = "C:/TPFIIT/visitor_v2_s_client_metodami.xml";
-    static String currDiagramIDPath = @"C:/AnimArch/currDiagramID.txt";
+    //static String currDiagramIDPath = "C:/AnimArch/currDiagramID.txt";
     public static List<String> parseCurrentDiagramElementsIDs()
     {
         //Document
         XmlDocument xmlDoc = new XmlDocument(); // Create an XML document object
         var encoding = Encoding.GetEncoding("UTF-8");
         //System.IO.StreamReader reader = new System.IO.StreamReader(path, System.Text.Encoding.GetEncoding("Windows-1252"), true);
-        string xmlText= System.IO.File.ReadAllText(path, encoding);
+        string xmlText= System.IO.File.ReadAllText(AnimationData.Instance.GetDiagramPath(), encoding);
         // XmlTextReader xmlReader = new XmlTextReader(reader);
         xmlDoc.LoadXml(xmlText); // Load the XML document from the specified file
 
-        string currDiagramID = System.IO.File.ReadAllText(currDiagramIDPath, encoding);
-
+        string currDiagramID = AnimationData.Instance.diagramId.ToString();
         //pridaj vsetky elementy patriace current otvorenemu diagramu
         List<string> currDiagramElements = new List<string>();
         XmlNodeList diagrams = xmlDoc.GetElementsByTagName("diagrams");
@@ -60,9 +59,9 @@ public static class XMIParser
         List<Class> XMIClassList = new List<Class>();
         XmlDocument xmlDoc = new XmlDocument(); // Create an XML document object
         // Load the XML document from the specified file
-        string xml = System.IO.File.ReadAllText(path);
+        string xml = System.IO.File.ReadAllText(AnimationData.Instance.GetDiagramPath());
         xmlDoc.LoadXml(xml);
-        string currDiagramID = System.IO.File.ReadAllText(currDiagramIDPath);
+        string currDiagramID = AnimationData.Instance.diagramId.ToString();
         //string currDiagramID = System.IO.File.ReadAllText(currDiagramIDPath);
         List<String> currDiagramElements = parseCurrentDiagramElementsIDs();
 
@@ -224,7 +223,10 @@ public static class XMIParser
             }
             if(currDiagramElements.Contains(XMIClass.XmiId)) XMIClassList.Add(XMIClass);
         }
-
+        if (geometryElements == null)
+        {
+            return null;
+        }
         for (int i = 0; i < geometryElements.Count; i++)
         {
             string subject = geometryElements[i].Attributes["subject"].Value;
@@ -268,7 +270,7 @@ public static class XMIParser
 
         XmlDocument xmlDoc = new XmlDocument(); // Create an XML document object
         var encoding = Encoding.GetEncoding("UTF-8");
-        string xmlText = System.IO.File.ReadAllText(path, encoding);
+        string xmlText = System.IO.File.ReadAllText(AnimationData.Instance.GetDiagramPath(), encoding);
         // XmlTextReader xmlReader = new XmlTextReader(reader);
         xmlDoc.LoadXml(xmlText); // Load the XML document from the specified file
         List<String> currDiagramElements = parseCurrentDiagramElementsIDs();

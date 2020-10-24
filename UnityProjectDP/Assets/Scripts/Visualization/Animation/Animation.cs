@@ -146,21 +146,29 @@ public class Animation : Singleton<Animation>
     }
     public IEnumerator AnimateFill(OALCall Call)
     {
-        GameObject newFiller = Instantiate(LineFill);
-        Fillers.Add(newFiller);
-        newFiller.transform.position = classDiagram.graph.transform.GetChild(0).transform.position;
-        newFiller.transform.SetParent(classDiagram.graph.transform);
-        newFiller.transform.localScale = new Vector3(1, 1, 1);
-        LineFiller lf = newFiller.GetComponent<LineFiller>();
         GameObject edge = classDiagram.FindEdge(Call.RelationshipName);
         if (edge != null)
         {
-            bool flip = false;
-            if (classDiagram.FindOwnerOfRelation(/*Call.CallerClassName, Call.CalledClassName*/Call.RelationshipName).Equals(Call.CalledClassName))
+            if (edge.CompareTag("Generalization"))
             {
-                flip = true;
+                HighlightEdge(Call.RelationshipName, true);
+                yield return new WaitForSeconds(AnimationData.Instance.AnimSpeed/2);
             }
-            yield return lf.StartCoroutine(lf.AnimateFlow(edge.GetComponent<UILineRenderer>().Points, flip));
+            else
+            {
+                GameObject newFiller = Instantiate(LineFill);
+                Fillers.Add(newFiller);
+                newFiller.transform.position = classDiagram.graph.transform.GetChild(0).transform.position;
+                newFiller.transform.SetParent(classDiagram.graph.transform);
+                newFiller.transform.localScale = new Vector3(1, 1, 1);
+                LineFiller lf = newFiller.GetComponent<LineFiller>();
+                bool flip = false;
+                if (classDiagram.FindOwnerOfRelation(/*Call.CallerClassName, Call.CalledClassName*/Call.RelationshipName).Equals(Call.CalledClassName))
+                {
+                    flip = true;
+                }
+                yield return lf.StartCoroutine(lf.AnimateFlow(edge.GetComponent<UILineRenderer>().Points, flip));
+            }
         }
     }
     //Method used to Highlight/Unhighlight single class by name, depending on bool value of argument 

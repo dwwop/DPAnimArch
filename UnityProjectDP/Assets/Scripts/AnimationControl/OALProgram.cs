@@ -8,8 +8,8 @@ namespace OALProgramControl
 {
     public class OALProgram : Singleton<OALProgram>
     {
-        public CDClassPool ExecutionSpace { get; }
-        public CDRelationshipPool RelationshipSpace { get; }
+        public CDClassPool ExecutionSpace { get; set; }
+        public CDRelationshipPool RelationshipSpace { get; set; }
         private bool InDatabase;
         private readonly object InstanceDatabaseLock = new object();
 

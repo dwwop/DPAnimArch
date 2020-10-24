@@ -9,6 +9,8 @@ public class AnimationData : Singleton<AnimationData>
 {
     private List<Anim> animations;
     public Anim selectedAnim;
+    string diagramPath= @"C:/AnimArch/exportedXMI.xml";
+    public int diagramId=4;
     public float AnimSpeed{get; set;}
     private void Awake()
     {
@@ -42,5 +44,21 @@ public class AnimationData : Singleton<AnimationData>
         }
         Debug.Log("Anim "+name +" not found");
         return new Anim();
+    }
+    public string GetDiagramPath()
+    {
+        return diagramPath;
+    }
+    public void SetDiagramPath(string diagramPath)
+    {
+        this.diagramPath = diagramPath;
+        this.diagramId = 0;
+        
+    }
+    public void ClearData()
+    {
+        animations.Clear();
+        MenuManager.Instance.UpdateAnimations();
+        diagramId = 0;
     }
 }

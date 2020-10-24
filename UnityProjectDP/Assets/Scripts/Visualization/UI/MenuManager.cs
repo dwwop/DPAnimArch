@@ -228,7 +228,7 @@ public class MenuManager : Singleton<MenuManager>
     }
     public void SelectAnimation()
     {
-         String name= animationsDropdown.options[animationsDropdown.value].text;
+        String name= animationsDropdown.options[animationsDropdown.value].text;
         foreach(Anim anim in AnimationData.Instance.getAnimList())
         {
             if (name.Equals(anim.AnimationName))
@@ -334,5 +334,9 @@ public class MenuManager : Singleton<MenuManager>
             panelStepMode.SetActive(false);
             panelPlayMode.SetActive(true);
         }
+    }
+    public void UnshowAnimation()
+    {
+        Animation.Instance.UnhighlightAll();
     }
 }

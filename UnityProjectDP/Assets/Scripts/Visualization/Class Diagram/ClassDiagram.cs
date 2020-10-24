@@ -29,22 +29,65 @@ public class ClassDiagram : Singleton<ClassDiagram>
     {
         //Asign memory for variables before the first frame
         GameObjectClasses = new Dictionary<string, GameObject>();
-        DiagramClasses = new List<Class>();
         GameObjectRelations = new Dictionary<string, GameObject>();
+        DiagramClasses = new List<Class>();
         DiagramRelations = new List<Relation>();
+        ResetDiagram();
     }
     private void Start()
     {
-        //Atempt to load diagram at the start of the application
-        LoadDiagram();
+    }
+    public void ResetDiagram()
+    {
+        if (GameObjectClasses != null)
+        {
+            if (GameObjectClasses.Count > 0)
+            {
+                foreach(KeyValuePair<string,GameObject> kv in GameObjectClasses)
+                {
+                    Destroy(kv.Value);
+                    //GameObjectClasses.Remove(kv.Key);
+                }
+            }
+            GameObjectClasses.Clear();
+        }
+        if (GameObjectRelations != null)
+        {
+            if (GameObjectRelations.Count > 0)
+            {
+                foreach (KeyValuePair<string, GameObject> kv in GameObjectRelations)
+                {
+                    Destroy(kv.Value);
+                    //GameObjectRelations.Remove(kv.Key);
+                }
+            }
+            GameObjectRelations.Clear();
+        }
+        if (graph != null)
+        {
+            Destroy(graph.gameObject);
+            graph = null;
+        }
+        DiagramClasses.Clear();
+        DiagramRelations.Clear();
+        OALProgram.Instance.ExecutionSpace.ClassPool.Clear();
+        OALProgram.Instance.ExecutionSpace= new CDClassPool();
+        OALProgram.Instance.RelationshipSpace = new CDRelationshipPool();
+        AnimationData.Instance.ClearData();
     }
     public void LoadDiagram()
     {
+        ResetDiagram();
+        Debug.Log("DIAGRAM CLASSES COUNT" + DiagramClasses.Count);
         var go = GameObject.Instantiate(graphPrefab);
         graph = go.GetComponent<Graph>();
-
         //Call parser to load data from specified path to 
-        ParseData();
+        int k = 0;
+        while (DiagramClasses.Count<1 &&k<10){
+            ParseData();
+            k++;
+            AnimationData.Instance.diagramId++;
+        }
         //Generate UI objects displaying the diagram
         Generate();
         //Set the layout of diagram so it is coresponding to EA view
@@ -126,8 +169,6 @@ public class ClassDiagram : Singleton<ClassDiagram>
         {
             Relation.FromClass = Relation.SourceModelName.Replace(" ", "_");
             Relation.ToClass = Relation.TargetModelName.Replace(" ", "_");
-            Debug.Log(Relation.PropertiesEa_type);
-            Debug.Log(Relation.ProperitesDirection);
             //Here you assign prefabs for each type of relation
             switch (Relation.PropertiesEa_type)
             {
@@ -170,6 +211,8 @@ public class ClassDiagram : Singleton<ClassDiagram>
     //Create GameObjects from the parsed data sotred in list of Classes and Relations
     private void Generate()
     {
+        Debug.Log("DIAGRAM CLASSES COUNT" + DiagramClasses.Count);
+        Debug.Log("RELATION COUNT" + DiagramRelations.Count);
         //Render classes
         for (int i = 0; i < DiagramClasses.Count; i++)
         {
@@ -211,7 +254,7 @@ public class ClassDiagram : Singleton<ClassDiagram>
 
             //Add Class to Dictionary 
             GameObjectClasses.Add(node.name, node);
-            Debug.Log(node.name);
+            //Debug.Log(node.name);
 
         }
 
@@ -224,8 +267,8 @@ public class ClassDiagram : Singleton<ClassDiagram>
                 prefab = associationNonePrefab;
                 Debug.Log("Unknown prefab");
             }
-
-            if (GameObjectClasses[rel.FromClass] != null && GameObjectClasses[rel.ToClass] != null)
+            GameObject g;
+            if (GameObjectClasses.TryGetValue(rel.FromClass,out g) && GameObjectClasses.TryGetValue(rel.ToClass, out g))
             {
                 GameObject edge = graph.AddEdge(GameObjectClasses[rel.FromClass], GameObjectClasses[rel.ToClass], prefab);
                 //Add relation node to dictionary

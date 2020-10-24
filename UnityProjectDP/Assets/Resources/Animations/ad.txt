@@ -1,2 +1,2 @@
-call from OfferVisitor::visitBronzeCreditCard() to GoldCreditCard::accept() across R11;
+call from Game::CreateArmy() to Warrior::Attack() across R13;
 

@@ -1,3 +1,9 @@
-call from HotelOfferVisitor::visitSilverCreditCard() to OfferVisitor::visitSilverCreditCard() across R14;
-call from HotelOfferVisitor::visitGoldCreditCard() to OfferVisitor::visitBronzeCreditCard() across R14;
+par
+thread
+call from CreditCard::accept() to BronzeCreditCard::accept() across R2;
+end thread;
+thread
+call from OfferVisitor::visitGoldCreditCard() to GoldCreditCard::getGoldCardValue() across R11;
+end thread;
+end par;
 

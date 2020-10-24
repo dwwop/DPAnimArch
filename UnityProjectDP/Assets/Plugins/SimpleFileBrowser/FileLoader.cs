@@ -9,24 +9,35 @@ public class FileLoader : MonoBehaviour
 {
     void Start()
     {
-        FileBrowser.SetFilters(true, new FileBrowser.Filter("Text Files", ".txt"));
+        FileBrowser.Filter[] filters=new FileBrowser.Filter[2];
+        filters[0] = new FileBrowser.Filter("Text Files", ".txt");
+        filters[1] = new FileBrowser.Filter("XML files", ".xml");
+        FileBrowser.SetFilters(true, filters);
         FileBrowser.SetDefaultFilter(".txt");
         FileBrowser.SetExcludedExtensions(".lnk", ".tmp", ".zip", ".rar", ".exe");
         FileBrowser.AddQuickLink("Resources", @"Assets\Resources\", null);
     }
     public void OpenBrowser()
     {
-        StartCoroutine(ShowLoadDialogCoroutine());
+        StartCoroutine(ShowLoadDialogCoroutine(@"Assets\Resources\Animations\","Load Animation","Animation"));
     }
     public void SaveAnimation(Anim newAnim)
     {
         StartCoroutine(SaveAnimationCoroutine(newAnim));
     }
-    IEnumerator ShowLoadDialogCoroutine()
+    IEnumerator ShowLoadDialogCoroutine(string path, string tooltip,string type)
     {
         // Show a load file dialog and wait for a response from user
         // Load file/folder: file, Initial path: default (Documents), Title: "Load File", submit button text: "Load"
-        yield return FileBrowser.WaitForLoadDialog(false, @"Assets\Resources\Animations\","Load Animation","Load");
+        if (type.Equals("Diagram"))
+        {
+            FileBrowser.SetDefaultFilter(".xml");
+        }
+        else
+        {
+            FileBrowser.SetDefaultFilter(".txt");
+        }
+        yield return FileBrowser.WaitForLoadDialog(false, path,tooltip,"Load");
 
         // Dialog is closed
         // Print whether a file is chosen (FileBrowser.Success)
@@ -38,17 +49,30 @@ public class FileLoader : MonoBehaviour
             // If a file was chosen, read its bytes via FileBrowserHelpers
             // Contrary to File.ReadAllBytes, this function works on Android 10+, as well
             //byte[] bytes = FileBrowserHelpers.ReadBytesFromFile(FileBrowser.Result)
-            string code = FileBrowserHelpers.ReadTextFromFile(FileBrowser.Result);
-            Anim loadedAnim = new Anim(FileBrowserHelpers.GetFilename(FileBrowser.Result).Replace(".txt", ""), code);
-            //loadedAnim.Code = GetCleanCode(loadedAnim.Code);
-            AnimationData.Instance.AddAnim(loadedAnim);
-            AnimationData.Instance.selectedAnim = loadedAnim;
-            MenuManager.Instance.UpdateAnimations();
-            MenuManager.Instance.SetSelectedAnimation(loadedAnim.AnimationName);
+            if (type.Equals("Animation"))
+            {
+                string code = FileBrowserHelpers.ReadTextFromFile(FileBrowser.Result);
+                Anim loadedAnim = new Anim(FileBrowserHelpers.GetFilename(FileBrowser.Result).Replace(".txt", ""), code);
+                //loadedAnim.Code = GetCleanCode(loadedAnim.Code);
+                AnimationData.Instance.AddAnim(loadedAnim);
+                AnimationData.Instance.selectedAnim = loadedAnim;
+                MenuManager.Instance.UpdateAnimations();
+                MenuManager.Instance.SetSelectedAnimation(loadedAnim.AnimationName);
+            }   
+            else if (type.Equals("Diagram"))
+            {
+                string fileName = FileBrowserHelpers.GetFilename(FileBrowser.Result);
+                Debug.Log(FileBrowser.Result);
+                Debug.Log(fileName);
+                AnimationData.Instance.SetDiagramPath(FileBrowser.Result);
+                ClassDiagram.Instance.LoadDiagram();
+            }
+        
         }
     }
     IEnumerator SaveAnimationCoroutine(Anim newAnim)
     {
+        FileBrowser.SetDefaultFilter(".txt");
         yield return FileBrowser.WaitForSaveDialog(false, @"Assets\Resources\Animations\", "Save Animation", "Save");
         if (FileBrowser.Success)
         {
@@ -64,18 +88,9 @@ public class FileLoader : MonoBehaviour
         }
 
     }
-   /* private string[] GetCleanCode(string[] uncleanCode)
+    public void OpenDiagram()
     {
-        List<String> code = new List<string>(uncleanCode);
-        List<String> cleanCode = new List<String>();
-        for (int i = 0; i < code.Count; i++)
-        {
-            if (code[i].Length > 1)
-            {
-                cleanCode.Add(Regex.Replace(code[i], " ", ""));
-            }
-        }
-        return cleanCode.ToArray();
-    }*/
+        StartCoroutine(ShowLoadDialogCoroutine(@"Assets\Resources\", "Load Diagram", "Diagram"));
+    }
 
 }
