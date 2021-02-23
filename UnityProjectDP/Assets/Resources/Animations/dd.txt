@@ -1,0 +1,2 @@
+call from SilverCreditCard::getSilverCardValue() to GasOfferVisitor::visitSilverCreditCard() across R9;
+

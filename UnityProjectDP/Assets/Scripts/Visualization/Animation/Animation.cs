@@ -149,7 +149,7 @@ public class Animation : Singleton<Animation>
         GameObject edge = classDiagram.FindEdge(Call.RelationshipName);
         if (edge != null)
         {
-            if (edge.CompareTag("Generalization"))
+            if (edge.CompareTag("Generalization")|| edge.CompareTag("Implements")|| edge.CompareTag("Realisation"))
             {
                 HighlightEdge(Call.RelationshipName, true);
                 yield return new WaitForSeconds(AnimationData.Instance.AnimSpeed/2);

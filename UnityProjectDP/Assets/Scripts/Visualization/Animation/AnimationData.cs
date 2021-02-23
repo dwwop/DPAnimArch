@@ -59,6 +59,7 @@ public class AnimationData : Singleton<AnimationData>
     {
         animations.Clear();
         MenuManager.Instance.UpdateAnimations();
+        selectedAnim = new Anim("");
         diagramId = 0;
     }
 }

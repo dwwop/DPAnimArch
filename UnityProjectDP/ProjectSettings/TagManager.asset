@@ -8,6 +8,7 @@ TagManager:
   - Association
   - Dependency
   - Generalization
+  - Implements
   layers:
   - Default
   - TransparentFX

@@ -83,6 +83,7 @@ public class ClassDiagram : Singleton<ClassDiagram>
         graph = go.GetComponent<Graph>();
         //Call parser to load data from specified path to 
         int k = 0;
+        // A trick used to skip empty diagrams in XMI file from EA
         while (DiagramClasses.Count<1 &&k<10){
             ParseData();
             k++;
