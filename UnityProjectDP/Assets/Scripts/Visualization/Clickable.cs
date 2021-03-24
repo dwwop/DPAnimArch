@@ -28,6 +28,7 @@ public class Clickable : MonoBehaviour
     {
         selectedElement = true;
         screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+        ClassEditor.Instance.SelectNode(this.gameObject);
         offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
     }
 

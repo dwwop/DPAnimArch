@@ -1,3 +1,3 @@
-call from GasOfferVisitor::visitSilverCreditCard() to SilverCreditCard::getSilverCardValue() across R9;
-call from Client::PrepareVisitors() to CreditCard::accept() across R6;
+call from OfferVisitor::visitGoldCreditCard() to HotelOfferVisitor::visitSilverCreditCard() across R14;
+call from GasOfferVisitor::visitSilverCreditCard() to GoldCreditCard::accept() across R7;
 
