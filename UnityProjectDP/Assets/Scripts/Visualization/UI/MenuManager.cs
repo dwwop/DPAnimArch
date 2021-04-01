@@ -68,6 +68,7 @@ public class MenuManager : Singleton<MenuManager>
     public GameObject panelStepMode;
     [SerializeField]
     public GameObject panelPlayMode;
+
     struct InteractiveData
     {
         public string fromClass;
@@ -76,6 +77,8 @@ public class MenuManager : Singleton<MenuManager>
         public string toClass;
         public string toMethod;
     }
+
+
     InteractiveData interactiveData = new InteractiveData();
     private void Awake()
     {
