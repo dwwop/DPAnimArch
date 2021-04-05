@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO; //Filip
 using UnityEngine;
 using OALProgramControl;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 using Assets.Scripts.AnimationControl.OAL;
-
 
 //Controls the entire animation process
 public class Animation : Singleton<Animation>
@@ -63,16 +63,44 @@ public class Animation : Singleton<Animation>
         }
         OALProgram Program = OALProgram.Instance;
         string Code = selectedAnimation.Code;
+        //Dictionary<string, Dictionary<string, string>> MethodsCodes = selectedAnimation.GetMethodsCodes
         Debug.Log("Code: ");
         Debug.Log(Code);
+        
+        Dictionary<string, string> ChoppedMethods = CodeChopping(Code);    //Filip
+
+
+        /*CDClassPool Classes = new CDClassPool();    //alebo mozno zobrat z OALProgram.Instance.ExecutionSpace
+        foreach (KeyValuePair<string, string> pair in ChoppedMethods/MethodsCodes)   //Filip
+         {
+             EXEScope scope= OALParserBridge.Parse(pair.Value);
+             EXEScopeMethod methodBody = new EXEScopeMethod(scope.Commands);
+
+             string[] ClassMethodNname = pair.Key.Split(new[] { "::" }, System.StringSplitOptions.None);    //get class and method name
+             CDMethod Method = new CDMethod(ClassMethodNname[1]);
+            //pridaj tam methodBody
+
+             if(Classes.ClassExists(ClassMethodNname[0])) 
+             {
+                CDClass Class = Classes.getClassByName(ClassMethodNname[0]);
+                Class.AddMethod(Method);
+             } 
+             else 
+             {
+                CDClass Class = new CDClass(ClassMethodNname[0]));
+                Class.AddMethod(Method);
+                Classes.ClassPool.Add(Class);
+             }
+         }*/
+
         OALProgram.Instance.SuperScope = OALParserBridge.Parse(Code);
         ACS = new AnimationCommandStorage();
         bool temp = Program.PreExecute(ACS);
         Debug.Log("Done executing: " + temp.ToString());
         ACS.ClearSteps();
         Success = true;
-    
-        if(Success)
+
+        if (Success)
         {
             Debug.Log("We have " + ACS.AnimationSteps.Count() + " anim sequences");
             foreach (List<AnimationCommand> AnimationSequence in ACS.AnimationSteps)
@@ -106,6 +134,40 @@ public class Animation : Singleton<Animation>
             this.AnimationIsRunning = false;
         }
     }
+
+    public Dictionary<string, string> CodeChopping(string Code) //Filip
+    {
+        Dictionary<string, string> ChoppedMethods = new Dictionary<string, string>();
+
+        using (StringReader reader = new StringReader(Code))
+        {
+            int i;
+            string name;
+            string value;
+
+            // Loop over the lines in the string
+            for (string line = reader.ReadLine(); line != null; line = reader.ReadLine())
+            {
+                if (line != "")
+                {
+                    i = line.IndexOf("()", 10);
+                    name = line.Substring(10, i - 10);
+
+                    if (!ChoppedMethods.TryGetValue(name, out value))
+                    {
+                        ChoppedMethods.Add(name, line);
+                    }
+                    else 
+                    {
+                        value = value + System.Environment.NewLine + line;
+                        ChoppedMethods[name] = value;
+                    }
+                }  
+            }
+        }
+        return ChoppedMethods;
+    }
+
     public void IncrementBarrier()
     {
         this.CurrentBarrierFill++;
@@ -146,6 +208,7 @@ public class Animation : Singleton<Animation>
     }
     public IEnumerator AnimateFill(OALCall Call)
     {
+        Debug.Log("Filip, hrana: " + Call.RelationshipName); //Filip
         GameObject edge = classDiagram.FindEdge(Call.RelationshipName);
         if (edge != null)
         {
@@ -189,6 +252,7 @@ public class Animation : Singleton<Animation>
             if (isToBeHighlighted)
             {
                 bh.HighlightBackground();
+                Debug.Log("Filip, classa: " + className); //Filip
             }
             else
             {
@@ -218,6 +282,7 @@ public class Animation : Singleton<Animation>
             if (isToBeHighlighted)
             {
                 th.HighlightLine(methodName);
+                Debug.Log("Filip, metoda: " + methodName); //Filip
             }
             else
             {
@@ -281,7 +346,6 @@ public class Animation : Singleton<Animation>
                         HighlightEdge(Call.RelationshipName, false);
                         timeModifier = 1f;
                         break;
-
                 }
                 step++;
                 if (standardPlayMode)

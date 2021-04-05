@@ -13,6 +13,9 @@ namespace OALProgramControl
         public List<CDParameter> Parameters { get; set; }
         public string OALCode { get; set; }
         public int CallCountInOALProgram { get; set; }
+
+        //public EXEScopeMethod ExecutableCode;   //Filip
+
         public CDMethod(String Name, String Type)
         {
             this.Name = Name;
@@ -20,6 +23,7 @@ namespace OALProgramControl
             this.CallCountInOALProgram = 0;
             this.OALCode = "";
             this.Parameters = new List<CDParameter>();
+            //this.ExecutableCode = null; //Filip
         }
         public void IncementCallCount()
         {
