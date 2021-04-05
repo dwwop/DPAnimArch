@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class BackgroundHighlighter : MonoBehaviour {
 
@@ -22,6 +23,9 @@ public class BackgroundHighlighter : MonoBehaviour {
 	{
         if (highlight == 0)
         {
+            RectTransform rc = GetComponent<RectTransform>();
+            rc.DOScaleX(1.2f, 0.5f);
+            rc.DOScaleY(1.2f, 0.5f);
             GetComponentInChildren<Image>().color = Animation.Instance.classColor;
         }
         highlight++;
@@ -38,6 +42,9 @@ public class BackgroundHighlighter : MonoBehaviour {
                 highlight--;
         if (highlight == 0)
         {
+            RectTransform rc = GetComponent<RectTransform>();
+            rc.DOScaleX(1f, 0.5f);
+            rc.DOScaleY(1f, 0.5f);
             GetComponentInChildren<Image>().color = defaultColor;
         }
 	}

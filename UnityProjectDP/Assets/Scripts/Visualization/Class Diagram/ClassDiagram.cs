@@ -77,10 +77,7 @@ public class ClassDiagram : Singleton<ClassDiagram>
     }
     public void LoadDiagram()
     {
-        ResetDiagram();
-        Debug.Log("DIAGRAM CLASSES COUNT" + DiagramClasses.Count);
-        var go = GameObject.Instantiate(graphPrefab);
-        graph = go.GetComponent<Graph>();
+        CreateGraph();
         //Call parser to load data from specified path to 
         int k = 0;
         // A trick used to skip empty diagrams in XMI file from EA
@@ -93,6 +90,13 @@ public class ClassDiagram : Singleton<ClassDiagram>
         Generate();
         //Set the layout of diagram so it is coresponding to EA view
         ManualLayout();
+    }
+    public Graph CreateGraph()
+    {
+        ResetDiagram();
+        var go = GameObject.Instantiate(graphPrefab);
+        graph = go.GetComponent<Graph>();
+        return graph;
     }
 
     // Parser used to parse data from XML to C# data structures
@@ -370,6 +374,10 @@ public class ClassDiagram : Singleton<ClassDiagram>
     public List<Relation> GetRelationList()
     {
         return DiagramRelations;
+    }
+    public void CreateRelationEdge(GameObject node1, GameObject node2)
+    {
+        GameObject edge = graph.AddEdge(node1, node2, associationFullPrefab);
     }
 
 }

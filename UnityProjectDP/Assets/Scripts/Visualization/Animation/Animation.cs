@@ -304,10 +304,12 @@ public class Animation : Singleton<Animation>
             if (isToBeHighlighted)
             {
                 edge.GetComponent<UEdge>().ChangeColor(relationColor);
+                edge.GetComponent<UILineRenderer>().LineThickness = 8;
             }
             else
             {
                 edge.GetComponent<UEdge>().ChangeColor(Color.white);
+                edge.GetComponent<UILineRenderer>().LineThickness = 5;
             }
         }
         else
