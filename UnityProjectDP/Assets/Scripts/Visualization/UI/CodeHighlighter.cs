@@ -83,6 +83,10 @@ public class CodeHighlighter : MonoBehaviour
     }
     public void RemoveColors()
     {
+        if (targetText==null)
+        {
+            return;
+        }
         Debug.Log("removing colors");
         List<Marker> markers = new List<Marker>();
         Marker currentMarker=new Marker();
@@ -142,5 +146,6 @@ public class CodeHighlighter : MonoBehaviour
         {
             targetText.text = targetText.text.Remove(m.start, m.end - m.start);
         }
+
     }
 }

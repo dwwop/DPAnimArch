@@ -1,3 +1,5 @@
-call from AST::execute() to ASTLeaf::getType() across R4;
-call from ASTLeaf::getType() to OperationEvaluator::tellType() across R7;
+call from OfferVisitor::visitBronzeCreditCard() to HotelOfferVisitor::visitSilverCreditCard() across R14;
+call from OfferVisitor::visitBronzeCreditCard() to HotelOfferVisitor::visitSilverCreditCard() across R14;
+call from OfferVisitor::visitGoldCreditCard() to HotelOfferVisitor::visitSilverCreditCard() across R14;
+
 

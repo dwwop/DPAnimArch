@@ -252,8 +252,11 @@ public class MenuManager : Singleton<MenuManager>
         {
             createdAnim.SetMethodCode(classTxt.text, methodTxt.text, sepInput.text);
         }
+        scriptCode.gameObject.SetActive(true);
+
         scriptCode.GetComponent<CodeHighlighter>().RemoveColors();
         createdAnim.Code = scriptCode.text;
+        scriptCode.gameObject.SetActive(false);
         fileLoader.SaveAnimation(createdAnim);
         EndAnimate();
     }
