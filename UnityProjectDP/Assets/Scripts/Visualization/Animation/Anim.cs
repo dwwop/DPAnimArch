@@ -64,7 +64,7 @@ public struct Anim
         }
     }
 
-    public Dictionary<string, Dictionary<string, string>> GetMethodsCodes() //Filip
+    public Dictionary<string, Dictionary<string, string>> GetMethodsCodesDictionary() //Filip
     {
         return MethodsCodes;
     }

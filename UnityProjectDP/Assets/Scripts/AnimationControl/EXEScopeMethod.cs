@@ -32,6 +32,7 @@ namespace OALProgramControl     //Filip
 
         public override Boolean Execute(OALProgram OALProgram, EXEScope Scope)
         {
+            //this.SuperScope = Scope;
             this.OALProgram = OALProgram;
 
             Boolean Success = true;

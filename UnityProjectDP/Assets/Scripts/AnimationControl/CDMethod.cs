@@ -14,9 +14,9 @@ namespace OALProgramControl
         public string OALCode { get; set; }
         public int CallCountInOALProgram { get; set; }
 
-        //public EXEScopeMethod ExecutableCode;   //Filip
+        //public EXEScopeMethod ExecutableCode { get; set; }   //Filip
 
-        public CDMethod(String Name, String Type)
+        public CDMethod(String Name, String Type)   // mozno treba spravit aj novy konstruktor bez Type
         {
             this.Name = Name;
             this.ReturnType = ReturnType;

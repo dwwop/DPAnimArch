@@ -63,35 +63,45 @@ public class Animation : Singleton<Animation>
         }
         OALProgram Program = OALProgram.Instance;
         string Code = selectedAnimation.Code;
-        //Dictionary<string, Dictionary<string, string>> MethodsCodes = selectedAnimation.GetMethodsCodes
+        Dictionary<string, Dictionary<string, string>> MethodsCodes = selectedAnimation.GetMethodsCodesDictionary();//
         Debug.Log("Code: ");
         Debug.Log(Code);
         
         Dictionary<string, string> ChoppedMethods = CodeChopping(Code);    //Filip
 
+        /*foreach (KeyValuePair<string, Dictionary<string, string>> classItem in MethodsCodes)   //Filip
+        {
+            Debug.Log(classItem.Key);
+            foreach (KeyValuePair<string, string> methodItem in classItem.Value)
+            {
+                Debug.Log(methodItem.Key);
+                Debug.Log(methodItem.Value);
+            }
+        }*/
 
-        /*CDClassPool Classes = new CDClassPool();    //alebo mozno zobrat z OALProgram.Instance.ExecutionSpace
-        foreach (KeyValuePair<string, string> pair in ChoppedMethods/MethodsCodes)   //Filip
-         {
-             EXEScope scope= OALParserBridge.Parse(pair.Value);
-             EXEScopeMethod methodBody = new EXEScopeMethod(scope.Commands);
+                /*CDClassPool Classes = new CDClassPool();    //alebo mozno zobrat z OALProgram.Instance.ExecutionSpace/Program.ExecutionSpace
+                foreach (KeyValuePair<string, Dictionary<string, string>> classItem in MethodsCodes)   //Filip
+                {
+                    foreach (KeyValuePair<string, string> methodItem in classItem.Value) 
+                    {
+                        EXEScope Scope = OALParserBridge.Parse(methodItem.Value);
+                        EXEScopeMethod MethodBody = new EXEScopeMethod(Scope.Commands);
 
-             string[] ClassMethodNname = pair.Key.Split(new[] { "::" }, System.StringSplitOptions.None);    //get class and method name
-             CDMethod Method = new CDMethod(ClassMethodNname[1]);
-            //pridaj tam methodBody
+                        CDMethod Method = new CDMethod(methodItem.Key);
+                        Method.ExecutableCode = MethodBody; //pridaj tam methodBody
 
-             if(Classes.ClassExists(ClassMethodNname[0])) 
-             {
-                CDClass Class = Classes.getClassByName(ClassMethodNname[0]);
-                Class.AddMethod(Method);
-             } 
-             else 
-             {
-                CDClass Class = new CDClass(ClassMethodNname[0]));
-                Class.AddMethod(Method);
-                Classes.ClassPool.Add(Class);
-             }
-         }*/
+                        if (Classes.ClassExists(classItem.Key)) 
+                        {
+                            CDClass Class = Classes.getClassByName(classItem.Key);
+                            Class.AddMethod(Method);
+                        } 
+                        else 
+                        {
+                            CDClass Class = Classes.SpawnClass(classItem.Key);  //add new Class to Classes list
+                            Class.AddMethod(Method);
+                        }
+                    }
+                }*/
 
         OALProgram.Instance.SuperScope = OALParserBridge.Parse(Code);
         ACS = new AnimationCommandStorage();
