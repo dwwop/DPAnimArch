@@ -17,7 +17,7 @@ public struct Anim
     public Anim(string animation_name)
     {
         AnimationName = animation_name;
-        Code = null;
+        Code = "";
         MethodsCodes = new Dictionary<string, Dictionary<string, string>>();//Filip
     }
 

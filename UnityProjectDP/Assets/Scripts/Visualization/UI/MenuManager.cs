@@ -68,7 +68,13 @@ public class MenuManager : Singleton<MenuManager>
     public GameObject panelStepMode;
     [SerializeField]
     public GameObject panelPlayMode;
-
+    [SerializeField]
+    private TMP_InputField sepInput;
+    [SerializeField]
+    private TMP_Text classTxt;
+    [SerializeField]
+    private TMP_Text methodTxt;
+    public Anim createdAnim;
     struct InteractiveData
     {
         public string fromClass;
@@ -117,6 +123,7 @@ public class MenuManager : Singleton<MenuManager>
         PanelInteractiveCompleted.SetActive(false);
         animationScreen.SetActive(true);
         mainScreen.SetActive(false);
+        createdAnim=new Anim("");
     }
     public void EndAnimate()
     {
@@ -159,6 +166,14 @@ public class MenuManager : Singleton<MenuManager>
                     interactiveData.fromClass = name;
                     Animation.Instance.HighlightClass(interactiveData.fromClass, true);
                     i++;
+                    if (sepInput.text.Length > 2 && !classTxt.text.Equals("class unselected") && !methodTxt.text.Equals("method unselected"))
+                    {
+                        createdAnim.SetMethodCode(classTxt.text, methodTxt.text,sepInput.text);
+                    }
+                    sepInput.interactable = false;
+                    classTxt.text = name;
+                    methodTxt.text = "method unselected";
+
 
                 }
                 else
@@ -191,6 +206,8 @@ public class MenuManager : Singleton<MenuManager>
             InteractiveText.GetComponent<DotsAnimation>().currentText = "Select target class\nfor call function\ndirectly in diagram\n.";
             interactiveData.fromMethod = methodName;
             Animation.Instance.HighlightMethod(interactiveData.fromClass, interactiveData.fromMethod, true);
+            sepInput.interactable = true;
+            sepInput.text = createdAnim.GetMethodBody(interactiveData.fromClass, interactiveData.fromMethod);
             UpdateInteractiveShow();
         }
         else
@@ -217,16 +234,27 @@ public class MenuManager : Singleton<MenuManager>
             OALProgram.Instance.RelationshipSpace.GetRelationshipByClasses(interactiveData.fromClass, interactiveData.toClass).RelationshipName, interactiveData.toClass,
             interactiveData.toMethod
         );
-
+        if (!sepInput.text.EndsWith("\n") && sepInput.text.Length > 1)
+            sepInput.text += "\n";
+        sepInput.text+= OALScriptBuilder.GetInstance().AddCall(
+            interactiveData.fromClass, interactiveData.fromMethod,
+            OALProgram.Instance.RelationshipSpace.GetRelationshipByClasses(interactiveData.fromClass, interactiveData.toClass).RelationshipName, interactiveData.toClass,
+            interactiveData.toMethod
+        );
+        createdAnim.SetMethodCode(interactiveData.fromClass, interactiveData.fromMethod, sepInput.text);
         interactiveData = new InteractiveData();
     }
 
     //Save animation to file and memory
     public void SaveAnimation()
     {
+        if (sepInput.text.Length > 2 && !classTxt.text.Equals("class unselected") && !methodTxt.text.Equals("method unselected"))
+        {
+            createdAnim.SetMethodCode(classTxt.text, methodTxt.text, sepInput.text);
+        }
         scriptCode.GetComponent<CodeHighlighter>().RemoveColors();
-        Anim newAnim = new Anim("", scriptCode.text);
-        fileLoader.SaveAnimation(newAnim);
+        createdAnim.Code = scriptCode.text;
+        fileLoader.SaveAnimation(createdAnim);
         EndAnimate();
     }
     public void SelectAnimation()
@@ -266,10 +294,13 @@ public class MenuManager : Singleton<MenuManager>
         if (interactiveData.fromClass != null)
         {
             classFromTxt.text = "Class: " + interactiveData.fromClass;
+            classTxt.text = interactiveData.fromClass;
         }
         if (interactiveData.fromMethod != null)
         {
             methodFromTxt.text = "Method: " + interactiveData.fromMethod;
+            methodTxt.text = interactiveData.fromMethod;
+            sepInput.interactable = true;
         }
         if (interactiveData.toClass != null)
         {
@@ -278,6 +309,7 @@ public class MenuManager : Singleton<MenuManager>
         if (interactiveData.toMethod != null)
         {
             PanelInteractiveCompleted.SetActive(true);
+
         }
     }
     public void UpdateSpeed()
