@@ -1,6 +1,6 @@
 ﻿//Data structure for single animation
 
-public struct Anim 
+public class Anim 
 {
     public string Code { set; get; }
     public string AnimationName { set; get; }
@@ -14,5 +14,4 @@ public struct Anim
         AnimationName = animation_name;
         Code = null;
     }
-
 }

@@ -1,3 +1,2 @@
-call from Client_Client_Client::op() to Component_Componentovany::operationB() across R1;
-call from Leaf::operationB() to Component_Componentovany::operationB() across R2;
+call from Component_Componentovany::operationB() to Leaf::operationB() across R2;
 

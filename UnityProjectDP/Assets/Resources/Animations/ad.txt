@@ -1,2 +1,2 @@
-call from Game::CreateArmy() to Warrior::Attack() across R13;
+call from Component_Componentovany::operationA() to Client_Client_Client::op() across R1;
 

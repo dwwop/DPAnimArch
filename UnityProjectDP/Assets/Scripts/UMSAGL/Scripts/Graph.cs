@@ -118,7 +118,9 @@ public class Graph : MonoBehaviour
 		units = transform.Find("Units"); //extra object to center graph
 		settings = new SugiyamaLayoutSettings();
 		settings.EdgeRoutingSettings.EdgeRoutingMode = EdgeRoutingMode.RectilinearToCenter;
-	}
+        GetComponent<Canvas>().worldCamera = Camera.main;
+
+    }
 
 	void PositionNodes()
 	{
