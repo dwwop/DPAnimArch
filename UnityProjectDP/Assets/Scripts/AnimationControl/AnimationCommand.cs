@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using UnityEngine; // Filip
 
 namespace OALProgramControl
 {
@@ -21,19 +20,6 @@ namespace OALProgramControl
             {
                 OALCall Call = ((EXECommandCall)this.DecoratedCommand).CreateOALCall();
                 yield return Animation.Instance.ResolveCallFunct(Call);
-
-               /*Color c1 = Animation.Instance.classColor;// Filip
-                Color c2 = Animation.Instance.methodColor;// Filip
-                Color c3 = Animation.Instance.relationColor;// Filip
-
-                Animation.Instance.classColor = Color.blue;// Filip
-                Animation.Instance.methodColor = Color.yellow;// Filip
-                Animation.Instance.relationColor = Color.blue;// Filip
-                yield return Animation.Instance.ResolveCallFunct(Call); // Filip
-
-                Animation.Instance.classColor = c1; // Filip
-                Animation.Instance.methodColor = c2;// Filip
-                Animation.Instance.relationColor = c3;// Filip*/
             }
             else
             {

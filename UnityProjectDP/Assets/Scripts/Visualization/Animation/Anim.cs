@@ -20,7 +20,6 @@ public struct Anim
         Code = "";
         MethodsCodes = new Dictionary<string, Dictionary<string, string>>();//Filip
     }
-
     public void SetMethodCode(string className, string methodName, string code) //Filip
     {
         Dictionary<string, string> classMethods;
@@ -42,7 +41,6 @@ public struct Anim
             }
         }
     }
-
     public string GetMethodBody(string className, string methodName) //Filip
     {
         Dictionary<string, string> classMethods;
@@ -63,7 +61,6 @@ public struct Anim
             }
         }
     }
-
     public Dictionary<string, Dictionary<string, string>> GetMethodsCodesDictionary() //Filip
     {
         return MethodsCodes;

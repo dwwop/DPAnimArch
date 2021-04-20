@@ -136,6 +136,22 @@ namespace OALProgramControl
             return Result;
         }
 
+        public CDMethod getMethodByName(String MethodName)
+        {
+            CDMethod Result = null;
+
+            foreach (CDMethod Method in this.Methods)
+            {
+                if (Method.Name.Equals(MethodName))
+                {
+                    Result = Method;
+                    break;
+                }
+            }
+
+            return Result;
+        }
+
         public int InstanceCount()
         {
             return this.Instances.Count;

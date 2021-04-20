@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.IO; //Filip
 using UnityEngine;
 using OALProgramControl;
 using TMPro;
@@ -62,48 +61,39 @@ public class Animation : Singleton<Animation>
                 selectedAnimation = animations[0];
         }
         OALProgram Program = OALProgram.Instance;
+        Dictionary<string, Dictionary<string, string>> MethodsCodes = selectedAnimation.GetMethodsCodesDictionary();//Filip
         string Code = selectedAnimation.Code;
-        Dictionary<string, Dictionary<string, string>> MethodsCodes = selectedAnimation.GetMethodsCodesDictionary();//
         Debug.Log("Code: ");
         Debug.Log(Code);
-        
-        Dictionary<string, string> ChoppedMethods = CodeChopping(Code);    //Filip
 
-        /*foreach (KeyValuePair<string, Dictionary<string, string>> classItem in MethodsCodes)   //Filip
+        /*CDClassPool ProgramClasses = Program.ExecutionSpace;    //Filip
+        foreach (KeyValuePair<string, Dictionary<string, string>> classItem in MethodsCodes)   //Filip
         {
-            Debug.Log(classItem.Key);
+            CDClass Class = ProgramClasses.getClassByName(classItem.Key);
+
             foreach (KeyValuePair<string, string> methodItem in classItem.Value)
             {
-                Debug.Log(methodItem.Key);
-                Debug.Log(methodItem.Value);
+                //mozno dat do Anim odstranovanie zatvorky
+                int index = methodItem.Key.IndexOf("("); 
+                string methodName = methodItem.Key.Substring(0, index); // remove "(...)" from method name
+                CDMethod Method = Class.getMethodByName(methodName);
+
+                //Debug.Log("telo:" + methodItem.Value);//
+                //ak je methodItem.Value prazdny retazec tak executablecode nastav na null inak parsuj
+                if (methodItem.Value.Equals(""))
+                {
+                    Method.ExecutableCode = null;
+                }
+                else
+                {
+                    EXEScope Scope = OALParserBridge.Parse(methodItem.Value);
+                    EXEScopeMethod MethodBody = new EXEScopeMethod(Scope.Commands);
+                    Method.ExecutableCode = MethodBody;
+                }
             }
         }*/
 
-                /*CDClassPool Classes = new CDClassPool();    //alebo mozno zobrat z OALProgram.Instance.ExecutionSpace/Program.ExecutionSpace
-                foreach (KeyValuePair<string, Dictionary<string, string>> classItem in MethodsCodes)   //Filip
-                {
-                    foreach (KeyValuePair<string, string> methodItem in classItem.Value) 
-                    {
-                        EXEScope Scope = OALParserBridge.Parse(methodItem.Value);
-                        EXEScopeMethod MethodBody = new EXEScopeMethod(Scope.Commands);
-
-                        CDMethod Method = new CDMethod(methodItem.Key);
-                        Method.ExecutableCode = MethodBody; //pridaj tam methodBody
-
-                        if (Classes.ClassExists(classItem.Key)) 
-                        {
-                            CDClass Class = Classes.getClassByName(classItem.Key);
-                            Class.AddMethod(Method);
-                        } 
-                        else 
-                        {
-                            CDClass Class = Classes.SpawnClass(classItem.Key);  //add new Class to Classes list
-                            Class.AddMethod(Method);
-                        }
-                    }
-                }*/
-
-        OALProgram.Instance.SuperScope = OALParserBridge.Parse(Code);
+        OALProgram.Instance.SuperScope = OALParserBridge.Parse(Code); //Method.ExecutableCode dame namiesto OALParserBridge.Parse(Code) pre metodu ktora bude zacinat
         ACS = new AnimationCommandStorage();
         bool temp = Program.PreExecute(ACS);
         Debug.Log("Done executing: " + temp.ToString());
@@ -143,39 +133,6 @@ public class Animation : Singleton<Animation>
         {
             this.AnimationIsRunning = false;
         }
-    }
-
-    public Dictionary<string, string> CodeChopping(string Code) //Filip
-    {
-        Dictionary<string, string> ChoppedMethods = new Dictionary<string, string>();
-
-        using (StringReader reader = new StringReader(Code))
-        {
-            int i;
-            string name;
-            string value;
-
-            // Loop over the lines in the string
-            for (string line = reader.ReadLine(); line != null; line = reader.ReadLine())
-            {
-                if (line != "")
-                {
-                    i = line.IndexOf("()", 10);
-                    name = line.Substring(10, i - 10);
-
-                    if (!ChoppedMethods.TryGetValue(name, out value))
-                    {
-                        ChoppedMethods.Add(name, line);
-                    }
-                    else 
-                    {
-                        value = value + System.Environment.NewLine + line;
-                        ChoppedMethods[name] = value;
-                    }
-                }  
-            }
-        }
-        return ChoppedMethods;
     }
 
     public void IncrementBarrier()
@@ -218,7 +175,7 @@ public class Animation : Singleton<Animation>
     }
     public IEnumerator AnimateFill(OALCall Call)
     {
-        Debug.Log("Filip, hrana: " + Call.RelationshipName); //Filip
+        //Debug.Log("Filip, hrana: " + Call.RelationshipName); //Filip
         GameObject edge = classDiagram.FindEdge(Call.RelationshipName);
         if (edge != null)
         {
@@ -262,7 +219,7 @@ public class Animation : Singleton<Animation>
             if (isToBeHighlighted)
             {
                 bh.HighlightBackground();
-                Debug.Log("Filip, classa: " + className); //Filip
+                //Debug.Log("Filip, classa: " + className); //Filip
             }
             else
             {
@@ -292,7 +249,7 @@ public class Animation : Singleton<Animation>
             if (isToBeHighlighted)
             {
                 th.HighlightLine(methodName);
-                Debug.Log("Filip, metoda: " + methodName); //Filip
+                //Debug.Log("Filip, metoda: " + methodName); //Filip
             }
             else
             {

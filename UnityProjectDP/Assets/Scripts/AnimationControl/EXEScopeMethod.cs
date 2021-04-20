@@ -1,30 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace OALProgramControl     //Filip
+namespace OALProgramControl
 {
     public class EXEScopeMethod : EXEScope
     {
-        private List<EXEPrimitiveVariable> PrimitiveVariables;
-        private List<EXEReferencingVariable> ReferencingVariables;
-        private List<EXEReferencingSetVariable> SetReferencingVariables;
-        private EXEScope SuperScope { get; set; }
-        public List<EXECommand> Commands;
-
-        public OALProgram OALProgram;
-
-        public EXEScopeMethod(List<EXECommand> Commands)
+        public EXEScopeMethod(List<EXECommand> Commands) : base()
         {
-            this.PrimitiveVariables = new List<EXEPrimitiveVariable>();
-            this.ReferencingVariables = new List<EXEReferencingVariable>();
-            this.SetReferencingVariables = new List<EXEReferencingSetVariable>();
-            this.SuperScope = null;
             this.Commands = Commands;
-
-            this.OALProgram = null;
         }
 
-        public override Boolean SynchronizedExecute(OALProgram OALProgram, EXEScope Scope)//asi netreba
+        public override Boolean SynchronizedExecute(OALProgram OALProgram, EXEScope Scope)
         {
             Boolean Success = this.Execute(OALProgram, Scope);
             return Success;
@@ -32,19 +18,40 @@ namespace OALProgramControl     //Filip
 
         public override Boolean Execute(OALProgram OALProgram, EXEScope Scope)
         {
-            //this.SuperScope = Scope;
+            this.SetSuperScope(Scope);
             this.OALProgram = OALProgram;
 
             Boolean Success = true;
 
             foreach (EXECommand Command in this.Commands)
             {
-                Success = Command.SynchronizedExecute(OALProgram, this);
+                Success = Command.SynchronizedExecute(OALProgram, this); 
                 if (!Success)
                 {
                     break;
                 }
             }
+            this.SetSuperScope(null);
+
+            return Success;
+        }
+
+        public override Boolean PreExecute(AnimationCommandStorage ACS, OALProgram OALProgram, EXEScope Scope)
+        {
+            this.SetSuperScope(Scope);
+            this.OALProgram = OALProgram;
+
+            Boolean Success = true;
+
+            foreach (EXECommand Command in this.Commands)
+            {
+                Success = Command.PreExecute(ACS, OALProgram, this);
+                if (!Success)
+                {
+                    break;
+                }
+            }
+            this.SetSuperScope(null);
 
             return Success;
         }

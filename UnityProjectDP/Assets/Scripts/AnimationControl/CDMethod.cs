@@ -13,17 +13,16 @@ namespace OALProgramControl
         public List<CDParameter> Parameters { get; set; }
         public string OALCode { get; set; }
         public int CallCountInOALProgram { get; set; }
+        public EXEScopeMethod ExecutableCode { get; set; }
 
-        //public EXEScopeMethod ExecutableCode { get; set; }   //Filip
-
-        public CDMethod(String Name, String Type)   // mozno treba spravit aj novy konstruktor bez Type
+        public CDMethod(String Name, String Type)
         {
             this.Name = Name;
             this.ReturnType = ReturnType;
             this.CallCountInOALProgram = 0;
             this.OALCode = "";
             this.Parameters = new List<CDParameter>();
-            //this.ExecutableCode = null; //Filip
+            this.ExecutableCode = null;
         }
         public void IncementCallCount()
         {
