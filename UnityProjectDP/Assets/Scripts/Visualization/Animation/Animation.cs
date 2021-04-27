@@ -61,32 +61,30 @@ public class Animation : Singleton<Animation>
                 selectedAnimation = animations[0];
         }
         OALProgram Program = OALProgram.Instance;
-        Dictionary<string, Dictionary<string, string>> MethodsCodes = selectedAnimation.GetMethodsCodesDictionary();//Filip
-        string Code = selectedAnimation.Code;
+        List<AnimClass> MethodsCodes = selectedAnimation.GetMethodsCodesList();//Filip
+        string Code = selectedAnimation.Code;   //toto potom mozno pojde prec
         Debug.Log("Code: ");
         Debug.Log(Code);
 
         /*CDClassPool ProgramClasses = Program.ExecutionSpace;    //Filip
-        foreach (KeyValuePair<string, Dictionary<string, string>> classItem in MethodsCodes)   //Filip
+        foreach (AnimClass classItem in MethodsCodes)   //Filip
         {
-            CDClass Class = ProgramClasses.getClassByName(classItem.Key);
+            CDClass Class = ProgramClasses.getClassByName(classItem.Name);
 
-            foreach (KeyValuePair<string, string> methodItem in classItem.Value)
+            foreach (AnimMethod methodItem in classItem.Methods)
             {
-                //mozno dat do Anim odstranovanie zatvorky
-                int index = methodItem.Key.IndexOf("("); 
-                string methodName = methodItem.Key.Substring(0, index); // remove "(...)" from method name
-                CDMethod Method = Class.getMethodByName(methodName);
+                CDMethod Method = Class.getMethodByName(methodItem.Name);
 
-                //Debug.Log("telo:" + methodItem.Value);//
-                //ak je methodItem.Value prazdny retazec tak executablecode nastav na null inak parsuj
-                if (methodItem.Value.Equals(""))
+                //Debug.Log("meno f:" + methodItem.Name);//
+                //Debug.Log("telo:" + methodItem.Code);//
+                //ak je methodItem.Code prazdny retazec tak executablecode nastav na null inak parsuj
+                if (methodItem.Code.Equals(""))
                 {
                     Method.ExecutableCode = null;
                 }
                 else
                 {
-                    EXEScope Scope = OALParserBridge.Parse(methodItem.Value);
+                    EXEScope Scope = OALParserBridge.Parse(methodItem.Code);
                     EXEScopeMethod MethodBody = new EXEScopeMethod(Scope.Commands);
                     Method.ExecutableCode = MethodBody;
                 }

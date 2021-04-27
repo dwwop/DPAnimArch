@@ -1,4 +1,2 @@
-call from AST::execute() to ASTLeaf::getType() across R4;
-if(2>3)
-call from ASTLeaf::getType() to OperationEvaluator::tellType() across R7;
-end if;
+call from AST::printPretty() to OperationEvaluator::tellType() across R1;
+
