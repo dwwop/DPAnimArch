@@ -10,7 +10,7 @@ public class FileLoader : MonoBehaviour
     void Start()
     {
         FileBrowser.Filter[] filters=new FileBrowser.Filter[2];
-        filters[0] = new FileBrowser.Filter("Text Files", ".json");
+        filters[0] = new FileBrowser.Filter("JSON files", ".json");
         filters[1] = new FileBrowser.Filter("XML files", ".xml");
         FileBrowser.SetFilters(true, filters);
         FileBrowser.SetDefaultFilter(".json");
