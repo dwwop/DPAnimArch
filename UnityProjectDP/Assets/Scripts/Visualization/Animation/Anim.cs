@@ -7,7 +7,9 @@ using UnityEngine;  //Filip
 [System.Serializable]
 public struct Anim
 {
+    [SerializeField]
     public string Code; //{ set; get; }
+    [SerializeField]
     public string AnimationName; //{ set; get; }
     [SerializeField]
     private List<AnimClass> MethodsCodes;//Filip
@@ -86,14 +88,14 @@ public struct Anim
     {
         return MethodsCodes;
     }
-    public void SaveCode()
+    public void SaveCode(string path)
     {
         string text = JsonUtility.ToJson(this);
-        File.WriteAllText(@"C:\Users\garah\Downloads\test.json", text);
+        File.WriteAllText(path, text);
     }
-    public void LoadCode()
+    public void LoadCode(string path)
     {
-        string text = File.ReadAllText(@"C:\Users\garah\Downloads\test.json");
+        string text = File.ReadAllText(path);
         Anim anim = JsonUtility.FromJson<Anim>(text);
         MethodsCodes = anim.GetMethodsCodesList();
         Code = anim.Code;   //zatial davame aj code

@@ -10,10 +10,10 @@ public class FileLoader : MonoBehaviour
     void Start()
     {
         FileBrowser.Filter[] filters=new FileBrowser.Filter[2];
-        filters[0] = new FileBrowser.Filter("Text Files", ".txt");
+        filters[0] = new FileBrowser.Filter("Text Files", ".json");
         filters[1] = new FileBrowser.Filter("XML files", ".xml");
         FileBrowser.SetFilters(true, filters);
-        FileBrowser.SetDefaultFilter(".txt");
+        FileBrowser.SetDefaultFilter(".json");
         FileBrowser.SetExcludedExtensions(".lnk", ".tmp", ".zip", ".rar", ".exe");
         FileBrowser.AddQuickLink("Resources", @"Assets\Resources\", null);
     }
@@ -35,7 +35,7 @@ public class FileLoader : MonoBehaviour
         }
         else
         {
-            FileBrowser.SetDefaultFilter(".txt");
+            FileBrowser.SetDefaultFilter(".json");
         }
         yield return FileBrowser.WaitForLoadDialog(false, path,tooltip,"Load");
 
@@ -51,8 +51,9 @@ public class FileLoader : MonoBehaviour
             //byte[] bytes = FileBrowserHelpers.ReadBytesFromFile(FileBrowser.Result)
             if (type.Equals("Animation"))
             {
-                string code = FileBrowserHelpers.ReadTextFromFile(FileBrowser.Result);
-                Anim loadedAnim = new Anim(FileBrowserHelpers.GetFilename(FileBrowser.Result).Replace(".txt", ""), code);
+                //string code = FileBrowserHelpers.ReadTextFromFile(FileBrowser.Result);
+                Anim loadedAnim = new Anim(FileBrowserHelpers.GetFilename(FileBrowser.Result).Replace(".json", ""),"");
+                loadedAnim.LoadCode(FileBrowser.Result);
                 //loadedAnim.Code = GetCleanCode(loadedAnim.Code);
                 AnimationData.Instance.AddAnim(loadedAnim);
                 AnimationData.Instance.selectedAnim = loadedAnim;
@@ -73,15 +74,16 @@ public class FileLoader : MonoBehaviour
     }
     IEnumerator SaveAnimationCoroutine(Anim newAnim)
     {
-        FileBrowser.SetDefaultFilter(".txt");
+        FileBrowser.SetDefaultFilter(".json");
         yield return FileBrowser.WaitForSaveDialog(false, @"Assets\Resources\Animations\", "Save Animation", "Save");
         if (FileBrowser.Success)
         {
             string path = FileBrowser.Result;
             string fileName = FileBrowserHelpers.GetFilename(FileBrowser.Result);
-            newAnim.AnimationName = fileName.Replace(".txt", "");
+            newAnim.AnimationName = FileBrowserHelpers.GetFilename(FileBrowser.Result).Replace(".json", "");
+            newAnim.SaveCode(path);
             //FileBrowserHelpers.CreateFileInDirectory(@"Assets\Resources\Animations\",fileName);
-            HandleTextFile.WriteString(path, newAnim.Code/*GetCleanCode(newAnim.Code)*/);
+            //HandleTextFile.WriteString(path, newAnim.Code/*GetCleanCode(newAnim.Code)*/);
             AnimationData.Instance.AddAnim(newAnim);
             AnimationData.Instance.selectedAnim = newAnim;
             MenuManager.Instance.UpdateAnimations();
