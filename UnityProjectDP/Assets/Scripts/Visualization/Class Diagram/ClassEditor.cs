@@ -10,6 +10,11 @@ public class ClassEditor : Singleton<ClassEditor>
     bool active = false;
     GameObject node1;
     GameObject node2;
+
+    public GameObject methodMenu;
+    public GameObject attributeMenu;
+    public AttributeMenu atrMenu;
+    public MethodMenu mtdMenu;
     public void InitializeCreation()
     {
         graph= ClassDiagram.Instance.CreateGraph();

@@ -146,6 +146,10 @@ public class ClassDiagram : Singleton<ClassDiagram>
                         continue;
                     }
                     TempCDClass.AddAttribute(new CDAttribute(CurrentAttribute.Name, EXETypes.ConvertEATypeName(AttributeType)));
+                    if (CurrentClass.attributes == null)
+                    {
+                        CurrentClass.attributes = new List<Attribute>();
+                    }
                 }
             }
 
@@ -294,7 +298,6 @@ public class ClassDiagram : Singleton<ClassDiagram>
         Class result=null;
         foreach(Class c in DiagramClasses)
         {
-            
             if (c.Name.Equals(searchedClass))
             {
                 result = c;
@@ -302,7 +305,9 @@ public class ClassDiagram : Singleton<ClassDiagram>
                 return result;
             }
         }
+        
         Debug.Log("Class " + searchedClass+ " not found");
+
         return result;
     }
     public Method FindMethodByName(String searchedClass,String searchedMethod)
@@ -311,7 +316,11 @@ public class ClassDiagram : Singleton<ClassDiagram>
         Class c = FindClassByName(searchedClass);
         if(c==null)
             return null;
-        foreach(Method m in c.methods)
+        if (c.Methods == null)
+        {
+            return null;
+        }
+        foreach (Method m in c.Methods)
         {
             if (m.Name.Equals(searchedMethod))
             {
@@ -321,6 +330,70 @@ public class ClassDiagram : Singleton<ClassDiagram>
         }
         Debug.Log("Method " + searchedMethod + "not found");
         return result;
+    }
+    public bool AddMethod(String targetClass, Method methodToAdd)
+    {
+        Class c = FindClassByName(targetClass);
+        if (c == null)
+            return false;
+        else
+        {
+            if (FindMethodByName(targetClass, methodToAdd.Name)==null)
+            {
+                if (c.Methods == null)
+                {
+                    c.Methods = new List<Method>();
+                }
+                c.Methods.Add(methodToAdd);
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        return true;
+    }
+    public Attribute FindAttributeByName(String searchedClass, String attribute)
+    {
+        Attribute result = null;
+        Class c = FindClassByName(searchedClass);
+        if (c == null)
+            return null;
+        if (c.Attributes == null)
+        {
+            return null;
+        }
+        foreach (Attribute atr in c.Attributes)
+        {
+            if (atr.Name.Equals(attribute))
+            {
+                result = atr;
+                return result;
+            }
+        }
+        Debug.Log("Method " + attribute + "not found");
+        return result;
+    }
+    public bool AddAtr(String targetClass, Attribute atr)
+    {
+        Class c = FindClassByName(targetClass);
+        if (c == null)
+            return false;
+        else
+        {
+            if (FindAttributeByName(targetClass, atr.Name) == null)
+            {
+                if (c.Attributes == null)
+                {
+                    c.Attributes = new List<Attribute>();
+                }
+                c.Attributes.Add(atr);
+            }
+            else return false;
+
+        }
+        return true;
     }
     public GameObject FindNode(String name)
     {

@@ -109,6 +109,10 @@ public class MenuManager : Singleton<MenuManager>
     {
         animationsDropdown.value= animationsDropdown.options.FindIndex(option => option.text == name);
     }
+    public void InitializeAnim()
+    {
+        createdAnim = new Anim("");
+    }
     public void StartAnimate()
     {
         InteractiveText.GetComponent<DotsAnimation>().currentText= "Select source class\n for call function\ndirectly in diagram\n.";
@@ -123,7 +127,6 @@ public class MenuManager : Singleton<MenuManager>
         PanelInteractiveCompleted.SetActive(false);
         animationScreen.SetActive(true);
         mainScreen.SetActive(false);
-        createdAnim=new Anim("");
     }
     public void EndAnimate()
     {

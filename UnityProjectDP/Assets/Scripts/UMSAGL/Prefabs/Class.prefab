@@ -90,6 +90,7 @@ GameObject:
   - component: {fileID: 114752474515285174}
   - component: {fileID: 54018352948757740}
   - component: {fileID: 7765813031263570784}
+  - component: {fileID: 2398271712557318398}
   m_Layer: 5
   m_Name: Class
   m_TagString: Untagged
@@ -249,6 +250,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   methodsText: {fileID: 8679096439739462296}
+--- !u!114 &2398271712557318398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226358218867430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 911f50fff8eddf64f971f1410a89f967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attributeTxt: {fileID: 2879770495493647124}
+  mtdTxt: {fileID: 8679096439739462296}
+  classTxt: {fileID: 1241997347917799074}
 --- !u!1 &1634513748961536
 GameObject:
   m_ObjectHideFlags: 0
@@ -1181,7 +1197,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5612973806838268956}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2398271712557318398}
+        m_MethodName: OpenAttributeMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!223 &5572654938870500922
 Canvas:
   m_ObjectHideFlags: 0
@@ -1496,7 +1523,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3917757873258551267}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2398271712557318398}
+        m_MethodName: OpenMethodMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!223 &4593292128662863825
 Canvas:
   m_ObjectHideFlags: 0
