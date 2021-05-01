@@ -5,9 +5,8 @@ namespace OALProgramControl
 {
     public class EXEScopeMethod : EXEScope
     {
-        public EXEScopeMethod(List<EXECommand> Commands) : base()
+        public EXEScopeMethod() : base()
         {
-            this.Commands = Commands;
         }
 
         public override Boolean SynchronizedExecute(OALProgram OALProgram, EXEScope Scope)

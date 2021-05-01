@@ -85,7 +85,7 @@ namespace OALProgramControl
 
             this.ThreadSyncer.RegisterThread(1);
 
-            Result = this.SuperScope.PreExecute(ACS, this, this.SuperScope);
+            Result = this.SuperScope.PreExecute(ACS, this, null);   //predtym bol v tretom parametri this.Superscope
 
             this.ThreadSyncer.UnregisterThread();
             this.SuperScope.ClearVariablesRecursive();

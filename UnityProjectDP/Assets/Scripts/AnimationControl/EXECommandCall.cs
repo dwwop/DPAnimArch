@@ -38,15 +38,13 @@ namespace OALProgramControl
             OALProgram.ThreadSyncer.RequestStep(this, Scope, null);
 
             //Filip, ak mas null v executablecode tak vrat true inak toto dole
-            EXEScopeMethod ExecutableCode = OALProgram.ExecutionSpace.getClassByName(CalledClass).getMethodByName(CalledMethod).ExecutableCode;
+            EXEScopeMethod ExecutableCode = OALProgram.ExecutionSpace.getClassByName(this.CalledClass).getMethodByName(this.CalledMethod).ExecutableCode;
             if (ExecutableCode != null)
             {
                 return ExecutableCode.SynchronizedExecute(OALProgram, Scope);
             }
-            else
-            {
-                return true;
-            }
+            
+            return true;
         }
 
         public override Boolean PreExecute(AnimationCommandStorage ACS, OALProgram OALProgram, EXEScope Scope)
@@ -56,15 +54,13 @@ namespace OALProgramControl
             //ACS.AddAnimationStep(new AnimationCommand(Scope, this));
 
             //Filip, ak mas null v executablecode tak vrat true inak toto dole
-            EXEScopeMethod ExecutableCode = OALProgram.ExecutionSpace.getClassByName(CalledClass).getMethodByName(CalledMethod).ExecutableCode;
+            EXEScopeMethod ExecutableCode = OALProgram.ExecutionSpace.getClassByName(this.CalledClass).getMethodByName(this.CalledMethod).ExecutableCode;
             if (ExecutableCode != null)
             {
                 return ExecutableCode.PreExecute(ACS, OALProgram, Scope);
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
 
         public OALCall CreateOALCall()

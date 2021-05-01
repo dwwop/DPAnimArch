@@ -99,6 +99,5 @@ public struct Anim
         Anim anim = JsonUtility.FromJson<Anim>(text);
         MethodsCodes = anim.GetMethodsCodesList();
         Code = anim.Code;   //zatial davame aj code
-        AnimationName = anim.AnimationName; //zatial davame
     }
 }

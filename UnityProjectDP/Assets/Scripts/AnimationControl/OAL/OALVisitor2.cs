@@ -14,13 +14,13 @@ namespace AnimationControl.OAL
 {
     public class OALVisitor2:OALBaseVisitor<object>
     {
-        public EXEScope globalExeScope;
+        public EXEScopeMethod globalExeScope;
         private Stack<EXEScope> stackEXEScope;
         private Stack<EXEASTNode> stackEXEASTNode;
 
         public OALVisitor2()
         {
-            this.globalExeScope = new EXEScope();
+            this.globalExeScope = new EXEScopeMethod();
             this.stackEXEASTNode = new Stack<EXEASTNode>();
             this.stackEXEScope = new Stack<EXEScope>();
             this.stackEXEScope.Push(this.globalExeScope);         

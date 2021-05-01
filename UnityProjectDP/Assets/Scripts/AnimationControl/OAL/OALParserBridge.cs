@@ -11,7 +11,7 @@ namespace Assets.Scripts.AnimationControl.OAL
 {
     class OALParserBridge
     {
-        public static EXEScope Parse(String Code)
+        public static EXEScopeMethod Parse(String Code)
         {
             OALParser parser = null;
             try

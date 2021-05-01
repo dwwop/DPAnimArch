@@ -66,31 +66,40 @@ public class Animation : Singleton<Animation>
         Debug.Log("Code: ");
         Debug.Log(Code);
 
-        /*CDClassPool ProgramClasses = Program.ExecutionSpace;    //Filip
+        /*CDMethod StartMethod = null;//
+        bool isFirst = true;//
         foreach (AnimClass classItem in MethodsCodes)   //Filip
         {
-            CDClass Class = ProgramClasses.getClassByName(classItem.Name);
+            CDClass Class = Program.ExecutionSpace.getClassByName(classItem.Name);
 
             foreach (AnimMethod methodItem in classItem.Methods)
             {
                 CDMethod Method = Class.getMethodByName(methodItem.Name);
 
-                //Debug.Log("meno f:" + methodItem.Name);//
-                //Debug.Log("telo:" + methodItem.Code);//
                 //ak je methodItem.Code prazdny retazec tak executablecode nastav na null inak parsuj
-                if (methodItem.Code.Equals(""))
+                if (!methodItem.Code.Equals(""))
                 {
-                    Method.ExecutableCode = null;
-                }
-                else
-                {
-                    EXEScope Scope = OALParserBridge.Parse(methodItem.Code);
-                    EXEScopeMethod MethodBody = new EXEScopeMethod(Scope.Commands);
+                    //Method.ExecutableCode = null;
+                    EXEScopeMethod MethodBody = OALParserBridge.Parse(methodItem.Code);
                     Method.ExecutableCode = MethodBody;
                 }
+                //else
+                //{
+                //    EXEScopeMethod MethodBody = OALParserBridge.Parse(methodItem.Code);
+                //    Method.ExecutableCode = MethodBody;
+                //}
+
+                if (isFirst)//
+                {
+                    StartMethod = Method;
+                    isFirst = false;
+                }//
             }
         }*/
 
+        //najdeme startMethod z daneho class stringu a method stringu, ak startMethod.ExecutableCode je null tak return null alebo yield break
+
+        //OALProgram.Instance.SuperScope =  StartMethod.ExecutableCode;//
         OALProgram.Instance.SuperScope = OALParserBridge.Parse(Code); //Method.ExecutableCode dame namiesto OALParserBridge.Parse(Code) pre metodu ktora bude zacinat
         ACS = new AnimationCommandStorage();
         bool temp = Program.PreExecute(ACS);
@@ -127,6 +136,7 @@ public class Animation : Singleton<Animation>
                 }
             }
         }
+        Debug.Log("Over");
         lock (this.AnimationBoolLock)
         {
             this.AnimationIsRunning = false;
