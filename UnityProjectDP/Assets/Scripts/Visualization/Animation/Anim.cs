@@ -88,6 +88,17 @@ public struct Anim
     {
         return MethodsCodes;
     }
+    public List<AnimMethod> GetMethodsByClassName(string className) //Filip
+    {
+        foreach (AnimClass classItem in MethodsCodes)
+        {
+            if (classItem.Name.Equals(className))
+            {
+                return classItem.Methods;
+            }
+        }
+        return null;
+    }
     public void SaveCode(string path)
     {
         string text = JsonUtility.ToJson(this);
