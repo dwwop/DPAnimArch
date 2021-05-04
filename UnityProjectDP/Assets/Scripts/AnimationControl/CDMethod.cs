@@ -18,7 +18,7 @@ namespace OALProgramControl
         public CDMethod(String Name, String Type)
         {
             this.Name = Name;
-            this.ReturnType = ReturnType;
+            this.ReturnType = Type;
             this.CallCountInOALProgram = 0;
             this.OALCode = "";
             this.Parameters = new List<CDParameter>();

@@ -24,7 +24,7 @@ public class DotsAnimation : MonoBehaviour
         if (timeWaited > speed)
         {
             timeWaited = 0;
-            if (dots < 6)
+            if (dots < maxDots)
             {
                 affectedText.text= currentText+ string.Concat(Enumerable.Repeat(".", dots));
                 dots++;

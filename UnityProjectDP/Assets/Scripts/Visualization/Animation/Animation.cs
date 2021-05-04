@@ -28,6 +28,9 @@ public class Animation : Singleton<Animation>
     public bool nextStep=false;
     private bool prevStep = false;
     private List<GameObject> Fillers;
+
+    public string startClassName;
+    public string startMethodName;
     private void Awake()
     {
         classDiagram = GameObject.Find("ClassDiagram").GetComponent<ClassDiagram>();
@@ -390,18 +393,21 @@ public class Animation : Singleton<Animation>
     {
         isPaused = false;
         StopAllCoroutines();
-        foreach (Class c in ClassDiagram.Instance.GetClassList())
-        {
-            HighlightClass(c.Name, false);
-            foreach (Method m in c.Methods)
+        if(ClassDiagram.Instance.GetClassList()!=null)
+            foreach (Class c in ClassDiagram.Instance.GetClassList())
             {
-                HighlightMethod(c.Name, m.Name, false);
+                HighlightClass(c.Name, false);
+                if(c.Methods!=null)
+                    foreach (Method m in c.Methods)
+                    {
+                        HighlightMethod(c.Name, m.Name, false);
+                    }
             }
-        }
-        foreach (Relation r in ClassDiagram.Instance.GetRelationList())
-        {
-            HighlightEdge(r.OALName, false);
-        }
+        if(ClassDiagram.Instance.GetRelationList()!=null)
+            foreach (Relation r in ClassDiagram.Instance.GetRelationList())
+            {
+                HighlightEdge(r.OALName, false);
+            }
         AnimationIsRunning = false;
     }
 

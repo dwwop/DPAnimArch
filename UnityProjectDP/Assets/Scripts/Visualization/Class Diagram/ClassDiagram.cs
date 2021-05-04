@@ -345,6 +345,11 @@ public class ClassDiagram : Singleton<ClassDiagram>
                     c.Methods = new List<Method>();
                 }
                 c.Methods.Add(methodToAdd);
+                if (OALProgram.Instance.ExecutionSpace.ClassExists(targetClass))
+                {
+                    OALProgram.Instance.ExecutionSpace.getClassByName(targetClass).AddMethod(new CDMethod(methodToAdd.Name, methodToAdd.ReturnValue));
+                }
+                
             }
             else
             {
