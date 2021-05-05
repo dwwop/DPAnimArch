@@ -389,6 +389,8 @@ public class MenuManager : Singleton<MenuManager>
     }
     public void SelectPlayClass(string name)
     {
+        Animation.Instance.UnhighlightAll();
+        Animation.Instance.HighlightClass(name, true);
         playIntroTexts.SetActive(false);
         Animation.Instance.startClassName = name;
         foreach (Button button in playBtns)
@@ -420,9 +422,20 @@ public class MenuManager : Singleton<MenuManager>
         }
         playIntroTexts.SetActive(true);
         Debug.Log("Selected class: " + Animation.Instance.startClassName + "Selected Method: " + Animation.Instance.startMethodName);
+        Animation.Instance.HighlightClass(Animation.Instance.startClassName, false);
     }
     public void UnshowAnimation()
     {
         Animation.Instance.UnhighlightAll();
+    }
+    public void EndPlay()
+    {
+        isPlaying = false;
+        foreach (Button button in playBtns)
+        {
+            button.gameObject.SetActive(false);
+        }
+        Animation.Instance.startClassName = "";
+        Animation.Instance.startMethodName = "";
     }
 }
