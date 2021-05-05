@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace OALProgramControl
 {
@@ -56,4 +55,3 @@ namespace OALProgramControl
         }
     }
 }
-
