@@ -75,6 +75,10 @@ public class MenuManager : Singleton<MenuManager>
     [SerializeField]
     private TMP_Text methodTxt;
     public Anim createdAnim;
+    public bool isPlaying = false;
+    public Button[] playBtns;
+    public GameObject playIntroTexts;
+    public List<AnimMethod> animMethods;
     struct InteractiveData
     {
         public string fromClass;
@@ -139,6 +143,7 @@ public class MenuManager : Singleton<MenuManager>
         introScreen.SetActive(true);
         PanelInteractiveCompleted.SetActive(false);
         PanelInteractiveShow.SetActive(false);
+
     }
     public void SelectClass(String name)
     {
@@ -332,8 +337,14 @@ public class MenuManager : Singleton<MenuManager>
         }
         else
         {
+            isPlaying = true;
             panelAnimationPlay.SetActive(true);
             mainScreen.SetActive(false);
+            foreach (Button button in playBtns)
+            {
+                button.gameObject.SetActive(false);
+            }
+            playIntroTexts.SetActive(true);
             if (Animation.Instance.standardPlayMode)
             {
                 panelStepMode.SetActive(false);
@@ -375,6 +386,40 @@ public class MenuManager : Singleton<MenuManager>
             panelStepMode.SetActive(false);
             panelPlayMode.SetActive(true);
         }
+    }
+    public void SelectPlayClass(string name)
+    {
+        playIntroTexts.SetActive(false);
+        Animation.Instance.startClassName = name;
+        foreach (Button button in playBtns)
+        {
+            button.gameObject.SetActive(false);
+        }
+        Class selectedClass = ClassDiagram.Instance.FindClassByName(name);
+        animMethods = AnimationData.Instance.selectedAnim.GetMethodsByClassName(name);
+        int i = 0;
+        if (animMethods != null)
+        {
+            foreach (AnimMethod m in animMethods )
+            {
+                if (i < 4)
+                {
+                    playBtns[i].GetComponentInChildren<TMP_Text>().text = m.Name + "()";
+                    playBtns[i].gameObject.SetActive(true);
+                    i++;
+                }
+            }
+        }
+    }
+    public void SelectPlayMethod(int id)
+    {
+        Animation.Instance.startMethodName = animMethods[id].Name;
+        foreach (Button button in playBtns)
+        {
+            button.gameObject.SetActive(false);
+        }
+        playIntroTexts.SetActive(true);
+        Debug.Log("Selected class: " + Animation.Instance.startClassName + "Selected Method: " + Animation.Instance.startMethodName);
     }
     public void UnshowAnimation()
     {

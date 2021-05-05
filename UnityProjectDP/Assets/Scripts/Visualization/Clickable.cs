@@ -63,6 +63,11 @@ public class Clickable : MonoBehaviour
         {
             MenuManager.Instance.SelectClass(this.gameObject.name);
         }
+        if (Input.GetMouseButtonDown(0) && MenuManager.Instance.isPlaying == true)
+        {
+            MenuManager.Instance.SelectPlayClass(this.gameObject.name);
+            Debug.Log("selecting class");
+        }
     }
     private bool IsMouseOverUI()
     {
