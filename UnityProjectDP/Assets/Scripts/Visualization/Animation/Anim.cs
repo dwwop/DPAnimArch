@@ -1,7 +1,9 @@
 ﻿//Data structure for single animation
 
+using OALProgramControl;    //Filip
 using System.Collections.Generic;   //Filip
 using System.IO;  //Filip
+using System.Linq;//Filip
 using UnityEngine;  //Filip
 
 [System.Serializable]
@@ -29,45 +31,68 @@ public struct Anim
     {
         int index = methodName.IndexOf("(");
         methodName = methodName.Substring(0, index); // remove "(...)" from method name
-        bool classExist = false;
 
-        foreach (AnimClass classItem in MethodsCodes)
+        if (string.IsNullOrWhiteSpace(code))
         {
-            if (classItem.Name.Equals(className))
+            AnimClass classItem = MethodsCodes.FirstOrDefault(c => c.Name.Equals(className));   //alebo SingleOrDefault
+            if (classItem != null)
             {
-                classExist = true;
-                bool methodExist = false;
+                AnimMethod methodItem = classItem.Methods.FirstOrDefault(m => m.Name.Equals(methodName));  //alebo SingleOrDefault
+                if (methodItem != null)
+                {
+                    CDMethod Method = OALProgram.Instance.ExecutionSpace.getClassByName(className).getMethodByName(methodName);
+                    Method.ExecutableCode = null;
 
-                foreach (AnimMethod methodItem in classItem.Methods)
-                {
-                    if (methodItem.Name.Equals(methodName))
+                    classItem.Methods.Remove(methodItem);
+                    if (classItem.Methods.Count == 0) 
                     {
-                        methodExist = true;
-                        methodItem.Code = code;
-                        break;
+                        MethodsCodes.Remove(classItem);
                     }
-                }
-                if (!methodExist)
-                {
-                    AnimMethod Method = new AnimMethod(methodName, code);
-                    classItem.Methods.Add(Method);  
-                }
-                break;
+                }        
             }
         }
-        if (!classExist) 
+        else
         {
-            AnimMethod Method = new AnimMethod(methodName, code);
-            AnimClass Class = new AnimClass(className);
-            Class.Methods.Add(Method);
-            MethodsCodes.Add(Class);
+            bool classExist = false;
+
+            foreach (AnimClass classItem in MethodsCodes)
+            {
+                if (classItem.Name.Equals(className))
+                {
+                    classExist = true;
+                    bool methodExist = false;
+
+                    foreach (AnimMethod methodItem in classItem.Methods)
+                    {
+                        if (methodItem.Name.Equals(methodName))
+                        {
+                            methodExist = true;
+                            methodItem.Code = code;
+                            break;
+                        }
+                    }
+                    if (!methodExist)
+                    {
+                        AnimMethod Method = new AnimMethod(methodName, code);
+                        classItem.Methods.Add(Method);
+                    }
+                    break;
+                }
+            }
+            if (!classExist)
+            {
+                AnimMethod Method = new AnimMethod(methodName, code);
+                AnimClass Class = new AnimClass(className);
+                Class.Methods.Add(Method);
+                MethodsCodes.Add(Class);
+            }
         }
     }
     public string GetMethodBody(string className, string methodName) //Filip
     {
         int index = methodName.IndexOf("(");
         methodName = methodName.Substring(0, index); // remove "(...)" from method name
-
+        
         foreach (AnimClass classItem in MethodsCodes)
         {
             if (classItem.Name.Equals(className))

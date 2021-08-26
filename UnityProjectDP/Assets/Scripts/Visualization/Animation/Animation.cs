@@ -78,17 +78,14 @@ public class Animation : Singleton<Animation>
                 CDMethod Method = Class.getMethodByName(methodItem.Name);
 
                 //ak je methodItem.Code nie je prazdny retazec tak parsuj
-                if (!string.IsNullOrWhiteSpace(methodItem.Code))    //methodItem.Code.Equals("")
-                {
-                    //Method.ExecutableCode = null;
-                    EXEScopeMethod MethodBody = OALParserBridge.Parse(methodItem.Code);
-                    Method.ExecutableCode = MethodBody;
-                }
-                //else
+                //if (!string.IsNullOrWhiteSpace(methodItem.Code))        //toto asi uz nebude potrebne
                 //{
-                //    EXEScopeMethod MethodBody = OALParserBridge.Parse(methodItem.Code);
-                //    Method.ExecutableCode = MethodBody;
+                EXEScopeMethod MethodBody = OALParserBridge.Parse(methodItem.Code);
+                Method.ExecutableCode = MethodBody;
                 //}
+                /*else {////
+                    Method.ExecutableCode = null;
+                }///*/
             }
         }
 
@@ -100,6 +97,7 @@ public class Animation : Singleton<Animation>
         EXEScopeMethod MethodExecutableCode = Program.ExecutionSpace.getClassByName(startClassName).getMethodByName(startMethodName).ExecutableCode;
         if(MethodExecutableCode == null)
         {
+            Debug.Log("Warning, EXEScopeMethod of selected Method is null");
             yield break;
         }
 
