@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System.Xml;
 using OALProgramControl;
@@ -43,7 +44,7 @@ public class ClassDiagram : Singleton<ClassDiagram>
         {
             if (GameObjectClasses.Count > 0)
             {
-                foreach(KeyValuePair<string,GameObject> kv in GameObjectClasses)
+                foreach (KeyValuePair<string, GameObject> kv in GameObjectClasses)
                 {
                     Destroy(kv.Value);
                     //GameObjectClasses.Remove(kv.Key);
@@ -71,7 +72,7 @@ public class ClassDiagram : Singleton<ClassDiagram>
         DiagramClasses.Clear();
         DiagramRelations.Clear();
         OALProgram.Instance.ExecutionSpace.ClassPool.Clear();
-        OALProgram.Instance.ExecutionSpace= new CDClassPool();
+        OALProgram.Instance.ExecutionSpace = new CDClassPool();
         OALProgram.Instance.RelationshipSpace = new CDRelationshipPool();
         AnimationData.Instance.ClearData();
     }
@@ -81,13 +82,15 @@ public class ClassDiagram : Singleton<ClassDiagram>
         //Call parser to load data from specified path to 
         int k = 0;
         // A trick used to skip empty diagrams in XMI file from EA
-        while (DiagramClasses.Count<1 &&k<10){
+        while (DiagramClasses.Count < 1 && k < 10) {
             ParseData();
             k++;
             AnimationData.Instance.diagramId++;
         }
         //Generate UI objects displaying the diagram
         Generate();
+
+        fakeObjects();
         //Set the layout of diagram so it is coresponding to EA view
         ManualLayout();
     }
@@ -97,6 +100,75 @@ public class ClassDiagram : Singleton<ClassDiagram>
         var go = GameObject.Instantiate(graphPrefab);
         graph = go.GetComponent<Graph>();
         return graph;
+    }
+    public void fakeObjects()
+    {
+        List<DiagramObject> dos = new List<DiagramObject>( new DiagramObject [] {
+            new DiagramObject("Operand1", "ASTLeaf", new List<(string, string, string)>( new [] {
+                ("value", "string", "string"),
+                ("type", "string", "\"Due to false \"")
+            })),
+            new DiagramObject("Operand2", "ASTLeaf", new List<(string, string, string)>( new [] {
+                ("value", "string", "string"),
+                ("type", "string", "\"pandemic narrative.\"")
+            }))
+        });
+
+        foreach (DiagramObject dgo in dos)
+        {
+            AddDiagramObject(dgo);
+        }
+    }
+    // Lukas
+    public class DiagramObject
+    {
+        public string name;
+        public string className;
+        public GameObject VisualObject;
+        // Name, Type, Value
+        public List<(string, string, string)> Attributes;
+
+        public DiagramObject(string name, string className, List<(string, string, string)> Attributes)
+        {
+            this.name = name;
+            this.className = className;
+            VisualObject = null;
+            this.Attributes = Attributes;
+        }
+    }
+    // Lukas
+    public void AddDiagramObject(DiagramObject DiagramObject)
+    {
+        DiagramObject.VisualObject = graph.AddNode();
+        DiagramObject.VisualObject.name = DiagramObject.name + ":" + DiagramObject.className;
+        DiagramObject.VisualObject.transform.Find("Background").Find("Header").GetComponent<TextMeshProUGUI>().text = DiagramObject.VisualObject.name;
+        DiagramObject.VisualObject.GetComponent<BackgroundHighlighter>().GetComponentInChildren<Image>().color = Color.cyan;
+
+        foreach ((string, string, string) attr in DiagramObject.Attributes)
+        {
+            DiagramObject.VisualObject.transform.Find("Background").Find("Attributes").GetComponent<TextMeshProUGUI>().text
+                += attr.Item1 + " : " + string.Format("{0}", attr.Item3) + "\n";
+        }
+
+        GameObjectClasses.Add(DiagramObject.VisualObject.name, DiagramObject.VisualObject);
+
+        GameObject prefab = dependsPrefab;
+        GameObject g;
+        if (GameObjectClasses.TryGetValue(DiagramObject.VisualObject.name, out g) && GameObjectClasses.TryGetValue(DiagramObject.className, out g))
+        {
+            GameObject edge = graph.AddEdge(GameObjectClasses[DiagramObject.VisualObject.name], GameObjectClasses[DiagramObject.className], prefab);
+            //Add relation node to dictionary
+            //GameObjectRelations.Add(rel.FromClass + "/" + rel.ToClass, edge);
+            //RELADD
+            GameObjectRelations.Add(DiagramObject.VisualObject.name, edge);
+            //Quickfix
+            if (edge.gameObject.transform.childCount > 0)
+                StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
+
+            edge.GetComponent<UEdge>().GraphEdge.Color = Color.cyan;
+        }
+        else
+            Debug.Log("Cant find specified Edge in Dictionary");
     }
 
     // Parser used to parse data from XML to C# data structures
