@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using AnimArch.Visualization.ClassDiagram;
 public class ClassEditor : Singleton<ClassEditor>
 {
     Graph graph;
@@ -17,7 +17,7 @@ public class ClassEditor : Singleton<ClassEditor>
     public MethodMenu mtdMenu;
     public void InitializeCreation()
     {
-        graph= ClassDiagram.Instance.CreateGraph();
+        graph= ClassDiagramPalette.Instance.CreateGraph();
         active = true;
         
     }
@@ -62,7 +62,7 @@ public class ClassEditor : Singleton<ClassEditor>
     {
         if(node1!=null && node2 != null)
         {
-            ClassDiagram.Instance.CreateRelationEdge(node1, node2);
+            ClassDiagramPalette.Instance.CreateRelationEdge(node1, node2);
             node1 = null;
             node2 = null;
             graph.UpdateGraph();

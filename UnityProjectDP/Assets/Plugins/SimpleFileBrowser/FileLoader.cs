@@ -4,6 +4,7 @@ using UnityEngine;
 using SimpleFileBrowser;
 using System;
 using System.Text.RegularExpressions;
+using AnimArch.Visualization.ClassDiagram;
 
 public class FileLoader : MonoBehaviour
 {
@@ -66,7 +67,7 @@ public class FileLoader : MonoBehaviour
                 Debug.Log(FileBrowser.Result);
                 Debug.Log(fileName);
                 AnimationData.Instance.SetDiagramPath(FileBrowser.Result);
-                ClassDiagram.Instance.LoadDiagram();
+                ClassDiagramPalette.Instance.LoadDiagram();
                 
             }
         

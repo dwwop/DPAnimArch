@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-
+using AnimArch.Visualization.ClassDiagram;
 public class MethodMenu : MonoBehaviour
 {
     public GameObject MtdPanel;
@@ -32,7 +32,7 @@ public class MethodMenu : MonoBehaviour
     {
         SetName(inp.text);
         SetType(dropdown.options[dropdown.value].text);
-        if (ClassDiagram.Instance.AddMethod(classTxt.text, mtd))
+        if (ClassDiagramPalette.Instance.AddMethod(classTxt.text, mtd))
         {
             mtdTxt.text += mtd.Name + "() :" + mtd.ReturnValue + "\n";
         }

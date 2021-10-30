@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using AnimArch.Visualization.ClassDiagram;
 
 public class AttributeMenu : MonoBehaviour
 {
@@ -33,7 +34,7 @@ public class AttributeMenu : MonoBehaviour
     {
         SetName(inp.text);
         SetType(dropdown.options[dropdown.value].text);
-        if (ClassDiagram.Instance.AddAtr(classTxt.text, atr))
+        if (ClassDiagramPalette.Instance.AddAtr(classTxt.text, atr))
         {
             if (isArray.isOn)
             {

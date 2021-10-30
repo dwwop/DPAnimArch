@@ -8,10 +8,12 @@ using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 using Assets.Scripts.AnimationControl.OAL;
 
+using AnimArch.Visualization.ClassDiagram;
+
 //Controls the entire animation process
 public class Animation : Singleton<Animation>
 {
-    private ClassDiagram classDiagram;
+    private ClassDiagramPalette classDiagram;
     public Color classColor;
     public Color methodColor;
     public Color relationColor;
@@ -33,7 +35,7 @@ public class Animation : Singleton<Animation>
     public string startMethodName;
     private void Awake()
     {
-        classDiagram = GameObject.Find("ClassDiagram").GetComponent<ClassDiagram>();
+        classDiagram = GameObject.Find("ClassDiagram").GetComponent<ClassDiagramPalette>();
         standardPlayMode = true;
     }
 
@@ -392,8 +394,8 @@ public class Animation : Singleton<Animation>
     {
         isPaused = false;
         StopAllCoroutines();
-        if(ClassDiagram.Instance.GetClassList()!=null)
-            foreach (Class c in ClassDiagram.Instance.GetClassList())
+        if(ClassDiagramPalette.Instance.GetClassList()!=null)
+            foreach (Class c in ClassDiagramPalette.Instance.GetClassList())
             {
                 HighlightClass(c.Name, false);
                 if(c.Methods!=null)
@@ -402,8 +404,8 @@ public class Animation : Singleton<Animation>
                         HighlightMethod(c.Name, m.Name, false);
                     }
             }
-        if(ClassDiagram.Instance.GetRelationList()!=null)
-            foreach (Relation r in ClassDiagram.Instance.GetRelationList())
+        if(ClassDiagramPalette.Instance.GetRelationList()!=null)
+            foreach (Relation r in ClassDiagramPalette.Instance.GetRelationList())
             {
                 HighlightEdge(r.OALName, false);
             }
