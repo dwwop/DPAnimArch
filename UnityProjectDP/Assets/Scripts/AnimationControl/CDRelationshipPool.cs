@@ -7,7 +7,7 @@ namespace OALProgramControl
     public class CDRelationshipPool
     {
         private long RelationshipIdSeed;
-        private List<CDRelationship> RelationshipPool { get; }
+        public List<CDRelationship> RelationshipPool { get; }
 
         public CDRelationshipPool()
         {

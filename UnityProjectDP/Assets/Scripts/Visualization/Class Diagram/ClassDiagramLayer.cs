@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -7,6 +9,8 @@ namespace AnimArch.Visualization.ClassDiagram
 {
     public class ClassDiagramLayer
     {
+        public Graph Diagram;
+
         public readonly Dictionary<string, DiagramElement<Class>> Classes;
         public readonly Dictionary<string, DiagramElement<Relation>> Relations;
 
@@ -42,7 +46,7 @@ namespace AnimArch.Visualization.ClassDiagram
             return true;
         }
         // TODO - should be performed by relation somehow
-        private string RelationName(Relation Relation)
+        public static string RelationName(Relation Relation)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -51,6 +55,12 @@ namespace AnimArch.Visualization.ClassDiagram
             sb.Append(Relation.ToClass);
 
             return sb.ToString();
+        }
+        internal void ManipulateGameObject(Action<GameObject> ManipulationFunction)
+        {
+            Classes.Values.ToList().ForEach((ClassElement)      => ClassElement.ManipulateGameObject(ManipulationFunction));
+            Relations.Values.ToList().ForEach((RelationElement) => RelationElement.ManipulateGameObject(ManipulationFunction));
+            ManipulationFunction(Diagram.gameObject);
         }
     }
 }

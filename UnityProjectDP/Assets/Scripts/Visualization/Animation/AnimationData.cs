@@ -7,14 +7,14 @@ using UnityEngine;
 //has global acces: AnimationData.Instance.calledMethod()
 public class AnimationData : Singleton<AnimationData>
 {
-    private List<Anim> animations;
+    private List<Anim> animations = new List<Anim>();
     public Anim selectedAnim;
     string diagramPath= @"C:/AnimArch/exportedXMI.xml";
     public int diagramId=4;
     public float AnimSpeed{get; set;}
     private void Awake()
     {
-        animations = new List<Anim>();
+        Debug.Log("AnimationData::Awake called");
         selectedAnim = new Anim("");
     }
     public List<Anim> getAnimList()

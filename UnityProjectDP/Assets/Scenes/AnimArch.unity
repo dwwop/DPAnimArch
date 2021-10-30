@@ -18783,6 +18783,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1164213133}
   - component: {fileID: 1164213134}
+  - component: {fileID: 1164213135}
   m_Layer: 0
   m_Name: ClassDiagram
   m_TagString: Untagged
@@ -18838,6 +18839,19 @@ MonoBehaviour:
   realisationPrefab: {fileID: 1250365410247918905, guid: b038e1a8b67b5294ebca95aaa358c047,
     type: 3}
   graph: {fileID: 0}
+--- !u!114 &1164213135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164213132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae109420d8e647a4a9c1bb4dd694c7e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _persistent: 1
 --- !u!1 &1164831679
 GameObject:
   m_ObjectHideFlags: 0

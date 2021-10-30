@@ -17,7 +17,7 @@ public class ClassEditor : Singleton<ClassEditor>
     public MethodMenu mtdMenu;
     public void InitializeCreation()
     {
-        graph= ClassDiagramPalette.Instance.CreateGraph();
+        graph= Diagram.Instance.CreateGraph();
         active = true;
         
     }
@@ -62,7 +62,7 @@ public class ClassEditor : Singleton<ClassEditor>
     {
         if(node1!=null && node2 != null)
         {
-            ClassDiagramPalette.Instance.CreateRelationEdge(node1, node2);
+            Diagram.Instance.CreateRelationEdge(node1, node2);
             node1 = null;
             node2 = null;
             graph.UpdateGraph();
