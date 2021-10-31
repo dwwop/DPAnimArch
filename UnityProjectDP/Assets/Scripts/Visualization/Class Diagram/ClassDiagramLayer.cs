@@ -59,8 +59,13 @@ namespace AnimArch.Visualization.ClassDiagram
         internal void ManipulateGameObject(Action<GameObject> ManipulationFunction)
         {
             Classes.Values.ToList().ForEach((ClassElement)      => ClassElement.ManipulateGameObject(ManipulationFunction));
+            Classes.Clear();
+
             Relations.Values.ToList().ForEach((RelationElement) => RelationElement.ManipulateGameObject(ManipulationFunction));
+            Relations.Clear();
+
             ManipulationFunction(Diagram.gameObject);
+            Diagram = null;
         }
     }
 }

@@ -17,7 +17,7 @@ public class ClassEditor : Singleton<ClassEditor>
     public MethodMenu mtdMenu;
     public void InitializeCreation()
     {
-        graph= Diagram.Instance.CreateGraph();
+        graph= Diagram.Instance.CreateNewGraph();
         active = true;
         
     }

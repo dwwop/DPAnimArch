@@ -35,6 +35,7 @@ namespace AnimArch.Visualization.ClassDiagram
         private void Clear()
         {
             DiagramLayers.ForEach((Layer) => Layer.ManipulateGameObject(Destroy));
+            DiagramLayers.Clear();
             OALProgram.Instance.ExecutionSpace.ClassPool.Clear();
             OALProgram.Instance.RelationshipSpace.RelationshipPool.Clear();
             AnimationData.Instance.ClearData();
