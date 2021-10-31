@@ -60,7 +60,8 @@ namespace AnimArch.Visualization.ClassDiagram
 
             //fakeObjects();
             //Set the layout of diagram so it is coresponding to EA view
-            ManualLayout();
+            //ManualLayout();
+            AutoLayout();
         }
         // Legacy
         void ParseData()
