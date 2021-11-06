@@ -34,6 +34,7 @@ namespace OALProgramControl
         // SetUloh2
         public override bool Execute(OALProgram OALProgram, EXEScope Scope)
         {
+            /*
             //Select instances of given class that match the criteria and assign them to variable with given name
             // ClassName tells us which class we are interested in
             // Cardinality tells us whether we want one random instance (matching the criteria) or all of them
@@ -106,8 +107,8 @@ namespace OALProgramControl
                     SelectedVar.ReferencedInstanceId = Id;
                     String ConditionResult = this.WhereCondition.Evaluate(Scope, OALProgram.ExecutionSpace);
 
-                   /* Console.WriteLine("cond evaluated");
-                    Console.WriteLine(Id + " : " + ConditionResult == null ? "null" : ConditionResult);*/
+                    //Console.WriteLine("cond evaluated");
+                    //Console.WriteLine(Id + " : " + ConditionResult == null ? "null" : ConditionResult);
 
                     if (!EXETypes.IsValidValue(ConditionResult, EXETypes.BooleanTypeName))
                     {
@@ -124,6 +125,7 @@ namespace OALProgramControl
                 //foreach (long id in ResultIds) Console.WriteLine("RES: " + id);
                 SelectedIds = ResultIds;
                 Scope.DestroyReferencingVariable(TempSelectedVarName);
+            
             }
 
             // Now we have ids of selected instances. Let's assign them to a variable
@@ -165,6 +167,11 @@ namespace OALProgramControl
             {
                 return false;
             }
+
+            return true;
+            */
+
+            ConsolePanel.Instance.YieldOutput(ToCodeSimple());
 
             return true;
         }

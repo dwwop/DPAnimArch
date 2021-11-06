@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ConsolePanel : MonoBehaviour
+public class ConsolePanel : Singleton<ConsolePanel>
 {
     public GameObject inputField;
     public GameObject outputField;
