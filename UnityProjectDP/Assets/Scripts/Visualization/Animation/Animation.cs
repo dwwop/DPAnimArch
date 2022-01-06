@@ -50,8 +50,6 @@ public class Animation : Singleton<Animation>
             this.AnimationIsRunning = true;
         }
 
-        bool Success;
-
         List<Anim> animations = AnimationData.Instance.getAnimList();
         Anim selectedAnimation = AnimationData.Instance.selectedAnim;
         if (animations != null)
@@ -101,12 +99,18 @@ public class Animation : Singleton<Animation>
         OALProgram.Instance.SuperScope = MethodExecutableCode;//StartMethod.ExecutableCode
         //OALProgram.Instance.SuperScope = OALParserBridge.Parse(Code); //Method.ExecutableCode dame namiesto OALParserBridge.Parse(Code) pre metodu ktora bude zacinat
 
+        Debug.Log("Abt to execute program");
+        int i = 0;
 
-        Success = true;
-
-        while (Program.NextStep())
+        bool Success = true;
+        while (Success && Program.CommandStack.HasNext())
         {
-            Program.CurrentCommands().ForEach(command => command.Execute(Program));
+            EXECommand CurrentCommand = Program.CommandStack.Next();
+            bool ExecutionSuccess = CurrentCommand.Execute(Program);
+            
+            Debug.Log("Command " + i++.ToString() + ". Success: " + ExecutionSuccess.ToString() + ". Command type: " + CurrentCommand.GetType().Name);
+
+            Success = Success && ExecutionSuccess;
         }
         /*
         if (Success)

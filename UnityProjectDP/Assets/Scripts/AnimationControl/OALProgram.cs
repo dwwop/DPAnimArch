@@ -22,43 +22,17 @@ namespace OALProgramControl
             set
             {
                 _SuperScope = value;
-                CurrentCommandPointer = new EXEProgramPointer(_SuperScope);
+                CommandStack = new EXEExecutionStack();
+                CommandStack.Enqueue(_SuperScope);
             }
         }
-        private EXEProgramPointer CurrentCommandPointer { get; set; }
+        public EXEExecutionStack CommandStack { get; private set; }
 
         public OALProgram()
         {
             this.ExecutionSpace = new CDClassPool();
             this.RelationshipSpace = new CDRelationshipPool();
             this.SuperScope = new EXEScope();
-            this.CurrentCommandPointer = new EXEProgramPointer(SuperScope);
         }
-
-        public bool NextStep()
-        {
-            bool Result = false;
-
-            EXECommand NextCommand = CurrentCommandPointer.NextCommand();
-            if (NextCommand != null)
-            {
-                Result = true;
-            }
-
-            return Result;
-        }
-        public List<EXECommand> CurrentCommands()
-        {
-            List<EXECommand> Result = new EXECommand[] { CurrentCommandPointer.CurrentCommand }.ToList();
-
-            return Result;
-        }
-        /*public bool Execute()
-        {
-            bool Result = this.SuperScope.Execute(this, null);
-            this.SuperScope.ClearVariablesRecursive();
-
-            return Result;
-        }*/
     }
 }

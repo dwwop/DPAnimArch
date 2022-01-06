@@ -83,10 +83,6 @@ namespace OALProgramControl
             */
             return true;
         }
-        public override bool PropagateControlCommand(LoopControlStructure PropagatedCommand)
-        {
-            return false;
-        }
 
         public override String ToCode(String Indent = "")
         {
@@ -96,7 +92,7 @@ namespace OALProgramControl
                 foreach (EXEScope Thread in this.Threads)
                 {
                     Result += Indent + "\tthread\n";
-                    foreach (EXECommand Command in Thread._Commands)
+                    foreach (EXECommand Command in Thread.Commands)
                     {
                         Result += Command.ToCode(Indent + "\t\t");
                     }

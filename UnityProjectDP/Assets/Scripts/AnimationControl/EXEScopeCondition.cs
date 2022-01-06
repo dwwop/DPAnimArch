@@ -74,8 +74,6 @@ namespace OALProgramControl
 
         public override Boolean Execute(OALProgram OALProgram)
         {
-            /*
-            this.OALProgram = OALProgram;
             Boolean Result = true;
             Boolean AScopeWasExecuted = false;
 
@@ -84,9 +82,8 @@ namespace OALProgramControl
                 return false;
             }
 
-            OALProgram.AccessInstanceDatabase();
-            String ConditionResult = this.Condition.Evaluate(Scope, OALProgram.ExecutionSpace);
-            OALProgram.LeaveInstanceDatabase();
+            String ConditionResult = this.Condition.Evaluate(SuperScope, OALProgram.ExecutionSpace);
+
             if (ConditionResult == null)
             {
                 return false;
@@ -99,14 +96,7 @@ namespace OALProgramControl
 
             if (IfConditionResult)
             {
-                foreach (EXECommand Command in this.Commands)
-                {
-                    Result = Command.SynchronizedExecute(OALProgram, this);
-                    if (!Result)
-                    {
-                        break;
-                    }
-                }
+                AddCommandsToStack(OALProgram, this.Commands);
                 AScopeWasExecuted = true;
             }
 
@@ -123,9 +113,9 @@ namespace OALProgramControl
                     {
                         return false;
                     }
-                    OALProgram.AccessInstanceDatabase();
-                    ConditionResult = CurrentElif.Condition.Evaluate(Scope, OALProgram.ExecutionSpace);
-                    OALProgram.LeaveInstanceDatabase();
+
+                    ConditionResult = CurrentElif.Condition.Evaluate(SuperScope, OALProgram.ExecutionSpace);
+
 
                     if (ConditionResult == null)
                     {
@@ -139,7 +129,7 @@ namespace OALProgramControl
                     
                     if (IfConditionResult)
                     {
-                        Result = CurrentElif.SynchronizedExecute(OALProgram, CurrentElif);
+                        Result = CurrentElif.Execute(OALProgram);
                         AScopeWasExecuted = true;
                         break;
                     }
@@ -153,17 +143,15 @@ namespace OALProgramControl
 
             if (this.ElseScope != null)
             {
-                Result = this.ElseScope.SynchronizedExecute(OALProgram, ElseScope);
+                Result = this.ElseScope.Execute(OALProgram);
             }
 
             return Result;
-            */
-            return true;
         }
         public override String ToCode(String Indent = "")
         {
             String Result = Indent + "if (" + this.Condition.ToCode() + ")\n";
-            foreach (EXECommand Command in this._Commands)
+            foreach (EXECommand Command in this.Commands)
             {
                 Result += Command.ToCode(Indent + "\t");
             }
@@ -172,7 +160,7 @@ namespace OALProgramControl
                 foreach (EXEScopeCondition Elif in this.ElifScopes)
                 {
                     Result += Indent + "elif (" + Elif.Condition.ToCode() + ")\n";
-                    foreach (EXECommand Command in Elif._Commands)
+                    foreach (EXECommand Command in Elif.Commands)
                     {
                         Result += Command.ToCode(Indent + "\t");
                     }
@@ -181,7 +169,7 @@ namespace OALProgramControl
             if (this.ElseScope != null)
             {
                 Result += Indent + "else\n";
-                foreach (EXECommand Command in this.ElseScope._Commands)
+                foreach (EXECommand Command in this.ElseScope.Commands)
                 {
                     Result += Command.ToCode(Indent + "\t");
                 }

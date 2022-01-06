@@ -23,6 +23,7 @@ namespace OALProgramControl
 
         public override Boolean Execute(OALProgram OALProgram)
         {
+            UnityEngine.Debug.Log(this.ToCode());
             Boolean Result = false;
 
             String AssignedValue = this.AssignedExpression.Evaluate(SuperScope, OALProgram.ExecutionSpace);

@@ -10,27 +10,23 @@ namespace OALProgramControl
     {
         public String IteratorName { get; set; }
         public String IterableName { get; set; }
-        public LoopControlStructure CurrentLoopControlCommand { get; set; }
+        private int IterableIndex;
         public EXEScopeForEach(String Iterator, String Iterable)  : base()
         {
             this.IteratorName = Iterator;
             this.IterableName = Iterable;
+            int IterableIndex = 0;
         }
         public EXEScopeForEach(EXEScope SuperScope, EXECommand[] Commands, String Iterator, String Iterable) : base(SuperScope, Commands)
         {
             this.IteratorName = Iterator;
             this.IterableName = Iterable;
-            this.CurrentLoopControlCommand = LoopControlStructure.None;
+            int IterableIndex = 0;
         }
         public override Boolean Execute(OALProgram OALProgram)
         {
-            /*
-            this.OALProgram = OALProgram;
-
-            OALProgram.AccessInstanceDatabase();
             EXEReferencingVariable IteratorVariable = this.FindReferencingVariableByName(this.IteratorName);
             EXEReferencingSetVariable IterableVariable = this.FindSetReferencingVariableByName(this.IterableName);
-            OALProgram.LeaveInstanceDatabase();
 
             Boolean Success = true;
 
@@ -53,70 +49,28 @@ namespace OALProgramControl
                 Success = this.GetSuperScope().AddVariable(IteratorVariable);
             }
 
+            Success = Success && IterableIndex < IterableVariable.GetReferencingVariables().Count;
+
             if (Success)
             {
-                foreach (EXEReferencingVariable CurrentItem in IterableVariable.GetReferencingVariables())
-                {
-                    //!!NON-RECURSIVE!!
-                    this.ClearVariables();
+                
+                EXEReferencingVariable CurrentItem = IterableVariable.GetReferencingVariables()[IterableIndex];
+                IteratorVariable.ReferencedInstanceId = CurrentItem.ReferencedInstanceId;
 
-                    IteratorVariable.ReferencedInstanceId = CurrentItem.ReferencedInstanceId;
-
-                    Console.WriteLine("ForEach: " + CurrentItem.ReferencedInstanceId);
-
-                    foreach (EXECommand Command in this.Commands)
-                    {
-                        if (this.CurrentLoopControlCommand != LoopControlStructure.None)
-                        {
-                            break;
-                        }
-
-                        Success = Command.SynchronizedExecute(OALProgram, this);
-                        if (!Success)
-                        {
-                            break;
-                        }
-                    }
-
-                    if (!Success)
-                    {
-                        break;
-                    }
-
-                    if (this.CurrentLoopControlCommand == LoopControlStructure.Break)
-                    {
-                        this.CurrentLoopControlCommand = LoopControlStructure.None;
-                        break;
-                    }
-                    else if (this.CurrentLoopControlCommand == LoopControlStructure.Continue)
-                    {
-                        this.CurrentLoopControlCommand = LoopControlStructure.None;
-                        continue;
-                    }
-                }
+                IterableIndex++;
+                OALProgram.CommandStack.Enqueue(this);
+                AddCommandsToStack(OALProgram, this.Commands);
+                this.ClearVariables();
+                Success = this.GetSuperScope().AddVariable(IteratorVariable);
             }
             
-
             return Success;
-            */
-            return true;
         }
 
-        public override bool PropagateControlCommand(LoopControlStructure PropagatedCommand)
-        {
-            if (this.CurrentLoopControlCommand != LoopControlStructure.None)
-            {
-                return false;
-            }
-
-            this.CurrentLoopControlCommand = PropagatedCommand;
-
-            return true;
-        }
         public override String ToCode(String Indent = "")
         {
             String Result = Indent + "for each " + this.IteratorName + " in " + this.IterableName + "\n";
-            foreach (EXECommand Command in this._Commands)
+            foreach (EXECommand Command in this.Commands)
             {
                 Result += Command.ToCode(Indent + "\t");
             }

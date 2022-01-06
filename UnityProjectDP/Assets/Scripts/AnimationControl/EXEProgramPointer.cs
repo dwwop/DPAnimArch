@@ -14,7 +14,7 @@ namespace OALProgramControl
         {
             get
             {
-                return CurrentScope._Commands[CommandIndexQueue.Peek().Value];
+                return CurrentScope.Commands[CommandIndexQueue.Peek().Value];
             }
         }
         public EXEScope CurrentScope { get; private set; }
@@ -42,7 +42,7 @@ namespace OALProgramControl
 
             if (CurrentScope != null)
             {
-                Result = CurrentScope._Commands[CommandIndexQueue.Peek().Value];  
+                Result = CurrentScope.Commands[CommandIndexQueue.Peek().Value];  
             }
 
             if (Result != null)

@@ -4,7 +4,7 @@
     {
         public override bool Execute(OALProgram OALProgram)
         {
-            return SuperScope.PropagateControlCommand(LoopControlStructure.Break);
+            return true;//return SuperScope.PropagateControlCommand(LoopControlStructure.Break);
         }
         public override string ToCodeSimple()
         {

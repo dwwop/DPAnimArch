@@ -7,9 +7,11 @@ namespace OALProgramControl
     public class EXEReferencingSetVariable : EXEReferenceHandle
     {
         private List<EXEReferencingVariable> ReferencingVariables;
+        public bool Sealed;
         public EXEReferencingSetVariable(String Name, String ClassName) : base(Name, ClassName)
         {
-            this.ReferencingVariables = new List<EXEReferencingVariable>(); ;
+            this.ReferencingVariables = new List<EXEReferencingVariable>();
+            Sealed = false;
         }
 
         public void UnsetVariables(long ID)
@@ -29,6 +31,11 @@ namespace OALProgramControl
 
         public void AddReferencingVariable(EXEReferencingVariable NewReferencingVariable)
         {
+            if (Sealed)
+            {
+                throw new Exception("Tried to add to collection while it was being iterated in FOREACH loop.");
+            }
+
             this.ReferencingVariables.Add(NewReferencingVariable);
         }
 
