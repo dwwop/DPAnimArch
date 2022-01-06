@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OALProgramControl
 {
@@ -11,6 +12,18 @@ namespace OALProgramControl
         {
             AddCommandsToStack(OALProgram, this.Commands);
             return true;
+        }
+        public EXEScopeMethod CreateClone()
+        {
+            EXEScopeMethod Clone = new EXEScopeMethod
+            {
+                Commands = new List<EXECommand>(),
+                OALCode = this.OALCode
+            };
+
+            Clone.Commands.AddRange(this.Commands);
+
+            return Clone;
         }
     }
 }

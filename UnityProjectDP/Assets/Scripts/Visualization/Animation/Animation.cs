@@ -105,10 +105,20 @@ public class Animation : Singleton<Animation>
         bool Success = true;
         while (Success && Program.CommandStack.HasNext())
         {
+
             EXECommand CurrentCommand = Program.CommandStack.Next();
             bool ExecutionSuccess = CurrentCommand.Execute(Program);
             
             Debug.Log("Command " + i++.ToString() + ". Success: " + ExecutionSuccess.ToString() + ". Command type: " + CurrentCommand.GetType().Name);
+
+            if (CurrentCommand.GetType().Equals(typeof(EXECommandCall)))
+            {
+                StartCoroutine(ResolveCallFunct(((EXECommandCall)CurrentCommand).CreateOALCall()));
+
+                BarrierSize = 1;
+                CurrentBarrierFill = 0;
+                yield return StartCoroutine(BarrierFillCheck());
+            }
 
             Success = Success && ExecutionSuccess;
         }
@@ -371,6 +381,8 @@ public class Animation : Singleton<Animation>
                 }
             }
         }
+
+        IncrementBarrier();
     }
     
     public string GetColorCode(string type)

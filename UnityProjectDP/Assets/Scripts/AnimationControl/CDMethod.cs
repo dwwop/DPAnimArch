@@ -13,7 +13,19 @@ namespace OALProgramControl
         public List<CDParameter> Parameters { get; set; }
         public string OALCode { get; set; }
         public int CallCountInOALProgram { get; set; }
-        public EXEScopeMethod ExecutableCode { get; set; }
+
+        private EXEScopeMethod _ExecutableCode;
+        public EXEScopeMethod ExecutableCode
+        {
+            get
+            {
+                return _ExecutableCode == null ?  new EXEScopeMethod() : _ExecutableCode.CreateClone();
+            }
+            set
+            {
+                _ExecutableCode = value;
+            }
+        }
 
         public CDMethod(String Name, String Type)
         {

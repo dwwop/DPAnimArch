@@ -30,12 +30,10 @@ namespace OALProgramControl
         public override Boolean Execute(OALProgram OALProgram)
         {
             //Filip, ak mas null v executablecode tak vrat true inak toto dole
-            /*EXEScopeMethod ExecutableCode = OALProgram.ExecutionSpace.getClassByName(this.CalledClass).getMethodByName(this.CalledMethod).ExecutableCode;
-            if (ExecutableCode != null)
-            {
-                return ExecutableCode.SynchronizedExecute(OALProgram, Scope);
-            }*/
-            
+            EXEScopeMethod MethodCode = OALProgram.ExecutionSpace.getClassByName(this.CalledClass).getMethodByName(this.CalledMethod).ExecutableCode;
+            MethodCode.SetSuperScope(this.SuperScope);
+            OALProgram.CommandStack.Enqueue(MethodCode);
+
             return true;
         }
 
