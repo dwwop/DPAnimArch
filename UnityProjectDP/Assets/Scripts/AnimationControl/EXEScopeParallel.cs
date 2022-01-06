@@ -32,13 +32,9 @@ namespace OALProgramControl
             Thread.SetSuperScope(this);
             this.Threads.Add(Thread);
         }
-        public override Boolean SynchronizedExecute(OALProgram OALProgram, EXEScope Scope)
+        public override Boolean Execute(OALProgram OALProgram)
         {
-            Boolean Success = this.Execute(OALProgram, Scope);
-            return Success;
-        }
-        public override Boolean Execute(OALProgram OALProgram, EXEScope Scope)
-        {
+            /*
             this.OALProgram = OALProgram;
             this.OALProgram.ThreadSyncer.RegisterThread((uint)this.Threads.Count);
             EXEScopeParallel ParallelScope = this;
@@ -84,54 +80,8 @@ namespace OALProgramControl
             OALProgram.ThreadSyncer.RegisterThread(1);
 
             return Success;
-        }
-        public override Boolean PreExecute(AnimationCommandStorage ACS, OALProgram OALProgram, EXEScope Scope)
-        {
-            this.OALProgram = OALProgram;
-            this.OALProgram.ThreadSyncer.RegisterThread((uint)this.Threads.Count);
-            EXEScopeParallel ParallelScope = this;
-            Boolean Success = true;
-
-            lock (this.MyThreadEndSyncer)
-            {
-                this.ActiveThreadCount = this.Threads.Count;
-            }
-
-            OALProgram.ThreadSyncer.UnregisterThread();
-
-            foreach (EXEScope ThreadScope in this.Threads)
-            {
-                new Thread(() =>
-                {
-                    Thread.CurrentThread.IsBackground = false;
-
-                    Boolean MySuccess = ThreadScope.PreExecute(ACS, OALProgram, ParallelScope);
-
-                    OALProgram.ThreadSyncer.UnregisterThread();
-
-                    lock (ParallelScope.MyThreadEndSyncer)
-                    {
-                        Success &= MySuccess;
-                        ParallelScope.ActiveThreadCount--;
-                        if (ParallelScope.ActiveThreadCount == 0)
-                        {
-                            Monitor.PulseAll(this.MyThreadEndSyncer);
-                        }
-                    }
-                }).Start();
-            }
-
-            lock (this.MyThreadEndSyncer)
-            {
-                while (this.ActiveThreadCount > 0)
-                {
-                    Monitor.Wait(this.MyThreadEndSyncer);
-                }
-            }
-
-            OALProgram.ThreadSyncer.RegisterThread(1);
-
-            return Success;
+            */
+            return true;
         }
         public override bool PropagateControlCommand(LoopControlStructure PropagatedCommand)
         {
@@ -146,7 +96,7 @@ namespace OALProgramControl
                 foreach (EXEScope Thread in this.Threads)
                 {
                     Result += Indent + "\tthread\n";
-                    foreach (EXECommand Command in Thread.Commands)
+                    foreach (EXECommand Command in Thread._Commands)
                     {
                         Result += Command.ToCode(Indent + "\t\t");
                     }

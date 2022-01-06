@@ -9,8 +9,15 @@ namespace OALProgramControl
         private List<EXEPrimitiveVariable> PrimitiveVariables;
         private List<EXEReferencingVariable> ReferencingVariables;
         private List<EXEReferencingSetVariable> SetReferencingVariables;
-        private EXEScope SuperScope { get; set; }
-        public List<EXECommand> Commands;
+
+        protected List<EXECommand> _Commands;
+        public virtual List<EXECommand> Commands
+        {
+            get
+            {
+                return this.Commands;
+            }
+        }
 
         public String OALCode;
 
@@ -23,7 +30,7 @@ namespace OALProgramControl
             this.ReferencingVariables = new List<EXEReferencingVariable>();
             this.SetReferencingVariables = new List<EXEReferencingSetVariable>();
             this.SuperScope = null;
-            this.Commands = new List<EXECommand>();
+            this._Commands = new List<EXECommand>();
 
             this.OALProgram = null;
         }
@@ -35,22 +42,13 @@ namespace OALProgramControl
 
             this.SetSuperScope(SuperScope);
 
-            this.Commands = new List<EXECommand>();
+            this._Commands = new List<EXECommand>();
             foreach (EXECommand Command in Commands)
             {
                 this.AddCommand(Command);
             }
 
             this.OALProgram = null;
-        }
-
-        public EXEScope GetSuperScope()
-        {
-            return this.SuperScope;
-        }
-        public virtual void SetSuperScope(EXEScope SuperScope)
-        {
-            this.SuperScope = SuperScope;
         }
 
         public Dictionary<String, String> GetStateDictRecursive()
@@ -324,7 +322,7 @@ namespace OALProgramControl
 
         public void AddCommand(EXECommand Command)
         {
-            this.Commands.Add(Command);
+            this._Commands.Add(Command);
             if (Command.IsComposite())
             {
                 ((EXEScope)Command).SetSuperScope(this);
@@ -423,9 +421,9 @@ namespace OALProgramControl
         }
 
         //"Scope" param is ignored here, because this class is a scope
-        public override Boolean Execute(OALProgram OALProgram, EXEScope Scope)
+        public override Boolean Execute(OALProgram OALProgram)
         {
-            this.OALProgram = OALProgram;
+            /*this.OALProgram = OALProgram;
 
             Boolean Success = true;
 
@@ -438,30 +436,8 @@ namespace OALProgramControl
                 }
             }
 
-            return Success;
-        }
-        public override Boolean SynchronizedExecute(OALProgram OALProgram, EXEScope Scope)
-        {
-            Boolean Success = this.Execute(OALProgram, Scope);
-            return Success;
-        }
-
-        public override Boolean PreExecute(AnimationCommandStorage ACS, OALProgram OALProgram, EXEScope Scope)
-        {
-            this.OALProgram = OALProgram;
-
-            Boolean Success = true;
-
-            foreach (EXECommand Command in this.Commands)
-            {
-                Success = Command.PreExecute(ACS, OALProgram, this);
-                if (!Success)
-                {
-                    break;
-                }
-            }
-
-            return Success;
+            return Success;*/
+            return true;
         }
 
         public List<(String, String)> GetReferencingVariablesByIDRecursive(long ID)
@@ -490,7 +466,7 @@ namespace OALProgramControl
         {
             this.ClearVariables();
 
-            foreach (EXECommand Command in this.Commands)
+            foreach (EXECommand Command in this._Commands)
             {
                 if (Command is EXEScope)
                 {
@@ -512,7 +488,7 @@ namespace OALProgramControl
         public override String ToCode(String Indent = "")
         {
             String Result = "";
-            foreach (EXECommand Command in this.Commands)
+            foreach (EXECommand Command in this._Commands)
             {
                 Result += Command.ToCode(Indent);
             }

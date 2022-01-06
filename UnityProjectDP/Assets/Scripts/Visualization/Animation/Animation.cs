@@ -20,7 +20,6 @@ public class Animation : Singleton<Animation>
     private int CurrentBarrierFill;
     [HideInInspector]
     public bool AnimationIsRunning = false;
-    private readonly Object AnimationBoolLock = new Object();
     [HideInInspector]
     public bool isPaused = false;
     [HideInInspector]
@@ -41,21 +40,18 @@ public class Animation : Singleton<Animation>
     public IEnumerator Animate()
     {
         Fillers = new List<GameObject>();
-        lock (this.AnimationBoolLock)
+
+        if (this.AnimationIsRunning)
         {
-            if (this.AnimationIsRunning)
-            {
-                yield break;
-            }
-            else
-            {
-                this.AnimationIsRunning = true;
-            }
+            yield break;
+        }
+        else
+        {
+            this.AnimationIsRunning = true;
         }
 
         bool Success;
-        AnimationCommandStorage ACS = null;
-        Debug.Log("In try block");
+
         List<Anim> animations = AnimationData.Instance.getAnimList();
         Anim selectedAnimation = AnimationData.Instance.selectedAnim;
         if (animations != null)
@@ -63,6 +59,7 @@ public class Animation : Singleton<Animation>
             if (animations.Count > 0 && selectedAnimation.AnimationName.Equals(""))
                 selectedAnimation = animations[0];
         }
+
         OALProgram Program = OALProgram.Instance;
         List<AnimClass> MethodsCodes = selectedAnimation.GetMethodsCodesList();//Filip
         string Code = selectedAnimation.Code;   //toto potom mozno pojde prec
@@ -103,12 +100,15 @@ public class Animation : Singleton<Animation>
 
         OALProgram.Instance.SuperScope = MethodExecutableCode;//StartMethod.ExecutableCode
         //OALProgram.Instance.SuperScope = OALParserBridge.Parse(Code); //Method.ExecutableCode dame namiesto OALParserBridge.Parse(Code) pre metodu ktora bude zacinat
-        ACS = new AnimationCommandStorage();
-        bool temp = Program.PreExecute(ACS);
-        Debug.Log("Done executing: " + temp.ToString());
-        ACS.ClearSteps();
+
+
         Success = true;
 
+        while (Program.NextStep())
+        {
+            Program.CurrentCommands().ForEach(command => command.Execute(Program));
+        }
+        /*
         if (Success)
         {
             Debug.Log("We have " + ACS.AnimationSteps.Count() + " anim sequences");
@@ -138,11 +138,9 @@ public class Animation : Singleton<Animation>
                 }
             }
         }
+        */
         Debug.Log("Over");
-        lock (this.AnimationBoolLock)
-        {
-            this.AnimationIsRunning = false;
-        }
+        this.AnimationIsRunning = false;
     }
 
     public void IncrementBarrier()

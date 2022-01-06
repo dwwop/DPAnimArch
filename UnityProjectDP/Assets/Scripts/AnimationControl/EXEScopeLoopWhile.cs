@@ -21,14 +21,9 @@ namespace OALProgramControl
             this.Condition = Condition;
             this.CurrentLoopControlCommand = LoopControlStructure.None;
         }
-
-        public override Boolean SynchronizedExecute(OALProgram OALProgram, EXEScope Scope)
+        public override Boolean Execute(OALProgram OALProgram)
         {
-            Boolean Success = this.Execute(OALProgram, Scope);
-            return Success;
-        }
-        public override Boolean Execute(OALProgram OALProgram , EXEScope Scope)
-        {
+            /*
             Boolean Success = true;
             this.OALProgram = OALProgram;
 
@@ -96,76 +91,8 @@ namespace OALProgramControl
                 }
             }
             return Success;
-        }
-        public override Boolean PreExecute(AnimationCommandStorage ACS, OALProgram OALProgram, EXEScope Scope)
-        {
-            Boolean Success = true;
-            this.OALProgram = OALProgram;
-
-            bool ConditionTrue = true;
-            String ConditionResult;
-            int IterationCounter = 0;
-            while (ConditionTrue)
-            {
-                OALProgram.AccessInstanceDatabase();
-                ConditionResult = this.Condition.Evaluate(Scope, OALProgram.ExecutionSpace);
-                OALProgram.LeaveInstanceDatabase();
-
-                //!!NON-RECURSIVE!!
-                this.ClearVariables();
-
-                if (ConditionResult == null)
-                {
-                    return false;
-                }
-                if (!EXETypes.BooleanTypeName.Equals(EXETypes.DetermineVariableType("", ConditionResult)))
-                {
-                    return false;
-                }
-                ConditionTrue = EXETypes.BooleanTrue.Equals(ConditionResult);
-                if (!ConditionTrue)
-                {
-                    break;
-                }
-
-                if (IterationCounter >= EXEExecutionGlobals.LoopIterationCap)
-                {
-                    Success = false;
-                    break;
-                }
-
-                foreach (EXECommand Command in this.Commands)
-                {
-                    if (this.CurrentLoopControlCommand != LoopControlStructure.None)
-                    {
-                        break;
-                    }
-
-                    Success = Command.PreExecute(ACS, OALProgram, this);
-                    if (!Success)
-                    {
-                        break;
-                    }
-                }
-                if (!Success)
-                {
-                    break;
-                }
-
-                IterationCounter++;
-
-                if (this.CurrentLoopControlCommand == LoopControlStructure.Break)
-                {
-                    this.CurrentLoopControlCommand = LoopControlStructure.None;
-                    break;
-                }
-                else if (this.CurrentLoopControlCommand == LoopControlStructure.Continue)
-                {
-                    this.CurrentLoopControlCommand = LoopControlStructure.None;
-                    continue;
-                }
-            }
-            return Success;
+            */
+            return true;
         }
         public override bool PropagateControlCommand(LoopControlStructure PropagatedCommand)
         {
@@ -182,7 +109,7 @@ namespace OALProgramControl
         public override String ToCode(String Indent = "")
         {
             String Result = Indent + "while (" + this.Condition.ToCode() + ")\n";
-            foreach (EXECommand Command in this.Commands)
+            foreach (EXECommand Command in this._Commands)
             {
                 Result += Command.ToCode(Indent + "\t");
             }

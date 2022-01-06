@@ -22,14 +22,14 @@ namespace OALProgramControl
         // Based on class names get the CDRelationship from RelationshipSpace
         // Based on variable names get the instance ids from Scope.ReferencingVariables
         // Create relationship between the given instance ids (CDRelationship.CreateRelationship) and return result of it
-        public override bool Execute(OALProgram OALProgram, EXEScope Scope)
+        public override bool Execute(OALProgram OALProgram)
         {
-            EXEReferencingVariable Variable1 = Scope.FindReferencingVariableByName(this.Variable1Name);
+            EXEReferencingVariable Variable1 = SuperScope.FindReferencingVariableByName(this.Variable1Name);
             if (Variable1 == null)
             {
                 return false;
             }
-            EXEReferencingVariable Variable2 = Scope.FindReferencingVariableByName(this.Variable2Name);
+            EXEReferencingVariable Variable2 = SuperScope.FindReferencingVariableByName(this.Variable2Name);
             if (Variable2 == null)
             {
                 return false;

@@ -21,12 +21,11 @@ namespace OALProgramControl
             this.AssignedExpression = AssignedExpression;
         }
 
-        public override Boolean Execute(OALProgram OALProgram, EXEScope Scope)
+        public override Boolean Execute(OALProgram OALProgram)
         {
-            //Console.WriteLine("Assignment is being executed");
             Boolean Result = false;
 
-            String AssignedValue = this.AssignedExpression.Evaluate(Scope, OALProgram.ExecutionSpace);
+            String AssignedValue = this.AssignedExpression.Evaluate(SuperScope, OALProgram.ExecutionSpace);
 
             if (AssignedValue == null)
             {
@@ -36,25 +35,21 @@ namespace OALProgramControl
             // If we are assigning to a variable
             if (this.AttributeName == null)
             {
-                //Console.WriteLine("Assigning value: " + AssignedValue + " to variable " + this.VariableName);
 
-                EXEPrimitiveVariable Variable = Scope.FindPrimitiveVariableByName(this.VariableName);
+                EXEPrimitiveVariable Variable = SuperScope.FindPrimitiveVariableByName(this.VariableName);
                 // If the variable doesnt exist, we simply create it
                 if (Variable == null)
                 {
-                    //Console.WriteLine("Creating new var " + this.VariableName);
-                    Result = Scope.AddVariable(new EXEPrimitiveVariable(this.VariableName, AssignedValue));
+                    Result = SuperScope.AddVariable(new EXEPrimitiveVariable(this.VariableName, AssignedValue));
                 }
                 //If variable exists and its type is UNDEFINED
                 else if (EXETypes.UnitializedName.Equals(Variable.Type))
                 {
-                    //Console.WriteLine("Assigning to unitialized var" + this.VariableName);
                     Result = Variable.AssignValue(Variable.Name, AssignedValue);
                 }
                 // If the variable exists and is primitive
                 else if (!EXETypes.ReferenceTypeName.Equals(Variable.Type))
                 {
-                    //Console.WriteLine("Assigning to initialized var" + this.VariableName);
                     // If the types don't match, this fails and returns false
                     AssignedValue = EXETypes.AdjustAssignedValue(Variable.Type, AssignedValue);
                     Result = Variable.AssignValue("", AssignedValue);
@@ -68,11 +63,9 @@ namespace OALProgramControl
             {
             
                 EXEReferenceEvaluator RefEvaluator = new EXEReferenceEvaluator();
-                Result = RefEvaluator.SetAttributeValue(this.VariableName, this.AttributeName, Scope, OALProgram.ExecutionSpace, AssignedValue);
-                //Console.WriteLine("Tried to assign " + AssignedValue + " to " + this.VariableName + "." + this.AttributeName);
+                Result = RefEvaluator.SetAttributeValue(this.VariableName, this.AttributeName, SuperScope, OALProgram.ExecutionSpace, AssignedValue);
             }
 
-            //Console.WriteLine("Assignment Result: " + Result);
             return Result;
         }
         public override String ToCodeSimple()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,122 +11,54 @@ namespace OALProgramControl
     {
         public CDClassPool ExecutionSpace { get; set; }
         public CDRelationshipPool RelationshipSpace { get; set; }
-        private bool InDatabase;
-        private readonly object InstanceDatabaseLock = new object();
 
-        public EXEScope SuperScope { get; set; }
-        private int AllowedStepCount { get; set; }
-        private bool ContinuousExecution { get; set; }
-
-        private readonly object StepCountLock = new object();
-
-        public EXEThreadSynchronizator ThreadSyncer { get; }
-
-        public EXETestGUI Visualizer = new EXETestGUIImplementation();
-        
-        private int command_counter = 0;
+        private EXEScope _SuperScope;
+        public EXEScope SuperScope
+        {
+            get
+            {
+                return _SuperScope;
+            }
+            set
+            {
+                _SuperScope = value;
+                CurrentCommandPointer = new EXEProgramPointer(_SuperScope);
+            }
+        }
+        private EXEProgramPointer CurrentCommandPointer { get; set; }
 
         public OALProgram()
         {
-            Debug.Log("OALProgram Constructor was called");
-
             this.ExecutionSpace = new CDClassPool();
             this.RelationshipSpace = new CDRelationshipPool();
             this.SuperScope = new EXEScope();
-
-            this.AllowedStepCount = int.MaxValue;
-            this.ContinuousExecution = true;
-            this.ThreadSyncer = new EXEThreadSynchronizator(this);
-
-            this.InDatabase = false;
+            this.CurrentCommandPointer = new EXEProgramPointer(SuperScope);
         }
 
-        public void AccessInstanceDatabase()
-        {
-            Console.WriteLine("Accessing Instance DB");
-            lock (this.InstanceDatabaseLock)
-            {
-                
-                while (this.InDatabase)
-                {
-                    Monitor.Wait(this.InstanceDatabaseLock);
-                }
-                this.InDatabase = true;
-            }
-            Console.WriteLine("Accessed Instance DB");
-            //Console.WriteLine("Executing command no. " + ++this.command_counter);
-        }
-        public void LeaveInstanceDatabase()
-        {
-            Console.WriteLine("Leaving Instance DB");
-            lock (this.InstanceDatabaseLock)
-            {
-                Monitor.PulseAll(this.InstanceDatabaseLock);
-                this.InDatabase = false;
-            }
-            Console.WriteLine("Left Instance DB");
-        }
-        public bool Execute()
+        public bool NextStep()
         {
             bool Result = false;
 
-            this.ThreadSyncer.RegisterThread(1);
-
-            Result = this.SuperScope.SynchronizedExecute(this, null);
-
-            this.ThreadSyncer.UnregisterThread();
-            this.SuperScope.ClearVariablesRecursive();
+            EXECommand NextCommand = CurrentCommandPointer.NextCommand();
+            if (NextCommand != null)
+            {
+                Result = true;
+            }
 
             return Result;
         }
-
-        public bool PreExecute(AnimationCommandStorage ACS)
+        public List<EXECommand> CurrentCommands()
         {
-            bool Result = false;
-
-            this.ThreadSyncer.RegisterThread(1);
-
-            Result = this.SuperScope.PreExecute(ACS, this, null);   //predtym bol v tretom parametri this.Superscope
-
-            this.ThreadSyncer.UnregisterThread();
-            this.SuperScope.ClearVariablesRecursive();
+            List<EXECommand> Result = new EXECommand[] { CurrentCommandPointer.CurrentCommand }.ToList();
 
             return Result;
         }
+        /*public bool Execute()
+        {
+            bool Result = this.SuperScope.Execute(this, null);
+            this.SuperScope.ClearVariablesRecursive();
 
-        public void RequestNextStep()
-        {
-            lock (StepCountLock)
-            {
-                if (!ContinuousExecution)
-                {
-                    while (AllowedStepCount <= 0)
-                    {
-                        Monitor.Wait(StepCountLock);
-                    }
-                    --AllowedStepCount;
-                } 
-            }
-        }
-        public void PermitNextStep()
-        {
-            lock (StepCountLock)
-            {
-                ++AllowedStepCount;
-                Monitor.PulseAll(StepCountLock);
-            }
-        }
-        public void ToggleContinuousExecution()
-        {
-            lock (StepCountLock)
-            {
-                ContinuousExecution = !ContinuousExecution;
-                if (!ContinuousExecution)
-                {
-                    AllowedStepCount = 0;
-                }
-                Monitor.PulseAll(StepCountLock);
-            }
-        }
+            return Result;
+        }*/
     }
 }

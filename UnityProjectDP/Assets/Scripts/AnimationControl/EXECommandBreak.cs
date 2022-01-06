@@ -2,9 +2,9 @@
 {
     public class EXECommandBreak : EXECommand
     {
-        public override bool Execute(OALProgram OALProgram, EXEScope Scope)
+        public override bool Execute(OALProgram OALProgram)
         {
-            return Scope.PropagateControlCommand(LoopControlStructure.Break);
+            return SuperScope.PropagateControlCommand(LoopControlStructure.Break);
         }
         public override string ToCodeSimple()
         {

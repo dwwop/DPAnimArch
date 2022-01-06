@@ -11,16 +11,16 @@ namespace OALProgramControl
             this.VariableName = VariableName;
         }
 
-        public override bool Execute(OALProgram OALProgram, EXEScope Scope)
+        public override bool Execute(OALProgram OALProgram)
         {
             bool Result = false;
-            EXEReferencingVariable Variable = Scope.FindReferencingVariableByName(this.VariableName);
+            EXEReferencingVariable Variable = SuperScope.FindReferencingVariableByName(this.VariableName);
             if (Variable != null)
             {
                 bool DestructionSuccess = OALProgram.ExecutionSpace.DestroyInstance(Variable.ClassName, Variable.ReferencedInstanceId);
                 if(DestructionSuccess)
                 {
-                    Result = Scope.UnsetReferencingVariables(Variable.ClassName, Variable.ReferencedInstanceId);
+                    Result = SuperScope.UnsetReferencingVariables(Variable.ClassName, Variable.ReferencedInstanceId);
                 }
             }
             return Result;

@@ -32,9 +32,8 @@ namespace OALProgramControl
         }
 
         // SetUloh2
-        public override bool Execute(OALProgram OALProgram, EXEScope Scope)
+        public override bool Execute(OALProgram OALProgram)
         {
-            /*
             //Select instances of given class that match the criteria and assign them to variable with given name
             // ClassName tells us which class we are interested in
             // Cardinality tells us whether we want one random instance (matching the criteria) or all of them
@@ -50,7 +49,7 @@ namespace OALProgramControl
             }
 
             // We need to check, if the variable already exists, it must be of corresponding type
-            if (Scope.VariableNameExists(this.VariableName))
+            if (SuperScope.VariableNameExists(this.VariableName))
             {
                 if
                 (
@@ -58,13 +57,13 @@ namespace OALProgramControl
                         (
                             EXECommandQuerySelect.CardinalityAny.Equals(this.Cardinality)
                             &&
-                            this.ClassName == Scope.FindReferencingVariableByName(this.VariableName).ClassName
+                            this.ClassName == SuperScope.FindReferencingVariableByName(this.VariableName).ClassName
                         )
                         ||
                         (
                             EXECommandQuerySelect.CardinalityMany.Equals(this.Cardinality)
                             &&
-                            this.ClassName == Scope.FindSetReferencingVariableByName(this.VariableName).ClassName
+                            this.ClassName == SuperScope.FindSetReferencingVariableByName(this.VariableName).ClassName
                         )
                     )
                 )
@@ -83,7 +82,7 @@ namespace OALProgramControl
             // If class has no instances, command may execute successfully, but we better verify references in the WHERE condition
             if (SelectedIds.Count() == 0 && this.WhereCondition != null)
             {
-                return this.WhereCondition.VerifyReferences(Scope, OALProgram.ExecutionSpace);
+                return this.WhereCondition.VerifyReferences(SuperScope, OALProgram.ExecutionSpace);
             }
 
             //Console.WriteLine("Select has " + SelectedIds.Count + " potential results");
@@ -95,7 +94,7 @@ namespace OALProgramControl
 
                 //Console.WriteLine("creating selected var");
                 EXEReferencingVariable SelectedVar = new EXEReferencingVariable(TempSelectedVarName, this.ClassName, -1);
-                if (!Scope.AddVariable(SelectedVar))
+                if (!SuperScope.AddVariable(SelectedVar))
                 {
                     return false;
                 }
@@ -105,14 +104,14 @@ namespace OALProgramControl
                 {
                     //Console.WriteLine("id check iteration start");
                     SelectedVar.ReferencedInstanceId = Id;
-                    String ConditionResult = this.WhereCondition.Evaluate(Scope, OALProgram.ExecutionSpace);
+                    String ConditionResult = this.WhereCondition.Evaluate(SuperScope, OALProgram.ExecutionSpace);
 
                     //Console.WriteLine("cond evaluated");
                     //Console.WriteLine(Id + " : " + ConditionResult == null ? "null" : ConditionResult);
 
                     if (!EXETypes.IsValidValue(ConditionResult, EXETypes.BooleanTypeName))
                     {
-                        Scope.DestroyReferencingVariable(TempSelectedVarName);
+                        SuperScope.DestroyReferencingVariable(TempSelectedVarName);
                         return false;
                     }
 
@@ -124,18 +123,18 @@ namespace OALProgramControl
                 //Console.WriteLine("Select has " + SelectedIds.Count + " results");
                 //foreach (long id in ResultIds) Console.WriteLine("RES: " + id);
                 SelectedIds = ResultIds;
-                Scope.DestroyReferencingVariable(TempSelectedVarName);
+                SuperScope.DestroyReferencingVariable(TempSelectedVarName);
             
             }
 
             // Now we have ids of selected instances. Let's assign them to a variable
             if (EXECommandQuerySelect.CardinalityMany.Equals(this.Cardinality))
             {
-                EXEReferencingSetVariable Variable = Scope.FindSetReferencingVariableByName(this.VariableName);
+                EXEReferencingSetVariable Variable = SuperScope.FindSetReferencingVariableByName(this.VariableName);
                 if (Variable == null)
                 {
                     Variable = new EXEReferencingSetVariable(this.VariableName, this.ClassName);
-                    if (!Scope.AddVariable(Variable))
+                    if (!SuperScope.AddVariable(Variable))
                     {
                         return false;
                     }
@@ -147,13 +146,13 @@ namespace OALProgramControl
             }
             else if (EXECommandQuerySelect.CardinalityAny.Equals(this.Cardinality))
             {
-                EXEReferencingVariable Variable = Scope.FindReferencingVariableByName(this.VariableName);
+                EXEReferencingVariable Variable = SuperScope.FindReferencingVariableByName(this.VariableName);
                 long ResultId = SelectedIds.Any() ? SelectedIds[new Random().Next(SelectedIds.Count)] : -1;
                 if (Variable == null)
                 {
                     //Console.WriteLine("Final 'any' id is " + ResultId);
                     Variable = new EXEReferencingVariable(this.VariableName, this.ClassName, ResultId);
-                    if (!Scope.AddVariable(Variable))
+                    if (!SuperScope.AddVariable(Variable))
                     {
                         return false;
                     }
@@ -167,11 +166,6 @@ namespace OALProgramControl
             {
                 return false;
             }
-
-            return true;
-            */
-
-            ConsolePanel.Instance.YieldOutput(ToCodeSimple());
 
             return true;
         }

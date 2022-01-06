@@ -21,7 +21,7 @@ namespace OALProgramControl
             this.RelationshipSelection = RelationshipSelection;
         }
         // SetUloh2
-        public override bool Execute(OALProgram OALProgram, EXEScope Scope)
+        public override bool Execute(OALProgram OALProgram)
         {
             //Select instances of given class that match the criteria and assign them to variable with given name
             // ClassName tells us which class we are interested in
@@ -44,18 +44,18 @@ namespace OALProgramControl
             }
 
             // We need to check, if the variable already exists, it must be of corresponding type
-            if (Scope.VariableNameExists(this.VariableName))
+            if (SuperScope.VariableNameExists(this.VariableName))
             {
                 if
                 (
                     !(
                             (EXECommandQuerySelect.CardinalityAny.Equals(this.Cardinality)
                             &&
-                            this.RelationshipSelection.GetLastClassName() == Scope.FindReferencingVariableByName(this.VariableName).ClassName)
+                            this.RelationshipSelection.GetLastClassName() == SuperScope.FindReferencingVariableByName(this.VariableName).ClassName)
                         ||
                             (EXECommandQuerySelect.CardinalityMany.Equals(this.Cardinality)
                             &&
-                            this.RelationshipSelection.GetLastClassName() == Scope.FindSetReferencingVariableByName(this.VariableName).ClassName)
+                            this.RelationshipSelection.GetLastClassName() == SuperScope.FindSetReferencingVariableByName(this.VariableName).ClassName)
                     )
                 )
                 {
@@ -64,7 +64,7 @@ namespace OALProgramControl
             }
 
             // Evaluate relationship selection. If it fails, execution fails too
-            List<long> SelectedIds = this.RelationshipSelection.Evaluate(OALProgram.RelationshipSpace, Scope);
+            List<long> SelectedIds = this.RelationshipSelection.Evaluate(OALProgram.RelationshipSpace, SuperScope);
             if (SelectedIds == null)
             {
                 return false;
@@ -72,7 +72,7 @@ namespace OALProgramControl
             // If class has no instances, command may execute successfully, but we better verify references in the WHERE condition
             if (SelectedIds.Count() == 0 && this.WhereCondition != null)
             {
-                return this.WhereCondition.VerifyReferences(Scope, OALProgram.ExecutionSpace);
+                return this.WhereCondition.VerifyReferences(SuperScope, OALProgram.ExecutionSpace);
             }
 
             // Now let's evaluate the condition
@@ -81,7 +81,7 @@ namespace OALProgramControl
                 String TempSelectedVarName = "selected";
 
                 EXEReferencingVariable SelectedVar = new EXEReferencingVariable(TempSelectedVarName, this.RelationshipSelection.GetLastClassName(), -1);
-                if (!Scope.AddVariable(SelectedVar))
+                if (!SuperScope.AddVariable(SelectedVar))
                 {
                     return false;
                 }
@@ -90,12 +90,12 @@ namespace OALProgramControl
                 foreach (long Id in SelectedIds)
                 {
                     SelectedVar.ReferencedInstanceId = Id;
-                    String ConditionResult = this.WhereCondition.Evaluate(Scope, OALProgram.ExecutionSpace);
+                    String ConditionResult = this.WhereCondition.Evaluate(SuperScope, OALProgram.ExecutionSpace);
                     //Console.Write(Id + " : " + ConditionResult);
 
                     if(!EXETypes.IsValidValue(ConditionResult, EXETypes.BooleanTypeName))
                     {
-                        Scope.DestroyReferencingVariable(TempSelectedVarName);
+                        SuperScope.DestroyReferencingVariable(TempSelectedVarName);
                         return false;
                     }
 
@@ -106,17 +106,17 @@ namespace OALProgramControl
                 }
 
                 SelectedIds = ResultIds;
-                Scope.DestroyReferencingVariable(TempSelectedVarName);
+                SuperScope.DestroyReferencingVariable(TempSelectedVarName);
             }
 
             // Now we have ids of selected instances. Let's assign them to a variable
             if (EXECommandQuerySelect.CardinalityMany.Equals(this.Cardinality))
             {
-                EXEReferencingSetVariable Variable = Scope.FindSetReferencingVariableByName(this.VariableName);
+                EXEReferencingSetVariable Variable = SuperScope.FindSetReferencingVariableByName(this.VariableName);
                 if (Variable == null)
                 {
                     Variable = new EXEReferencingSetVariable(this.VariableName, this.RelationshipSelection.GetLastClassName());
-                    if (!Scope.AddVariable(Variable))
+                    if (!SuperScope.AddVariable(Variable))
                     {
                         return false;
                     }
@@ -128,12 +128,12 @@ namespace OALProgramControl
             }
             else if (EXECommandQuerySelect.CardinalityAny.Equals(this.Cardinality))
             {
-                EXEReferencingVariable Variable = Scope.FindReferencingVariableByName(this.VariableName);
+                EXEReferencingVariable Variable = SuperScope.FindReferencingVariableByName(this.VariableName);
                 if (Variable == null)
                 {
                     long ResultId = SelectedIds.Any() ? SelectedIds[new Random().Next(SelectedIds.Count)] : -1;
                     Variable = new EXEReferencingVariable(this.VariableName, this.RelationshipSelection.GetLastClassName(), ResultId);
-                    if (!Scope.AddVariable(Variable))
+                    if (!SuperScope.AddVariable(Variable))
                     {
                         return false;
                     }

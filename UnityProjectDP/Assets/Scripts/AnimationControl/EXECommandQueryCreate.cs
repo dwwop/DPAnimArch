@@ -24,7 +24,7 @@ namespace OALProgramControl
         }
 
         // SetUloh2
-        public override bool Execute(OALProgram OALProgram, EXEScope Scope)
+        public override bool Execute(OALProgram OALProgram)
         {
             //Create an instance of given class -> will affect ExecutionSpace.
             //If ReferencingVariableName is provided (is not ""), create a referencing variable pointing to this instance -> will affect scope
@@ -34,7 +34,7 @@ namespace OALProgramControl
                 return false;
             }
 
-            EXEReferencingVariable Variable = Scope.FindReferencingVariableByName(this.ReferencingVariableName);
+            EXEReferencingVariable Variable = SuperScope.FindReferencingVariableByName(this.ReferencingVariableName);
             if (Variable != null)
             {
                 if (!String.Equals(this.ClassName, Variable.ClassName))
@@ -59,7 +59,7 @@ namespace OALProgramControl
                 else
                 {
                     Variable = new EXEReferencingVariable(this.ReferencingVariableName, Class.Name, Instance.UniqueID);
-                    return Scope.AddVariable(Variable);
+                    return SuperScope.AddVariable(Variable);
                 }
             }
 

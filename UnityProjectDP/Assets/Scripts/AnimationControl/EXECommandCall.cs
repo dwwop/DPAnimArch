@@ -26,40 +26,16 @@ namespace OALProgramControl
             this.CalledClass = CalledClass;
             this.CalledMethod = CalledMethod;
         }
-        public override Boolean SynchronizedExecute(OALProgram OALProgram, EXEScope Scope)
-        {
-            Boolean Success = this.Execute(OALProgram, Scope);
-            return Success;
-        }
 
-        public override Boolean Execute(OALProgram OALProgram, EXEScope Scope)
+        public override Boolean Execute(OALProgram OALProgram)
         {
-            //OALProgram.RequestNextStep();
-            OALProgram.ThreadSyncer.RequestStep(this, Scope, null);
-
             //Filip, ak mas null v executablecode tak vrat true inak toto dole
-            EXEScopeMethod ExecutableCode = OALProgram.ExecutionSpace.getClassByName(this.CalledClass).getMethodByName(this.CalledMethod).ExecutableCode;
+            /*EXEScopeMethod ExecutableCode = OALProgram.ExecutionSpace.getClassByName(this.CalledClass).getMethodByName(this.CalledMethod).ExecutableCode;
             if (ExecutableCode != null)
             {
                 return ExecutableCode.SynchronizedExecute(OALProgram, Scope);
-            }
+            }*/
             
-            return true;
-        }
-
-        public override Boolean PreExecute(AnimationCommandStorage ACS, OALProgram OALProgram, EXEScope Scope)
-        {
-            OALProgram.ThreadSyncer.RequestStep(this, Scope, ACS);
-
-            //ACS.AddAnimationStep(new AnimationCommand(Scope, this));
-
-            //Filip, ak mas null v executablecode tak vrat true inak toto dole
-            EXEScopeMethod ExecutableCode = OALProgram.ExecutionSpace.getClassByName(this.CalledClass).getMethodByName(this.CalledMethod).ExecutableCode;
-            if (ExecutableCode != null)
-            {
-                return ExecutableCode.PreExecute(ACS, OALProgram, Scope);
-            }
-
             return true;
         }
 
