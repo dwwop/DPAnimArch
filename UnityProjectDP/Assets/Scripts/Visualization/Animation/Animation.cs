@@ -113,10 +113,11 @@ public class Animation : Singleton<Animation>
 
             if (CurrentCommand.GetType().Equals(typeof(EXECommandCall)))
             {
+				BarrierSize = 1;
+                CurrentBarrierFill = 0;
+				
                 StartCoroutine(ResolveCallFunct(((EXECommandCall)CurrentCommand).CreateOALCall()));
 
-                BarrierSize = 1;
-                CurrentBarrierFill = 0;
                 yield return StartCoroutine(BarrierFillCheck());
             }
 
