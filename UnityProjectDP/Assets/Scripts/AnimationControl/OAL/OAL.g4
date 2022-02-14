@@ -1,193 +1,211 @@
 grammar OAL;
 
+// Parser Rules
+//treba asi podoplnat commenty aj do jednotlivych pravidiel //asi netreba
+
 lines
 	:	line+ EOF
 	;
 
 line
-	:	exeCommandQueryCreate 
-	|	exeCommandQueryRelate 
-	|	exeCommandQuerySelect 
-	|	exeCommandQuerySelectRelatedBy 
-	|	exeCommandQueryDelete 
-	|	exeCommandQueryUnrelate 
-	|	exeCommandAssignment 
-	|	exeCommandCall 
+	:	exeCommandQueryCreate
+	|	exeCommandQueryRelate
+	|	exeCommandQuerySelect
+	|	exeCommandQuerySelectRelatedBy
+	|	exeCommandQueryDelete
+	|	exeCommandQueryUnrelate
+	|	exeCommandAssignment
+	|	exeCommandCall
+	|	exeCommandCreateList
+	|	exeCommandAddingToList
+	|	exeCommandWrite
+	|	exeCommandRead
 	|	continueCommand
 	|	breakCommand
 	|	whileCommand
-	|	ifCommnad
+	|	ifCommand
 	|	foreachCommand
 	|	parCommand
-	;
-	
-parCommand
-	:	'par'('thread' line+ 'end thread;')+ 'end par;'
+	|	commentCommand
 	;
 
-ifCommnad
-	:	'if''('expr')' line* ('elif''('expr')' line+)* ('else' line+)? 'end if;'
-	;
+parCommand
+    :   'par' 'thread' line+ 'end thread' ';' ('thread' line+ 'end thread' ';')+ 'end par' ';'    //oni nemaju 2 az n
+    ;
+
+ifCommand
+    :   'if' expr line* ('elif' '(' expr ')' line+)* ('else' line+)? 'end if' ';'  //zatvorky maju byt povinne alebo nemusia? moze byt v ifelse aj * pri line?
+    ;
 
 whileCommand
-	:	'while''('expr')' line+ 'end while;'
-	;
-	
+    :   'while' '(' expr ')' line+ 'end while' ';'
+    ;
+
 foreachCommand
-	:	'for each' variableName ' in ' variableName line+ 'end for;'
-	;
+    :   'for each ' variableName ' in ' instanceHandle line+ 'end for' ';'
+    ;
 
 continueCommand
-	:	'continue;'
+	:   'continue' ';'
 	;
 
 breakCommand
-	:	'break;'
-	;
+    :   'break' ';'
+    ;
+
+commentCommand
+    :   COMMENT
+    ;
 
 exeCommandQueryCreate
-	:	'create object instance 'instanceHandle' of 'keyLetter';'
-	|	'create object instance of 'keyLetter';'
-	;
+    :   'create object instance ' instanceHandle ' of ' keyLetter ';'
+    |   'create object instance of ' keyLetter ';'
+    ;
 
 exeCommandQueryRelate
-	:	'relate 'instanceHandle' to 'instanceHandle' across 'relationshipSpecification';'
-	;
+    :   'relate ' instanceHandle ' to ' instanceHandle ' across ' relationshipSpecification ';'
+    ;
 
 exeCommandQuerySelect
-	:	'select any 'instanceHandle' from instances of 'keyLetter (' where ' whereExpression)?';'
-	|	'select many 'instanceHandle' from instances of 'keyLetter (' where ' whereExpression)?';'
-	;
+    :   'select any ' instanceHandle ' from instances of ' keyLetter (' where ' whereExpression)? ';'
+    |   'select many ' instanceHandle ' from instances of ' keyLetter (' where ' whereExpression)? ';'
+    ;
 
 exeCommandQuerySelectRelatedBy
-	:	'select any 'instanceHandle' related by 'start'->'className relationshipLink ('->'className relationshipLink)* (' where ' whereExpression)?';'
-	|	'select many 'instanceHandle' related by 'start'->'className relationshipLink ('->'className relationshipLink)* (' where ' whereExpression)?';'
-	;
+    :   'select any ' instanceHandle ' related by ' start '->' className relationshipLink ('->' className relationshipLink)* (' where ' whereExpression)? ';'
+    |   'select many ' instanceHandle ' related by ' start '->' className relationshipLink ('->' className relationshipLink)* (' where ' whereExpression)? ';'
+    ;
 
 exeCommandQueryDelete
-	:	'delete object instance 'instanceHandle';'
-	;
+    :   'delete object instance ' instanceHandle ';'
+    ;
 
 exeCommandQueryUnrelate
-	:	'unrelate 'instanceHandle' from 'instanceHandle' across 'relationshipSpecification';'
-	;
+    :   'unrelate ' instanceHandle ' from ' instanceHandle ' across ' relationshipSpecification ';'
+    ;
 
 exeCommandAssignment
-	:	variableName'='expr';'
-	|	'assign 'variableName'='expr';'
-	|	instanceHandle'.'atribute'='expr';'
-	|	'assign 'instanceHandle'.'atribute'='expr';'
-	;
+    :   ('assign ')? instanceHandle '=' expr ';'
+    ;
 
 exeCommandCall
-	:	'call from 'keyLetter'::'methodName'() to 'keyLetter'::'methodName'()'(' across 'relationshipSpecification)?';'
-	;
+    :   instanceHandle '.' methodName ('()' | '(' expr? (',' expr)* ')') ';'
+    |   'call from ' keyLetter '::' methodName '() to ' keyLetter '::' methodName '()' (' across ' relationshipSpecification)? ';'
+    ;
 
-commands
-	:	'create object instance 'instanceHandle' of 'keyLetter';'
-	|	'create object instance of 'keyLetter';'
-	|	'relate 'instanceHandle' to 'instanceHandle' across 'relationshipSpecification';'
-	|	'unrelate 'instanceHandle' from 'instanceHandle' across 'relationshipSpecification';'
-	|	'select any 'instanceHandle' from instances of 'keyLetter (' where ' whereExpression)?';'
-	|	'select many 'instanceHandle' from instances of 'keyLetter (' where ' whereExpression)?';'
-	|	'select any 'instanceHandle' related by 'start'->'className relationshipLink ('->'className relationshipLink)* (' where ' whereExpression)?';'
-	|	'select many 'instanceHandle' related by 'start'->'className relationshipLink ('->'className relationshipLink)* (' where ' whereExpression)?';'
-	|	'delete object instance 'instanceHandle';'
-	|	variableName'='expr';'
-	|	instanceHandle'.'atribute'='expr';'
-	|	'assign 'variableName'='expr';'
-	|	'assign 'instanceHandle'.'atribute'='expr';'
-	|	'call from 'keyLetter'::'methodName'() to 'keyLetter'::'methodName'()'(' across 'relationshipSpecification)?';'
-	;
+exeCommandCreateList
+    :   'create list ' instanceHandle ' of ' keyLetter ('{' instanceHandle (',' instanceHandle)* '}')? ';'
+    ;
 
-relationshipLink
-    :    '['RelationshipSpecification']'
+exeCommandAddingToList
+    :   'add ' instanceHandle ' to ' instanceHandle ';'
+    ;
+
+exeCommandWrite
+    :   'write(' (expr (',' expr)*)? ')' ';'
+    ;
+
+exeCommandRead
+    :   ('assign ')? instanceHandle '=' ('read(' string? ')' | 'int(read(' string? '))' | 'real(read(' string? '))' | 'bool(read(' string? '))') ';'
+    ;
+
+expr
+    :   NUM | variableName | BOOL | string
+    |   variableName '.' variableName
+    |   'cardinality ' instanceHandle
+    |   ('empty ' | 'not_empty ') instanceHandle
+    |   '(' expr ')'
+    |   '-' expr 
+    |   expr ('*' | '/' | '%') expr
+    |   expr ('+' | '-')  expr
+    |   expr ('<' | '>' | '<=' | '>=' | '==' | '!=') expr
+    |   ('not ' | 'NOT ') expr
+    |   expr (' and ' | ' AND ') expr
+    |   expr (' or ' | ' OR ') expr
     ;
 
 instanceHandle
-	:	VariableName
-	;
+    :   instanceName
+    |   instanceName '.' attribute
+    ;
+
+instanceName
+    :   NAME
+    ;
 
 keyLetter
-	:	VariableName
-	;
+    :   NAME
+    ;
 
 whereExpression
-	:	expr
+	:   expr
 	;
 
 start
-	:	VariableName
+	:	NAME
 	;
 
 className
-	:	VariableName
+	:	NAME
 	;
 
 variableName
-	:	VariableName
+	:	NAME
 	;
 
 methodName
-	:	VariableName
+	:	NAME
 	;
 
-anyOrMany
-	:	AnyOrMany
+attribute
+	:	NAME
 	;
 
-atribute
-	:	VariableName
-	;
+string
+    :   STRING
+    ;  
 
-expr
-	:	 Digit | VariableName | Text
-    |    VariableName'.'VariableName
-	|	 'cardinality 'VariableName
-	|	 expr ('*' | '/' | '%') expr
-    |    expr ('+' | '-') expr
-    |    expr ('<' | '>' | '<=' | '>=') expr
-	|	 ('empty ' | 'not_empty ')VariableName
-	|    ('NOT ' | 'not ') expr
-    |    expr ('==' | '!=') expr
-	|	 '(' expr ')'
-    |    expr ('AND' | 'OR' | 'and' | 'or') expr
+relationshipLink
+    :   '['RELATIONSHIP_SPECIFICATION']'
     ;
 
 relationshipSpecification
-    :    RelationshipSpecification
+    :   RELATIONSHIP_SPECIFICATION
     ;
 
-AnyOrMany
-	:	('any'|'many')
-	;
+// Lexer Rules
 
-RelationshipSpecification
-	:	'R'Digit
-	;
-
-VariableName
-    :   Nondigit ( Nondigit | Digit )*
+RELATIONSHIP_SPECIFICATION
+    :   'R'[0-9]+
     ;
 
-Text
-	:	'"'( Nondigit | Digit | ' ')*'"'
-	;
-
-Digit
-    :     [0-9]+('.'[0-9]+)?
+BOOL
+    :   'TRUE' | 'FALSE'
     ;
 
-Nondigit
-    :     [a-zA-Z_#]
+NAME
+    :   [a-zA-Z_#][a-zA-Z0-9_#]*
     ;
 
-Whitespace
-	:    [ \t]+ 
-	-> skip
-	;
+STRING
+    :   '"' .*? '"' ;
 
-NewLine
-	:	( '\r'? '\n' | '\r')+
-	-> skip
-	;
+NUM
+    :   INT | DECIMAL
+    ;
+
+fragment INT
+    :   '0' | [1-9][0-9]*
+    ;
+fragment DECIMAL
+    :   [0-9]+'.'[0-9]+  //   '0''.'[0-9]+ | [1-9][0-9]*'.'[0-9]+
+    ;
+
+COMMENT
+    :   '//' ~('\r' | '\n')*  // druhy priklad:  '//' .*? '/n'
+    ;
+
+WHITE_SPACE
+    :   [ \t\r\n]+      // skip spaces, tabs, newlines
+    -> skip
+    ;

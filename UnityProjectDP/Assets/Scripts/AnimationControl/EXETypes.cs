@@ -27,6 +27,12 @@ namespace OALProgramControl
         private static readonly List<String> RealNames = new List<string>(new String[] { "real", "float", "double", "decimal", "floating", "floating point" });
         private static readonly List<String> BoolNames = new List<string>(new String[] { "bool", "boolean"});
         private static readonly List<String> StringNames = new List<string>(new String[] { "string", "char[]", "char", "List<char>" });
+        private static readonly List<String> PrimitiveNames = new List<string>(new String[] { IntegerTypeName, RealTypeName, BooleanTypeName, StringTypeName, DateTypeName, UniqueIDTypeName });
+
+        public static bool IsPrimitive(String typeName)
+        {
+            return PrimitiveNames.Contains(typeName.ToLower());
+        }
         public static String DetermineVariableType(String name, String value)
         {
             if (name == UniqueIDAttributeName)

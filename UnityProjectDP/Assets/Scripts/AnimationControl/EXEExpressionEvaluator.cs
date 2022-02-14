@@ -76,7 +76,7 @@ namespace OALProgramControl
                         //convert to list of int
                         List<int> IntList = Operands.Select(int.Parse).ToList();
                         //sub numbers in list and return result 
-                        return IntList.Aggregate((a, x) => a - x).ToString();
+                        return IntList.Aggregate(0, (a, x) => a - x).ToString();
                     }
                     //true if Operands are real numbers
                     if (String.Equals(EXETypes.RealTypeName, VariableType))
@@ -96,7 +96,7 @@ namespace OALProgramControl
                             }
                         }
                         //sub numbers in list and return result
-                        return EXETypes.AdjustAssignedValue(EXETypes.RealTypeName, DoubleList.Aggregate((a, x) => a - x).ToString());
+                        return EXETypes.AdjustAssignedValue(EXETypes.RealTypeName, DoubleList.Aggregate((decimal)0, (a, x) => a - x).ToString());
                     }
                     break;
                 case "*": //int, real
@@ -518,9 +518,13 @@ namespace OALProgramControl
             //check if it is int or real number
             if (String.Equals(ParamType, EXETypes.IntegerTypeName) || String.Equals(ParamType, EXETypes.RealTypeName))
             {
-                if (oper == "+" || oper == "-" || oper == "*" || oper == "/" || oper == "%")
+                if (oper == "+" || oper == "*" || oper == "/" || oper == "%")
                 {
                     if (param.Length < 2) return EXETypes.BooleanFalse;
+                }
+                else if (oper == "-")
+                {
+                    if (param.Length < 1) return EXETypes.BooleanFalse;
                 }
                 else if (oper == "==" || oper == "!=" || oper == "<" || oper == ">" || oper == "<=" || oper == ">=")
                 {

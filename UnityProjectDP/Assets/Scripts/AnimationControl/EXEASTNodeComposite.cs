@@ -12,6 +12,18 @@ namespace OALProgramControl
         public String Operation { get; set; }
         public List<EXEASTNode> Operands { get; }
 
+        public static List<List<String>> LeveledOperators = new List<List<String>>(new List<String>[] {
+            new List<String> (new String[] { "and", "or"}),
+            new List<String> (new String[] { "not"}),
+            new List<String> (new String[] { "==", "!="}),
+            new List<String> (new String[] { "empty", "not_empty"}),
+            new List<String> (new String[] { "<=", ">=", "<", ">" }),
+            new List<String> (new String[] { "+", "-"}),
+            new List<String> (new String[] { "*", "/", "%"}),
+            new List<String> (new String[] { "cardinality"}),
+            new List<String> (new String[] { "."})
+        });
+
         public EXEASTNodeComposite(String Operation)
         {
             this.Operation = Operation;
@@ -225,8 +237,8 @@ namespace OALProgramControl
                     if (Operand is EXEASTNodeComposite)
                     {
                         String SubOperation = ((EXEASTNodeComposite) Operand).Operation;
-                        int ThisOperatorLevel = OALParser2.GetOperatorLevel(this.Operation);
-                        int SubOperatorLevel = OALParser2.GetOperatorLevel(SubOperation);
+                        int ThisOperatorLevel = GetOperatorLevel(this.Operation);
+                        int SubOperatorLevel = GetOperatorLevel(SubOperation);
                         if (ThisOperatorLevel != -1 && SubOperatorLevel != -1)
                         {
                             if (ThisOperatorLevel >= SubOperatorLevel && !this.Operation.Equals(SubOperation))
@@ -250,6 +262,18 @@ namespace OALProgramControl
                 }
             }
             return Result;
+        }
+
+        public static int GetOperatorLevel(String Operator)
+        {
+            for (int i = 0; i < LeveledOperators.Count; i++)
+            {
+                if (LeveledOperators[i].Contains(Operator))
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 }

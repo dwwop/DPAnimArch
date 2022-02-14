@@ -54,8 +54,14 @@ namespace Assets.Scripts.Animation
                 this.InstantiatedRelationships.Add(Relationship);
             }*/
 
-            Result += "call from " + FromClass + "::" + FromMethod + " to "
-            + ToClass + "::" + ToMethod + " across " + Relationship + ";\n";
+            /*Result += "call from " + FromClass + "::" + FromMethod + " to "
+            + ToClass + "::" + ToMethod + " across " + Relationship + ";\n";*/
+
+            //
+            String InstanceName = ToClass.ToLower() + "_1";
+            Result += "create object instance " + InstanceName + " of " + ToClass + ";\n"
+                + InstanceName + "." + ToMethod + ";\n";
+            //
 
             return Result;
         }

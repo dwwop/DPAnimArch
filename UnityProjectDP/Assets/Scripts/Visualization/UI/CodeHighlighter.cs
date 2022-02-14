@@ -4,11 +4,29 @@ using UnityEngine;
 using TMPro;
 using System.Text.RegularExpressions;
 using OALProgramControl;
+using System;
 
 public class CodeHighlighter : MonoBehaviour
 {
     TMP_InputField targetText;
     Dictionary<string, string> keyWords;
+    public static List<String> Keywords = new List<String>(new String[]
+        {
+             "create", "object", "instance", "of",
+            "relate", "to", "across",
+            "select", "any", "many", "from", "instances", "where", "related", "by",
+            "delete", "unrelate",
+            "call",
+            "if", "elif", "else", "end",
+            "par", "thread",
+            "while",
+            "for", "each", "in",
+            "break", "continue",
+            "and", "or", "not",
+            "assign",
+            "false", "true",
+            "cardinality", "empty", "not_empty"
+        });
     void Awake()
     {
         string Colour = "#6a2ac9";
@@ -26,7 +44,7 @@ public class CodeHighlighter : MonoBehaviour
             { "to", Colour}*/
         };
 
-        foreach (string KeyWord in OALParser2.Keywords)
+        foreach (string KeyWord in Keywords)
         {
             keyWords.Add(KeyWord, "#6a2ac9");
         }
