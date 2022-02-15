@@ -24,7 +24,7 @@ namespace OALProgramControl
         }
 
         // SetUloh2
-        public override bool Execute(OALProgram OALProgram)
+        protected override bool Execute(OALProgram OALProgram)
         {
             //Create an instance of given class -> will affect ExecutionSpace.
             //If ReferencingVariableName is provided (is not ""), create a referencing variable pointing to this instance -> will affect scope

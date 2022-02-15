@@ -72,7 +72,7 @@ namespace OALProgramControl
             ElifScope.SetSuperScope(this.GetSuperScope());
         }
 
-        public override Boolean Execute(OALProgram OALProgram)
+        protected override Boolean Execute(OALProgram OALProgram)
         {
             Boolean Result = true;
             Boolean AScopeWasExecuted = false;
@@ -129,7 +129,7 @@ namespace OALProgramControl
                     
                     if (IfConditionResult)
                     {
-                        Result = CurrentElif.Execute(OALProgram);
+                        Result = CurrentElif.PerformExecution(OALProgram);
                         AScopeWasExecuted = true;
                         break;
                     }
@@ -143,7 +143,7 @@ namespace OALProgramControl
 
             if (this.ElseScope != null)
             {
-                Result = this.ElseScope.Execute(OALProgram);
+                Result = this.ElseScope.PerformExecution(OALProgram);
             }
 
             return Result;

@@ -2,7 +2,7 @@
 {
     public class EXECommandBreak : EXECommand
     {
-        public override bool Execute(OALProgram OALProgram)
+        protected override bool Execute(OALProgram OALProgram)
         {
             return true;//return SuperScope.PropagateControlCommand(LoopControlStructure.Break);
         }

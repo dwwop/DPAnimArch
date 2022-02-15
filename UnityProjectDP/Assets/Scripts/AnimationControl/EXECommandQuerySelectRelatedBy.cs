@@ -21,7 +21,7 @@ namespace OALProgramControl
             this.RelationshipSelection = RelationshipSelection;
         }
         // SetUloh2
-        public override bool Execute(OALProgram OALProgram)
+        protected override bool Execute(OALProgram OALProgram)
         {
             //Select instances of given class that match the criteria and assign them to variable with given name
             // ClassName tells us which class we are interested in

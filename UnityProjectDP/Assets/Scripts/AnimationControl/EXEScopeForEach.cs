@@ -23,7 +23,7 @@ namespace OALProgramControl
             this.IterableName = Iterable;
             int IterableIndex = 0;
         }
-        public override Boolean Execute(OALProgram OALProgram)
+        protected override Boolean Execute(OALProgram OALProgram)
         {
             EXEReferencingVariable IteratorVariable = this.FindReferencingVariableByName(this.IteratorName);
             EXEReferencingSetVariable IterableVariable = this.FindSetReferencingVariableByName(this.IterableName);

@@ -158,7 +158,7 @@ public class ClassDiagram : Singleton<ClassDiagram>
                 foreach (Method CurrentMethod in CurrentClass.Methods)
                 {
                     CurrentMethod.Name = CurrentMethod.Name.Replace(" ", "_");
-                    TempCDClass.AddMethod(new CDMethod(CurrentMethod.Name, EXETypes.ConvertEATypeName(CurrentMethod.ReturnValue)));
+                    TempCDClass.AddMethod(new CDMethod(TempCDClass, CurrentMethod.Name, EXETypes.ConvertEATypeName(CurrentMethod.ReturnValue)));
                 }
             }
             CurrentClass.Top *= -1;
@@ -347,7 +347,8 @@ public class ClassDiagram : Singleton<ClassDiagram>
                 c.Methods.Add(methodToAdd);
                 if (OALProgram.Instance.ExecutionSpace.ClassExists(targetClass))
                 {
-                    OALProgram.Instance.ExecutionSpace.getClassByName(targetClass).AddMethod(new CDMethod(methodToAdd.Name, methodToAdd.ReturnValue));
+                    CDClass CDClass = OALProgram.Instance.ExecutionSpace.getClassByName(targetClass);
+                    CDClass.AddMethod(new CDMethod(CDClass, methodToAdd.Name, methodToAdd.ReturnValue));
                 }
                 
             }

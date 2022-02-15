@@ -11,7 +11,7 @@ namespace OALProgramControl
             this.VariableName = VariableName;
         }
 
-        public override bool Execute(OALProgram OALProgram)
+        protected override bool Execute(OALProgram OALProgram)
         {
             bool Result = false;
             EXEReferencingVariable Variable = SuperScope.FindReferencingVariableByName(this.VariableName);

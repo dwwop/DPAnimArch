@@ -5,10 +5,12 @@ namespace OALProgramControl
 {
     public class EXEScopeMethod : EXEScope
     {
+        public MethodCallRecord MethodDefinition;
+
         public EXEScopeMethod() : base()
         {
         }
-        public override Boolean Execute(OALProgram OALProgram)
+        protected override Boolean Execute(OALProgram OALProgram)
         {
             AddCommandsToStack(OALProgram, this.Commands);
             return true;
@@ -17,6 +19,7 @@ namespace OALProgramControl
         {
             EXEScopeMethod Clone = new EXEScopeMethod
             {
+                MethodDefinition = this.MethodDefinition,
                 Commands = new List<EXECommand>(),
                 OALCode = this.OALCode
             };

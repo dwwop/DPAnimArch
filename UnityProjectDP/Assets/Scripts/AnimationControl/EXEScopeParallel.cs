@@ -32,7 +32,7 @@ namespace OALProgramControl
             Thread.SetSuperScope(this);
             this.Threads.Add(Thread);
         }
-        public override Boolean Execute(OALProgram OALProgram)
+        protected override Boolean Execute(OALProgram OALProgram)
         {
             /*
             this.OALProgram = OALProgram;

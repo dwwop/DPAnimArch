@@ -21,7 +21,7 @@ namespace OALProgramControl
             this.AssignedExpression = AssignedExpression;
         }
 
-        public override Boolean Execute(OALProgram OALProgram)
+        protected override Boolean Execute(OALProgram OALProgram)
         {
             UnityEngine.Debug.Log(this.ToCode());
             Boolean Result = false;

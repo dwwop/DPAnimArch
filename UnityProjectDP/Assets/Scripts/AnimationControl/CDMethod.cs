@@ -8,6 +8,7 @@ namespace OALProgramControl
 {
     public class CDMethod
     {
+        public CDClass OwningClass { get; set; }
         public string Name { get; set; }
         public string ReturnType { get; set; }
         public List<CDParameter> Parameters { get; set; }
@@ -24,11 +25,16 @@ namespace OALProgramControl
             set
             {
                 _ExecutableCode = value;
+                if (_ExecutableCode != null)
+                {
+                    _ExecutableCode.MethodDefinition = new MethodCallRecord(this.OwningClass.Name, this.Name);
+                }
             }
         }
 
-        public CDMethod(String Name, String Type)
+        public CDMethod(CDClass OwningClass, String Name, String Type)
         {
+            this.OwningClass = OwningClass;
             this.Name = Name;
             this.ReturnType = Type;
             this.CallCountInOALProgram = 0;

@@ -21,7 +21,7 @@ namespace OALProgramControl
             this.Condition = Condition;
             this.IterationCounter = 0;
         }
-        public override Boolean Execute(OALProgram OALProgram)
+        protected override Boolean Execute(OALProgram OALProgram)
         {
             Boolean Success = true;
 

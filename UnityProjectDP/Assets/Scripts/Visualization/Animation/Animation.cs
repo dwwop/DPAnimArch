@@ -84,8 +84,15 @@ public class Animation : Singleton<Animation>
             }
         }
 
-        if (Program.ExecutionSpace.getClassByName(startClassName).getMethodByName(startMethodName) == null) {
-            Debug.Log("Error, Method not found");
+        CDClass startClass = Program.ExecutionSpace.getClassByName(startClassName);
+        if (startClass == null)
+        {
+            Debug.LogError(string.Format("Error, Class \"{0}\" not found", startClassName ?? "NULL"));
+        }
+
+        CDMethod startMethod = startClass.getMethodByName(startMethodName);
+        if (startMethod == null) {
+            Debug.LogError(string.Format("Error, Method \"{0}\" not found", startMethodName ?? "NULL"));
         }
 
         //najdeme startMethod z daneho class stringu a method stringu, ak startMethod.ExecutableCode je null tak return null alebo yield break
@@ -107,7 +114,7 @@ public class Animation : Singleton<Animation>
         {
 
             EXECommand CurrentCommand = Program.CommandStack.Next();
-            bool ExecutionSuccess = CurrentCommand.Execute(Program);
+            bool ExecutionSuccess = CurrentCommand.PerformExecution(Program);
             
             Debug.Log("Command " + i++.ToString() + ". Success: " + ExecutionSuccess.ToString() + ". Command type: " + CurrentCommand.GetType().Name);
 

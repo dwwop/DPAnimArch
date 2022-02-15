@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace OALProgramControl
 {
@@ -54,6 +55,7 @@ namespace OALProgramControl
             CDRelationship Result = null;
             foreach (CDRelationship Relationship in this.RelationshipPool)
             {
+
                 if ((Relationship.FromClass == Class1 && Relationship.ToClass == Class2) || (Relationship.FromClass == Class2 && Relationship.ToClass == Class1))
                 {
                     Result = Relationship;

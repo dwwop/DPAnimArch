@@ -12,34 +12,29 @@ namespace OALProgramControl
 {
     public class EXECommandCall : EXECommand
     {
-        private String CallerClass { get; }
-        private String CalledClass { get; }
-        private String CallerMethod { get; }
+        private String CalledClass { get; set; }
         private String CalledMethod { get; }
-        private String RelationshipName { get; }
         private String InstanceName { get; }////
         private String AttributeName { get; }////
-        private String MethodName { get; }////
         private List<EXEASTNode> Parameters { get; }////
-
-        public EXECommandCall(String CallerClass, String CallerMethod, String RelationshipName, String CalledClass, String CalledMethod)
+        private MethodCallRecord CallerMethodInfo
         {
-            this.CallerClass = CallerClass;
-            this.CallerMethod = CallerMethod;
-            this.RelationshipName = RelationshipName;
-            this.CalledClass = CalledClass;
-            this.CalledMethod = CalledMethod;
+            get
+            {
+                EXEScopeMethod TopScope = (EXEScopeMethod)GetTopLevelScope();
+                return TopScope.MethodDefinition;
+            }
         }
 
         public EXECommandCall(String InstanceName, String AttributeName, String MethodName, List<EXEASTNode> Parameters)////
         {
             this.InstanceName = InstanceName;
             this.AttributeName = AttributeName;
-            this.MethodName = MethodName;
+            this.CalledMethod = MethodName;
             this.Parameters = Parameters;
         }
 
-        public override Boolean Execute(OALProgram OALProgram)
+        protected override Boolean Execute(OALProgram OALProgram)
         {
             EXEReferencingVariable Reference = this.SuperScope.FindReferencingVariableByName(this.InstanceName);
 
@@ -55,7 +50,9 @@ namespace OALProgramControl
                 return false;
             }
 
-            CDMethod Method = Class.getMethodByName(this.MethodName);
+            this.CalledClass = Class.Name;
+
+            CDMethod Method = Class.getMethodByName(this.CalledMethod);
 
             if (Method == null)
             {
@@ -90,13 +87,29 @@ namespace OALProgramControl
 
         public OALCall CreateOALCall()
         {
-            return new OALCall(this.CallerClass, this.CallerMethod, this.RelationshipName, this.CalledClass, this.CalledMethod);
+            MethodCallRecord _CallerMethodInfo = this.CallerMethodInfo;
+            CDRelationship _RelationshipInfo = CallRelationshipInfo(_CallerMethodInfo.ClassName, this.CalledClass);
+            return new OALCall
+            (
+                _CallerMethodInfo.ClassName,
+                _CallerMethodInfo.MethodName,
+                _RelationshipInfo.RelationshipName,
+                this.CalledClass,
+                this.CalledMethod
+            );
         }
 
         public override String ToCodeSimple()
         {
-            return "call from " + this.CallerClass + "::" + this.CallerMethod + "() to "
-                + this.CalledClass + "::" + this.CalledMethod + "() across " + this.RelationshipName;
+            MethodCallRecord _CallerMethodInfo = this.CallerMethodInfo;
+            CDRelationship _RelationshipInfo = CallRelationshipInfo(_CallerMethodInfo.ClassName, this.CalledClass);
+            return "call from " + _CallerMethodInfo.ClassName + "::" + _CallerMethodInfo.MethodName + "() to "
+                + this.CalledClass + "::" + this.CalledMethod + "() across " + _RelationshipInfo.RelationshipName;
+        }
+
+        private CDRelationship CallRelationshipInfo(string CallerMethod, string CalledMethod)
+        {
+            return OALProgram.Instance.RelationshipSpace.GetRelationshipByClasses(CallerMethod, CalledMethod);
         }
     }
 }
