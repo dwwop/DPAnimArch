@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace OALProgramControl
 {
@@ -30,13 +31,25 @@ namespace OALProgramControl
             {
                 Result = this.Value;
             }
-            // We got here because we have a variable name, the variable is of primitive value
-            else if(EXETypes.ReferenceTypeName.Equals(ValueType))
+            // We got here because we have a variable name, the variable is of primitive value, or object reference, or set reference
+            else
             {
                 EXEPrimitiveVariable ThisVariable = Scope.FindPrimitiveVariableByName(this.Value);
                 if(ThisVariable != null)
                 {
-                    Result = ThisVariable.Value;
+                    return ThisVariable.Value;
+                }
+
+                EXEReferencingVariable ThisRefVariable = Scope.FindReferencingVariableByName(this.Value);
+                if (ThisRefVariable != null)
+                {
+                    return ThisRefVariable.ReferencedInstanceId.ToString();
+                }
+
+                EXEReferencingSetVariable ThisRefSetVariable = Scope.FindSetReferencingVariableByName(this.Value);
+                if (ThisRefSetVariable != null)
+                {
+                    return String.Join(",", ThisRefSetVariable.GetReferencingVariables().Select(variable => variable.ReferencedInstanceId.ToString()).ToList());
                 }
             }
 

@@ -14,9 +14,9 @@ namespace OALProgramControl
     {
         private String CalledClass { get; set; }
         private String CalledMethod { get; }
-        private String InstanceName { get; }////
-        private String AttributeName { get; }////
-        private List<EXEASTNode> Parameters { get; }////
+        private String InstanceName { get; }
+        private String AttributeName { get; }
+        private List<EXEASTNode> Parameters { get; }
         private MethodCallRecord CallerMethodInfo
         {
             get
@@ -26,7 +26,7 @@ namespace OALProgramControl
             }
         }
 
-        public EXECommandCall(String InstanceName, String AttributeName, String MethodName, List<EXEASTNode> Parameters)////
+        public EXECommandCall(String InstanceName, String AttributeName, String MethodName, List<EXEASTNode> Parameters)
         {
             this.InstanceName = InstanceName;
             this.AttributeName = AttributeName;
@@ -48,6 +48,25 @@ namespace OALProgramControl
             if (Class == null)
             {
                 return false;
+            }
+
+            if (this.AttributeName != null)
+            {
+                CDAttribute Attribute = Class.GetAttributeByName(this.AttributeName);
+
+                if (Attribute == null)
+                {
+                    return false;
+                }
+
+                CDClass AtrributeClass = OALProgram.ExecutionSpace.getClassByName(Attribute.Type);
+
+                if (AtrributeClass == null)
+                {
+                    return false;
+                }
+
+                Class = AtrributeClass;
             }
 
             this.CalledClass = Class.Name;
@@ -73,13 +92,78 @@ namespace OALProgramControl
             {
                 CDParameter Parameter = Method.Parameters[i];
 
-                //TODO: Skontrolovat ci typ sedi
                 if (EXETypes.IsPrimitive(Parameter.Type))
                 {
                     String Value = Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
+
+                    if (!EXETypes.IsValidValue(Value, Parameter.Type))
+                    {
+                        return false;
+                    }
+
                     MethodCode.AddVariable(new EXEPrimitiveVariable(Parameter.Name, Value));
                 }
-                //TODO: Ak je referencny typ
+                else if ("[]".Equals(Parameter.Type.Substring(Parameter.Type.Length - 2, 2)))
+                {
+                    CDClass ClassDefinition = OALProgram.ExecutionSpace.getClassByName(Parameter.Type.Substring(0, Parameter.Type.Length - 2));
+                    if (ClassDefinition == null)
+                    {
+                        return false;
+                    }
+                    //co ak value je integer napr. 5 a nie id, zistime to? netreba parsovat aj do long ?
+                    String Values = Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
+
+                    if (!EXETypes.IsValidReferenceValue(Values, Parameter.Type))
+                    {
+                        return false;
+                    }
+
+                    int[] IDs = Values.Split(',').Select(id => int.Parse(id)).ToArray();
+
+                    CDClassInstance ClassInstance;
+                    foreach (int ID in IDs)
+                    {
+                        ClassInstance = ClassDefinition.GetInstanceByID(ID);
+                        if (ClassInstance == null)
+                        {
+                            return false;
+                        }
+                    }
+
+                    EXEReferencingSetVariable CreatedSetVariable = new EXEReferencingSetVariable(Parameter.Name, ClassDefinition.Name);
+
+                    foreach (int ID in IDs)
+                    {
+                        CreatedSetVariable.AddReferencingVariable(new EXEReferencingVariable("", ClassDefinition.Name, ID));
+                    }
+
+                    MethodCode.AddVariable(CreatedSetVariable);
+                }
+                else if (!String.IsNullOrEmpty(Parameter.Type))
+                {
+                    CDClass ClassDefinition = OALProgram.ExecutionSpace.getClassByName(Parameter.Type);
+                    if (ClassDefinition == null)
+                    {
+                        return false;
+                    }
+                    //co ak value je integer napr. 5 a nie id, zistime to? netreba parsovat aj do long ?
+                    String Value = Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
+
+                    if (!EXETypes.IsValidReferenceValue(Value, Parameter.Type))
+                    {
+                        return false;
+                    }
+
+                    int ID = int.Parse(Value);
+
+                    CDClassInstance ClassInstance = ClassDefinition.GetInstanceByID(ID);
+                    if (ClassInstance == null)
+                    {
+                        return false;
+                    }
+
+                    MethodCode.AddVariable(new EXEReferencingVariable(Parameter.Name, ClassDefinition.Name, ID));
+                }
             }
 
             return true;

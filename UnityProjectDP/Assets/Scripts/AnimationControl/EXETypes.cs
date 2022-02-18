@@ -106,12 +106,31 @@ namespace OALProgramControl
                 case "date":
                     //TODO (ak vobec)
                     break;
+                case "string":
+                    Result = (Value[0] == '"' && Value[Value.Length - 1] == '"');
+                    break;
                 default:
                     Result = false;
                     break;
             }
 
             return Result;
+        }
+        public static Boolean IsValidReferenceValue(String Value, String Type)
+        {
+            if (!Value.Split(',').Select(id => int.TryParse(id, out _)).Aggregate(true, (acc, x) => acc && x))
+            {
+                return false;
+            }
+
+            int[] IDs = Value.Split(',').Select(id => int.Parse(id)).ToArray();
+
+            if (IDs.Length != 1 && !"[]".Equals(Type.Substring(Type.Length - 2, 2)))
+            {
+                return false;
+            }
+
+            return true;
         }
         public static String ConvertEATypeName(String EAType)
         {
