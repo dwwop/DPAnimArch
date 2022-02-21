@@ -3,29 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SwitchButtonsPanelScript : MonoBehaviour
+namespace AnimArch.Visualization.UI
 {
-
-    [SerializeField]
-    private Button[] buttons;
-
-    public void SetAllButtonsInteractable()
+    public class SwitchButtonsPanelScript : MonoBehaviour
     {
-        foreach (Button button in buttons)
+
+        [SerializeField]
+        private Button[] buttons;
+
+        public void SetAllButtonsInteractable()
         {
-            button.interactable = true;
+            foreach (Button button in buttons)
+            {
+                button.interactable = true;
+            }
         }
-    }
 
-    public void OnButtonClicked(Button clickedButton)
-    {
-        int buttonIndex = System.Array.IndexOf(buttons, clickedButton);
+        public void OnButtonClicked(Button clickedButton)
+        {
+            int buttonIndex = System.Array.IndexOf(buttons, clickedButton);
 
-        if (buttonIndex == -1)
-            return;
+            if (buttonIndex == -1)
+                return;
 
-        SetAllButtonsInteractable();
+            SetAllButtonsInteractable();
 
-        clickedButton.interactable = false;
+            clickedButton.interactable = false;
+        }
     }
 }

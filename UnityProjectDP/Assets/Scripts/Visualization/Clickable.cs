@@ -1,76 +1,80 @@
+using AnimArch.Visualization.ClassDiagrams;
+using AnimArch.Visualization.UI;
 using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-
-[Serializable]
-public class GameObjectEvent : UnityEvent<GameObject> { };
-public class Clickable : MonoBehaviour
+namespace AnimArch.Visualization
 {
-    public GameObjectEvent triggerHighlighAction;
-    public GameObjectEvent triggerUnhighlighAction;
-    private Vector3 screenPoint;
-    private Vector3 offset;
-
-    private bool selectedElement = false;
-
-
-    private void OnMouseDown()
+    [Serializable]
+    public class GameObjectEvent : UnityEvent<GameObject> { };
+    public class Clickable : MonoBehaviour
     {
-        string temp = ToolManager.Instance.SelectedTool;
-        if (temp == "DiagramMovement")
-            OnClassSelected();
-    }
+        public GameObjectEvent triggerHighlighAction;
+        public GameObjectEvent triggerUnhighlighAction;
+        private Vector3 screenPoint;
+        private Vector3 offset;
 
-    private void OnClassSelected()
-    {
-        selectedElement = true;
-        screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
-        ClassEditor.Instance.SelectNode(this.gameObject);
-        offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
-    }
+        private bool selectedElement = false;
 
-    void OnMouseUp()
-    {
-        selectedElement = false;
-    }
 
-    void OnMouseDrag()
-    {
-        if (selectedElement == false || ToolManager.Instance.SelectedTool != "DiagramMovement"|| IsMouseOverUI())
+        private void OnMouseDown()
         {
-            return;
+            string temp = ToolManager.Instance.SelectedTool;
+            if (temp == "DiagramMovement")
+                OnClassSelected();
         }
 
-        Vector3 cursorPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
-        Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorPoint) + offset;
-        cursorPosition.z = transform.position.z;
-        transform.position = cursorPosition;
-    }
-    void OnMouseOver()
-    {
-        if (Input.GetMouseButtonDown(0) && ToolManager.Instance.SelectedTool == "Highlighter" && !IsMouseOverUI())
+        private void OnClassSelected()
         {
-            triggerHighlighAction.Invoke(gameObject);
+            selectedElement = true;
+            screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+            ClassEditor.Instance.SelectNode(this.gameObject);
+            offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
         }
-        if (Input.GetMouseButtonDown(1) && ToolManager.Instance.SelectedTool == "Highlighter" && !IsMouseOverUI())
+
+        void OnMouseUp()
         {
-            triggerUnhighlighAction.Invoke(gameObject);
+            selectedElement = false;
         }
-        if (Input.GetMouseButtonDown(0)&&MenuManager.Instance.isCreating==true)
+
+        void OnMouseDrag()
         {
-            MenuManager.Instance.SelectClass(this.gameObject.name);
+            if (selectedElement == false || ToolManager.Instance.SelectedTool != "DiagramMovement"|| IsMouseOverUI())
+            {
+                return;
+            }
+
+            Vector3 cursorPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
+            Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorPoint) + offset;
+            cursorPosition.z = transform.position.z;
+            transform.position = cursorPosition;
         }
-        if (Input.GetMouseButtonDown(0) && MenuManager.Instance.isPlaying == true)
+        void OnMouseOver()
         {
-            MenuManager.Instance.SelectPlayClass(this.gameObject.name);
-            Debug.Log("selecting class");
+            if (Input.GetMouseButtonDown(0) && ToolManager.Instance.SelectedTool == "Highlighter" && !IsMouseOverUI())
+            {
+                triggerHighlighAction.Invoke(gameObject);
+            }
+            if (Input.GetMouseButtonDown(1) && ToolManager.Instance.SelectedTool == "Highlighter" && !IsMouseOverUI())
+            {
+                triggerUnhighlighAction.Invoke(gameObject);
+            }
+            if (Input.GetMouseButtonDown(0) && MenuManager.Instance.isCreating==true)
+            {
+                MenuManager.Instance.SelectClass(this.gameObject.name);
+            }
+            if (Input.GetMouseButtonDown(0) && MenuManager.Instance.isPlaying == true)
+            {
+                MenuManager.Instance.SelectPlayClass(this.gameObject.name);
+                Debug.Log("selecting class");
+            }
         }
-    }
-    private bool IsMouseOverUI()
-    {
-        return EventSystem.current.IsPointerOverGameObject();
+        private bool IsMouseOverUI()
+        {
+            return EventSystem.current.IsPointerOverGameObject();
+        }
     }
 }

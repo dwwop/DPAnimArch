@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CheckScript : MonoBehaviour
+namespace AnimArch.Visualization.TODO
 {
-    public Button saveBtn;
-    public void CheckScriptCode()
+    public class CheckScript : MonoBehaviour
     {
-        //SEM treba doplnit metodu na check ci sa da script vykonat
-        saveBtn.interactable = true;
+        public Button saveBtn;
+        public void CheckScriptCode()
+        {
+            //SEM treba doplnit metodu na check ci sa da script vykonat
+            saveBtn.interactable = true;
+        }
     }
 }

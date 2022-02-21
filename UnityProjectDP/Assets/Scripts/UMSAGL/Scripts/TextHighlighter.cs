@@ -14,7 +14,7 @@ public class TextHighlighter : MonoBehaviour
 
     public void HighlightLine(string line)
     {
-        startColorTag = "<color=#" + Animation.Instance.GetColorCode("method")+">";
+        startColorTag = "<color=#" + AnimArch.Visualization.Animating.Animation.Instance.GetColorCode("method")+">";
         //TODO REWORK
         text=methodsText.text;
         Debug.Log(text);

@@ -3,28 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SwitchColorPanelScript : MonoBehaviour
+namespace AnimArch.Visualization.Animating
 {
-    [SerializeField]
-    private Image[] images;
-
-    public void SetAllImagesUnOutlined()
+    public class SwitchColorPanelScript : MonoBehaviour
     {
-        foreach (Image img in images)
+        [SerializeField]
+        private Image[] images;
+
+        public void SetAllImagesUnOutlined()
         {
-            img.GetComponent<Outline>().enabled = false;
+            foreach (Image img in images)
+            {
+                img.GetComponent<Outline>().enabled = false;
+            }
         }
-    }
 
-    public void OnImageClicked(Image clickedImage)
-    {
-        int imageIndex = System.Array.IndexOf(images, clickedImage);
+        public void OnImageClicked(Image clickedImage)
+        {
+            int imageIndex = System.Array.IndexOf(images, clickedImage);
 
-        if (imageIndex == -1)
-            return;
+            if (imageIndex == -1)
+                return;
 
-        SetAllImagesUnOutlined();
+            SetAllImagesUnOutlined();
 
-        clickedImage.GetComponent<Outline>().enabled = true;
+            clickedImage.GetComponent<Outline>().enabled = true;
+        }
     }
 }

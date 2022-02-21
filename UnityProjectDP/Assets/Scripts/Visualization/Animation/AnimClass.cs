@@ -1,17 +1,20 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class AnimClass  //Filip
+namespace AnimArch.Visualization.Animating
 {
-    [SerializeField]
-    public string Name;
-    [SerializeField]
-    public List<AnimMethod> Methods;
-
-    public AnimClass(string Name)
+    [System.Serializable]
+    public class AnimClass  //Filip
     {
-        this.Name = Name;
-        this.Methods = new List<AnimMethod>();
+        [SerializeField]
+        public string Name;
+        [SerializeField]
+        public List<AnimMethod> Methods;
+
+        public AnimClass(string Name)
+        {
+            this.Name = Name;
+            this.Methods = new List<AnimMethod>();
+        }
     }
 }

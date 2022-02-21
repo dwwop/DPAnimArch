@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.Scripts.Animation
+namespace AnimArch.Visualization
 {
 	public class CouroutineManager
 	{

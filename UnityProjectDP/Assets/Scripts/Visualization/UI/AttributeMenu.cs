@@ -3,50 +3,54 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using AnimArch.Visualization.ClassDiagrams;
 
-public class AttributeMenu : MonoBehaviour
+namespace AnimArch.Visualization.UI
 {
-    public GameObject AtrPanel;
-    public TMP_InputField inp;
-    public TMP_Dropdown dropdown;
-    private TMP_Text atrTxt;
-    private TMP_Text classTxt;
-    private Attribute atr;
-    public Toggle isArray;
-    public void ActivateCreation(TMP_Text classTxt,TMP_Text atrTxt)
+    public class AttributeMenu : MonoBehaviour
     {
-        AtrPanel.SetActive(true);
-        this.atrTxt = atrTxt;
-        this.classTxt = classTxt;
-        atr = new Attribute();
-
-    }
-    public void SetName(string atrName)
-    {
-        atr.Name = atrName;
-    }
-    public void SetType(string type)
-    {
-        atr.Type = type;
-    }
-    public void SaveAtr()
-    {
-        SetName(inp.text);
-        SetType(dropdown.options[dropdown.value].text);
-        if (ClassDiagram.Instance.AddAtr(classTxt.text, atr))
+        public GameObject AtrPanel;
+        public TMP_InputField inp;
+        public TMP_Dropdown dropdown;
+        private TMP_Text atrTxt;
+        private TMP_Text classTxt;
+        private Attribute atr;
+        public Toggle isArray;
+        public void ActivateCreation(TMP_Text classTxt, TMP_Text atrTxt)
         {
-            if (isArray.isOn)
-            {
-                atrTxt.text += atr.Name + "[]: " + atr.Type + "\n";
-            }
-            else
-            {
-                atrTxt.text += atr.Name + ": " + atr.Type + "\n";
-            }
+            AtrPanel.SetActive(true);
+            this.atrTxt = atrTxt;
+            this.classTxt = classTxt;
+            atr = new Attribute();
+
         }
-        atr = new Attribute();
-        AtrPanel.SetActive(false);
-        inp.text = "";
-        isArray.isOn = false;
+        public void SetName(string atrName)
+        {
+            atr.Name = atrName;
+        }
+        public void SetType(string type)
+        {
+            atr.Type = type;
+        }
+        public void SaveAtr()
+        {
+            SetName(inp.text);
+            SetType(dropdown.options[dropdown.value].text);
+            if (ClassDiagram.Instance.AddAtr(classTxt.text, atr))
+            {
+                if (isArray.isOn)
+                {
+                    atrTxt.text += atr.Name + "[]: " + atr.Type + "\n";
+                }
+                else
+                {
+                    atrTxt.text += atr.Name + ": " + atr.Type + "\n";
+                }
+            }
+            atr = new Attribute();
+            AtrPanel.SetActive(false);
+            inp.text = "";
+            isArray.isOn = false;
+        }
     }
 }

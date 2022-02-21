@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using AnimArch.Visualization.ClassDiagrams;
 
-public class AttributeOpen : MonoBehaviour
+namespace AnimArch.Visualization.UI
 {
-    public TMP_Text attributeTxt;
-    public TMP_Text mtdTxt;
-    public TMP_Text classTxt;
-    public void OpenAttributeMenu()
+    public class AttributeOpen : MonoBehaviour
     {
-        ClassEditor.Instance.atrMenu.ActivateCreation(classTxt, attributeTxt);
-    }
-    public void OpenMethodMenu()
-    {
-        ClassEditor.Instance.mtdMenu.ActivateCreation(classTxt, mtdTxt);
+        public TMP_Text attributeTxt;
+        public TMP_Text mtdTxt;
+        public TMP_Text classTxt;
+        public void OpenAttributeMenu()
+        {
+            ClassEditor.Instance.atrMenu.ActivateCreation(classTxt, attributeTxt);
+        }
+        public void OpenMethodMenu()
+        {
+            ClassEditor.Instance.mtdMenu.ActivateCreation(classTxt, mtdTxt);
+        }
     }
 }

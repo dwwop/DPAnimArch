@@ -26,7 +26,7 @@ public class BackgroundHighlighter : MonoBehaviour {
             RectTransform rc = GetComponent<RectTransform>();
             rc.DOScaleX(1.2f, 0.5f);
             rc.DOScaleY(1.2f, 0.5f);
-            GetComponentInChildren<Image>().color = Animation.Instance.classColor;
+            GetComponentInChildren<Image>().color = AnimArch.Visualization.Animating.Animation.Instance.classColor;
         }
         highlight++;
 	}
