@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using System.Xml;
 using OALProgramControl;
+using UnityEngine.UI;
 
 public class ClassDiagram : Singleton<ClassDiagram>
 {
@@ -28,10 +29,6 @@ public class ClassDiagram : Singleton<ClassDiagram>
     private void Awake()
     {
         //Asign memory for variables before the first frame
-        GameObjectClasses = new Dictionary<string, GameObject>();
-        GameObjectRelations = new Dictionary<string, GameObject>();
-        DiagramClasses = new List<Class>();
-        DiagramRelations = new List<Relation>();
         ResetDiagram();
     }
     private void Start()
@@ -39,28 +36,25 @@ public class ClassDiagram : Singleton<ClassDiagram>
     }
     public void ResetDiagram()
     {
+        // Get rid of already rendered classes in diagram.
         if (GameObjectClasses != null)
         {
-            if (GameObjectClasses.Count > 0)
+            foreach (GameObject ClassObject in GameObjectClasses.Values)
             {
-                foreach(KeyValuePair<string,GameObject> kv in GameObjectClasses)
-                {
-                    Destroy(kv.Value);
-                    //GameObjectClasses.Remove(kv.Key);
-                }
+                Destroy(ClassObject);
             }
+
             GameObjectClasses.Clear();
         }
+
+        // Get rid of already rendered relationships in diagram.
         if (GameObjectRelations != null)
         {
-            if (GameObjectRelations.Count > 0)
+            foreach (GameObject RelationshipObject in GameObjectRelations.Values)
             {
-                foreach (KeyValuePair<string, GameObject> kv in GameObjectRelations)
-                {
-                    Destroy(kv.Value);
-                    //GameObjectRelations.Remove(kv.Key);
-                }
+                Destroy(RelationshipObject);
             }
+
             GameObjectRelations.Clear();
         }
         if (graph != null)
@@ -68,11 +62,25 @@ public class ClassDiagram : Singleton<ClassDiagram>
             Destroy(graph.gameObject);
             graph = null;
         }
-        DiagramClasses.Clear();
-        DiagramRelations.Clear();
-        OALProgram.Instance.ExecutionSpace.ClassPool.Clear();
+
+        if (DiagramClasses != null)
+        {
+            DiagramClasses.Clear();
+        }
+        DiagramClasses = new List<Class>();
+
+        if (DiagramRelations != null)
+        {
+            DiagramRelations.Clear();
+        }
+        DiagramRelations = new List<Relation>();
+
+        GameObjectClasses = new Dictionary<string, GameObject>();
+        GameObjectRelations = new Dictionary<string, GameObject>();
+
         OALProgram.Instance.ExecutionSpace= new CDClassPool();
         OALProgram.Instance.RelationshipSpace = new CDRelationshipPool();
+
         AnimationData.Instance.ClearData();
     }
     public void LoadDiagram()
@@ -88,6 +96,9 @@ public class ClassDiagram : Singleton<ClassDiagram>
         }
         //Generate UI objects displaying the diagram
         Generate();
+
+        fakeObjects();
+
         //Set the layout of diagram so it is coresponding to EA view
         ManualLayout();
     }
@@ -458,5 +469,80 @@ public class ClassDiagram : Singleton<ClassDiagram>
     {
         GameObject edge = graph.AddEdge(node1, node2, associationFullPrefab);
     }
+    public void fakeObjects()
+    {
+        List<DiagramObject> dos = new List<DiagramObject>(new DiagramObject[] {
+            new DiagramObject("Operand1", "ASTLeaf", new List<(string, string, string)>( new [] {
+                ("value", "string", "string"),
+                ("type", "string", "\"Due to false \"")
+            })),
+            new DiagramObject("Operand2", "ASTLeaf", new List<(string, string, string)>( new [] {
+                ("value", "string", "string"),
+                ("type", "string", "\"pandemic narrative.\"")
+            }))
+        });
 
+        foreach (DiagramObject dgo in dos)
+        {
+            AddDiagramObject(dgo);
+            dgo.VisualObject.GetComponent<RectTransform>().position
+                = new Vector3
+                (
+                    dgo.VisualObject.GetComponent<RectTransform>().position.x,
+                    dgo.VisualObject.GetComponent<RectTransform>().position.y,
+                    200
+                );
+        }
+    }
+    // Lukas
+    public class DiagramObject
+    {
+        public string name;
+        public string className;
+        public GameObject VisualObject;
+        // Name, Type, Value
+        public List<(string, string, string)> Attributes;
+
+        public DiagramObject(string name, string className, List<(string, string, string)> Attributes)
+        {
+            this.name = name;
+            this.className = className;
+            VisualObject = null;
+            this.Attributes = Attributes;
+        }
+    }
+    // Lukas
+    public void AddDiagramObject(DiagramObject DiagramObject)
+    {
+        DiagramObject.VisualObject = graph.AddNode();
+        DiagramObject.VisualObject.name = DiagramObject.name + ":" + DiagramObject.className;
+        DiagramObject.VisualObject.transform.Find("Background").Find("Header").GetComponent<TextMeshProUGUI>().text = DiagramObject.VisualObject.name;
+        DiagramObject.VisualObject.GetComponent<BackgroundHighlighter>().GetComponentInChildren<Image>().color = Color.cyan;
+
+        foreach ((string, string, string) attr in DiagramObject.Attributes)
+        {
+            DiagramObject.VisualObject.transform.Find("Background").Find("Attributes").GetComponent<TextMeshProUGUI>().text
+                += attr.Item1 + " : " + string.Format("{0}", attr.Item3) + "\n";
+        }
+
+        GameObjectClasses.Add(DiagramObject.VisualObject.name, DiagramObject.VisualObject);
+
+        GameObject prefab = dependsPrefab;
+        GameObject g;
+        if (GameObjectClasses.TryGetValue(DiagramObject.VisualObject.name, out g) && GameObjectClasses.TryGetValue(DiagramObject.className, out g))
+        {
+            GameObject edge = graph.AddEdge(GameObjectClasses[DiagramObject.VisualObject.name], GameObjectClasses[DiagramObject.className], prefab);
+            //Add relation node to dictionary
+            //GameObjectRelations.Add(rel.FromClass + "/" + rel.ToClass, edge);
+            //RELADD
+            GameObjectRelations.Add(DiagramObject.VisualObject.name, edge);
+            //Quickfix
+            if (edge.gameObject.transform.childCount > 0)
+                StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
+
+            edge.GetComponent<UEdge>().GraphEdge.Color = Color.cyan;
+        }
+        else
+            Debug.Log("Cant find specified Edge in Dictionary");
+    }
 }
