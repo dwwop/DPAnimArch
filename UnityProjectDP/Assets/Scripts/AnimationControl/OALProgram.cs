@@ -30,6 +30,11 @@ namespace OALProgramControl
 
         public OALProgram()
         {
+            Reset();
+        }
+
+        public void Reset()
+        {
             this.ExecutionSpace = new CDClassPool();
             this.RelationshipSpace = new CDRelationshipPool();
             this.SuperScope = new EXEScope();

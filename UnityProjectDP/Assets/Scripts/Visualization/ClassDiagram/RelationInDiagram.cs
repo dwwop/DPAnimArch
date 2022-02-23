@@ -5,11 +5,10 @@ using UnityEngine;
 
 namespace AnimArch.Visualization.ClassDiagrams
 {
-    public class ClassInDiagram
+    public class RelationInDiagram
     {
-        public Class XMIParsedClass;
-        public CDClass ClassInfo;
+        public Relation XMIParsedRelation;
+        public CDRelationship RelationInfo;
         public GameObject VisualObject;
-        public bool isObject = false;
     }
 }

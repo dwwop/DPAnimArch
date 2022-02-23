@@ -11,6 +11,7 @@ using AnimArch.Extensions;
 using AnimArch.Visualization.Animating;
 using AnimArch.Visualization.UI;
 using AnimArch.XMIParsing;
+using AnimArch.Extensions.Unity;
 
 namespace AnimArch.Visualization.ClassDiagrams
 {
@@ -28,10 +29,11 @@ namespace AnimArch.Visualization.ClassDiagrams
         public GameObject realisationPrefab;
         public Graph graph;
         //private List<Class> DiagramClasses; //List of all classes from XMI
-        private List<Relation> DiagramRelations; //List of all relations from XMI
-        private Dictionary<string, GameObject> GameObjectRelations; // Dictionary of all objects created from list classes
+        //private List<Relation> DiagramRelations; //List of all relations from XMI
+        //private Dictionary<string, GameObject> GameObjectRelations; // Dictionary of all objects created from list classes
         //private Dictionary<string, GameObject> GameObjectClasses; //Dictionary of all ojects created from relations list
         public List<ClassInDiagram> Classes { get; private set; }
+        public List<RelationInDiagram> Relations { get; private set; }
 
         //Awake is called before the first frame and before Start()
         private void Awake()
@@ -51,35 +53,27 @@ namespace AnimArch.Visualization.ClassDiagrams
 
                 Classes.Clear();
             }
+            Classes = new List<ClassInDiagram>();
 
-            // Get rid of already rendered relationships in diagram.
-            if (GameObjectRelations != null)
+            // Get rid of already rendered relations in diagram.
+            if (Relations != null)
             {
-                foreach (GameObject RelationshipObject in GameObjectRelations.Values)
+                foreach (RelationInDiagram Relation in Relations)
                 {
-                    Destroy(RelationshipObject);
+                    Destroy(Relation.VisualObject);
                 }
 
-                GameObjectRelations.Clear();
+                Relations.Clear();
             }
+            Relations = new List<RelationInDiagram>();
+
             if (graph != null)
             {
                 Destroy(graph.gameObject);
                 graph = null;
             }
 
-            if (DiagramRelations != null)
-            {
-                DiagramRelations.Clear();
-            }
-            DiagramRelations = new List<Relation>();
-
-            GameObjectRelations = new Dictionary<string, GameObject>();
-
-            Classes = new List<ClassInDiagram>(); 
-
-            OALProgram.Instance.ExecutionSpace = new CDClassPool();
-            OALProgram.Instance.RelationshipSpace = new CDRelationshipPool();
+            OALProgram.Instance.Reset();
 
             AnimationData.Instance.ClearData();
         }
@@ -95,13 +89,20 @@ namespace AnimArch.Visualization.ClassDiagrams
                 k++;
                 AnimationData.Instance.diagramId++;
             }
+
+            fakeObjects();
+
             //Generate UI objects displaying the diagram
             Generate();
 
+
             //Set the layout of diagram so it is coresponding to EA view
             ManualLayout();
+            //AutoLayout();
 
-            fakeObjects();
+            Classes
+                .Where(Class => Class.isObject)
+                .ForEach(Class => Class.VisualObject.GetComponent<RectTransform>().Shift(0, 0, 200));
         }
         public Graph CreateGraph()
         {
@@ -174,7 +175,7 @@ namespace AnimArch.Visualization.ClassDiagrams
                     }
                 }
                 CurrentClass.Top *= -1;
-                Classes.Add( new ClassInDiagram() { XMIParsedClass = CurrentClass });
+                Classes.Add( new ClassInDiagram() { XMIParsedClass = CurrentClass, ClassInfo = TempCDClass });
             }
 
             List<Relation> XMIRelationList = XMIParser.ParseRelations();
@@ -211,34 +212,44 @@ namespace AnimArch.Visualization.ClassDiagrams
                 TempCDRelationship = OALProgram.Instance.RelationshipSpace.SpawnRelationship(Relation.FromClass, Relation.ToClass);
                 Relation.OALName = TempCDRelationship.RelationshipName;
 
-                DiagramRelations.Add(Relation);
+                Relations.Add(new RelationInDiagram() { XMIParsedRelation = Relation, RelationInfo = TempCDRelationship });
             }
         }
 
         //Auto arrange objects in space
-        /*public void AutoLayout()
+        public void AutoLayout()
         {
             //TODO better automatic Layout
             graph.Layout();
-        }*/
+        }
 
         //Set layout as close as possible to EA layout
         public void ManualLayout()
         {
             foreach (ClassInDiagram c in Classes)
             {
+                if (c.isObject)
+                {
+                    continue;
+                }
+
                 c.VisualObject.GetComponent<RectTransform>().position
-                    = new Vector3(c.XMIParsedClass.Left * 1.25f, c.XMIParsedClass.Top * 1.25f);
+                    = new Vector3(c.XMIParsedClass.Left * 1.25f, c.XMIParsedClass.Top * 1.25f, c.VisualObject.GetComponent<RectTransform>().position.z);
             }
         }
         //Create GameObjects from the parsed data sotred in list of Classes and Relations
         private void Generate()
         {
             Debug.Log("DIAGRAM CLASSES COUNT" + Classes.Count);
-            Debug.Log("RELATION COUNT" + DiagramRelations.Count);
+            Debug.Log("RELATION COUNT" + Relations.Count);
             //Render classes
             for (int i = 0; i < Classes.Count; i++)
             {
+                if (Classes[i].isObject)
+                {
+                    continue;
+                }
+
                 //Setting up
                 var node = graph.AddNode();
                 node.name = Classes[i].XMIParsedClass.Name;
@@ -280,21 +291,21 @@ namespace AnimArch.Visualization.ClassDiagrams
             }
 
             //Render Relations between classes
-            foreach (Relation rel in DiagramRelations)
+            foreach (RelationInDiagram rel in Relations)
             {
-                GameObject prefab = rel.PrefabType;
+                GameObject prefab = rel.XMIParsedRelation.PrefabType;
                 if (prefab == null)
                 {
                     prefab = associationNonePrefab;
                 }
 
-                GameObject startingClass = FindClassByName(rel.FromClass)?.VisualObject;
-                GameObject finishingClass = FindClassByName(rel.ToClass)?.VisualObject;
+                GameObject startingClass = FindClassByName(rel.XMIParsedRelation.FromClass)?.VisualObject;
+                GameObject finishingClass = FindClassByName(rel.XMIParsedRelation.ToClass)?.VisualObject;
                 if (startingClass != null && finishingClass != null)
                 {
                     GameObject edge = graph.AddEdge(startingClass, finishingClass, prefab);
 
-                    GameObjectRelations.Add(rel.OALName, edge);
+                    rel.VisualObject = edge;
                     //Quickfix
 
                     if (edge.gameObject.transform.childCount > 0)
@@ -306,7 +317,7 @@ namespace AnimArch.Visualization.ClassDiagrams
                 {
                     Debug.LogError
                     (
-                        string.Format("Can't find specified Edge \"{0}\"->\"{1}\"", rel.FromClass, rel.ToClass)
+                        string.Format("Can't find specified Edge \"{0}\"->\"{1}\"", rel.XMIParsedRelation.FromClass, rel.XMIParsedRelation.ToClass)
                     );
                 }
             }
@@ -453,23 +464,16 @@ namespace AnimArch.Visualization.ClassDiagrams
         }
         public GameObject FindEdge(string RelationshipName)
         {
-            GameObject Result = null;
-            if (GameObjectRelations.ContainsKey(RelationshipName))
-            {
-                Result = GameObjectRelations[RelationshipName];
-            }
-            return Result;
+            return Relations
+                .Where(relation => string.Equals(RelationshipName, relation.RelationInfo.RelationshipName))
+                .FirstOrDefault()?
+                .VisualObject;
         }
         public String FindOwnerOfRelation(String RelationName)
         {
-            foreach (Relation Relation in DiagramRelations)
-            {
-                if (String.Equals(Relation.OALName, RelationName))
-                {
-                    return Relation.FromClass;
-                }
-            }
-            return "";
+            return Relations
+                .Where(relation => string.Equals(RelationName, relation.XMIParsedRelation.OALName))
+                .FirstOrCustomDefault<RelationInDiagram, string>(relationInDiagram => relationInDiagram.XMIParsedRelation.FromClass, "");
         }
         //Fix used to minimalize relation displaying bug
         private IEnumerator QuickFix(GameObject g)
@@ -483,9 +487,9 @@ namespace AnimArch.Visualization.ClassDiagrams
         {
             return Classes.Select(classInDiagram => classInDiagram.XMIParsedClass);
         }
-        public List<Relation> GetRelationList()
+        public IEnumerable<Relation> GetRelationList()
         {
-            return DiagramRelations;
+            return Relations.Select(relationInDiagram => relationInDiagram.XMIParsedRelation);
         }
         public void CreateRelationEdge(GameObject node1, GameObject node2)
         {
@@ -504,15 +508,15 @@ namespace AnimArch.Visualization.ClassDiagrams
                 }))
             });
 
+            int i = 0;
             foreach (DiagramObject dgo in dos)
             {
                 AddDiagramObject(dgo);
                 dgo.VisualObject.GetComponent<RectTransform>().position
                     = new Vector3
                     (
-                        dgo.VisualObject.GetComponent<RectTransform>().position.x,
-                        dgo.VisualObject.GetComponent<RectTransform>().position.y,
-                        200
+                        0,
+                        300 * i++
                     );
             }
         }
@@ -552,17 +556,38 @@ namespace AnimArch.Visualization.ClassDiagrams
                 new ClassInDiagram()
                 {
                     VisualObject = DiagramObject.VisualObject,
-                    XMIParsedClass = new Class() { Name = DiagramObject.VisualObject.name}
+                    XMIParsedClass = new Class() { Name = DiagramObject.VisualObject.name},
+                    isObject = true
                 }
             );
-
+            /*
             GameObject prefab = dependsPrefab;
             GameObject startingClass = FindClassByName(DiagramObject.VisualObject.name)?.VisualObject;
             GameObject finishingClass = FindClassByName(DiagramObject.className)?.VisualObject;
             if (startingClass != null && finishingClass != null)
             {
                 GameObject edge = graph.AddEdge(startingClass, finishingClass, prefab);
-                GameObjectRelations.Add(DiagramObject.VisualObject.name, edge);
+                Relations.Add
+                (
+                    new RelationInDiagram()
+                    {
+                        VisualObject = edge,
+                        XMIParsedRelation
+                            = new Relation()
+                            {
+                                OALName = DiagramObject.VisualObject.name,
+                                FromClass = startingClass.name,
+                                ToClass = finishingClass.name
+                            },
+                        RelationInfo
+                            = new CDRelationship
+                            (
+                                startingClass.name,
+                                finishingClass.name,
+                                DiagramObject.VisualObject.name
+                            )
+                    }
+                );
 
                 //Quickfix
                 if (edge.gameObject.transform.childCount > 0)
@@ -583,7 +608,7 @@ namespace AnimArch.Visualization.ClassDiagrams
                         DiagramObject.className
                     )
                 );
-            }
+            }*/
         }
     }
 }
