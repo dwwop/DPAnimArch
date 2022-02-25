@@ -14,20 +14,23 @@ namespace OALProgramControl
         public String Cardinality { get; set; }
         public String ClassName { get; set; }
         public String VariableName { get; set; }
+        public String AttributeName { get; set; }
         public EXEASTNode WhereCondition { get; set; }
 
-        public EXECommandQuerySelect(String Cardinality, String ClassName, String VariableName)
+        public EXECommandQuerySelect(String Cardinality, String ClassName, String VariableName, String AttributeName)
         {
             this.Cardinality = Cardinality;
             this.ClassName = ClassName;
             this.VariableName = VariableName;
+            this.AttributeName = AttributeName;
             this.WhereCondition = null;
         }
-        public EXECommandQuerySelect(String Cardinality, String ClassName, String VariableName, EXEASTNode WhereCondition)
+        public EXECommandQuerySelect(String Cardinality, String ClassName, String VariableName, String AttributeName, EXEASTNode WhereCondition)
         {
             this.Cardinality = Cardinality;
             this.ClassName = ClassName;
             this.VariableName = VariableName;
+            this.AttributeName = AttributeName;
             this.WhereCondition = WhereCondition;
         }
 
@@ -48,25 +51,74 @@ namespace OALProgramControl
                 return false;
             }
 
-            // We need to check, if the variable already exists, it must be of corresponding type
-            if (SuperScope.VariableNameExists(this.VariableName))
+            CDClassInstance ClassInstance = null; // This is important if we have AttributeName
+
+            if (this.AttributeName == null)
             {
-                if
-                (
-                    !(
-                        (
-                            EXECommandQuerySelect.CardinalityAny.Equals(this.Cardinality)
-                            &&
-                            this.ClassName == SuperScope.FindReferencingVariableByName(this.VariableName).ClassName
-                        )
-                        ||
-                        (
-                            EXECommandQuerySelect.CardinalityMany.Equals(this.Cardinality)
-                            &&
-                            this.ClassName == SuperScope.FindSetReferencingVariableByName(this.VariableName).ClassName
+                // We need to check, if the variable already exists, it must be of corresponding type
+                if (SuperScope.VariableNameExists(this.VariableName))
+                {
+                    if
+                    (
+                        !(
+                            (
+                                EXECommandQuerySelect.CardinalityAny.Equals(this.Cardinality)
+                                &&
+                                this.ClassName == SuperScope.FindReferencingVariableByName(this.VariableName).ClassName
+                            )
+                            ||
+                            (
+                                EXECommandQuerySelect.CardinalityMany.Equals(this.Cardinality)
+                                &&
+                                this.ClassName == SuperScope.FindSetReferencingVariableByName(this.VariableName).ClassName
+                            )
                         )
                     )
-                )
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                // If we have AttributeName, VariableName must be reference (not set variable)
+                EXEReferencingVariable Variable = SuperScope.FindReferencingVariableByName(this.VariableName);
+                if (Variable == null)
+                {
+                    return false;
+                }
+
+                CDClass VariableClass = OALProgram.ExecutionSpace.getClassByName(Variable.ClassName);
+                if (VariableClass == null)
+                {
+                    return false;
+                }
+
+                CDAttribute Attribute = VariableClass.GetAttributeByName(this.AttributeName);
+                if (Attribute == null)
+                {
+                    return false;
+                }
+
+                // We need to check the corresponding type of attribute
+                if ("[]".Equals(Attribute.Type.Substring(Attribute.Type.Length - 2, 2)))
+                {
+                    if (!Attribute.Type.Equals(this.ClassName + "[]") || EXECommandQuerySelect.CardinalityAny.Equals(this.Cardinality))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (!Attribute.Type.Equals(this.ClassName) || EXECommandQuerySelect.CardinalityMany.Equals(this.Cardinality))
+                    {
+                        return false;
+                    }
+                }
+
+                // Get instance representing VariableName, important in assignment section at end of this Execute method
+                ClassInstance = VariableClass.GetInstanceByID(Variable.ReferencedInstanceId);
+                if (ClassInstance == null)
                 {
                     return false;
                 }
@@ -130,36 +182,63 @@ namespace OALProgramControl
             // Now we have ids of selected instances. Let's assign them to a variable
             if (EXECommandQuerySelect.CardinalityMany.Equals(this.Cardinality))
             {
-                EXEReferencingSetVariable Variable = SuperScope.FindSetReferencingVariableByName(this.VariableName);
-                if (Variable == null)
+                if (this.AttributeName == null)
                 {
-                    Variable = new EXEReferencingSetVariable(this.VariableName, this.ClassName);
-                    if (!SuperScope.AddVariable(Variable))
+                    EXEReferencingSetVariable Variable = SuperScope.FindSetReferencingVariableByName(this.VariableName);
+                    if (Variable == null)
                     {
-                        return false;
+                        Variable = new EXEReferencingSetVariable(this.VariableName, this.ClassName);
+                        if (!SuperScope.AddVariable(Variable))
+                        {
+                            return false;
+                        }
                     }
-                }
-                foreach (long Id in SelectedIds)
-                {
-                    Variable.AddReferencingVariable(new EXEReferencingVariable("", Variable.ClassName, Id));
-                }
-            }
-            else if (EXECommandQuerySelect.CardinalityAny.Equals(this.Cardinality))
-            {
-                EXEReferencingVariable Variable = SuperScope.FindReferencingVariableByName(this.VariableName);
-                long ResultId = SelectedIds.Any() ? SelectedIds[new Random().Next(SelectedIds.Count)] : -1;
-                if (Variable == null)
-                {
-                    //Console.WriteLine("Final 'any' id is " + ResultId);
-                    Variable = new EXEReferencingVariable(this.VariableName, this.ClassName, ResultId);
-                    if (!SuperScope.AddVariable(Variable))
+
+                    Variable.ClearVariables();
+
+                    foreach (long Id in SelectedIds)
                     {
-                        return false;
+                        Variable.AddReferencingVariable(new EXEReferencingVariable("", Variable.ClassName, Id));
                     }
                 }
                 else
                 {
-                    Variable.ReferencedInstanceId = ResultId;
+                    String Result = String.Join(",", SelectedIds);
+
+                    if (!ClassInstance.SetAttribute(this.AttributeName, Result))
+                    {
+                        return false;
+                    }
+                }
+            }
+            else if (EXECommandQuerySelect.CardinalityAny.Equals(this.Cardinality))
+            {
+                long ResultId = SelectedIds.Any() ? SelectedIds[0] : -1;
+
+                if (this.AttributeName == null)
+                {
+                    EXEReferencingVariable Variable = SuperScope.FindReferencingVariableByName(this.VariableName);
+
+                    if (Variable == null)
+                    {
+                        //Console.WriteLine("Final 'any' id is " + ResultId);
+                        Variable = new EXEReferencingVariable(this.VariableName, this.ClassName, ResultId);
+                        if (!SuperScope.AddVariable(Variable))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        Variable.ReferencedInstanceId = ResultId;
+                    }
+                }
+                else
+                {
+                    if (!ClassInstance.SetAttribute(this.AttributeName, ResultId.ToString()))
+                    {
+                        return false;
+                    }
                 }
             }
             else
@@ -171,8 +250,8 @@ namespace OALProgramControl
         }
         public override string ToCodeSimple()
         {
-            return "select " + this.Cardinality + " " + this.VariableName + " from instances of " + this.ClassName +
-                (this.WhereCondition == null ? "" : (" where ") + this.WhereCondition.ToCode());
+            return "select " + this.Cardinality + " " + (this.AttributeName == null ? this.VariableName : (this.VariableName + "." + this.AttributeName))
+                + " from instances of " + this.ClassName + (this.WhereCondition == null ? "" : (" where ") + this.WhereCondition.ToCode());
         }
     }
 }

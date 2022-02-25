@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace OALProgramControl
 {
@@ -36,6 +37,93 @@ namespace OALProgramControl
             // If we are assigning to a variable
             if (this.AttributeName == null)
             {
+                /*//
+                EXEReferencingVariable RefVariable = SuperScope.FindReferencingVariableByName(this.VariableName);
+                EXEReferencingSetVariable SetVariable = SuperScope.FindSetReferencingVariableByName(this.VariableName);
+
+                String AssignedValueType = EXETypes.DetermineVariableType("", AssignedValue);
+
+                if (RefVariable != null)
+                {
+                    // treba nejak osetrit aby to nakoniec bolo ID a nie integer
+                    if (!EXETypes.IntegerTypeName.Equals(AssignedValueType))
+                    {
+                        return Result;
+                    }
+
+                    CDClass VariableClass = OALProgram.ExecutionSpace.getClassByName(RefVariable.ClassName);
+                    if (VariableClass == null)
+                    {
+                        return Result;
+                    }
+
+                    CDClassInstance ClassInstance = VariableClass.GetInstanceByID(long.Parse(AssignedValue));
+                    if (ClassInstance == null)
+                    {
+                        return Result;
+                    }
+
+                    RefVariable.ReferencedInstanceId = long.Parse(AssignedValue);    
+                }
+                else if (SetVariable != null)
+                {
+                    CDClass VariableClass = OALProgram.ExecutionSpace.getClassByName(SetVariable.ClassName);
+                    if (VariableClass == null)
+                    {
+                        return Result;
+                    }
+
+                    if (!EXETypes.IsValidReferenceValue(AssignedValue, SetVariable.ClassName + "[]"))
+                    {
+                        return Result;
+                    }
+
+                    int[] IDs = AssignedValue.Split(',').Select(id => int.Parse(id)).ToArray();
+
+                    CDClassInstance ClassInstance;
+                    foreach (int ID in IDs)
+                    {
+                        ClassInstance = VariableClass.GetInstanceByID(ID);
+                        if (ClassInstance == null)
+                        {
+                            return Result;
+                        }
+                    }
+
+                    //treba asi clearnut list referencing variables v SetVariable
+                    foreach (int ID in IDs)
+                    {
+                        SetVariable.AddReferencingVariable(new EXEReferencingVariable("", VariableClass.Name, ID));
+                    }
+                }
+                // We must create new Variable, it depends on the type of AssignedExpression
+                else
+                {
+                    if (AssignedValueType == null)
+                    {
+                        return Result;
+                    }
+
+                    if (EXETypes.IsPrimitive(AssignedValueType))
+                    {//tu si nie sme isty s integerom, moze to byt aj ID
+                        Result = SuperScope.AddVariable(new EXEPrimitiveVariable(this.VariableName, AssignedValue));
+                    }
+                    else if (EXETypes.UnitializedName.Equals(AssignedValueType))
+                    {
+                        //neviem
+                    }
+                    // We have reference
+                    else if (EXETypes.ReferenceTypeName.Equals(AssignedValueType))
+                    {
+
+                    }
+                    else
+                    {
+                        return Result;
+                    }
+                //v poli bez mena a vytvara sa nove
+                }
+                //*/
 
                 EXEPrimitiveVariable Variable = SuperScope.FindPrimitiveVariableByName(this.VariableName);
                 // If the variable doesnt exist, we simply create it

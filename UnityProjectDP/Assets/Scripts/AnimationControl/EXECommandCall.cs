@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using UnityEngine;
-using System.Collections;
-using Assets.Scripts.Animation;
+using AnimArch.Extensions;
 
 namespace OALProgramControl
 {
@@ -92,9 +87,24 @@ namespace OALProgramControl
             {
                 CDParameter Parameter = Method.Parameters[i];
 
+                if 
+                (
+                    !(
+                        Parameter.Type != null
+                        &&
+                        this.Parameters[i].IsReference().Implies
+                        (
+                            Object.Equals(Parameter.Type, this.SuperScope.DetermineVariableType(this.Parameters[i].AccessChain(), OALProgram.ExecutionSpace))
+                        )
+                    )
+                )
+                {
+                    return false;
+                }
+
                 if (EXETypes.IsPrimitive(Parameter.Type))
                 {
-                    String Value = Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
+                    String Value = this.Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
 
                     if (!EXETypes.IsValidValue(Value, Parameter.Type))
                     {
@@ -110,18 +120,18 @@ namespace OALProgramControl
                     {
                         return false;
                     }
-                    //co ak value je integer napr. 5 a nie id, zistime to? netreba parsovat aj do long ?
-                    String Values = Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
+
+                    String Values = this.Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
 
                     if (!EXETypes.IsValidReferenceValue(Values, Parameter.Type))
                     {
                         return false;
                     }
 
-                    int[] IDs = Values.Split(',').Select(id => int.Parse(id)).ToArray();
+                    long[] IDs = Values.Split(',').Select(id => long.Parse(id)).ToArray();
 
                     CDClassInstance ClassInstance;
-                    foreach (int ID in IDs)
+                    foreach (long ID in IDs)
                     {
                         ClassInstance = ClassDefinition.GetInstanceByID(ID);
                         if (ClassInstance == null)
@@ -132,7 +142,7 @@ namespace OALProgramControl
 
                     EXEReferencingSetVariable CreatedSetVariable = new EXEReferencingSetVariable(Parameter.Name, ClassDefinition.Name);
 
-                    foreach (int ID in IDs)
+                    foreach (long ID in IDs)
                     {
                         CreatedSetVariable.AddReferencingVariable(new EXEReferencingVariable("", ClassDefinition.Name, ID));
                     }
@@ -146,15 +156,15 @@ namespace OALProgramControl
                     {
                         return false;
                     }
-                    //co ak value je integer napr. 5 a nie id, zistime to? netreba parsovat aj do long ?
-                    String Value = Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
+
+                    string Value = Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
 
                     if (!EXETypes.IsValidReferenceValue(Value, Parameter.Type))
                     {
                         return false;
                     }
 
-                    int ID = int.Parse(Value);
+                    long ID = long.Parse(Value);
 
                     CDClassInstance ClassInstance = ClassDefinition.GetInstanceByID(ID);
                     if (ClassInstance == null)

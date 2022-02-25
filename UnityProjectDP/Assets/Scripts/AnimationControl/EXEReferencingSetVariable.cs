@@ -7,6 +7,13 @@ namespace OALProgramControl
     public class EXEReferencingSetVariable : EXEReferenceHandle
     {
         private List<EXEReferencingVariable> ReferencingVariables;
+        public String Type
+        {
+            get
+            {
+                return this.ClassName + "[]";
+            }
+        }
         public bool Sealed;
         public EXEReferencingSetVariable(String Name, String ClassName) : base(Name, ClassName)
         {
@@ -71,6 +78,11 @@ namespace OALProgramControl
                 }
             }
             return Result;
+        }
+
+        public void ClearVariables()
+        {
+            this.ReferencingVariables.Clear();
         }
     }
 }

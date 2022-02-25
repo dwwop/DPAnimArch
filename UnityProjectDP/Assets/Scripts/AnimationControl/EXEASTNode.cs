@@ -12,6 +12,8 @@ namespace OALProgramControl
         String Evaluate(EXEScope Scope, CDClassPool ExecutionSpace);
         bool VerifyReferences(EXEScope Scope, CDClassPool ExecutionSpace);
         void PrintPretty(string indent, bool last);
+        List<String> AccessChain();
+        bool IsReference();
         string ToCode();
     }
 }

@@ -74,7 +74,6 @@ namespace OALProgramControl
                 return StringTypeName;
             }
 
-
             return ReferenceTypeName;
         }
         public static Boolean IsValidValue(String Value, String Type)
@@ -118,12 +117,12 @@ namespace OALProgramControl
         }
         public static Boolean IsValidReferenceValue(String Value, String Type)
         {
-            if (!Value.Split(',').Select(id => int.TryParse(id, out _)).Aggregate(true, (acc, x) => acc && x))
+            if (!Value.Split(',').Select(id => long.TryParse(id, out _)).Aggregate(true, (acc, x) => acc && x))
             {
                 return false;
             }
 
-            int[] IDs = Value.Split(',').Select(id => int.Parse(id)).ToArray();
+            long[] IDs = Value.Split(',').Select(id => long.Parse(id)).ToArray();
 
             if (IDs.Length != 1 && !"[]".Equals(Type.Substring(Type.Length - 2, 2)))
             {

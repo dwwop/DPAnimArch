@@ -96,6 +96,12 @@ namespace OALProgramControl
             else if (HandleEvaluator.IsHandleOperator(this.Operation))
             {
                 Console.WriteLine("We have handle operator");
+                //posielame ID a kontrola instancii a poli ak to je primitiva je to zle , ci je to reference takye ako v command call aj ke prmitiva je to zle
+                //evaluatorz vo vnutri bude jednoduche
+                //1. exeastnode.isreference()
+                //2. podobne ako exescope.determinavrailetype nova metoda - true ak to nie je primitive premenna alebo atribut
+                //3. oalprogram.executionspace.getclassbyinstaceid nesmie byt null
+                //4. prepisat handleoperator evaluciau, teray bude primitivna, posielame do nej exeastnode.evaluate
                 Result = HandleEvaluator.Evaluate(this.Operation, this.Operands.Select(x => ((EXEASTNodeLeaf)x).GetNodeValue()).ToList(), Scope);
             }
             // If we have access operator - we either access attribute or have decimal number. There are always 2 operands
@@ -274,6 +280,28 @@ namespace OALProgramControl
                 }
             }
             return -1;
+        }
+
+        public List<string> AccessChain()
+        {
+            if (!".".Equals(this.Operation))
+            {
+                return null;
+            }
+
+            List<List<String>> SubLists = this.Operands.Select(x => x.AccessChain()).ToList();
+
+            if (SubLists.Contains(null))
+            {
+                return null;
+            }
+
+            return SubLists.Aggregate(new List<String>(), (acc,x) => acc.Concat(x).ToList());
+        }
+
+        public bool IsReference()
+        {
+            return ".".Equals(this.Operation) && this.Operands.Select(x => x.IsReference()).Aggregate(true, (acc, x) => acc && x);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace OALProgramControl
@@ -88,6 +89,16 @@ namespace OALProgramControl
                 indent += "| ";
             }
             Console.WriteLine(this.Value);
+        }
+
+        public List<string> AccessChain()
+        {
+            return new List<string>(new string[] { this.Value });
+        }
+
+        public bool IsReference()
+        {
+            return EXETypes.ReferenceTypeName.Equals(EXETypes.DetermineVariableType("", this.Value));
         }
 
         public string ToCode()
