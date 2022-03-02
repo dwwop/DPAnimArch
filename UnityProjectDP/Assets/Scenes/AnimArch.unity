@@ -19394,6 +19394,8 @@ MonoBehaviour:
     type: 3}
   realisationPrefab: {fileID: 1250365410247918905, guid: b038e1a8b67b5294ebca95aaa358c047,
     type: 3}
+  interGraphLinePrefab: {fileID: 2910138570680623619, guid: 1d27ae98b0c21b54e9cc37aa284dcaba,
+    type: 3}
   graph: {fileID: 0}
 --- !u!1 &1164831679
 GameObject:

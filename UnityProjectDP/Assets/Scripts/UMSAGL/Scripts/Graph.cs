@@ -28,7 +28,7 @@ public class Graph : MonoBehaviour
 	private bool reposition = false;
 	private bool relayout = false;
 
-	private Transform units;
+	public Transform units;
 
 	public Vector2 Rect
 	{

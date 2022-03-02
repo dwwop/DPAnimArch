@@ -27,6 +27,7 @@ namespace AnimArch.Visualization.ClassDiagrams
         public GameObject generalizationPrefab;
         public GameObject implementsPrefab;
         public GameObject realisationPrefab;
+        public GameObject interGraphLinePrefab;
         public Graph graph;
         //private List<Class> DiagramClasses; //List of all classes from XMI
         //private List<Relation> DiagramRelations; //List of all relations from XMI
@@ -103,6 +104,15 @@ namespace AnimArch.Visualization.ClassDiagrams
             Classes
                 .Where(Class => Class.isObject)
                 .ForEach(Class => Class.VisualObject.GetComponent<RectTransform>().Shift(0, 0, 200));
+
+
+            ClassInDiagram CLASS = FindClassByName("ASTLeaf");
+            Classes
+                .Where(Class => Class.isObject)
+                .ForEach
+                (
+                    Class => CreateInterGraphLine(Class.VisualObject, CLASS.VisualObject)
+                );
         }
         public Graph CreateGraph()
         {
@@ -519,6 +529,16 @@ namespace AnimArch.Visualization.ClassDiagrams
                         300 * i++
                     );
             }
+
+            /*GameObject Line = Instantiate(interGraphLinePrefab);
+            Line.GetComponent<LineRenderer>().SetPositions(
+                new Vector3[]
+                {
+                    dos[0].VisualObject.GetComponent<RectTransform>().position,
+                    dos[1].VisualObject.GetComponent<RectTransform>().position
+                }
+            );
+            Line.GetComponent<LineRenderer>().widthMultiplier = 6f;*/
         }
         // Lukas
         public class DiagramObject
@@ -609,6 +629,25 @@ namespace AnimArch.Visualization.ClassDiagrams
                     )
                 );
             }*/
+        }
+
+        public GameObject CreateInterGraphLine(GameObject start, GameObject end)
+        {
+            GameObject Line = Instantiate(interGraphLinePrefab);
+
+            Line.GetComponent<LineRenderer>().SetPositions
+            (
+                new Vector3[]
+                {
+                    start.GetComponent<RectTransform>().position,
+                    end.GetComponent<RectTransform>().position
+                }
+            );
+
+            Line.GetComponent<LineRenderer>().widthMultiplier = 6f;
+            Line.transform.SetParent(graph.units);
+
+            return Line;
         }
     }
 }
