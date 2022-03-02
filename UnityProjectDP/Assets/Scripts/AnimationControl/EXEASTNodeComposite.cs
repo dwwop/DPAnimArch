@@ -101,8 +101,78 @@ namespace OALProgramControl
                 //1. exeastnode.isreference()
                 //2. podobne ako exescope.determinavrailetype nova metoda - true ak to nie je primitive premenna alebo atribut
                 //3. oalprogram.executionspace.getclassbyinstaceid nesmie byt null
-                //4. prepisat handleoperator evaluciau, teray bude primitivna, posielame do nej exeastnode.evaluate
-                Result = HandleEvaluator.Evaluate(this.Operation, this.Operands.Select(x => ((EXEASTNodeLeaf)x).GetNodeValue()).ToList(), Scope);
+                //4. prepisat handleoperator evaluciau, teraz bude primitivna, posielame do nej exeastnode.evaluate
+
+                //
+                if (this.Operands.Count == 1)
+                {
+                    if (this.Operands[0].IsReference())
+                    {
+                        String OperandType = Scope.DetermineVariableType(this.Operands[0].AccessChain(), ExecutionSpace);
+
+                        //Mozno spravit zvlast if pre EXETypes.UnitializedName lebo aj to mozeme nechat prejst
+                        if (!EXETypes.IsPrimitive(OperandType) && !EXETypes.ReferenceTypeName.Equals(OperandType) && !EXETypes.UnitializedName.Equals(OperandType))
+                        {
+                            String OperandValue = null;
+
+                            if ("[]".Equals(OperandType.Substring(OperandType.Length - 2, 2)))
+                            {
+                                CDClass Class = ExecutionSpace.getClassByName(OperandType.Substring(0, OperandType.Length - 2));
+                                if (Class == null)
+                                {
+                                    return Result;
+                                }
+
+                                OperandValue = this.Operands[0].Evaluate(Scope, ExecutionSpace);
+
+                                if (!EXETypes.IsValidReferenceValue(OperandValue, OperandType))
+                                {
+                                    return Result;
+                                }
+
+                                long[] IDs = OperandValue.Split(',').Select(id => long.Parse(id)).ToArray();
+
+                                CDClassInstance ClassInstance;
+                                foreach (long ID in IDs)
+                                {
+                                    ClassInstance = Class.GetInstanceByID(ID);
+                                    if (ClassInstance == null)
+                                    {
+                                        return Result;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                CDClass Class = ExecutionSpace.getClassByName(OperandType);
+                                if (Class == null)
+                                {
+                                    return Result;
+                                }
+
+                                OperandValue = this.Operands[0].Evaluate(Scope, ExecutionSpace);
+
+                                if (!EXETypes.IsValidReferenceValue(OperandValue, OperandType))
+                                {
+                                    return Result;
+                                }
+
+                                long ID = long.Parse(OperandValue);
+
+                                CDClassInstance ClassInstance = Class.GetInstanceByID(ID);
+                                if (ClassInstance == null)
+                                {
+                                    return Result;
+                                }
+                            }
+
+                            Result = HandleEvaluator.Evaluate(this.Operation, OperandValue, Scope);
+                        }
+                    }
+                }
+                //
+
+                //Result = HandleEvaluator.Evaluate(this.Operation, this.Operands.Select(x => ((EXEASTNodeLeaf)x).GetNodeValue()).ToList(), Scope);
             }
             // If we have access operator - we either access attribute or have decimal number. There are always 2 operands
             else if (".".Equals(this.Operation) && this.Operands.Count == 2)

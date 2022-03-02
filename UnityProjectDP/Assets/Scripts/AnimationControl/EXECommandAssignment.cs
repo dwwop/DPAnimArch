@@ -28,103 +28,227 @@ namespace OALProgramControl
             Boolean Result = false;
 
             String AssignedValue = this.AssignedExpression.Evaluate(SuperScope, OALProgram.ExecutionSpace);
-
             if (AssignedValue == null)
             {
                 return Result;
             }
 
+            // We find the type of AssignedExpression
+            String AssignedType;
+            if (this.AssignedExpression.IsReference())
+            {
+                AssignedType = SuperScope.DetermineVariableType(this.AssignedExpression.AccessChain(), OALProgram.ExecutionSpace);
+                if (AssignedType == null)
+                {
+                    return Result;
+                }
+
+                // Check if AssignedType is ReferenceTypeName, it means it is primitive
+                if (EXETypes.ReferenceTypeName.Equals(AssignedType))
+                {
+                    AssignedType = FindPrimitiveType(AssignedValue); //V tomto pripade by malo byt AssignedValue asi meno inej premennej
+                }
+            }
+            // It must be primitive, not reference
+            else
+            {
+                AssignedType = EXETypes.DetermineVariableType("", AssignedValue);
+                if (AssignedType == null)
+                {
+                    return Result;
+                }
+            }
+
+
             // If we are assigning to a variable
             if (this.AttributeName == null)
             {
-                /*//
-                EXEReferencingVariable RefVariable = SuperScope.FindReferencingVariableByName(this.VariableName);
+                EXEPrimitiveVariable PrimitiveVariable = SuperScope.FindPrimitiveVariableByName(this.VariableName);
+                EXEReferencingVariable ReferencingVariable = SuperScope.FindReferencingVariableByName(this.VariableName);
                 EXEReferencingSetVariable SetVariable = SuperScope.FindSetReferencingVariableByName(this.VariableName);
 
-                String AssignedValueType = EXETypes.DetermineVariableType("", AssignedValue);
-
-                if (RefVariable != null)
+                if (PrimitiveVariable != null)
                 {
-                    // treba nejak osetrit aby to nakoniec bolo ID a nie integer
-                    if (!EXETypes.IntegerTypeName.Equals(AssignedValueType))
+                    // We find the type of PrimitiveVariable
+                    String PrimitiveVariableType = PrimitiveVariable.Type;
+                    if (EXETypes.ReferenceTypeName.Equals(PrimitiveVariable.Type))
+                    {
+                        PrimitiveVariableType = FindPrimitiveType(PrimitiveVariable.Value); //V tomto pripade by malo byt AssignedValue asi meno inej premennej
+                    }
+
+                    // If PrimitiveVariable exists and its type is UNDEFINED
+                    if (EXETypes.UnitializedName.Equals(PrimitiveVariableType)) //moze sa stat ze aj AssignedType by bol unitialized?
+                    {
+                        return PrimitiveVariable.AssignValue(PrimitiveVariable.Name, AssignedValue);
+                        //TODO: ak sa to podari asi treba aj pozmenit typ ci ? mozno reisit v AssignValue() metode alebo aj kontrolovat validValue
+                    }
+
+                    // We need to compare primitive types
+                    if (!PrimitiveVariableType.Equals(AssignedType))
                     {
                         return Result;
                     }
 
-                    CDClass VariableClass = OALProgram.ExecutionSpace.getClassByName(RefVariable.ClassName);
-                    if (VariableClass == null)
+                    // If the types don't match, this fails and returns false
+                    AssignedValue = EXETypes.AdjustAssignedValue(PrimitiveVariableType, AssignedValue);
+                    Result = PrimitiveVariable.AssignValue("", AssignedValue);   
+                }
+                else if (ReferencingVariable != null)
+                {
+                    CDClass Class = OALProgram.ExecutionSpace.getClassByName(ReferencingVariable.ClassName);
+                    if (Class == null)
                     {
                         return Result;
                     }
 
-                    CDClassInstance ClassInstance = VariableClass.GetInstanceByID(long.Parse(AssignedValue));
+                    if
+                    (
+                        !(
+                            this.AssignedExpression.IsReference()
+                            &&
+                            Object.Equals(Class.Name, AssignedType)
+                        )
+                    )
+                    {
+                        return Result;
+                    }
+
+                    if (!EXETypes.IsValidReferenceValue(AssignedValue, Class.Name))
+                    {
+                        return Result;
+                    }
+
+                    long IDValue = long.Parse(AssignedValue);
+
+                    CDClassInstance ClassInstance = Class.GetInstanceByID(IDValue);
                     if (ClassInstance == null)
                     {
                         return Result;
                     }
 
-                    RefVariable.ReferencedInstanceId = long.Parse(AssignedValue);    
+                    ReferencingVariable.ReferencedInstanceId = IDValue;
+                    Result = true;
                 }
                 else if (SetVariable != null)
                 {
-                    CDClass VariableClass = OALProgram.ExecutionSpace.getClassByName(SetVariable.ClassName);
-                    if (VariableClass == null)
+                    CDClass Class = OALProgram.ExecutionSpace.getClassByName(SetVariable.ClassName);
+                    if (Class == null)
                     {
                         return Result;
                     }
 
-                    if (!EXETypes.IsValidReferenceValue(AssignedValue, SetVariable.ClassName + "[]"))
+                    if
+                    (
+                        !(
+                            this.AssignedExpression.IsReference()
+                            &&
+                            Object.Equals(SetVariable.Type, AssignedType)
+                        )
+                    )
                     {
                         return Result;
                     }
 
-                    int[] IDs = AssignedValue.Split(',').Select(id => int.Parse(id)).ToArray();
+                    if (!EXETypes.IsValidReferenceValue(AssignedValue, SetVariable.Type))
+                    {
+                        return Result;
+                    }
+
+                    long[] IDs = AssignedValue.Split(',').Select(id => long.Parse(id)).ToArray();
 
                     CDClassInstance ClassInstance;
-                    foreach (int ID in IDs)
+                    foreach (long ID in IDs)
                     {
-                        ClassInstance = VariableClass.GetInstanceByID(ID);
+                        ClassInstance = Class.GetInstanceByID(ID);
                         if (ClassInstance == null)
                         {
                             return Result;
                         }
                     }
 
-                    //treba asi clearnut list referencing variables v SetVariable
-                    foreach (int ID in IDs)
+                    SetVariable.ClearVariables();
+
+                    foreach (long ID in IDs)
                     {
-                        SetVariable.AddReferencingVariable(new EXEReferencingVariable("", VariableClass.Name, ID));
+                        SetVariable.AddReferencingVariable(new EXEReferencingVariable("", Class.Name, ID));
                     }
+                    Result = true;
                 }
                 // We must create new Variable, it depends on the type of AssignedExpression
                 else
                 {
-                    if (AssignedValueType == null)
+                    // Its type is UNDEFINED
+                    if (EXETypes.UnitializedName.Equals(AssignedType))
                     {
-                        return Result;
-                    }
-
-                    if (EXETypes.IsPrimitive(AssignedValueType))
-                    {//tu si nie sme isty s integerom, moze to byt aj ID
                         Result = SuperScope.AddVariable(new EXEPrimitiveVariable(this.VariableName, AssignedValue));
                     }
-                    else if (EXETypes.UnitializedName.Equals(AssignedValueType))
+                    else if (EXETypes.IsPrimitive(AssignedType))
                     {
-                        //neviem
+                        // If the types don't match, this fails and returns false
+                        AssignedValue = EXETypes.AdjustAssignedValue(AssignedType, AssignedValue);
+                        Result = SuperScope.AddVariable(new EXEPrimitiveVariable(this.VariableName, AssignedValue));
                     }
-                    // We have reference
-                    else if (EXETypes.ReferenceTypeName.Equals(AssignedValueType))
+                    else if ("[]".Equals(AssignedType.Substring(AssignedType.Length - 2, 2)))
                     {
+                        CDClass Class = OALProgram.ExecutionSpace.getClassByName(AssignedType.Substring(0, AssignedType.Length - 2));
+                        if (Class == null)
+                        {
+                            return Result;
+                        }
 
+                        if (!EXETypes.IsValidReferenceValue(AssignedValue, AssignedType))
+                        {
+                            return Result;
+                        }
+
+                        long[] IDs = AssignedValue.Split(',').Select(id => long.Parse(id)).ToArray();
+
+                        CDClassInstance ClassInstance;
+                        foreach (long ID in IDs)
+                        {
+                            ClassInstance = Class.GetInstanceByID(ID);
+                            if (ClassInstance == null)
+                            {
+                                return Result;
+                            }
+                        }
+
+                        EXEReferencingSetVariable CreatedSetVariable = new EXEReferencingSetVariable(this.VariableName, Class.Name);
+
+                        foreach (long ID in IDs)
+                        {
+                            CreatedSetVariable.AddReferencingVariable(new EXEReferencingVariable("", Class.Name, ID));
+                        }
+
+                        Result = SuperScope.AddVariable(CreatedSetVariable);
                     }
-                    else
+                    else if (!String.IsNullOrEmpty(AssignedType))
                     {
-                        return Result;
+                        CDClass Class = OALProgram.ExecutionSpace.getClassByName(AssignedType);
+                        if (Class == null)
+                        {
+                            return Result;
+                        }
+
+                        if (!EXETypes.IsValidReferenceValue(AssignedValue, AssignedType))
+                        {
+                            return Result;
+                        }
+
+                        long ID = long.Parse(AssignedValue);
+
+                        CDClassInstance ClassInstance = Class.GetInstanceByID(ID);
+                        if (ClassInstance == null)
+                        {
+                            return Result;
+                        }
+
+                        Result = SuperScope.AddVariable(new EXEReferencingVariable(this.VariableName, Class.Name, ID));
                     }
-                //v poli bez mena a vytvara sa nove
                 }
-                //*/
 
+
+                /*
                 EXEPrimitiveVariable Variable = SuperScope.FindPrimitiveVariableByName(this.VariableName);
                 // If the variable doesnt exist, we simply create it
                 if (Variable == null)
@@ -143,20 +267,33 @@ namespace OALProgramControl
                     AssignedValue = EXETypes.AdjustAssignedValue(Variable.Type, AssignedValue);
                     Result = Variable.AssignValue("", AssignedValue);
                 }
+                
 
                 // Variable exists and is not primitive. What to do, what to do?
                 // We do nothing, we CANNOT ASSIGN TO HANDLES!!!
+                */
             }
             // We are assigning to an attribute of a variable
             else
             {
-            
                 EXEReferenceEvaluator RefEvaluator = new EXEReferenceEvaluator();
-                Result = RefEvaluator.SetAttributeValue(this.VariableName, this.AttributeName, SuperScope, OALProgram.ExecutionSpace, AssignedValue);
+                Result = RefEvaluator.SetAttributeValue(this.VariableName, this.AttributeName, SuperScope, OALProgram.ExecutionSpace, AssignedValue, AssignedType);
             }
 
             return Result;
         }
+
+        private String FindPrimitiveType(String ReferenceName)
+        {
+            EXEPrimitiveVariable Variable = SuperScope.FindPrimitiveVariableByName(ReferenceName);
+            if (!EXETypes.ReferenceTypeName.Equals(Variable.Type))
+            {
+                return Variable.Type;
+            }
+
+            return FindPrimitiveType(Variable.Value);
+        }
+
         public override String ToCodeSimple()
         {
             String Result = this.VariableName;

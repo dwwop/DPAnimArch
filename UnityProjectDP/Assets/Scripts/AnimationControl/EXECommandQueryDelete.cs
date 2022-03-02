@@ -19,9 +19,9 @@ namespace OALProgramControl
             EXEReferencingVariable Variable = SuperScope.FindReferencingVariableByName(this.VariableName);
             if (Variable != null)
             {
-                //
                 String VariableClassName = Variable.ClassName;
                 long VariableInstanceId = Variable.ReferencedInstanceId;
+
                 if (this.AttributeName != null)
                 {
                     CDClass VariableClass = OALProgram.ExecutionSpace.getClassByName(Variable.ClassName);
@@ -36,7 +36,10 @@ namespace OALProgramControl
                         return false;
                     }
 
-                    VariableClassName = Attribute.Type;
+                    if ("[]".Equals(Attribute.Type.Substring(Attribute.Type.Length - 2, 2)))
+                    {
+                        return false;
+                    }
 
                     CDClassInstance ClassInstance = VariableClass.GetInstanceByID(Variable.ReferencedInstanceId);
                     if (ClassInstance == null)
@@ -48,15 +51,25 @@ namespace OALProgramControl
                     {
                         return false;
                     }
-                }
-                //
 
-                bool DestructionSuccess = OALProgram.ExecutionSpace.DestroyInstance(Variable.ClassName, Variable.ReferencedInstanceId);
+                    // We need to check if Attribute.Type is type of some class, not primitive type
+                    CDClass AttributeClass = OALProgram.ExecutionSpace.getClassByName(Attribute.Type);
+                    if (AttributeClass == null)
+                    {
+                        return false;
+                    }
+
+                    VariableClassName = Attribute.Type;
+                }
+
+                bool DestructionSuccess = OALProgram.ExecutionSpace.DestroyInstance(VariableClassName, VariableInstanceId);
                 if(DestructionSuccess)
                 {
-                    Result = SuperScope.UnsetReferencingVariables(Variable.ClassName, Variable.ReferencedInstanceId);
+                    //TODO: ako odstranit aj z atributov ?
+                    Result = SuperScope.UnsetReferencingVariables(VariableClassName, VariableInstanceId);
                 }
             }
+
             return Result;
         }
         public override string ToCodeSimple()

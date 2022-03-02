@@ -6,63 +6,23 @@ namespace OALProgramControl
 {
     public class EXECommandAddingToList : EXECommand
     {
-        private String ItemName { get; }
-        private String ItemAttributeName { get; }
         private String VariableName { get; }
         private String AttributeName { get; }
+        private EXEASTNode Item { get; }
 
-        public EXECommandAddingToList(String ItemName, String ItemAttributeName, String VariableName, String AttributeName)
+        public EXECommandAddingToList(String VariableName, String AttributeName, EXEASTNode Item)
         {
-            this.ItemName = ItemName;
-            this.ItemAttributeName = ItemAttributeName;
             this.VariableName = VariableName;
             this.AttributeName = AttributeName;
+            this.Item = Item;
         }
 
         protected override bool Execute(OALProgram OALProgram)
         {
-            // ItemName must be reference (not set variable)
-            EXEReferencingVariable ItemVariable = SuperScope.FindReferencingVariableByName(this.ItemName);
-            if (ItemVariable == null)
-            {
-                return false;
-            }
-
-            String ItemClassName = ItemVariable.ClassName;
-            long ItemInstanceId = ItemVariable.ReferencedInstanceId;
-            if (this.ItemAttributeName != null)
-            {
-                CDClass ItemClass = OALProgram.ExecutionSpace.getClassByName(ItemVariable.ClassName);
-                if (ItemClass == null)
-                {
-                    return false;
-                }
-
-                CDAttribute ItemAttribute = ItemClass.GetAttributeByName(this.ItemAttributeName);
-                if (ItemAttribute == null)
-                {
-                    return false;
-                }
-
-                ItemClassName = ItemAttribute.Type;
-
-                CDClassInstance ItemClassInstance = ItemClass.GetInstanceByID(ItemVariable.ReferencedInstanceId);
-                if (ItemClassInstance == null)
-                {
-                    return false;
-                }
-
-                // ItemAttributeName must be reference (not set variable)
-                if (!long.TryParse(ItemClassInstance.GetAttributeValue(this.ItemAttributeName), out ItemInstanceId))
-                {
-                    return false;
-                }
-            }
-
-          
             String SetVariableClassName;
             EXEReferencingSetVariable SetVariable = null; // This is important if we do not have AttributeName
             CDClassInstance ClassInstance = null; // This is important if we have AttributeName
+
             if (this.AttributeName == null)
             {
                 // If we do not have AttributeName, VariableName must be set variable reference
@@ -111,14 +71,43 @@ namespace OALProgramControl
             }
 
             // We need to compare class types
-            if (!ItemClassName.Equals(SetVariableClassName))
+            if
+            (
+                !(
+                    this.Item.IsReference()
+                    &&
+                    Object.Equals(SetVariableClassName, this.SuperScope.DetermineVariableType(this.Item.AccessChain(), OALProgram.ExecutionSpace))
+                )
+            )
             {
                 return false;
             }
 
+            String IDValue = this.Item.Evaluate(SuperScope, OALProgram.ExecutionSpace);
+
+            if (!EXETypes.IsValidReferenceValue(IDValue, SetVariableClassName))
+            {
+                return false;
+            }
+
+            long ItemInstanceID = long.Parse(IDValue);
+
+            CDClass SetVariableClass = OALProgram.ExecutionSpace.getClassByName(SetVariableClassName);
+            if (SetVariableClass == null)
+            {
+                return false;
+            }
+
+            CDClassInstance Instance = SetVariableClass.GetInstanceByID(ItemInstanceID);
+            if (Instance == null)
+            {
+                return false;
+            }
+
+
             if (this.AttributeName == null)
             {
-                SetVariable.AddReferencingVariable(new EXEReferencingVariable("", SetVariableClassName, ItemInstanceId));
+                SetVariable.AddReferencingVariable(new EXEReferencingVariable("", SetVariableClassName, ItemInstanceID));
             }
             else
             {
@@ -126,12 +115,12 @@ namespace OALProgramControl
 
                 if (Values.Length > 0 && !EXETypes.UnitializedName.Equals(Values))
                 {
-                    Values += "," + ItemInstanceId.ToString();
+                    Values += "," + ItemInstanceID.ToString();
                     ClassInstance.SetAttribute(this.AttributeName, Values);
                 }
                 else
                 {
-                    ClassInstance.SetAttribute(this.AttributeName, ItemInstanceId.ToString());
+                    ClassInstance.SetAttribute(this.AttributeName, ItemInstanceID.ToString());
                 }
             }
 
@@ -140,7 +129,7 @@ namespace OALProgramControl
 
         public override string ToCodeSimple()
         {
-            return "add " + (this.ItemAttributeName == null ? this.ItemName : (this.ItemName + "." + this.ItemAttributeName))
+            return "add " + this.Item.ToCode()
                 + " to " + (this.AttributeName == null ? this.VariableName : (this.VariableName + "." + this.AttributeName));
         }
     }

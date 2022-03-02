@@ -31,8 +31,6 @@ namespace OALProgramControl
             EXEReferencingVariable IteratorVariable = this.FindReferencingVariableByName(this.IteratorName);
             EXEReferencingSetVariable IterableVariable = this.FindSetReferencingVariableByName(this.IterableName);
 
-            Boolean Success = true;
-
             String IterableVariableClassName = "";
             int ReferencingVariablesCount = 0;
             List<long> ReferencingVariablesIDs = new List<long>(); // This is important if we have IterableAttributeName
@@ -40,84 +38,77 @@ namespace OALProgramControl
             if (this.IterableAttributeName == null)
             {
                 // We cannot iterate over not existing reference set
-                if (Success && IterableVariable == null)
+                if (IterableVariable == null)
                 {
-                    Success = false;
+                    return false;
                 }
-                else
-                {
-                    IterableVariableClassName = IterableVariable.ClassName;
-                    ReferencingVariablesCount = IterableVariable.GetReferencingVariables().Count;
-                }
+                
+                IterableVariableClassName = IterableVariable.ClassName;
+                ReferencingVariablesCount = IterableVariable.GetReferencingVariables().Count;    
             }
             else
             {
                 // If we have IterableAttributeName, IterableName must be reference and not reference set 
                 EXEReferencingVariable Variable = SuperScope.FindReferencingVariableByName(this.IterableName);
-                if (Success && Variable == null)
+                if (Variable == null)
                 {
-                    Success = false;
+                    return false;
                 }
 
                 CDClass VariableClass = OALProgram.ExecutionSpace.getClassByName(Variable.ClassName);
-                if (Success && VariableClass == null)
+                if (VariableClass == null)
                 {
-                    Success = false;
+                    return false;
                 }
 
                 CDAttribute Attribute = VariableClass.GetAttributeByName(this.IterableAttributeName);
-                if (Success && Attribute == null)
+                if (Attribute == null)
                 {
-                    Success = false;
+                    return false;
                 }
 
-                // We cannot iterate over reference that is not a Set
-                if (Success && !"[]".Equals(Attribute.Type.Substring(Attribute.Type.Length - 2, 2)))
+                // We cannot iterate over reference that is not a set
+                if (!"[]".Equals(Attribute.Type.Substring(Attribute.Type.Length - 2, 2)))
                 {
-                    Success = false;
+                    return false;
                 }
+                
+                IterableVariableClassName = Attribute.Type.Substring(0, Attribute.Type.Length - 2);
 
-                if (Success)
+                // Get instance representing IterableName
+                CDClassInstance ClassInstance = VariableClass.GetInstanceByID(Variable.ReferencedInstanceId);
+                if (ClassInstance == null)
                 {
-                    IterableVariableClassName = Attribute.Type.Substring(0, Attribute.Type.Length - 2);
-
-                    // Get instance representing IterableName
-                    CDClassInstance ClassInstance = VariableClass.GetInstanceByID(Variable.ReferencedInstanceId);
-                    if (ClassInstance == null)
-                    {
-                        Success = false;
-                    }
-
-                    String Values = ClassInstance.GetAttributeValue(this.IterableAttributeName);
-                    if (Success && !EXETypes.IsValidReferenceValue(Values, Attribute.Type))
-                    {
-                        Success = false;
-                    }
-
-                    if (Success)
-                    {
-                        ReferencingVariablesIDs = Values.Split(',').Select(id => long.Parse(id)).ToList();
-                        ReferencingVariablesCount = ReferencingVariablesIDs.Count;
-                    }
+                    return false;
                 }
+                
+                String Values = ClassInstance.GetAttributeValue(this.IterableAttributeName);
+                if (!EXETypes.IsValidReferenceValue(Values, Attribute.Type))
+                {
+                    return false;
+                }
+                
+                ReferencingVariablesIDs = Values.Split(',').Select(id => long.Parse(id)).ToList();
+                ReferencingVariablesCount = ReferencingVariablesIDs.Count; 
             }
 
             // If iterator already exists and its class does not match the iterable class, we cannot do this
-            if (Success && IteratorVariable != null && !IteratorVariable.ClassName.Equals(IterableVariableClassName))
+            if (IteratorVariable != null && !IteratorVariable.ClassName.Equals(IterableVariableClassName))
             {
-                Success = false;
+                return false;
             }
 
             // If iterator name is already taken for another variable, we quit again. Otherwise we create the iterator variable
-            if (Success && IteratorVariable == null)
+            if (IteratorVariable == null)
             {
                 IteratorVariable = new EXEReferencingVariable(this.IteratorName, IterableVariableClassName, -1);
-                Success = this.GetSuperScope().AddVariable(IteratorVariable);
+                if (!this.GetSuperScope().AddVariable(IteratorVariable))
+                {
+                    return false;
+                }
             }
 
-            Success = Success && IterableIndex < ReferencingVariablesCount;
-
-            if (Success)
+            if (IterableIndex < ReferencingVariablesCount)
             {
                 if (this.IterableAttributeName == null)
                 {
@@ -133,10 +124,17 @@ namespace OALProgramControl
                 OALProgram.CommandStack.Enqueue(this);
                 AddCommandsToStack(OALProgram, this.Commands);
                 this.ClearVariables();
-                Success = this.GetSuperScope().AddVariable(IteratorVariable);
+                if (!this.GetSuperScope().AddVariable(IteratorVariable))
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
             }
             
-            return Success;
+            return true;
         }
 
         public override String ToCode(String Indent = "")

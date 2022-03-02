@@ -215,7 +215,7 @@ namespace AnimationControl.OAL
             }
             else if(context.ChildCount == 2)
             {               
-                EXEASTNodeComposite ast = new EXEASTNodeComposite(ParseUtil.StripWhiteSpace(context.GetChild(0).GetText()));
+                EXEASTNodeComposite ast = new EXEASTNodeComposite(ParseUtil.StripWhiteSpace(context.GetChild(0).GetText().ToLower()));
                 stackEXEASTNode.Push(ast);
                 
                 base.VisitExpr(context);
@@ -255,7 +255,7 @@ namespace AnimationControl.OAL
             {
                 if (!context.GetChild(0).GetText().Equals("("))
                 {
-                    EXEASTNodeComposite ast = new EXEASTNodeComposite(ParseUtil.StripWhiteSpace(context.GetChild(1).GetText()));
+                    EXEASTNodeComposite ast = new EXEASTNodeComposite(ParseUtil.StripWhiteSpace(context.GetChild(1).GetText().ToLower()));
                     stackEXEASTNode.Push(ast);
                 }
 
@@ -570,7 +570,7 @@ namespace AnimationControl.OAL
                 {
                     if (context.GetChild(i).GetType().Name.Contains("InstanceHandleContext"))
                     {
-                        Visit(context.GetChild(i)); // We get this.instanceName and this.attributeName (can be null)
+                        Visit(context.GetChild(i)); // We get this.instanceName and this.attributeName(can be null)
 
                         if (this.attributeName == null)
                         {
@@ -596,15 +596,25 @@ namespace AnimationControl.OAL
 
         public override object VisitExeCommandAddingToList([NotNull] OALParser.ExeCommandAddingToListContext context) 
         {
-            Visit(context.GetChild(1));
-            String ItemName = this.instanceName;
-            String ItemAttributeName = this.attributeName; //can be null
+            EXEASTNode Item;
+
+            Visit(context.GetChild(1)); // We get this.instanceName and this.attributeName(can be null)
+            if (this.attributeName == null)
+            {
+                Item = new EXEASTNodeLeaf(this.instanceName);
+            }
+            else
+            {
+                Item = new EXEASTNodeComposite(".");
+                ((EXEASTNodeComposite)Item).AddOperand(new EXEASTNodeLeaf(this.instanceName));
+                ((EXEASTNodeComposite)Item).AddOperand(new EXEASTNodeLeaf(this.attributeName));
+            }
 
             Visit(context.GetChild(3));
             String VariableName = this.instanceName;
             String AttributeName = this.attributeName; //can be null
 
-            stackEXEScope.Peek().AddCommand(new EXECommandAddingToList(ItemName, ItemAttributeName, VariableName, AttributeName));
+            stackEXEScope.Peek().AddCommand(new EXECommandAddingToList(VariableName, AttributeName, Item));
 
             return null;
             //return base.VisitExeCommandAddingToList(context);
