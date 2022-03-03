@@ -58,7 +58,7 @@ namespace AnimationControl.OAL
                 }
                 
             }
-            
+
             if (InstanceName != null)
             {
                 stackEXEScope.Peek().AddCommand(new EXECommandQueryCreate(ClassName, InstanceName, AttributeName));
@@ -622,10 +622,32 @@ namespace AnimationControl.OAL
 		
 		public override object VisitExeCommandWrite([NotNull] OALParser.ExeCommandWriteContext context)
         {
-			return null;
-		}
-		
-		public override object VisitExeCommandRead([NotNull] OALParser.ExeCommandReadContext context)
+            List<EXEASTNode> ArgumentsList = new List<EXEASTNode>();
+
+            if (!context.GetChild(1).GetText().Equals(")"))
+            {
+                EXEASTNode Argument;
+
+                for (int i = 1; i < context.ChildCount - 2; i++)
+                {
+                    if (context.GetChild(i).GetType().Name.Contains("ExprContext"))
+                    {
+                        Visit(context.GetChild(i));
+                        Argument = stackEXEASTNode.Peek();
+                        ArgumentsList.Add(Argument);
+
+                        stackEXEASTNode.Clear();
+                    }
+                }
+            }
+
+            stackEXEScope.Peek().AddCommand(new EXECommandWrite(ArgumentsList));
+
+            return null;
+            //return base.VisitExeCommandWrite(context);
+        }
+
+        public override object VisitExeCommandRead([NotNull] OALParser.ExeCommandReadContext context)
         {
 			return null;
 		}

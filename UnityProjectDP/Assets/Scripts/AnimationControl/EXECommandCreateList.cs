@@ -148,7 +148,7 @@ namespace OALProgramControl
             String Result = "create list " + (this.AttributeName == null ? this.VariableName : (this.VariableName + "." + this.AttributeName))
                 + " of " + this.ClassName;
 
-            if (this.Items.Count > 0)
+            if (this.Items.Any())
             {
                 Result += " { " + this.Items[0].ToCode();
 
