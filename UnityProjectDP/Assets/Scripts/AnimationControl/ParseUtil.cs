@@ -81,6 +81,11 @@ namespace OALProgramControl
         }
         public static String StripWhiteSpace(String String)
         {
+            if (String == null)
+            {
+                return null;
+            }
+
             if (String.Length <= 0)
             {
                 return String;
