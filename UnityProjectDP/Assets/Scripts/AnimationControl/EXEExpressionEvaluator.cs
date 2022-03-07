@@ -75,8 +75,10 @@ namespace OALProgramControl
                     {
                         //convert to list of int
                         List<int> IntList = Operands.Select(int.Parse).ToList();
+                        int first = IntList[0];
+                        IntList.RemoveAt(0);
                         //sub numbers in list and return result 
-                        return IntList.Aggregate(0, (a, x) => a - x).ToString();
+                        return IntList.Aggregate(first, (a, x) => a - x).ToString();
                     }
                     //true if Operands are real numbers
                     if (String.Equals(EXETypes.RealTypeName, VariableType))
@@ -95,8 +97,10 @@ namespace OALProgramControl
                                 return EXETypes.BooleanFalse;
                             }
                         }
+                        decimal first = DoubleList[0];
+                        DoubleList.RemoveAt(0);
                         //sub numbers in list and return result
-                        return EXETypes.AdjustAssignedValue(EXETypes.RealTypeName, DoubleList.Aggregate((decimal)0, (a, x) => a - x).ToString());
+                        return EXETypes.AdjustAssignedValue(EXETypes.RealTypeName, DoubleList.Aggregate(first, (a, x) => a - x).ToString());
                     }
                     break;
                 case "*": //int, real

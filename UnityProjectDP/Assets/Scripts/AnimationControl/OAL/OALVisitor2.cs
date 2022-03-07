@@ -177,15 +177,15 @@ namespace AnimationControl.OAL
 
             return null;
             //return base.VisitExeCommandAssignment(context);*/
-			
-			_ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(1)) : Visit(context.GetChild(0));
+
+            _ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(1)) : Visit(context.GetChild(0));
 			String VariableName =  this.instanceName;
             String AttributeName = this.attributeName; //can be null
-			
-			_ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(3)) : Visit(context.GetChild(2));
+
+            _ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(3)) : Visit(context.GetChild(2));
 			EXEASTNode expression = stackEXEASTNode.Peek();
-			
-			stackEXEScope.Peek().AddCommand(new EXECommandAssignment(VariableName, AttributeName, expression));
+
+            stackEXEScope.Peek().AddCommand(new EXECommandAssignment(VariableName, AttributeName, expression));
 
             stackEXEASTNode.Clear();
 
@@ -199,7 +199,6 @@ namespace AnimationControl.OAL
 
             //Console.WriteLine("Expr: " + context.ChildCount);
             //Console.WriteLine(context.GetChild(0).GetType().Name);
-            
             if (context.ChildCount == 1)
             {
                 if (context.GetChild(0).GetType().Name.Contains("TerminalNode") && stackEXEASTNode.Count() == 0)
@@ -214,7 +213,7 @@ namespace AnimationControl.OAL
                 }
             }
             else if(context.ChildCount == 2)
-            {               
+            {
                 EXEASTNodeComposite ast = new EXEASTNodeComposite(ParseUtil.StripWhiteSpace(context.GetChild(0).GetText().ToLower()));
                 stackEXEASTNode.Push(ast);
                 

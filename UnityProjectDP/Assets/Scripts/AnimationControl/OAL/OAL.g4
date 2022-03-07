@@ -30,7 +30,7 @@ line
 	;
 
 parCommand
-    :   'par' 'thread' line+ 'end thread' ';' ('thread' line+ 'end thread' ';')+ 'end par' ';'    //oni nemaju 2 az n
+    :   'par' 'thread' line+ 'end thread' ';' ('thread' line+ 'end thread' ';')+ 'end par' ';'
     ;
 
 ifCommand
@@ -110,8 +110,8 @@ exeCommandRead
     ;
 
 expr
-    :   NUM | variableName | BOOL | string
-    |   variableName '.' variableName
+    :   NUM | NAME | BOOL | STRING
+    |   NAME '.' NAME
     |   'cardinality ' instanceHandle
     |   ('empty ' | 'not_empty ') instanceHandle
     |   '(' expr ')'
