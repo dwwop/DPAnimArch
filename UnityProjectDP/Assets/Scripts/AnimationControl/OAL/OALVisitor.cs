@@ -218,12 +218,6 @@ public interface IOALVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitAttribute([NotNull] OALParser.AttributeContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="OALParser.string"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitString([NotNull] OALParser.StringContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="OALParser.relationshipLink"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

@@ -106,7 +106,7 @@ exeCommandWrite
     ;
 
 exeCommandRead
-    :   ('assign ')? instanceHandle '=' ('read(' string? ')' | 'int(read(' string? '))' | 'real(read(' string? '))' | 'bool(read(' string? '))') ';'
+    :   ('assign ')? instanceHandle '=' ('read(' expr? ')' | 'int(read(' expr? '))' | 'real(read(' expr? '))' | 'bool(read(' expr? '))') ';'
     ;
 
 expr
@@ -160,10 +160,6 @@ methodName
 attribute
 	:	NAME
 	;
-
-string
-    :   STRING
-    ;  
 
 relationshipLink
     :   '['RELATIONSHIP_SPECIFICATION']'

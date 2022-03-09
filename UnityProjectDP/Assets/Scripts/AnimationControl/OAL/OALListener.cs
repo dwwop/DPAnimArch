@@ -341,16 +341,6 @@ public interface IOALListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitAttribute([NotNull] OALParser.AttributeContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="OALParser.string"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterString([NotNull] OALParser.StringContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="OALParser.string"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitString([NotNull] OALParser.StringContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="OALParser.relationshipLink"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

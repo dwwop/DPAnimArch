@@ -56,18 +56,12 @@ namespace OALProgramControl
                 }
                 else if (EXETypes.IsPrimitive(ArgumentType))
                 {
-                    Result += ArgumentValue + " ";
+                    Result += ArgumentValue;
                 }
                 else
                 {
                     return false;
                 }
-            }
-
-            if (this.Arguments.Any())
-            {
-                // Remove last space -> " "
-                Result = Result.Remove(Result.Length - 1, 1);
             }
 
             ConsolePanel.Instance.YieldOutput(Result);

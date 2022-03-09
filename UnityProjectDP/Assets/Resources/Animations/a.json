@@ -1,1 +1,1 @@
-{"Code":"create object instance astleaf_1 of ASTLeaf;\nastleaf_1.getType();\n","AnimationName":"a","MethodsCodes":[{"Name":"AST","Methods":[{"Name":"execute","Code":"write(-9);\ncreate object instance astleaf_1 of ASTLeaf;\nastleaf_1.getType();\n"}]}]}
+{"Code":"create object instance astleaf_1 of ASTLeaf;\nastleaf_1.getType();\n","AnimationName":"a","MethodsCodes":[{"Name":"AST","Methods":[{"Name":"execute","Code":"x = read(\"Hallo \"+ \"Filip:\");\ncreate object instance astleaf_1 of ASTLeaf;\nastleaf_1.getType();\n"}]}]}

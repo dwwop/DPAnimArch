@@ -408,18 +408,6 @@ public partial class OALBaseListener : IOALListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAttribute([NotNull] OALParser.AttributeContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="OALParser.string"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterString([NotNull] OALParser.StringContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="OALParser.string"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitString([NotNull] OALParser.StringContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="OALParser.relationshipLink"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
