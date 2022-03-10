@@ -10,6 +10,11 @@ namespace OALProgramControl
     {
         public static String RemoveWhitespace(String String)
         {
+            if (String == null)
+            {
+                return null;
+            }
+
             StringBuilder FilteredStringBuilder = new StringBuilder();
             foreach (char c in String)
             {
@@ -23,6 +28,11 @@ namespace OALProgramControl
 
         public static String SqueezeWhiteSpace(String String)
         {
+            if (String == null)
+            {
+                return null;
+            }
+
             if (String.Length <= 0)
             {
                 return String;

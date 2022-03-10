@@ -27,6 +27,8 @@ public class Animation : Singleton<Animation>
     public bool nextStep=false;
     private bool prevStep = false;
     private List<GameObject> Fillers;
+    [HideInInspector]
+    public string ReadValue;
 
     public string startClassName;
     public string startMethodName;
@@ -120,12 +122,24 @@ public class Animation : Singleton<Animation>
 
             if (CurrentCommand.GetType().Equals(typeof(EXECommandCall)))
             {
-				BarrierSize = 1;
+                BarrierSize = 1;
                 CurrentBarrierFill = 0;
-				
+
                 StartCoroutine(ResolveCallFunct(((EXECommandCall)CurrentCommand).CreateOALCall()));
 
                 yield return StartCoroutine(BarrierFillCheck());
+            }
+            else if (CurrentCommand.GetType().Equals(typeof(EXECommandRead)))
+            {
+                BarrierSize = 1;
+                CurrentBarrierFill = 0;
+
+                ConsolePanel.Instance.ActivateInputField();
+
+                yield return StartCoroutine(BarrierFillCheck());
+
+                ExecutionSuccess = ExecutionSuccess && ((EXECommandRead)CurrentCommand).AssignReadValue(this.ReadValue, Program);
+                this.ReadValue = null;
             }
 
             Success = Success && ExecutionSuccess;

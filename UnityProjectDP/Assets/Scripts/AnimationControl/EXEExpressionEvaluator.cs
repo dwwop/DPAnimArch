@@ -63,10 +63,10 @@ namespace OALProgramControl
                     {
                         //add string in list and return result 
                         //remove \" from Operands  
-                        List<String> StringList = Operands.Select(s => s.Replace("\"", "")).ToList();
+                        List<String> StringList = Operands.Select(s => s.Substring(1, s.Length - 2)).ToList();
 
                         //add strings in list and return result
-                        return CreateEXETypeString(StringList.Aggregate((a, x) => a + x).ToString());
+                        return CreateEXETypeString(StringList.Aggregate((a, x) => a + x));
                     }
                     break;
                 case "-": //int, real
@@ -77,6 +77,10 @@ namespace OALProgramControl
                         List<int> IntList = Operands.Select(int.Parse).ToList();
                         int first = IntList[0];
                         IntList.RemoveAt(0);
+                        if (!IntList.Any())
+                        {
+                            return (-first).ToString();
+                        }
                         //sub numbers in list and return result 
                         return IntList.Aggregate(first, (a, x) => a - x).ToString();
                     }
@@ -99,6 +103,10 @@ namespace OALProgramControl
                         }
                         decimal first = DoubleList[0];
                         DoubleList.RemoveAt(0);
+                        if (!DoubleList.Any())
+                        {
+                            return (-first).ToString();
+                        }
                         //sub numbers in list and return result
                         return EXETypes.AdjustAssignedValue(EXETypes.RealTypeName, DoubleList.Aggregate(first, (a, x) => a - x).ToString());
                     }

@@ -648,7 +648,7 @@ namespace AnimationControl.OAL
 
         public override object VisitExeCommandRead([NotNull] OALParser.ExeCommandReadContext context)
         {
-            /*String VariableName;
+            String VariableName;
             String AttributeName;
             String ReadType;
             EXEASTNode Prompt = null;
@@ -686,7 +686,7 @@ namespace AnimationControl.OAL
                 }
             }
 
-            stackEXEScope.Peek().AddCommand(new EXECommandRead(VariableName, AttributeName, ReadType, Prompt));*/
+            stackEXEScope.Peek().AddCommand(new EXECommandRead(VariableName, AttributeName, ReadType, Prompt));
 
             return null;
             //return base.VisitExeCommandRead(context);

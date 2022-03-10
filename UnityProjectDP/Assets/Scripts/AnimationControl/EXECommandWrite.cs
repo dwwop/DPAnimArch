@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace OALProgramControl
 {
@@ -16,6 +17,14 @@ namespace OALProgramControl
 
         protected override bool Execute(OALProgram OALProgram)
         {
+            Debug.Log("Write");//
+            Debug.Log(Arguments.Count);//
+            for (int i = 0; i < this.Arguments.Count; i++)
+            {
+                Debug.Log(Arguments[i].ToCode());//
+            }
+            Debug.Log("End Write");//
+
             String Result = "";
             String ArgumentValue;
             String ArgumentType;
@@ -50,12 +59,18 @@ namespace OALProgramControl
                 }
 
                 //nemoze to byt instancia, a ani pole instancii
-                if (EXETypes.UnitializedName.Equals(ArgumentType))
+                /*if (EXETypes.UnitializedName.Equals(ArgumentType))
                 {//neviem co treba tu
 
-                }
-                else if (EXETypes.IsPrimitive(ArgumentType))
+                }*/
+                if (EXETypes.IsPrimitive(ArgumentType) || EXETypes.UnitializedName.Equals(ArgumentType))
                 {
+                    if (EXETypes.StringTypeName.Equals(ArgumentType))
+                    {
+                        // Remove double quotes
+                        ArgumentValue = ArgumentValue.Substring(1, ArgumentValue.Length - 2);
+                    }
+
                     Result += ArgumentValue;
                 }
                 else

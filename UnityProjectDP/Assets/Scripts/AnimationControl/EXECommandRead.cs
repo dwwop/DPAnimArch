@@ -6,7 +6,7 @@ namespace OALProgramControl
 {
     public class EXECommandRead : EXECommand
     {
-        /*private String VariableName { get; }
+        private String VariableName { get; }
         private String AttributeName { get; }
         private String ReadType { get; }
         private EXEASTNode Prompt { get; }  // Must be String type
@@ -17,10 +17,10 @@ namespace OALProgramControl
             this.AttributeName = AttributeName;
             this.ReadType = ReadType;
             this.Prompt = Prompt;
-        }*/
+        }
 
         protected override Boolean Execute(OALProgram OALProgram)
-        {/*
+        {
             String Result = "";
 
             if (this.Prompt != null)
@@ -28,23 +28,25 @@ namespace OALProgramControl
                 Result = this.Prompt.Evaluate(SuperScope, OALProgram.ExecutionSpace);
 
                 String ResultType = EXETypes.DetermineVariableType("", Result);
-                //co psravit ak mame unitialized?
+
                 // We need String or this fails
-                if (!EXETypes.StringTypeName.Equals(ResultType))
+                if (EXETypes.StringTypeName.Equals(ResultType))
+                {
+                    // Remove double quotes
+                    Result = Result.Substring(1, Result.Length - 2);
+                }
+                else if (!EXETypes.UnitializedName.Equals(ResultType))
                 {
                     return false;
                 }
-
-                // Remove double quotes
-                Result = Result.Substring(1, Result.Length - 2);
             }
 
-            ConsolePanel.Instance.YieldOutput(Result);*/
+            ConsolePanel.Instance.YieldOutput(Result);
 
             return true;
         }
 
-        /*public Boolean AssignReadValue(String Value, OALProgram OALProgram)
+        public Boolean AssignReadValue(String Value, OALProgram OALProgram)
         {
             Boolean Result = false;
             String ExpectedType;
@@ -134,6 +136,6 @@ namespace OALProgramControl
         {
             return (this.AttributeName == null ? this.VariableName : (this.VariableName + "." + this.AttributeName))
                 + " = " + this.ReadType + (this.Prompt != null ? this.Prompt.ToCode() : "") + (this.ReadType.Equals("read(") ? ")" : "))");
-        }*/
+        }
     }
 }
