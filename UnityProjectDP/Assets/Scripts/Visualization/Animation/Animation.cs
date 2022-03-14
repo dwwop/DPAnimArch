@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 using Assets.Scripts.AnimationControl.OAL;
-using AnimArch.Visualization.ClassDiagrams;
+using AnimArch.Visualization.Diagrams;
 
 namespace AnimArch.Visualization.Animating
 {
@@ -418,8 +418,8 @@ namespace AnimArch.Visualization.Animating
         {
             isPaused = false;
             StopAllCoroutines();
-            if (ClassDiagram.Instance.GetClassList() != null)
-                foreach (Class c in ClassDiagram.Instance.GetClassList())
+            if (DiagramPool.Instance.ClassDiagram.GetClassList() != null)
+                foreach (Class c in DiagramPool.Instance.ClassDiagram.GetClassList())
                 {
                     HighlightClass(c.Name, false);
                     if (c.Methods != null)
@@ -428,8 +428,8 @@ namespace AnimArch.Visualization.Animating
                             HighlightMethod(c.Name, m.Name, false);
                         }
                 }
-            if (ClassDiagram.Instance.GetRelationList() != null)
-                foreach (Relation r in ClassDiagram.Instance.GetRelationList())
+            if (DiagramPool.Instance.ClassDiagram.GetRelationList() != null)
+                foreach (Relation r in DiagramPool.Instance.ClassDiagram.GetRelationList())
                 {
                     HighlightEdge(r.OALName, false);
                 }

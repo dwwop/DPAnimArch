@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using AnimArch.Visualization.ClassDiagrams;
+using AnimArch.Visualization.Diagrams;
 
 namespace AnimArch.Visualization.UI
 {

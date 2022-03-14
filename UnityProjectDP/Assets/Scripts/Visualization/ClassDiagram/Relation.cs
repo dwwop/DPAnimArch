@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-namespace AnimArch.Visualization.ClassDiagrams
+namespace AnimArch.Visualization.Diagrams
 {
     public class Relation
     {

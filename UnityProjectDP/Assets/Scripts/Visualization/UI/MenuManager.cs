@@ -8,7 +8,7 @@ using System;
 using System.Text.RegularExpressions;
 using OALProgramControl;
 using AnimArch.Visualization.Animating;
-using AnimArch.Visualization.ClassDiagrams;
+using AnimArch.Visualization.Diagrams;
 using AnimArch.Visualization.Animation;
 
 namespace AnimArch.Visualization.UI
@@ -155,7 +155,7 @@ namespace AnimArch.Visualization.UI
             {
                 button.SetActive(false);
             } 
-            Class selectedClass = ClassDiagram.Instance.FindClassByName(name).XMIParsedClass;
+            Class selectedClass = DiagramPool.Instance.ClassDiagram.FindClassByName(name).XMIParsedClass;
             PanelInteractiveIntro.SetActive(false);
             ClassNameTxt.text = name;
             PanelMethod.SetActive(true);
@@ -190,7 +190,7 @@ namespace AnimArch.Visualization.UI
                     }
                     else
                     {
-                        if (i < methodButtons.Count && ClassDiagram.Instance.FindEdge(interactiveData.fromClass, name) != null)
+                        if (i < methodButtons.Count && DiagramPool.Instance.ClassDiagram.FindEdge(interactiveData.fromClass, name) != null)
                         {
                             methodButtons[i].SetActive(true);
                             methodButtons[i].GetComponentInChildren<TMP_Text>().text = m.Name + "()";
@@ -401,7 +401,7 @@ namespace AnimArch.Visualization.UI
             {
                 button.gameObject.SetActive(false);
             }
-            Class selectedClass = ClassDiagram.Instance.FindClassByName(name).XMIParsedClass;
+            Class selectedClass = DiagramPool.Instance.ClassDiagram.FindClassByName(name).XMIParsedClass;
             animMethods = AnimationData.Instance.selectedAnim.GetMethodsByClassName(name);
             int i = 0;
             if (animMethods != null)

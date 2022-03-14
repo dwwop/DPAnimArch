@@ -1,4 +1,4 @@
-using AnimArch.Visualization.ClassDiagrams;
+using AnimArch.Visualization.Diagrams;
 using AnimArch.Visualization.UI;
 using System;
 using System.Collections;

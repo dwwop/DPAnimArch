@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using AnimArch.Visualization.ClassDiagrams;
+using AnimArch.Visualization.Diagrams;
 
 namespace AnimArch.Visualization.UI
 {
@@ -36,7 +36,7 @@ namespace AnimArch.Visualization.UI
         {
             SetName(inp.text);
             SetType(dropdown.options[dropdown.value].text);
-            if (ClassDiagram.Instance.AddAtr(classTxt.text, atr))
+            if (DiagramPool.Instance.ClassDiagram.AddAtr(classTxt.text, atr))
             {
                 if (isArray.isOn)
                 {

@@ -13,32 +13,18 @@ using AnimArch.Visualization.UI;
 using AnimArch.XMIParsing;
 using AnimArch.Extensions.Unity;
 
-namespace AnimArch.Visualization.ClassDiagrams
+namespace AnimArch.Visualization.Diagrams
 {
-    public class ClassDiagram : Singleton<ClassDiagram>
+    public class ClassDiagram : Diagram
     {
-        public GameObject graphPrefab;
-        public GameObject classPrefab;
-        public GameObject associationNonePrefab;
-        public GameObject associationFullPrefab;
-        public GameObject associationSDPrefab;
-        public GameObject associationDSPrefab;
-        public GameObject dependsPrefab;
-        public GameObject generalizationPrefab;
-        public GameObject implementsPrefab;
-        public GameObject realisationPrefab;
-        public GameObject interGraphLinePrefab;
         public Graph graph;
-        //private List<Class> DiagramClasses; //List of all classes from XMI
-        //private List<Relation> DiagramRelations; //List of all relations from XMI
-        //private Dictionary<string, GameObject> GameObjectRelations; // Dictionary of all objects created from list classes
-        //private Dictionary<string, GameObject> GameObjectClasses; //Dictionary of all ojects created from relations list
         public List<ClassInDiagram> Classes { get; private set; }
         public List<RelationInDiagram> Relations { get; private set; }
 
         //Awake is called before the first frame and before Start()
         private void Awake()
         {
+            DiagramPool.Instance.ClassDiagram = this;
             // Before the first frame.
             ResetDiagram();
         }
@@ -91,7 +77,7 @@ namespace AnimArch.Visualization.ClassDiagrams
                 AnimationData.Instance.diagramId++;
             }
 
-            fakeObjects();
+            //fakeObjects();
 
             //Generate UI objects displaying the diagram
             Generate();
@@ -101,7 +87,7 @@ namespace AnimArch.Visualization.ClassDiagrams
             ManualLayout();
             //AutoLayout();
 
-            Classes
+            /*Classes
                 .Where(Class => Class.isObject)
                 .ForEach(Class => Class.VisualObject.GetComponent<RectTransform>().Shift(0, 0, 200));
 
@@ -111,13 +97,14 @@ namespace AnimArch.Visualization.ClassDiagrams
                 .Where(Class => Class.isObject)
                 .ForEach
                 (
-                    Class => CreateInterGraphLine(Class.VisualObject, CLASS.VisualObject)
-                );
+                    Class => CreateInterGraphLine(graph, Class.VisualObject, CLASS.VisualObject)
+                );*/
+            DiagramPool.Instance.ObjectDiagram.LoadDiagram();
         }
         public Graph CreateGraph()
         {
             ResetDiagram();
-            var go = GameObject.Instantiate(graphPrefab);
+            var go = GameObject.Instantiate(DiagramPool.Instance.graphPrefab);
             graph = go.GetComponent<Graph>();
             return graph;
         }
@@ -207,16 +194,16 @@ namespace AnimArch.Visualization.ClassDiagrams
                     case "Association":
                         switch (Relation.ProperitesDirection)
                         {
-                            case "Source -> Destination": Relation.PrefabType = associationSDPrefab; break;
-                            case "Destination -> Source": Relation.PrefabType = associationDSPrefab; break;
-                            case "Bi-Directional": Relation.PrefabType = associationFullPrefab; break;
-                            default: Relation.PrefabType = associationNonePrefab; break;
+                            case "Source -> Destination": Relation.PrefabType = DiagramPool.Instance.associationSDPrefab; break;
+                            case "Destination -> Source": Relation.PrefabType = DiagramPool.Instance.associationDSPrefab; break;
+                            case "Bi-Directional": Relation.PrefabType = DiagramPool.Instance.associationFullPrefab; break;
+                            default: Relation.PrefabType = DiagramPool.Instance.associationNonePrefab; break;
                         }
                         break;
-                    case "Generalization": Relation.PrefabType = generalizationPrefab; break;
-                    case "Dependency": Relation.PrefabType = dependsPrefab; break;
-                    case "Realisation": Relation.PrefabType = realisationPrefab; break;
-                    default: Relation.PrefabType = associationNonePrefab; break;
+                    case "Generalization": Relation.PrefabType = DiagramPool.Instance.generalizationPrefab; break;
+                    case "Dependency": Relation.PrefabType = DiagramPool.Instance.dependsPrefab; break;
+                    case "Realisation": Relation.PrefabType = DiagramPool.Instance.realisationPrefab; break;
+                    default: Relation.PrefabType = DiagramPool.Instance.associationNonePrefab; break;
                 }
 
                 TempCDRelationship = OALProgram.Instance.RelationshipSpace.SpawnRelationship(Relation.FromClass, Relation.ToClass);
@@ -306,7 +293,7 @@ namespace AnimArch.Visualization.ClassDiagrams
                 GameObject prefab = rel.XMIParsedRelation.PrefabType;
                 if (prefab == null)
                 {
-                    prefab = associationNonePrefab;
+                    prefab = DiagramPool.Instance.associationNonePrefab;
                 }
 
                 GameObject startingClass = FindClassByName(rel.XMIParsedRelation.FromClass)?.VisualObject;
@@ -503,7 +490,7 @@ namespace AnimArch.Visualization.ClassDiagrams
         }
         public void CreateRelationEdge(GameObject node1, GameObject node2)
         {
-            GameObject edge = graph.AddEdge(node1, node2, associationFullPrefab);
+            GameObject edge = graph.AddEdge(node1, node2, DiagramPool.Instance.associationFullPrefab);
         }
         public void fakeObjects()
         {
@@ -629,25 +616,6 @@ namespace AnimArch.Visualization.ClassDiagrams
                     )
                 );
             }*/
-        }
-
-        public GameObject CreateInterGraphLine(GameObject start, GameObject end)
-        {
-            GameObject Line = Instantiate(interGraphLinePrefab);
-
-            Line.GetComponent<LineRenderer>().SetPositions
-            (
-                new Vector3[]
-                {
-                    start.GetComponent<RectTransform>().position,
-                    end.GetComponent<RectTransform>().position
-                }
-            );
-
-            Line.GetComponent<LineRenderer>().widthMultiplier = 6f;
-            Line.transform.SetParent(graph.units);
-
-            return Line;
         }
     }
 }

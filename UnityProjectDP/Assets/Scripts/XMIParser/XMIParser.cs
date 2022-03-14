@@ -5,7 +5,7 @@ using System.Xml;
 using System.Xml.XPath;
 using UnityEngine;
 using System.Text;
-using AnimArch.Visualization.ClassDiagrams;
+using AnimArch.Visualization.Diagrams;
 using AnimArch.Visualization.Animating;
 
 namespace AnimArch.XMIParsing
@@ -118,7 +118,7 @@ namespace AnimArch.XMIParsing
                         if (node.Name == "attributes")
                         {
                             XmlNodeList attributes = node.ChildNodes;
-                            XMIClass.Attributes = new List<Visualization.ClassDiagrams.Attribute>();
+                            XMIClass.Attributes = new List<Visualization.Diagrams.Attribute>();
 
                             foreach (XmlNode attribute in attributes)
                             {
@@ -137,7 +137,7 @@ namespace AnimArch.XMIParsing
                                     }
                                 }
 
-                                Visualization.ClassDiagrams.Attribute attr = new Visualization.ClassDiagrams.Attribute(id, name, type);
+                                Visualization.Diagrams.Attribute attr = new Visualization.Diagrams.Attribute(id, name, type);
                                 XMIClass.Attributes.Add(attr);
                             }
                         }

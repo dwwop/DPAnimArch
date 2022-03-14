@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using AnimArch.Visualization.UI;
 
-namespace AnimArch.Visualization.ClassDiagrams
+namespace AnimArch.Visualization.Diagrams
 {
     public class ClassEditor : Singleton<ClassEditor>
     {
@@ -20,7 +20,7 @@ namespace AnimArch.Visualization.ClassDiagrams
         public MethodMenu mtdMenu;
         public void InitializeCreation()
         {
-            graph = ClassDiagram.Instance.CreateGraph();
+            graph = DiagramPool.Instance.ClassDiagram.CreateGraph();
             active = true;
 
         }
@@ -65,7 +65,7 @@ namespace AnimArch.Visualization.ClassDiagrams
         {
             if (node1 != null && node2 != null)
             {
-                ClassDiagram.Instance.CreateRelationEdge(node1, node2);
+                DiagramPool.Instance.ClassDiagram.CreateRelationEdge(node1, node2);
                 node1 = null;
                 node2 = null;
                 graph.UpdateGraph();

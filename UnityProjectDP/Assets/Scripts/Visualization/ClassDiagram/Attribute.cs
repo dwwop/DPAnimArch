@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AnimArch.Visualization.ClassDiagrams
+namespace AnimArch.Visualization.Diagrams
 {
     public class Attribute
     {
