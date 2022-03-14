@@ -17,13 +17,13 @@ namespace OALProgramControl
 
         protected override bool Execute(OALProgram OALProgram)
         {
-            Debug.Log("Write");//
-            Debug.Log(Arguments.Count);//
-            for (int i = 0; i < this.Arguments.Count; i++)
-            {
-                Debug.Log(Arguments[i].ToCode());//
-            }
-            Debug.Log("End Write");//
+            //Debug.Log("Write");//
+            //Debug.Log(Arguments.Count);//
+            //for (int i = 0; i < this.Arguments.Count; i++)
+            //{
+                //Debug.Log(Arguments[i].ToCode());//
+            //}
+            //Debug.Log("End Write");//
 
             String Result = "";
             String ArgumentValue;
@@ -41,28 +41,23 @@ namespace OALProgramControl
                         return false;
                     }
 
-                    //treba toto overit ci potrebujeme tu metodu FindPrimitives alebo to budeme riesit inak
-                    // Check if AssignedType is ReferenceTypeName, it means it is primitive
+                    // Check if AssignedType is ReferenceTypeName, it means it is bullshit
                     if (EXETypes.ReferenceTypeName.Equals(ArgumentType))
                     {
-                        //ArgumentType = FindPrimitiveType(AssignedValue); //V tomto pripade by malo byt AssignedValue asi meno inej premennej
+                        return false;
                     }
                 }
                 // It must be primitive, not reference
                 else
                 {
                     ArgumentType = EXETypes.DetermineVariableType("", ArgumentValue);
-                    if (ArgumentType == null)
+                    if (ArgumentType == null || EXETypes.ReferenceTypeName.Equals(ArgumentType))
                     {
                         return false;
                     }
                 }
 
-                //nemoze to byt instancia, a ani pole instancii
-                /*if (EXETypes.UnitializedName.Equals(ArgumentType))
-                {//neviem co treba tu
-
-                }*/
+                //TODO: zatial to nemoze byt instancia, a ani pole instancii
                 if (EXETypes.IsPrimitive(ArgumentType) || EXETypes.UnitializedName.Equals(ArgumentType))
                 {
                     if (EXETypes.StringTypeName.Equals(ArgumentType))

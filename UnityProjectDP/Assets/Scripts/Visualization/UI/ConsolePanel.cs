@@ -31,7 +31,7 @@ public class ConsolePanel : Singleton<ConsolePanel>
 
     public void InputEntered()
     {
-        if (canWrite && (tmpInpField.text.Length > 0) && "\n".Equals(tmpInpField.text.Last()))
+        if (canWrite && (tmpInpField.text.Length > 1) && "\n".Equals(tmpInpField.text.Last()))
         {
             canWrite = false;
             tmpInpField.interactable = false;
@@ -42,6 +42,10 @@ public class ConsolePanel : Singleton<ConsolePanel>
             tmpInpField.text = "";
 
             Animation.Instance.IncrementBarrier();
+        }
+        else if (canWrite && tmpInpField.text.Replace("\n", "").Length == 0)
+        {
+            tmpInpField.text = "";
         }
     }
 }

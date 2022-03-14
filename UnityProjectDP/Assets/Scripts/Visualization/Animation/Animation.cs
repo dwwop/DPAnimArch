@@ -144,38 +144,8 @@ public class Animation : Singleton<Animation>
 
             Success = Success && ExecutionSuccess;
         }
-        /*
-        if (Success)
-        {
-            Debug.Log("We have " + ACS.AnimationSteps.Count() + " anim sequences");
-            foreach (List<AnimationCommand> AnimationSequence in ACS.AnimationSteps)
-            {
-                BarrierSize = AnimationSequence.Count;
-                Debug.Log("Filling barrier of size " + BarrierSize);
-                CurrentBarrierFill = 0;
-                if (!AnimationSequence.Any())
-                {
-                    continue;
-                }
-                if (AnimationSequence[0].IsCall)
-                {
-                    foreach (AnimationCommand Command in AnimationSequence)
-                    {
-                        StartCoroutine(Command.Execute());
-                    }
-                    yield return StartCoroutine(BarrierFillCheck());
-                }
-                else
-                {
-                    foreach (AnimationCommand Command in AnimationSequence)
-                    {
-                        Command.Execute();
-                    }
-                }
-            }
-        }
-        */
-        Debug.Log("Over");
+        
+        Debug.Log("Over, Success: " + Success);
         this.AnimationIsRunning = false;
     }
 

@@ -95,23 +95,20 @@ namespace OALProgramControl
             // If we have handle operators
             else if (HandleEvaluator.IsHandleOperator(this.Operation))
             {
-                Console.WriteLine("We have handle operator");
-                //posielame ID a kontrola instancii a poli ak to je primitiva je to zle , ci je to reference takye ako v command call aj ke prmitiva je to zle
-                //evaluatorz vo vnutri bude jednoduche
-                //1. exeastnode.isreference()
-                //2. podobne ako exescope.determinavrailetype nova metoda - true ak to nie je primitive premenna alebo atribut
-                //3. oalprogram.executionspace.getclassbyinstaceid nesmie byt null
-                //4. prepisat handleoperator evaluciau, teraz bude primitivna, posielame do nej exeastnode.evaluate
-
-                //
                 if (this.Operands.Count == 1)
                 {
                     if (this.Operands[0].IsReference())
                     {
                         String OperandType = Scope.DetermineVariableType(this.Operands[0].AccessChain(), ExecutionSpace);
 
-                        //Mozno spravit zvlast if pre EXETypes.UnitializedName lebo aj to mozeme nechat prejst
-                        if (!EXETypes.IsPrimitive(OperandType) && !EXETypes.ReferenceTypeName.Equals(OperandType) && !EXETypes.UnitializedName.Equals(OperandType))
+                        if
+                        (
+                            !EXETypes.IsPrimitive(OperandType)
+                            &&
+                            !EXETypes.ReferenceTypeName.Equals(OperandType)
+                            &&
+                            !EXETypes.UnitializedName.Equals(OperandType)
+                        )
                         {
                             String OperandValue = null;
 
@@ -166,13 +163,10 @@ namespace OALProgramControl
                                 }
                             }
 
-                            Result = HandleEvaluator.Evaluate(this.Operation, OperandValue, Scope);
+                            Result = HandleEvaluator.Evaluate(this.Operation, OperandValue);
                         }
                     }
                 }
-                //
-
-                //Result = HandleEvaluator.Evaluate(this.Operation, this.Operands.Select(x => ((EXEASTNodeLeaf)x).GetNodeValue()).ToList(), Scope);
             }
             // If we have access operator - we either access attribute or have decimal number. There are always 2 operands
             else if (".".Equals(this.Operation) && this.Operands.Count == 2)

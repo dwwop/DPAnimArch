@@ -155,29 +155,7 @@ namespace AnimationControl.OAL
 
 
         public override object VisitExeCommandAssignment([NotNull] OALParser.ExeCommandAssignmentContext context)
-        {//TODO priradenie atributu
-            /*String VariableName =  context.GetChild(0).GetText().Equals("assign ") ? context.GetChild(1).GetText() : context.GetChild(0).GetText();
-            String AttributeName = null;
-
-            if((context.GetChild(0).GetText().Equals("assign ") ? context.GetChild(2).GetText() : context.GetChild(1).GetText()).Equals("."))
-            {
-                AttributeName = context.GetChild(0).GetText().Equals("assign ") ? context.GetChild(3).GetText() : context.GetChild(2).GetText();
-                _ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(5)) : Visit(context.GetChild(4));
-            }
-            else
-            {
-                _ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(3)) : Visit(context.GetChild(2));
-            }
-
-            EXEASTNode expression = stackEXEASTNode.Peek();
-
-            stackEXEScope.Peek().AddCommand(new EXECommandAssignment(VariableName, AttributeName, expression));
-
-            stackEXEASTNode.Clear();
-
-            return null;
-            //return base.VisitExeCommandAssignment(context);*/
-
+        {
             _ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(1)) : Visit(context.GetChild(0));
             String VariableName = this.instanceName;
             String AttributeName = this.attributeName; //can be null
@@ -281,7 +259,7 @@ namespace AnimationControl.OAL
 
 
         public override object VisitExeCommandQuerySelectRelatedBy([NotNull] OALParser.ExeCommandQuerySelectRelatedByContext context)
-        { //Moze byt start aj s attributom ?
+        {
             String Cardinality = context.GetChild(0).GetText().Contains("many") ? "many" : "any";
             Console.WriteLine("Cardinality = " + Cardinality);
 

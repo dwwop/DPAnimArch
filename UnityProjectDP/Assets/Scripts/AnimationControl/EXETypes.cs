@@ -78,6 +78,11 @@ namespace OALProgramControl
         }
         public static Boolean IsValidValue(String Value, String Type)
         {
+            if (UnitializedName.Equals(Value))
+            {
+                return true;
+            }
+
             Boolean Result = false;
             switch (Type)
             {

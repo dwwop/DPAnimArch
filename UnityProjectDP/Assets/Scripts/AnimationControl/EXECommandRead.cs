@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace OALProgramControl
 {
@@ -29,7 +30,7 @@ namespace OALProgramControl
 
                 String ResultType = EXETypes.DetermineVariableType("", Result);
 
-                // We need String or this fails
+                // We need String otherwise this fails
                 if (EXETypes.StringTypeName.Equals(ResultType))
                 {
                     // Remove double quotes
@@ -49,32 +50,45 @@ namespace OALProgramControl
         public Boolean AssignReadValue(String Value, OALProgram OALProgram)
         {
             Boolean Result = false;
-            String ExpectedType;
+            String ValueType;
 
+            //X = int(Read()), real(read()), bool(read()) je pri UNDEFINED zle a pri read je to dobre lebo to berieme ako string
             if (this.ReadType.Contains("int"))
             {
-                ExpectedType = EXETypes.IntegerTypeName;
+                ValueType = EXETypes.IntegerTypeName;
+
+                if (!int.TryParse(Value, out _))
+                {
+                    return false;
+                }
             }
             else if (this.ReadType.Contains("real"))
             {
-                ExpectedType = EXETypes.RealTypeName;
+                ValueType = EXETypes.RealTypeName;
+
+                try
+                {
+                    double.Parse(Value, CultureInfo.InvariantCulture);
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
             }
             else if (this.ReadType.Contains("bool"))
             {
-                ExpectedType = EXETypes.BooleanTypeName;
+                ValueType = EXETypes.BooleanTypeName;
+
+                if (!EXETypes.BooleanTrue.Equals(Value) && !EXETypes.BooleanFalse.Equals(Value))
+                {
+                    return false;
+                }
             }
             // It must be String
             else
             {
-                ExpectedType = EXETypes.StringTypeName;
-            }
-
-            String ValueType = EXETypes.DetermineVariableType("", Value);
-
-            //netreba tu riesit aj unitializedtype ?
-            if (!ExpectedType.Equals(ValueType))
-            {
-                return Result;
+                ValueType = EXETypes.StringTypeName;
+                Value = '\"' + Value + '\"';
             }
 
             if (this.AttributeName == null)
@@ -83,44 +97,33 @@ namespace OALProgramControl
 
                 if (PrimitiveVariable != null)
                 {
-                    // We find the type of PrimitiveVariable
-                    String PrimitiveVariableType = PrimitiveVariable.Type;
                     if (EXETypes.ReferenceTypeName.Equals(PrimitiveVariable.Type))
                     {
-                        //PrimitiveVariableType = FindPrimitiveType(PrimitiveVariable.Value); //V tomto pripade by malo byt AssignedValue asi meno inej premennej
+                        return false;
                     }
 
                     // If PrimitiveVariable exists and its type is UNDEFINED
-                    if (EXETypes.UnitializedName.Equals(PrimitiveVariableType)) //moze sa stat ze aj AssignedType by bol unitialized?
+                    if (EXETypes.UnitializedName.Equals(PrimitiveVariable.Type)) //moze sa stat ze aj AssignedType by bol unitialized?
                     {
-                        return PrimitiveVariable.AssignValue(PrimitiveVariable.Name, Value);
-                        //TODO: ak sa to podari asi treba aj pozmenit typ ci ? mozno reisit v AssignValue() metode alebo aj kontrolovat validValue
+                        return false;
                     }
 
                     // We need to compare primitive types
-                    if (!PrimitiveVariableType.Equals(ValueType))
+                    if (!Object.Equals(PrimitiveVariable.Type, ValueType))
                     {
-                        return Result;
+                        return false;
                     }
 
                     // If the types don't match, this fails and returns false
-                    Value = EXETypes.AdjustAssignedValue(PrimitiveVariableType, Value);
+                    Value = EXETypes.AdjustAssignedValue(PrimitiveVariable.Type, Value);
                     Result = PrimitiveVariable.AssignValue("", Value);
                 }
-                // We must create new Variable, it depends on the type of ValueType/ExpectedType
+                // We must create new Variable, it depends on the type of ValueType
                 else
                 {
-                    //toto ani nemoze nastat pretoze nepridavame typ unitialized
-                    // Its type is UNDEFINED
-                    //if (EXETypes.UnitializedName.Equals(ValueType))
-                    //{
-                    //   //neviem ci to je dobre 
-                    //    return SuperScope.AddVariable(new EXEPrimitiveVariable(this.VariableName, Value));
-                    //}
-
                     // If the types don't match, this fails and returns false
-                    Value = EXETypes.AdjustAssignedValue(ExpectedType, Value);
-                    Result = SuperScope.AddVariable(new EXEPrimitiveVariable(this.VariableName, Value));
+                    Value = EXETypes.AdjustAssignedValue(ValueType, Value);
+                    Result = SuperScope.AddVariable(new EXEPrimitiveVariable(this.VariableName, Value, ValueType));
                 }        
             }
             else

@@ -43,17 +43,17 @@ namespace OALProgramControl
                     return Result;
                 }
 
-                // Check if AssignedType is ReferenceTypeName, it means it is primitive
+                // Check if AssignedType is ReferenceTypeName, it means it is some bullshit
                 if (EXETypes.ReferenceTypeName.Equals(AssignedType))
                 {
-                    AssignedType = FindPrimitiveType(AssignedValue); //V tomto pripade by malo byt AssignedValue asi meno inej premennej
+                    return Result;
                 }
             }
             // It must be primitive, not reference
             else
             {
                 AssignedType = EXETypes.DetermineVariableType("", AssignedValue);
-                if (AssignedType == null)
+                if (AssignedType == null || EXETypes.ReferenceTypeName.Equals(AssignedType))
                 {
                     return Result;
                 }
@@ -69,29 +69,26 @@ namespace OALProgramControl
 
                 if (PrimitiveVariable != null)
                 {
-                    // We find the type of PrimitiveVariable
-                    String PrimitiveVariableType = PrimitiveVariable.Type;
                     if (EXETypes.ReferenceTypeName.Equals(PrimitiveVariable.Type))
                     {
-                        PrimitiveVariableType = FindPrimitiveType(PrimitiveVariable.Value); //V tomto pripade by malo byt AssignedValue asi meno inej premennej
+                        return false;
                     }
 
                     // If PrimitiveVariable exists and its type is UNDEFINED
-                    if (EXETypes.UnitializedName.Equals(PrimitiveVariableType)) //moze sa stat ze aj AssignedType by bol unitialized?
+                    if (EXETypes.UnitializedName.Equals(PrimitiveVariable.Type)) //moze sa stat ze aj AssignedType by bol unitialized?
                     {
-                        return PrimitiveVariable.AssignValue(PrimitiveVariable.Name, AssignedValue);
-                        //TODO: ak sa to podari asi treba aj pozmenit typ ci ? mozno reisit v AssignValue() metode alebo aj kontrolovat validValue
+                        return false;
                     }
 
                     // We need to compare primitive types
-                    if (!PrimitiveVariableType.Equals(AssignedType))
+                    if (!Object.Equals(PrimitiveVariable.Type, AssignedType))
                     {
                         return Result;
                     }
 
                     // If the types don't match, this fails and returns false
-                    AssignedValue = EXETypes.AdjustAssignedValue(PrimitiveVariableType, AssignedValue);
-                    Result = PrimitiveVariable.AssignValue("", AssignedValue);   
+                    AssignedValue = EXETypes.AdjustAssignedValue(PrimitiveVariable.Type, AssignedValue);
+                    Result = PrimitiveVariable.AssignValue("", AssignedValue); 
                 }
                 else if (ReferencingVariable != null)
                 {
@@ -180,13 +177,13 @@ namespace OALProgramControl
                     // Its type is UNDEFINED
                     if (EXETypes.UnitializedName.Equals(AssignedType))
                     {
-                        Result = SuperScope.AddVariable(new EXEPrimitiveVariable(this.VariableName, AssignedValue));
+                        return false;
                     }
                     else if (EXETypes.IsPrimitive(AssignedType))
                     {
                         // If the types don't match, this fails and returns false
                         AssignedValue = EXETypes.AdjustAssignedValue(AssignedType, AssignedValue);
-                        Result = SuperScope.AddVariable(new EXEPrimitiveVariable(this.VariableName, AssignedValue));
+                        Result = SuperScope.AddVariable(new EXEPrimitiveVariable(this.VariableName, AssignedValue, AssignedType));
                     }
                     else if ("[]".Equals(AssignedType.Substring(AssignedType.Length - 2, 2)))
                     {
@@ -246,32 +243,6 @@ namespace OALProgramControl
                         Result = SuperScope.AddVariable(new EXEReferencingVariable(this.VariableName, Class.Name, ID));
                     }
                 }
-
-
-                /*
-                EXEPrimitiveVariable Variable = SuperScope.FindPrimitiveVariableByName(this.VariableName);
-                // If the variable doesnt exist, we simply create it
-                if (Variable == null)
-                {
-                    Result = SuperScope.AddVariable(new EXEPrimitiveVariable(this.VariableName, AssignedValue));
-                }
-                //If variable exists and its type is UNDEFINED
-                else if (EXETypes.UnitializedName.Equals(Variable.Type))
-                {
-                    Result = Variable.AssignValue(Variable.Name, AssignedValue);
-                }
-                // If the variable exists and is primitive
-                else if (!EXETypes.ReferenceTypeName.Equals(Variable.Type))
-                {
-                    // If the types don't match, this fails and returns false
-                    AssignedValue = EXETypes.AdjustAssignedValue(Variable.Type, AssignedValue);
-                    Result = Variable.AssignValue("", AssignedValue);
-                }
-                
-
-                // Variable exists and is not primitive. What to do, what to do?
-                // We do nothing, we CANNOT ASSIGN TO HANDLES!!!
-                */
             }
             // We are assigning to an attribute of a variable
             else
@@ -281,17 +252,6 @@ namespace OALProgramControl
             }
 
             return Result;
-        }
-
-        private String FindPrimitiveType(String ReferenceName)
-        {
-            EXEPrimitiveVariable Variable = SuperScope.FindPrimitiveVariableByName(ReferenceName);
-            if (!EXETypes.ReferenceTypeName.Equals(Variable.Type))
-            {
-                return Variable.Type;
-            }
-
-            return FindPrimitiveType(Variable.Value);
         }
 
         public override String ToCodeSimple()

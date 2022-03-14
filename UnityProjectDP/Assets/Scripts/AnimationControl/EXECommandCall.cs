@@ -111,7 +111,7 @@ namespace OALProgramControl
                         return false;
                     }
 
-                    MethodCode.AddVariable(new EXEPrimitiveVariable(Parameter.Name, Value));
+                    MethodCode.AddVariable(new EXEPrimitiveVariable(Parameter.Name, Value, Parameter.Type));
                 }
                 else if ("[]".Equals(Parameter.Type.Substring(Parameter.Type.Length - 2, 2)))
                 {
