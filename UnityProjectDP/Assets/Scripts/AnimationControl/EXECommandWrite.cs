@@ -17,14 +17,6 @@ namespace OALProgramControl
 
         protected override bool Execute(OALProgram OALProgram)
         {
-            //Debug.Log("Write");//
-            //Debug.Log(Arguments.Count);//
-            //for (int i = 0; i < this.Arguments.Count; i++)
-            //{
-                //Debug.Log(Arguments[i].ToCode());//
-            //}
-            //Debug.Log("End Write");//
-
             String Result = "";
             String ArgumentValue;
             String ArgumentType;

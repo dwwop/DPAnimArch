@@ -216,16 +216,12 @@ namespace AnimationControl.OAL
                     }
 
                     ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(newOperand);
+                }
+
+                if (stackEXEASTNode.Count() > 1)
+                {
                     EXEASTNode temp = stackEXEASTNode.Pop();
                     ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(temp);
-                }
-                else if (context.GetChild(0).GetText().ToLower().Equals("not ") || context.GetChild(0).GetText().Equals("-"))
-                {
-                    if (stackEXEASTNode.Count() > 1)
-                    {
-                        EXEASTNode temp = stackEXEASTNode.Pop();
-                        ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(temp);
-                    }
                 }
             }
             else if (context.ChildCount == 3)
@@ -242,15 +238,13 @@ namespace AnimationControl.OAL
                 {
                     ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(new EXEASTNodeLeaf(ParseUtil.StripWhiteSpace(context.GetChild(0).GetText())));
                     ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(new EXEASTNodeLeaf(ParseUtil.StripWhiteSpace(context.GetChild(2).GetText())));
-                    EXEASTNode temp = stackEXEASTNode.Pop();
-                    ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(temp);
                 }
-                else if (stackEXEASTNode.Count > 1 && !context.GetChild(0).GetText().Equals("("))
+                
+                if (stackEXEASTNode.Count > 1 && !context.GetChild(0).GetText().Equals("("))
                 {
                     EXEASTNode temp = stackEXEASTNode.Pop();
                     ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(temp);
                 }
-
             }
 
             return null;
