@@ -33,8 +33,8 @@ namespace OALProgramControl
                 // We need String otherwise this fails
                 if (EXETypes.StringTypeName.Equals(ResultType))
                 {
-                    // Remove double quotes
-                    Result = Result.Substring(1, Result.Length - 2);
+                    // Remove double quotes and replace '\"' with '"'
+                    Result = Result.Substring(1, Result.Length - 2).Replace("\\\"", "\""); ;
                 }
                 else if (!EXETypes.UnitializedName.Equals(ResultType))
                 {

@@ -329,7 +329,7 @@ namespace AnimationControl.OAL
 
             List<EXEASTNode> ParametersList = new List<EXEASTNode>();
 
-            if (context.GetChild(3).GetText().Equals("("))
+            if (!context.GetChild(4).GetText().Equals(")"))
             {
                 EXEASTNode Parameter;
 
@@ -595,11 +595,11 @@ namespace AnimationControl.OAL
         {
             List<EXEASTNode> ArgumentsList = new List<EXEASTNode>();
 
-            if (!context.GetChild(1).GetText().Equals(")"))
+            if (!context.GetChild(2).GetText().Equals(")"))
             {
                 EXEASTNode Argument;
 
-                for (int i = 1; i < context.ChildCount - 2; i++)
+                for (int i = 2; i < context.ChildCount - 2; i++)
                 {
                     if (context.GetChild(i).GetType().Name.Contains("ExprContext"))
                     {

@@ -54,8 +54,8 @@ namespace OALProgramControl
                 {
                     if (EXETypes.StringTypeName.Equals(ArgumentType))
                     {
-                        // Remove double quotes
-                        ArgumentValue = ArgumentValue.Substring(1, ArgumentValue.Length - 2);
+                        // Remove double quotes and replace '\"' with '"'
+                        ArgumentValue = ArgumentValue.Substring(1, ArgumentValue.Length - 2).Replace("\\\"", "\"");
                     }
 
                     Result += ArgumentValue;

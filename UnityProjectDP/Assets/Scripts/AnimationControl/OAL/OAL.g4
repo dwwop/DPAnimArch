@@ -46,8 +46,8 @@ foreachCommand
     ;
 
 continueCommand
-	:   'continue' ';'
-	;
+    :   'continue' ';'
+    ;
 
 breakCommand
     :   'break' ';'
@@ -89,8 +89,8 @@ exeCommandAssignment
     ;
 
 exeCommandCall
-    :   instanceHandle '.' methodName ('()' | '(' expr? (',' expr)* ')') ';'
-    |   'call from ' keyLetter '::' methodName '() to ' keyLetter '::' methodName '()' (' across ' relationshipSpecification)? ';'
+    :   instanceHandle '.' methodName '(' (expr (',' expr)*)? ')' ';'
+    |   'call from ' keyLetter '::' methodName '(' ')' ' to ' keyLetter '::' methodName '(' ')' (' across ' relationshipSpecification)? ';'
     ;
 
 exeCommandCreateList
@@ -102,11 +102,16 @@ exeCommandAddingToList
     ;
 
 exeCommandWrite
-    :   'write(' (expr (',' expr)*)? ')' ';'
+    :   'write' '(' (expr (',' expr)*)? ')' ';'
     ;
 
 exeCommandRead
-    :   ('assign ')? instanceHandle '=' ('read(' expr? ')' | 'int(read(' expr? '))' | 'real(read(' expr? '))' | 'bool(read(' expr? '))') ';'
+    :   ('assign ')? instanceHandle '=' (
+                                        'read(' expr? ')'
+                                        | 'int(read(' expr? ')' ')'
+                                        | 'real(read(' expr? ')' ')'
+                                        | 'bool(read(' expr? ')' ')'
+                                        ) ';'
     ;
 
 expr
@@ -138,28 +143,28 @@ keyLetter
     ;
 
 whereExpression
-	:   expr
-	;
+    :   expr
+    ;
 
 start
-	:	NAME
-	;
+    :	NAME
+    ;
 
 className
-	:	NAME
-	;
+    :	NAME
+    ;
 
 variableName
-	:	NAME
-	;
+    :	NAME
+    ;
 
 methodName
-	:	NAME
-	;
+    :	NAME
+    ;
 
 attribute
-	:	NAME
-	;
+    :	NAME
+    ;
 
 relationshipLink
     :   '['RELATIONSHIP_SPECIFICATION']'
@@ -184,7 +189,8 @@ NAME
     ;
 
 STRING
-    :   '"' .*? '"' ;
+    :   '"' (~'"' | '\\"')* '"'
+    ;
 
 NUM
     :   INT | DECIMAL
