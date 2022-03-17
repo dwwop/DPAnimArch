@@ -256,7 +256,7 @@ public class MenuManager : Singleton<MenuManager>
     //Save animation to file and memory
     public void SaveAnimation()
     {
-        if (sepInput.text.Length > 2 && !classTxt.text.Equals("class unselected") && !methodTxt.text.Equals("method unselected"))
+        if (!classTxt.text.Equals("class unselected") && !methodTxt.text.Equals("method unselected"))
         {
             createdAnim.SetMethodCode(classTxt.text, methodTxt.text, sepInput.text);
         }
@@ -285,6 +285,7 @@ public class MenuManager : Singleton<MenuManager>
             SelectAnimation();
             StartAnimate();
             scriptCode.text = AnimationData.Instance.selectedAnim.Code;
+            createdAnim = AnimationData.Instance.selectedAnim;
             AnimationData.Instance.RemoveAnim(AnimationData.Instance.selectedAnim);
             UpdateAnimations();
 
