@@ -28,6 +28,7 @@ namespace OALProgramControl
         private static readonly List<String> BoolNames = new List<string>(new String[] { "bool", "boolean"});
         private static readonly List<String> StringNames = new List<string>(new String[] { "string", "char[]", "char", "List<char>" });
         private static readonly List<String> PrimitiveNames = new List<string>(new String[] { IntegerTypeName, RealTypeName, BooleanTypeName, StringTypeName, DateTypeName, UniqueIDTypeName });
+        private static readonly Dictionary<Char, String> EscapeChars = new Dictionary<Char, String>() { { '\"', "\"" }, { '\'', "\'" }, { 't', "\t" }, { 'n', "\n" }, { '\\', "\\" } };
 
         public static bool IsPrimitive(String typeName)
         {
@@ -92,7 +93,7 @@ namespace OALProgramControl
                 case "real":
                     try
                     {
-                        double.Parse(Value, CultureInfo.InvariantCulture);
+                        decimal.Parse(Value, CultureInfo.InvariantCulture);
                         Result = true;
                     }
                     catch (Exception e)
@@ -101,7 +102,7 @@ namespace OALProgramControl
                     }
                     break;
                 case "boolean":
-                    Result = Boolean.TryParse(Value, out _);
+                    Result = (Value == EXETypes.BooleanTrue || Value == EXETypes.BooleanFalse);
                     break;
                 case "unique_ID":
                     //Result = Name == UniqueIDTypeName;
@@ -170,6 +171,11 @@ namespace OALProgramControl
                 return false;
             }
 
+            if (EXETypes.UnitializedName.Equals(NewValueType) && EXETypes.IsPrimitive(AttributeType))
+            {
+                return true;
+            }
+
             if (String.Equals(AttributeType, NewValueType))
             {
                 return true;
@@ -200,6 +206,11 @@ namespace OALProgramControl
             if (VariableType == null || NewValueType == null)
             {
                 return false;
+            }
+
+            if (EXETypes.UnitializedName.Equals(NewValueType) && EXETypes.IsPrimitive(VariableType))
+            {
+                return true;
             }
 
             if (String.Equals(VariableType, NewValueType))
@@ -259,6 +270,30 @@ namespace OALProgramControl
             }
 
             return NewValue;
+        }
+
+        public static String EvaluateEscapeSequences(String Value)
+        {
+            int index = Value.IndexOf('\\', 0);
+            String EscChar;
+
+            while (index != -1)
+            {
+                if ((index + 1) >= Value.Length)
+                {
+                    break;
+                }
+
+                if (EXETypes.EscapeChars.TryGetValue(Value[index + 1], out EscChar))
+                {
+                    Value = Value.Remove(index, 2)
+                                 .Insert(index, EscChar);
+                }
+
+                index = Value.IndexOf('\\', index + 1);
+            }
+
+            return Value;
         }
     }
 }

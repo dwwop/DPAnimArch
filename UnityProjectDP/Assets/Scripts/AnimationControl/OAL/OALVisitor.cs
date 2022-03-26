@@ -188,12 +188,6 @@ public interface IOALVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitWhereExpression([NotNull] OALParser.WhereExpressionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="OALParser.start"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitStart([NotNull] OALParser.StartContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="OALParser.className"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

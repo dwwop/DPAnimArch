@@ -24,6 +24,10 @@ namespace OALProgramControl
             for (int i = 0; i < this.Arguments.Count; i++)
             {
                 ArgumentValue = this.Arguments[i].Evaluate(SuperScope, OALProgram.ExecutionSpace);
+                if (ArgumentValue == null)
+                {
+                    return false;
+                }
 
                 if (this.Arguments[i].IsReference())
                 {
@@ -54,8 +58,8 @@ namespace OALProgramControl
                 {
                     if (EXETypes.StringTypeName.Equals(ArgumentType))
                     {
-                        // Remove double quotes and replace '\"' with '"'
-                        ArgumentValue = ArgumentValue.Substring(1, ArgumentValue.Length - 2).Replace("\\\"", "\"");
+                        // Remove double quotes
+                        ArgumentValue = ArgumentValue.Substring(1, ArgumentValue.Length - 2);
                     }
 
                     Result += ArgumentValue;

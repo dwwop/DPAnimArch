@@ -20,6 +20,7 @@ namespace OALProgramControl
         {
             List<String> Operands = PromoteIntegers(InOperands);
 
+            //TODO Lukas: Better check all operands
             if (!this.CanBeEvaluated(Operator, Operands)) return null;
 
             //Console.WriteLine("Can be evaluated");
@@ -592,7 +593,7 @@ namespace OALProgramControl
 
             }
 
-            //check if it is boolean type
+            //check if it is string type
             if (String.Equals(ParamType, EXETypes.StringTypeName))
             {
                 if (oper == ">" || oper == "<" || oper == "<=" || oper == ">=" || oper == "==" || oper == "!=")

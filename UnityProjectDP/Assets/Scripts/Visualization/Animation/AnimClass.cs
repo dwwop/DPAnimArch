@@ -7,6 +7,10 @@ public class AnimClass  //Filip
     [SerializeField]
     public string Name;
     [SerializeField]
+    public string SuperClass; //od ktorej dedi
+    [SerializeField]
+    public List<string> Attributes;
+    [SerializeField]
     public List<AnimMethod> Methods;
 
     public AnimClass(string Name)

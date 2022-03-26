@@ -64,7 +64,7 @@ namespace OALProgramControl
                 {
                     EvaluatedOperands.Add(Operand.Evaluate(Scope, ExecutionSpace));
                 }
-                if (EvaluatedOperands.Contains(null))
+                if (EvaluatedOperands.Contains(null) || EvaluatedOperands.Contains(EXETypes.UnitializedName))
                 {
                     return Result;
                 }
@@ -96,23 +96,29 @@ namespace OALProgramControl
             else if (HandleEvaluator.IsHandleOperator(this.Operation))
             {
                 if (this.Operands.Count == 1)
-                {
-                    if (this.Operands[0].IsReference())
+                {     
+                    if (this.Operands[0].IsReference() || EXETypes.UnitializedName.Equals(this.Operands[0].GetNodeValue()))
                     {
-                        String OperandType = Scope.DetermineVariableType(this.Operands[0].AccessChain(), ExecutionSpace);
+                        String OperandType = EXETypes.UnitializedName.Equals(this.Operands[0].GetNodeValue())
+                                             ?
+                                             EXETypes.UnitializedName
+                                             :
+                                             Scope.DetermineVariableType(this.Operands[0].AccessChain(), ExecutionSpace);
 
                         if
                         (
                             !EXETypes.IsPrimitive(OperandType)
                             &&
                             !EXETypes.ReferenceTypeName.Equals(OperandType)
-                            &&
-                            !EXETypes.UnitializedName.Equals(OperandType)
                         )
                         {
                             String OperandValue = null;
 
-                            if ("[]".Equals(OperandType.Substring(OperandType.Length - 2, 2)))
+                            if (EXETypes.UnitializedName.Equals(OperandType))
+                            {
+                                OperandValue = "";
+                            }
+                            else if ("[]".Equals(OperandType.Substring(OperandType.Length - 2, 2)))
                             {
                                 CDClass Class = ExecutionSpace.getClassByName(OperandType.Substring(0, OperandType.Length - 2));
                                 if (Class == null)
@@ -209,9 +215,17 @@ namespace OALProgramControl
             // If we have handle operators
             else if (HandleEvaluator.IsHandleOperator(this.Operation))
             {
-                if (this.Operands.Count() == 1 && Scope.FindReferenceHandleByName(((EXEASTNodeLeaf)this.Operands[0]).GetNodeValue()) != null)
+                if (this.Operands.Count() == 1)
                 {
-                    Result = true;
+                    String OperandType = Scope.DetermineVariableType(this.Operands[0].AccessChain(), ExecutionSpace);
+
+                    if (OperandType != null)
+                    {
+                        if (!EXETypes.IsPrimitive(OperandType) && !EXETypes.ReferenceTypeName.Equals(OperandType))
+                        {
+                            Result = true;
+                        }
+                    }
                 }
             }
             // If we have access operator - we either access attribute or have decimal number. There are always 2 operands

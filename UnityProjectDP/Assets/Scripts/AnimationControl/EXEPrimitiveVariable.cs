@@ -47,7 +47,7 @@ namespace OALProgramControl
             }
 
             String NewValueType = EXETypes.DetermineVariableType(name, NewValue);
-            if (NewValueType == this.Type)
+            if (NewValueType == this.Type || EXETypes.UnitializedName.Equals(NewValue))
             {
                 this.Value = NewValue;
                 return true;

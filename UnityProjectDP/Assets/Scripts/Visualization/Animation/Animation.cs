@@ -66,7 +66,7 @@ public class Animation : Singleton<Animation>
         Debug.Log("Code: ");
         Debug.Log(Code);
 
-        foreach (AnimClass classItem in MethodsCodes)   //Filip
+        foreach (AnimClass classItem in MethodsCodes)
         {
             CDClass Class = Program.ExecutionSpace.getClassByName(classItem.Name);
 
@@ -189,7 +189,6 @@ public class Animation : Singleton<Animation>
     }
     public IEnumerator AnimateFill(OALCall Call)
     {
-        //Debug.Log("Filip, hrana: " + Call.RelationshipName); //Filip
         GameObject edge = classDiagram.FindEdge(Call.RelationshipName);
         if (edge != null)
         {
@@ -233,7 +232,6 @@ public class Animation : Singleton<Animation>
             if (isToBeHighlighted)
             {
                 bh.HighlightBackground();
-                //Debug.Log("Filip, classa: " + className); //Filip
             }
             else
             {
@@ -263,7 +261,6 @@ public class Animation : Singleton<Animation>
             if (isToBeHighlighted)
             {
                 th.HighlightLine(methodName);
-                //Debug.Log("Filip, metoda: " + methodName); //Filip
             }
             else
             {

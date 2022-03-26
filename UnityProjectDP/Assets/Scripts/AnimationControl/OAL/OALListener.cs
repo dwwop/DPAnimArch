@@ -291,16 +291,6 @@ public interface IOALListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitWhereExpression([NotNull] OALParser.WhereExpressionContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="OALParser.start"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterStart([NotNull] OALParser.StartContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="OALParser.start"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitStart([NotNull] OALParser.StartContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="OALParser.className"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

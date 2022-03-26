@@ -30,7 +30,7 @@ namespace OALProgramControl
                 return Result;
             }
 
-            long[] Values = OperandValue.Split(',').Select(id => long.Parse(id)).ToArray(); 
+            long[] Values = String.Empty.Equals(OperandValue) ? new long[] {} : OperandValue.Split(',').Select(id => long.Parse(id)).ToArray(); 
 
             switch (Operator)
             {

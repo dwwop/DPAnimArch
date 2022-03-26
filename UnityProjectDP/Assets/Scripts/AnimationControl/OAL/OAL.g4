@@ -72,8 +72,8 @@ exeCommandQuerySelect
     ;
 
 exeCommandQuerySelectRelatedBy
-    :   'select any ' instanceHandle ' related by ' start '->' className relationshipLink ('->' className relationshipLink)* (' where ' whereExpression)? ';'
-    |   'select many ' instanceHandle ' related by ' start '->' className relationshipLink ('->' className relationshipLink)* (' where ' whereExpression)? ';'
+    :   'select any ' instanceHandle ' related by ' instanceHandle '->' className relationshipLink ('->' className relationshipLink)* (' where ' whereExpression)? ';'
+    |   'select many ' instanceHandle ' related by ' instanceHandle '->' className relationshipLink ('->' className relationshipLink)* (' where ' whereExpression)? ';'
     ;
 
 exeCommandQueryDelete
@@ -90,7 +90,7 @@ exeCommandAssignment
 
 exeCommandCall
     :   instanceHandle '.' methodName '(' (expr (',' expr)*)? ')' ';'
-    |   'call from ' keyLetter '::' methodName '(' ')' ' to ' keyLetter '::' methodName '(' ')' (' across ' relationshipSpecification)? ';'
+    // |   'call from ' keyLetter '::' methodName '(' ')' ' to ' keyLetter '::' methodName '(' ')' (' across ' relationshipSpecification)? ';'
     ;
 
 exeCommandCreateList
@@ -144,10 +144,6 @@ keyLetter
 
 whereExpression
     :   expr
-    ;
-
-start
-    :	NAME
     ;
 
 className

@@ -66,15 +66,13 @@ T__64=65
 T__65=66
 T__66=67
 T__67=68
-T__68=69
-T__69=70
-RELATIONSHIP_SPECIFICATION=71
-BOOL=72
-NAME=73
-STRING=74
-NUM=75
-COMMENT=76
-WHITE_SPACE=77
+RELATIONSHIP_SPECIFICATION=69
+BOOL=70
+NAME=71
+STRING=72
+NUM=73
+COMMENT=74
+WHITE_SPACE=75
 'par'=1
 'thread'=2
 'end thread'=3
@@ -112,36 +110,34 @@ WHITE_SPACE=77
 '='=35
 '.'=36
 ','=37
-'call from '=38
-'::'=39
-'create list '=40
-'{'=41
-'}'=42
-'add '=43
-'write'=44
-'read('=45
-'int(read('=46
-'real(read('=47
-'bool(read('=48
-'cardinality '=49
-'empty '=50
-'not_empty '=51
-'-'=52
-'*'=53
-'/'=54
-'%'=55
-'+'=56
-'<'=57
-'>'=58
-'<='=59
-'>='=60
-'=='=61
-'!='=62
-'not '=63
-'NOT '=64
-' and '=65
-' AND '=66
-' or '=67
-' OR '=68
-'['=69
-']'=70
+'create list '=38
+'{'=39
+'}'=40
+'add '=41
+'write'=42
+'read('=43
+'int(read('=44
+'real(read('=45
+'bool(read('=46
+'cardinality '=47
+'empty '=48
+'not_empty '=49
+'-'=50
+'*'=51
+'/'=52
+'%'=53
+'+'=54
+'<'=55
+'>'=56
+'<='=57
+'>='=58
+'=='=59
+'!='=60
+'not '=61
+'NOT '=62
+' and '=63
+' AND '=64
+' or '=65
+' OR '=66
+'['=67
+']'=68

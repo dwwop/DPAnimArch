@@ -75,15 +75,15 @@ namespace OALProgramControl
                     }
 
                     // If PrimitiveVariable exists and its type is UNDEFINED
-                    if (EXETypes.UnitializedName.Equals(PrimitiveVariable.Type)) //moze sa stat ze aj AssignedType by bol unitialized?
+                    if (EXETypes.UnitializedName.Equals(PrimitiveVariable.Type))
                     {
                         return false;
                     }
 
                     // We need to compare primitive types
-                    if (!Object.Equals(PrimitiveVariable.Type, AssignedType))
+                    if (!EXETypes.UnitializedName.Equals(AssignedType) && !Object.Equals(PrimitiveVariable.Type, AssignedType))
                     {
-                        return Result;
+                        return false;
                     }
 
                     // If the types don't match, this fails and returns false

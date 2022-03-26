@@ -38,12 +38,7 @@ namespace OALProgramControl
             CDAttribute Attribute = Class.GetAttributeByName(AttributeName);
             if (Attribute == null) return false;
 
-            if
-            (
-                !EXETypes.CanBeAssignedToAttribute(AttributeName, Attribute.Type, NewValueType)
-                ||
-                (EXETypes.UnitializedName.Equals(NewValueType) && !EXETypes.IsPrimitive(Attribute.Type))
-            )
+            if (!EXETypes.CanBeAssignedToAttribute(AttributeName, Attribute.Type, NewValueType))
             {
                 return false;
             }

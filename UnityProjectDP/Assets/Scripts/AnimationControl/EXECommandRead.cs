@@ -27,14 +27,18 @@ namespace OALProgramControl
             if (this.Prompt != null)
             {
                 Result = this.Prompt.Evaluate(SuperScope, OALProgram.ExecutionSpace);
+                if (Result == null)
+                {
+                    return false;
+                }
 
                 String ResultType = EXETypes.DetermineVariableType("", Result);
 
                 // We need String otherwise this fails
                 if (EXETypes.StringTypeName.Equals(ResultType))
                 {
-                    // Remove double quotes and replace '\"' with '"'
-                    Result = Result.Substring(1, Result.Length - 2).Replace("\\\"", "\""); ;
+                    // Remove double quotes
+                    Result = Result.Substring(1, Result.Length - 2);
                 }
                 else if (!EXETypes.UnitializedName.Equals(ResultType))
                 {
@@ -52,7 +56,6 @@ namespace OALProgramControl
             Boolean Result = false;
             String ValueType;
 
-            //X = int(Read()), real(read()), bool(read()) je pri UNDEFINED zle a pri read je to dobre lebo to berieme ako string
             if (this.ReadType.Contains("int"))
             {
                 ValueType = EXETypes.IntegerTypeName;
@@ -68,7 +71,7 @@ namespace OALProgramControl
 
                 try
                 {
-                    double.Parse(Value, CultureInfo.InvariantCulture);
+                    decimal.Parse(Value, CultureInfo.InvariantCulture);
                 }
                 catch (Exception e)
                 {
@@ -103,7 +106,7 @@ namespace OALProgramControl
                     }
 
                     // If PrimitiveVariable exists and its type is UNDEFINED
-                    if (EXETypes.UnitializedName.Equals(PrimitiveVariable.Type)) //moze sa stat ze aj AssignedType by bol unitialized?
+                    if (EXETypes.UnitializedName.Equals(PrimitiveVariable.Type))
                     {
                         return false;
                     }

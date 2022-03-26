@@ -115,7 +115,7 @@ namespace OALProgramControl
             }
 
             // Evaluate relationship selection. If it fails, execution fails too
-            List<long> SelectedIds = this.RelationshipSelection.Evaluate(OALProgram.RelationshipSpace, SuperScope);
+            List<long> SelectedIds = this.RelationshipSelection.Evaluate(OALProgram, SuperScope);
             if (SelectedIds == null)
             {
                 return false;

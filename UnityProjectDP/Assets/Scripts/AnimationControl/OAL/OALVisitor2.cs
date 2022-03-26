@@ -263,7 +263,10 @@ namespace AnimationControl.OAL
             String Variable = (AttributeName == null) ? VariableName : (VariableName + "." + AttributeName);
             Console.WriteLine("VariableName = " + Variable);
 
-            String StartingVariable = context.GetChild(3).GetText();
+            Visit(context.GetChild(3));
+            String StartingVariableName = this.instanceName;
+            String StartingAttributeName = this.attributeName; //can be null
+            String StartingVariable = (StartingAttributeName == null) ? StartingVariableName : (StartingVariableName + "." + StartingAttributeName);
             Console.WriteLine("StartingVariable = " + StartingVariable);
 
             String ClassName = context.GetChild(5).GetText();
@@ -274,7 +277,7 @@ namespace AnimationControl.OAL
 
             List<EXERelationshipLink> list = new List<EXERelationshipLink>();
             EXERelationshipLink eXERelationshipLink = new EXERelationshipLink(RelationshipName, ClassName);
-            EXERelationshipSelection eXERelationshipSelection = new EXERelationshipSelection(StartingVariable);
+            EXERelationshipSelection eXERelationshipSelection = new EXERelationshipSelection(StartingVariableName, StartingAttributeName);
             eXERelationshipSelection.AddRelationshipLink(eXERelationshipLink);
             EXEASTNode WhereExpression = null;
 
