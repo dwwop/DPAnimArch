@@ -1,10 +1,10 @@
 ﻿//Data structure for single animation
 
-using OALProgramControl;    //Filip
-using System.Collections.Generic;   //Filip
-using System.IO;  //Filip
-using System.Linq;//Filip
-using UnityEngine;  //Filip
+using OALProgramControl;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using UnityEngine;
 
 [System.Serializable]
 public struct Anim
@@ -14,116 +14,143 @@ public struct Anim
     [SerializeField]
     public string AnimationName; //{ set; get; }
     [SerializeField]
-    private List<AnimClass> MethodsCodes;//Filip
+    public string StartClass; //{ set; get; }
+    [SerializeField]
+    public string StartMethod; //{ set; get; }
+    [SerializeField]
+    private List<AnimClass> MethodsCodes;
     public Anim (string animation_name, string code)
     {
         Code = code;
         AnimationName = animation_name;
-        MethodsCodes = new List<AnimClass>();//Filip
+        StartClass = "";
+        StartMethod = "";
+        MethodsCodes = new List<AnimClass>();
     }
     public Anim(string animation_name)
     {
         AnimationName = animation_name;
         Code = "";
-        MethodsCodes = new List<AnimClass>();//Filip
+        StartClass = "";
+        StartMethod = "";
+        MethodsCodes = new List<AnimClass>();
     }
-    public void SetMethodCode(string className, string methodName, string code) //Filip
+
+    public void Initialize()
+    {
+        List<CDClass> ClassPool = OALProgram.Instance.ExecutionSpace.ClassPool;
+
+        if (ClassPool.Any())
+        {
+            foreach (CDClass ClassItem in ClassPool)
+            {
+                List<string> Attributes = ClassItem.Attributes.Select(a => a.Name).ToList();
+                List<AnimMethod> Methods = new List<AnimMethod>();
+
+                foreach (CDMethod MethodItem in ClassItem.Methods)
+                {
+                    List<string> Parameters = MethodItem.Parameters.Select(p => p.Name).ToList();
+                    Methods.Add(new AnimMethod(MethodItem.Name, Parameters, ""));
+                }
+
+                MethodsCodes.Add(new AnimClass(ClassItem.Name, "", Attributes, Methods));//TODO spravit superclass
+            }
+        }
+    }
+
+    public void SetMethodCode(string className, string methodName, string code)
     {
         int index = methodName.IndexOf("(");
         methodName = methodName.Substring(0, index); // remove "(...)" from method name
 
-        if (string.IsNullOrWhiteSpace(code))
+        AnimClass classItem = MethodsCodes.FirstOrDefault(c => c.Name.Equals(className));   //alebo SingleOrDefault
+        if (classItem != null)
         {
-            AnimClass classItem = MethodsCodes.FirstOrDefault(c => c.Name.Equals(className));   //alebo SingleOrDefault
-            if (classItem != null)
+            AnimMethod methodItem = classItem.Methods.FirstOrDefault(m => m.Name.Equals(methodName));  //alebo SingleOrDefault
+            if (methodItem != null)
             {
-                AnimMethod methodItem = classItem.Methods.FirstOrDefault(m => m.Name.Equals(methodName));  //alebo SingleOrDefault
-                if (methodItem != null)
+                if (string.IsNullOrWhiteSpace(code))
                 {
+                    methodItem.Code = "";
+
                     CDMethod Method = OALProgram.Instance.ExecutionSpace.getClassByName(className).getMethodByName(methodName);
                     Method.ExecutableCode = null;
-
-                    classItem.Methods.Remove(methodItem);
-                    if (classItem.Methods.Count == 0) 
-                    {
-                        MethodsCodes.Remove(classItem);
-                    }
-                }        
-            }
-        }
-        else
-        {
-            bool classExist = false;
-
-            foreach (AnimClass classItem in MethodsCodes)
-            {
-                if (classItem.Name.Equals(className))
-                {
-                    classExist = true;
-                    bool methodExist = false;
-
-                    foreach (AnimMethod methodItem in classItem.Methods)
-                    {
-                        if (methodItem.Name.Equals(methodName))
-                        {
-                            methodExist = true;
-                            methodItem.Code = code;
-                            break;
-                        }
-                    }
-                    if (!methodExist)
-                    {
-                        AnimMethod Method = new AnimMethod(methodName, code);
-                        classItem.Methods.Add(Method);
-                    }
-                    break;
                 }
-            }
-            if (!classExist)
-            {
-                AnimMethod Method = new AnimMethod(methodName, code);
-                AnimClass Class = new AnimClass(className);
-                Class.Methods.Add(Method);
-                MethodsCodes.Add(Class);
+                else
+                {
+                    methodItem.Code = code;
+                }
             }
         }
     }
-    public string GetMethodBody(string className, string methodName) //Filip
+
+    public string GetMethodBody(string className, string methodName)
     {
         int index = methodName.IndexOf("(");
         methodName = methodName.Substring(0, index); // remove "(...)" from method name
-        
-        foreach (AnimClass classItem in MethodsCodes)
+
+        AnimClass classItem = MethodsCodes.FirstOrDefault(c => c.Name.Equals(className));   //alebo SingleOrDefault
+        if (classItem != null)
         {
-            if (classItem.Name.Equals(className))
+            AnimMethod methodItem = classItem.Methods.FirstOrDefault(m => m.Name.Equals(methodName));  //alebo SingleOrDefault
+            if (methodItem != null)
             {
-                foreach (AnimMethod methodItem in classItem.Methods)
-                {
-                    if (methodItem.Name.Equals(methodName))
-                    {
-                        return methodItem.Code;
-                    }
-                }
-                return "";  //methodName is not in classItem.Methods
+                return methodItem.Code;
             }
         }
-        return "";  //className is not in MethodsCodes
+        return "";  // className or methodName does not exist
     }
-    public List<AnimClass> GetMethodsCodesList() //Filip
+
+    public List<AnimClass> GetMethodsCodesList()
     {
         return MethodsCodes;
     }
-    public List<AnimMethod> GetMethodsByClassName(string className) //Filip
+
+    // Return Methods that have a code
+    public List<AnimMethod> GetMethodsByClassName(string className)
     {
-        foreach (AnimClass classItem in MethodsCodes)
+        List<AnimMethod> Methods = null;
+        AnimClass classItem = MethodsCodes.FirstOrDefault(c => c.Name.Equals(className));   //alebo SingleOrDefault
+
+        if (classItem != null)
         {
-            if (classItem.Name.Equals(className))
+            Methods = new List<AnimMethod>();
+
+            foreach (AnimMethod methodItem in classItem.Methods)
             {
-                return classItem.Methods;
+                if (!string.IsNullOrEmpty(methodItem.Code))
+                {
+                    Methods.Add(methodItem);
+                }
             }
         }
-        return null;
+        return Methods;
     }
+
+    public void SetStartClassName(string startClassName)
+    {
+        if (string.IsNullOrWhiteSpace(startClassName))
+        {
+            StartClass = "";
+        }
+        else
+        {
+            StartClass = startClassName;
+        }
+    }
+
+    public void SetStartMethodName(string startMethodName)
+    {
+        if (string.IsNullOrWhiteSpace(startMethodName))
+        {
+            StartMethod = "";
+        }
+        else
+        {
+            StartMethod = startMethodName;
+        }
+    }
+
     public void SaveCode(string path)
     {
         string text = JsonUtility.ToJson(this);
@@ -134,6 +161,8 @@ public struct Anim
         string text = File.ReadAllText(path);
         Anim anim = JsonUtility.FromJson<Anim>(text);
         MethodsCodes = anim.GetMethodsCodesList();
+        StartClass = anim.StartClass;
+        StartMethod = anim.StartMethod;
         Code = anim.Code;   //zatial davame aj code
     }
 }

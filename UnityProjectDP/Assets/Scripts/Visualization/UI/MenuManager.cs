@@ -61,6 +61,12 @@ public class MenuManager : Singleton<MenuManager>
     private string interactiveSource = "source";
     private string sourceClassName = "";
     [SerializeField]
+    private GameObject PanelStartClassMethod;//
+    [SerializeField]
+    private TMP_InputField startClass;//
+    [SerializeField]
+    private TMP_InputField startMethod;//
+    [SerializeField]
     public GameObject panelError;
     [SerializeField]
     public GameObject panelAnimationPlay;
@@ -116,6 +122,7 @@ public class MenuManager : Singleton<MenuManager>
     public void InitializeAnim()
     {
         createdAnim = new Anim("");
+        createdAnim.Initialize();
     }
     public void StartAnimate()
     {
@@ -131,6 +138,9 @@ public class MenuManager : Singleton<MenuManager>
         PanelInteractiveCompleted.SetActive(false);
         animationScreen.SetActive(true);
         mainScreen.SetActive(false);
+        PanelStartClassMethod.SetActive(true);//
+        startClass.text = "";//
+        startMethod.text = "";//
     }
     public void EndAnimate()
     {
@@ -143,7 +153,7 @@ public class MenuManager : Singleton<MenuManager>
         introScreen.SetActive(true);
         PanelInteractiveCompleted.SetActive(false);
         PanelInteractiveShow.SetActive(false);
-
+        PanelStartClassMethod.SetActive(false);//
     }
     public void SelectClass(String name)
     {
@@ -264,6 +274,8 @@ public class MenuManager : Singleton<MenuManager>
 
         scriptCode.GetComponent<CodeHighlighter>().RemoveColors();
         createdAnim.Code = scriptCode.text;
+        createdAnim.SetStartClassName(startClass.text);//
+        createdAnim.SetStartMethodName(startMethod.text);//
         scriptCode.gameObject.SetActive(false);
         fileLoader.SaveAnimation(createdAnim);
         EndAnimate();
@@ -284,8 +296,10 @@ public class MenuManager : Singleton<MenuManager>
         {
             SelectAnimation();
             StartAnimate();
-            scriptCode.text = AnimationData.Instance.selectedAnim.Code;
             createdAnim = AnimationData.Instance.selectedAnim;
+            scriptCode.text = createdAnim.Code;
+            startClass.text = createdAnim.StartClass;//
+            startMethod.text = createdAnim.StartMethod;//
             AnimationData.Instance.RemoveAnim(AnimationData.Instance.selectedAnim);
             UpdateAnimations();
 

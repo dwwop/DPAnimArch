@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public class AnimClass  //Filip
+public class AnimClass
 {
     [SerializeField]
     public string Name;
@@ -13,9 +13,11 @@ public class AnimClass  //Filip
     [SerializeField]
     public List<AnimMethod> Methods;
 
-    public AnimClass(string Name)
+    public AnimClass(string Name, string SuperClass, List<string> Attributes, List<AnimMethod> Methods)
     {
         this.Name = Name;
-        this.Methods = new List<AnimMethod>();
+        this.SuperClass = SuperClass;
+        this.Attributes = Attributes;
+        this.Methods = Methods;
     }
 }

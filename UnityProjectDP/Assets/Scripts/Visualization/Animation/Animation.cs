@@ -61,7 +61,7 @@ public class Animation : Singleton<Animation>
         }
 
         OALProgram Program = OALProgram.Instance;
-        List<AnimClass> MethodsCodes = selectedAnimation.GetMethodsCodesList();//Filip
+        List<AnimClass> MethodsCodes = selectedAnimation.GetMethodsCodesList();
         string Code = selectedAnimation.Code;   //toto potom mozno pojde prec
         Debug.Log("Code: ");
         Debug.Log(Code);
@@ -75,14 +75,15 @@ public class Animation : Singleton<Animation>
                 CDMethod Method = Class.getMethodByName(methodItem.Name);
 
                 //ak je methodItem.Code nie je prazdny retazec tak parsuj
-                //if (!string.IsNullOrWhiteSpace(methodItem.Code))        //toto asi uz nebude potrebne
-                //{
-                EXEScopeMethod MethodBody = OALParserBridge.Parse(methodItem.Code);
-                Method.ExecutableCode = MethodBody;
-                //}
-                /*else {////
+                if (!string.IsNullOrWhiteSpace(methodItem.Code))
+                {
+                    EXEScopeMethod MethodBody = OALParserBridge.Parse(methodItem.Code);
+                    Method.ExecutableCode = MethodBody;
+                }
+                else
+                {
                     Method.ExecutableCode = null;
-                }///*/
+                }
             }
         }
 
@@ -106,8 +107,7 @@ public class Animation : Singleton<Animation>
         }
 
         OALProgram.Instance.SuperScope = MethodExecutableCode;//StartMethod.ExecutableCode
-        //OALProgram.Instance.SuperScope = OALParserBridge.Parse(Code); //Method.ExecutableCode dame namiesto OALParserBridge.Parse(Code) pre metodu ktora bude zacinat
-
+        
         Debug.Log("Abt to execute program");
         int i = 0;
 

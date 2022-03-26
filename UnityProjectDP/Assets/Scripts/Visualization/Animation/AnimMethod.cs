@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public class AnimMethod //Filip
+public class AnimMethod
 {
     [SerializeField]
     public string Name;
@@ -11,9 +11,10 @@ public class AnimMethod //Filip
     [SerializeField]
     public string Code;
 
-    public AnimMethod(string Name, string Code)
+    public AnimMethod(string Name, List<string> Parameters, string Code)
     {
         this.Name = Name;
+        this.Parameters = Parameters;
         this.Code = Code;
     }
 }
