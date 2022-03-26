@@ -48,12 +48,12 @@ namespace AnimArch.Visualization.Diagrams
             //Generate UI objects displaying the diagram
             Generate();
 
-            //Set the layout of diagram so it is coresponding to EA view
+            //Set the layout of diagram so it is corresponding to EA view
             ManualLayout();
             //AutoLayout();
 
             Objects
-                .ForEach(Object => Object.VisualObject.GetComponent<RectTransform>().Shift(0, 0, 200));
+                .ForEach(Object => Object.VisualObject.GetComponent<RectTransform>().Shift(0, 0, 400));
 
             //Objects
                 //.ForEach
