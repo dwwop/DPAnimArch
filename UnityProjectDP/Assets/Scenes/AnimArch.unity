@@ -1480,6 +1480,7 @@ MonoBehaviour:
   PanelStartClassMethod: {fileID: 1701013927}
   startClass: {fileID: 1731350720}
   startMethod: {fileID: 382540266}
+  ConsoleOutputField: {fileID: 1456497216}
   panelError: {fileID: 1898668916}
   panelAnimationPlay: {fileID: 311521134}
   panelStepMode: {fileID: 1515429650}

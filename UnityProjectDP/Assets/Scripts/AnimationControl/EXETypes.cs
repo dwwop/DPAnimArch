@@ -123,12 +123,17 @@ namespace OALProgramControl
         }
         public static Boolean IsValidReferenceValue(String Value, String Type)
         {
-            if (!Value.Split(',').Select(id => long.TryParse(id, out _)).Aggregate(true, (acc, x) => acc && x))
+            if
+            (
+                !Value.Split(',').Select(id => long.TryParse(id, out _)).Aggregate(true, (acc, x) => acc && x)
+                &&
+                !String.Empty.Equals(Value)
+            )
             {
                 return false;
             }
 
-            long[] IDs = Value.Split(',').Select(id => long.Parse(id)).ToArray();
+            long[] IDs = String.Empty.Equals(Value) ? new long[] { } : Value.Split(',').Select(id => long.Parse(id)).ToArray();
 
             if (IDs.Length != 1 && !"[]".Equals(Type.Substring(Type.Length - 2, 2)))
             {

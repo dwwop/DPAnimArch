@@ -594,6 +594,32 @@ namespace AnimationControl.OAL
             //return base.VisitExeCommandAddingToList(context);
         }
 
+        public override object VisitExeCommandRemovingFromList([NotNull] OALParser.ExeCommandRemovingFromListContext context)
+        {
+            EXEASTNode Item;
+
+            Visit(context.GetChild(1)); // We get this.instanceName and this.attributeName(can be null)
+            if (this.attributeName == null)
+            {
+                Item = new EXEASTNodeLeaf(this.instanceName);
+            }
+            else
+            {
+                Item = new EXEASTNodeComposite(".");
+                ((EXEASTNodeComposite)Item).AddOperand(new EXEASTNodeLeaf(this.instanceName));
+                ((EXEASTNodeComposite)Item).AddOperand(new EXEASTNodeLeaf(this.attributeName));
+            }
+
+            Visit(context.GetChild(3));
+            String VariableName = this.instanceName;
+            String AttributeName = this.attributeName; //can be null
+
+            stackEXEScope.Peek().AddCommand(new EXECommandRemovingFromList(VariableName, AttributeName, Item));
+
+            return null;
+            //return base.VisitExeCommandRemovingFromList(context);
+        }
+
         public override object VisitExeCommandWrite([NotNull] OALParser.ExeCommandWriteContext context)
         {
             List<EXEASTNode> ArgumentsList = new List<EXEASTNode>();
@@ -665,6 +691,24 @@ namespace AnimationControl.OAL
 
             return null;
             //return base.VisitExeCommandRead(context);
+        }
+
+        public override object VisitReturnCommand([NotNull] OALParser.ReturnCommandContext context)
+        {
+            EXEASTNode Expression = null;
+
+            if (context.GetChild(1).GetType().Name.Contains("ExprContext"))
+            {
+                Visit(context.GetChild(1));
+                Expression = stackEXEASTNode.Peek();
+
+                stackEXEASTNode.Clear();
+            }
+
+            stackEXEScope.Peek().AddCommand(new EXECommandReturn(Expression));
+
+            return null;
+            //return base.VisitReturnCommand(context);
         }
 
         public override object VisitInstanceHandle([NotNull] OALParser.InstanceHandleContext context)

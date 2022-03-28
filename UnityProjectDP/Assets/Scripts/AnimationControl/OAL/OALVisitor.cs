@@ -146,6 +146,12 @@ public interface IOALVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExeCommandAddingToList([NotNull] OALParser.ExeCommandAddingToListContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="OALParser.exeCommandRemovingFromList"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExeCommandRemovingFromList([NotNull] OALParser.ExeCommandRemovingFromListContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="OALParser.exeCommandWrite"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -157,6 +163,12 @@ public interface IOALVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitExeCommandRead([NotNull] OALParser.ExeCommandReadContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="OALParser.returnCommand"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitReturnCommand([NotNull] OALParser.ReturnCommandContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="OALParser.expr"/>.
 	/// </summary>

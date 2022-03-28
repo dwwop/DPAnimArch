@@ -87,8 +87,12 @@ namespace OALProgramControl
                 {
                     return false;
                 }
-                
-                ReferencingVariablesIDs = Values.Split(',').Select(id => long.Parse(id)).ToList();
+
+                if (!String.Empty.Equals(Values))
+                {
+                    ReferencingVariablesIDs = Values.Split(',').Select(id => long.Parse(id)).ToList();
+                }
+
                 ReferencingVariablesCount = ReferencingVariablesIDs.Count; 
             }
 

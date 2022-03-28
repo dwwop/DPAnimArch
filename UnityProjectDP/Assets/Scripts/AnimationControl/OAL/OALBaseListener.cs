@@ -264,6 +264,18 @@ public partial class OALBaseListener : IOALListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitExeCommandAddingToList([NotNull] OALParser.ExeCommandAddingToListContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="OALParser.exeCommandRemovingFromList"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterExeCommandRemovingFromList([NotNull] OALParser.ExeCommandRemovingFromListContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="OALParser.exeCommandRemovingFromList"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitExeCommandRemovingFromList([NotNull] OALParser.ExeCommandRemovingFromListContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="OALParser.exeCommandWrite"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -287,6 +299,18 @@ public partial class OALBaseListener : IOALListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitExeCommandRead([NotNull] OALParser.ExeCommandReadContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="OALParser.returnCommand"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterReturnCommand([NotNull] OALParser.ReturnCommandContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="OALParser.returnCommand"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitReturnCommand([NotNull] OALParser.ReturnCommandContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="OALParser.expr"/>.
 	/// <para>The default implementation does nothing.</para>

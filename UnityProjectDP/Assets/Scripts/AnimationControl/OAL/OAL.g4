@@ -18,8 +18,10 @@ line
 	|	exeCommandCall
 	|	exeCommandCreateList
 	|	exeCommandAddingToList
+    |	exeCommandRemovingFromList
 	|	exeCommandWrite
 	|	exeCommandRead
+    |	returnCommand
 	|	continueCommand
 	|	breakCommand
 	|	whileCommand
@@ -101,6 +103,10 @@ exeCommandAddingToList
     :   'add ' instanceHandle ' to ' instanceHandle ';'
     ;
 
+exeCommandRemovingFromList
+    :   'remove ' instanceHandle ' from ' instanceHandle ';'
+    ;
+
 exeCommandWrite
     :   'write' '(' (expr (',' expr)*)? ')' ';'
     ;
@@ -112,6 +118,10 @@ exeCommandRead
                                         | 'real(read(' expr? ')' ')'
                                         | 'bool(read(' expr? ')' ')'
                                         ) ';'
+    ;
+
+returnCommand
+    :   'return' expr? ';'
     ;
 
 expr

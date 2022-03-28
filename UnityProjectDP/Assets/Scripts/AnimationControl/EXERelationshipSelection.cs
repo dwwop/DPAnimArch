@@ -93,7 +93,10 @@ namespace OALProgramControl
                         return null;
                     }
 
-                    CurrentIds = IDValue.Split(',').Select(id => long.Parse(id)).ToList().FindAll(x => x >= 0);
+                    if (!String.Empty.Equals(IDValue))
+                    {
+                        CurrentIds = IDValue.Split(',').Select(id => long.Parse(id)).ToList().FindAll(x => x >= 0);
+                    }
 
                     CDClassInstance Instance;
                     foreach (long ID in CurrentIds)

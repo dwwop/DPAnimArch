@@ -67,6 +67,8 @@ public class MenuManager : Singleton<MenuManager>
     [SerializeField]
     private TMP_InputField startMethod;//
     [SerializeField]
+    private TMP_InputField ConsoleOutputField;//
+    [SerializeField]
     public GameObject panelError;
     [SerializeField]
     public GameObject panelAnimationPlay;
@@ -452,5 +454,6 @@ public class MenuManager : Singleton<MenuManager>
         }
         Animation.Instance.startClassName = "";
         Animation.Instance.startMethodName = "";
+        ConsoleOutputField.text = "";//
     }
 }

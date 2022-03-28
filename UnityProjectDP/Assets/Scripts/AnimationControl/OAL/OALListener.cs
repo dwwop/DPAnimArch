@@ -221,6 +221,16 @@ public interface IOALListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitExeCommandAddingToList([NotNull] OALParser.ExeCommandAddingToListContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="OALParser.exeCommandRemovingFromList"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExeCommandRemovingFromList([NotNull] OALParser.ExeCommandRemovingFromListContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="OALParser.exeCommandRemovingFromList"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExeCommandRemovingFromList([NotNull] OALParser.ExeCommandRemovingFromListContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="OALParser.exeCommandWrite"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -240,6 +250,16 @@ public interface IOALListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitExeCommandRead([NotNull] OALParser.ExeCommandReadContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="OALParser.returnCommand"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterReturnCommand([NotNull] OALParser.ReturnCommandContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="OALParser.returnCommand"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitReturnCommand([NotNull] OALParser.ReturnCommandContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="OALParser.expr"/>.
 	/// </summary>

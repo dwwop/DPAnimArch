@@ -65,7 +65,7 @@ namespace OALProgramControl
                     return false;
                 }
 
-                long[] IDs = NewValue.Split(',').Select(id => long.Parse(id)).ToArray();
+                long[] IDs = String.Empty.Equals(NewValue) ? new long[] { } : NewValue.Split(',').Select(id => long.Parse(id)).ToArray();
 
                 CDClassInstance Instance;
                 foreach (long ID in IDs)
