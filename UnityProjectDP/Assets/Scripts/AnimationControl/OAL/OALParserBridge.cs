@@ -47,5 +47,43 @@ namespace Assets.Scripts.AnimationControl.OAL
 
             return test.globalExeScope;
         }
+
+        public static String PythonParse(String Code, List<String> Attributes)
+        {
+            OALParser parser = null;
+            try
+            {
+                ICharStream target = new AntlrInputStream(Code);
+                ITokenSource lexer = new OALLexer(target);
+                ITokenStream tokens = new CommonTokenStream(lexer);
+                parser = new OALParser(tokens);
+                parser.BuildParseTree = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+
+            }
+
+            //ExprParser.LiteralContext result = parser.literal();
+            OALParser.LinesContext result = parser.lines();
+            Console.Write(result.ToStringTree());
+            Console.WriteLine();
+
+            OALToPythonVisitor test = new OALToPythonVisitor(Attributes);
+            String pythonCode = "";
+
+            try
+            {
+                pythonCode = test.VisitLines(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+
+            }
+
+            return pythonCode;
+        }
     }
 }

@@ -4,14 +4,16 @@ using UnityEngine;
 using SimpleFileBrowser;
 using System;
 using System.Text.RegularExpressions;
+using System.IO;//
 
 public class FileLoader : MonoBehaviour
 {
     void Start()
     {
-        FileBrowser.Filter[] filters=new FileBrowser.Filter[2];
+        FileBrowser.Filter[] filters=new FileBrowser.Filter[3];
         filters[0] = new FileBrowser.Filter("JSON files", ".json");
         filters[1] = new FileBrowser.Filter("XML files", ".xml");
+        filters[2] = new FileBrowser.Filter("Python files", ".py");
         FileBrowser.SetFilters(true, filters);
         FileBrowser.SetDefaultFilter(".json");
         FileBrowser.SetExcludedExtensions(".lnk", ".tmp", ".zip", ".rar", ".exe");
@@ -24,6 +26,13 @@ public class FileLoader : MonoBehaviour
     public void SaveAnimation(Anim newAnim)
     {
         StartCoroutine(SaveAnimationCoroutine(newAnim));
+    }
+    public void SaveAnimationToPython()
+    {
+        if (AnimationData.Instance.getAnimList().Count > 0)
+        {
+            StartCoroutine(SaveAnimationToPythonCoroutine());
+        }
     }
     IEnumerator ShowLoadDialogCoroutine(string path, string tooltip,string type)
     {
@@ -90,6 +99,22 @@ public class FileLoader : MonoBehaviour
             MenuManager.Instance.SetSelectedAnimation(newAnim.AnimationName);
         }
 
+    }
+    IEnumerator SaveAnimationToPythonCoroutine()
+    {
+        FileBrowser.SetDefaultFilter(".py");
+        yield return FileBrowser.WaitForSaveDialog(false, @"Assets\Resources\Python\", "Save Animation to Python", "Save");
+        if (FileBrowser.Success)
+        {
+            string path = FileBrowser.Result;
+            string fileName = FileBrowserHelpers.GetFilename(FileBrowser.Result);
+            Anim selectedAnim = AnimationData.Instance.selectedAnim;//
+            string pythonCode = selectedAnim.GeneratePythonCode();//
+            File.WriteAllText(path, pythonCode);//
+            //selectedAnim.SaveCode(path); //toto dat prec
+            //FileBrowserHelpers.CreateFileInDirectory(@"Assets\Resources\Python\",fileName);
+            //HandleTextFile.WriteString(path, selectedAnim.Code/*GetCleanCode(selectedAnim.Code)*/);
+        }
     }
     public void OpenDiagram()
     {
