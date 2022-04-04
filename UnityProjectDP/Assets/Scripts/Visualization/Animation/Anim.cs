@@ -55,8 +55,8 @@ public struct Anim
             foreach (CDClass ClassItem in ClassPool)
             {
                 SuperClass = "";
-                Relation = Relations.FirstOrDefault(r => r.FromClass.Equals(ClassItem.Name));//
-                if (Relation != null)//
+                Relation = Relations.FirstOrDefault(r => r.FromClass.Equals(ClassItem.Name));
+                if (Relation != null)
                 {
                     SuperClass = Relation.ToClass;
                 }

@@ -5,11 +5,8 @@ class AST:
 		self.code = None
 		AST.instances.append(self)
 
-	def execute(self):
+	def execute(self, operationEvaluator, scope):
 		astleaf_1 = ASTLeaf()
-		x = input("insert value: ")
-		astleaf_1.value = x
-		print(astleaf_1.value, sep='')
 		astleaf_1.getType()
 
 	def printPretty(self):
@@ -30,8 +27,7 @@ class ASTLeaf(AST):
 		ASTLeaf.instances.append(self)
 
 	def getType(self):
-		operationevaluator_1 = OperationEvaluator()
-		operationevaluator_1.evaluateOperation()
+		pass
 
 class OperationEvaluator:
 	instances = []
@@ -39,10 +35,10 @@ class OperationEvaluator:
 	def __init__(self):
 		OperationEvaluator.instances.append(self)
 
-	def evaluateOperation(self):
+	def evaluateOperation(self, operator, operands):
 		pass
 
-	def tellType(self):
+	def tellType(self, value):
 		pass
 
 class Operator:
@@ -67,6 +63,3 @@ def cardinality(variable):
 	else:
 		return 0
 
-#main
-ast = AST()
-ast.execute()
