@@ -98,7 +98,7 @@ namespace OALProgramControl
                 return false;
             }
 
-            CDClassInstance Instance = SetVariableClass.GetInstanceByID(ItemInstanceID);
+            CDClassInstance Instance = SetVariableClass.GetInstanceByIDRecursiveDownward(ItemInstanceID);
             if (Instance == null)
             {
                 return false;

@@ -13,6 +13,9 @@ namespace OALProgramControl
         public List<CDAttribute> Attributes { get; }
         public List<CDMethod> Methods { get;  }
         private List<CDClassInstance> Instances { get; }
+        private CDClass _SuperClass { get; set; }
+        public CDClass SuperClass { get { return _SuperClass; } set { _SuperClass = value; if (_SuperClass != null) { SuperClass.SubClasses.Add(this); } } }
+        public List<CDClass> SubClasses { get; }
 
         public CDClass(String Name)
         {
@@ -23,6 +26,10 @@ namespace OALProgramControl
             this.Methods = new List<CDMethod>();
 
             this.Instances = new List<CDClassInstance>();
+
+            this.SuperClass = null;
+
+            this.SubClasses = new List<CDClass>();
         }
         public CDClass(String Name, CDAttribute [] Attributes)
         {
@@ -33,6 +40,10 @@ namespace OALProgramControl
             this.Methods = new List<CDMethod>();
 
             this.Instances = new List<CDClassInstance>();
+
+            this.SuperClass = null;
+
+            this.SubClasses = new List<CDClass>();
         }
         public CDClass(String Name, CDMethod[] Methods)
         {
@@ -43,6 +54,10 @@ namespace OALProgramControl
             this.Methods = new List<CDMethod>(Methods);
 
             this.Instances = new List<CDClassInstance>();
+
+            this.SuperClass = null;
+
+            this.SubClasses = new List<CDClass>();
         }
         public CDClass(String Name, CDAttribute[] Attributes, CDMethod[] Methods)
         {
@@ -53,6 +68,10 @@ namespace OALProgramControl
             this.Methods = new List<CDMethod>(Methods);
 
             this.Instances = new List<CDClassInstance>();
+
+            this.SuperClass = null;
+
+            this.SubClasses = new List<CDClass>();
         }
 
         public CDClassInstance CreateClassInstance()
@@ -170,6 +189,52 @@ namespace OALProgramControl
             return Result;
         }
 
+        public CDClassInstance GetInstanceByIDRecursiveDownward(long id)
+        {
+            CDClassInstance Result = GetInstanceByID(id);
+
+            if (Result != null)
+            {
+                return Result;
+            }
+
+            foreach (CDClass SubClass in this.SubClasses)
+            {
+                Result = SubClass.GetInstanceByIDRecursiveDownward(id);
+
+                if (Result != null)
+                {
+                    return Result;
+                }
+            }
+
+            return null;
+        }
+
+        public CDClass GetInstanceClassByIDRecursiveDownward(long id)
+        {
+            CDClassInstance Instance = GetInstanceByID(id);
+
+            if (Instance != null)
+            {
+                return this;
+            }
+
+            CDClass Result = null;
+
+            foreach (CDClass SubClass in this.SubClasses)
+            {
+                Result = SubClass.GetInstanceClassByIDRecursiveDownward(id);
+
+                if (Result != null)
+                {
+                    return Result;
+                }
+            }
+
+            return null;
+        }
+
         public CDAttribute GetAttributeByName(String Name)
         {
             CDAttribute Result = null;
@@ -182,6 +247,28 @@ namespace OALProgramControl
                 }
             }
             return Result;
+        }
+
+        public bool CanBeAssignedTo(CDClass TargetClass)
+        {
+            if (TargetClass == null)
+            {
+                return false;
+            }
+
+            CDClass CurrentClass = this;
+
+            while (CurrentClass != null)
+            {
+                if (CurrentClass == TargetClass)
+                {
+                    return true;
+                }
+
+                CurrentClass = CurrentClass.SuperClass;
+            }
+
+            return false;
         }
         
         private int PowerOf(int x, int power)

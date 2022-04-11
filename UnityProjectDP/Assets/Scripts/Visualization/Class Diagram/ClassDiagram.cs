@@ -208,6 +208,17 @@ public class ClassDiagram : Singleton<ClassDiagram>
             TempCDRelationship = OALProgram.Instance.RelationshipSpace.SpawnRelationship(Relation.FromClass, Relation.ToClass);
             Relation.OALName = TempCDRelationship.RelationshipName;
 
+            if ("Generalization".Equals(Relation.PropertiesEa_type) || "Realisation".Equals(Relation.PropertiesEa_type))
+            {
+                CDClass FromClass = OALProgram.Instance.ExecutionSpace.getClassByName(Relation.FromClass);
+                CDClass ToClass = OALProgram.Instance.ExecutionSpace.getClassByName(Relation.ToClass);
+
+                if (FromClass != null && ToClass != null)
+                {
+                    FromClass.SuperClass = ToClass;
+                }
+            }
+
             DiagramRelations.Add(Relation);
         }
     }

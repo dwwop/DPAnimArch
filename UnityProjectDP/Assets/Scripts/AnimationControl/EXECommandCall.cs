@@ -45,6 +45,13 @@ namespace OALProgramControl
                 return false;
             }
 
+            Class = Class.GetInstanceClassByIDRecursiveDownward(Reference.ReferencedInstanceId);
+
+            if (Class == null)
+            {
+                return false;
+            }
+
             if (this.AttributeName != null)
             {
                 CDAttribute Attribute = Class.GetAttributeByName(this.AttributeName);
@@ -88,7 +95,7 @@ namespace OALProgramControl
             {
                 CDParameter Parameter = Method.Parameters[i];
 
-                if 
+                if
                 (
                     !(
                         Parameter.Type != null
@@ -97,6 +104,12 @@ namespace OALProgramControl
                         (
                             Object.Equals(Parameter.Type, this.SuperScope.DetermineVariableType(this.Parameters[i].AccessChain(), OALProgram.ExecutionSpace))
                         )
+                    )
+                    &&
+                    !(
+                        OALProgram.Instance.ExecutionSpace.ClassExists(Parameter.Type)
+                        ||
+                        OALProgram.Instance.ExecutionSpace.ClassExists(Parameter.Type.Substring(0, Parameter.Type.Length - 2))
                     )
                 )
                 {
@@ -167,7 +180,7 @@ namespace OALProgramControl
 
                     long ID = long.Parse(Value);
 
-                    CDClassInstance ClassInstance = ClassDefinition.GetInstanceByID(ID);
+                    CDClassInstance ClassInstance = ClassDefinition.GetInstanceByIDRecursiveDownward(ID);
                     if (ClassInstance == null)
                     {
                         return false;

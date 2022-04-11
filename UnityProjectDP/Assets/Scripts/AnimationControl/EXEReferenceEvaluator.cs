@@ -26,6 +26,7 @@ namespace OALProgramControl
         public Boolean SetAttributeValue(String ReferencingVariableName, String AttributeName, EXEScope Scope, CDClassPool ExecutionSpace, String NewValue, String NewValueType)
         {
             EXEReferencingVariable ReferencingVariable = Scope.FindReferencingVariableByName(ReferencingVariableName);
+
             if (ReferencingVariable == null) return false;
 
             CDClassInstance ClassInstance = ExecutionSpace.GetClassInstanceById(ReferencingVariable.ClassName, ReferencingVariable.ReferencedInstanceId);
@@ -87,6 +88,12 @@ namespace OALProgramControl
                     return false;
                 }
 
+                CDClass NewValueClass = ExecutionSpace.getClassByName(NewValueType);
+                if (NewValueClass == null)
+                {
+                    return false;
+                }
+
                 if (!EXETypes.IsValidReferenceValue(NewValue, AttributeClass.Name))
                 {
                     return false;
@@ -94,7 +101,7 @@ namespace OALProgramControl
 
                 long IDValue = long.Parse(NewValue);
 
-                CDClassInstance Instance = AttributeClass.GetInstanceByID(IDValue);
+                CDClassInstance Instance = NewValueClass.GetInstanceByID(IDValue);
                 if (Instance == null)
                 {
                     return false;

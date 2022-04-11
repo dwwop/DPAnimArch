@@ -71,7 +71,7 @@ namespace OALProgramControl
                 {
                     return false;
                 }
-
+                
                 String AttributeClass = Attribute.Type.Substring(0, Attribute.Type.Length - 2);
                 if (!String.Equals(this.ClassName, AttributeClass))
                 {
