@@ -197,13 +197,15 @@ namespace OALProgramControl
         {
             MethodCallRecord _CallerMethodInfo = this.CallerMethodInfo;
             CDRelationship _RelationshipInfo = CallRelationshipInfo(_CallerMethodInfo.ClassName, this.CalledClass);
+            bool IsSelfCall = string.Equals(this.CalledClass, _CallerMethodInfo.ClassName);
             return new OALCall
             (
                 _CallerMethodInfo.ClassName,
                 _CallerMethodInfo.MethodName,
-                _RelationshipInfo.RelationshipName,
+                IsSelfCall ? null : _RelationshipInfo.RelationshipName,
                 this.CalledClass,
-                this.CalledMethod
+                this.CalledMethod,
+                IsSelfCall
             );
         }
 

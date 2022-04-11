@@ -314,8 +314,8 @@ public class Animation : Singleton<Animation>
                 {
                     case 0: HighlightClass(Call.CallerClassName, true); break;
                     case 1: HighlightMethod(Call.CallerClassName, Call.CallerMethodName, true); break;
-                    case 2: yield return StartCoroutine(AnimateFill(Call)); timeModifier = 0f; break;
-                    case 3: HighlightEdge(Call.RelationshipName, true); timeModifier = 0.5f; break;
+                    case 2: if (!Call.NoRelationship) { yield return StartCoroutine(AnimateFill(Call)); timeModifier = 0f; } break;
+                    case 3: if (!Call.NoRelationship) { HighlightEdge(Call.RelationshipName, true); timeModifier = 0.5f; } break;
                     case 4: HighlightClass(Call.CalledClassName, true); timeModifier = 1f; break;
                     case 5: HighlightMethod(Call.CalledClassName, Call.CalledMethodName, true); timeModifier = 1.25f; break;
                     case 6:
@@ -323,7 +323,7 @@ public class Animation : Singleton<Animation>
                         HighlightMethod(Call.CallerClassName, Call.CallerMethodName, false);
                         HighlightClass(Call.CalledClassName, false);
                         HighlightMethod(Call.CalledClassName, Call.CalledMethodName, false);
-                        HighlightEdge(Call.RelationshipName, false);
+                        if (!Call.NoRelationship) { HighlightEdge(Call.RelationshipName, false); }
                         timeModifier = 1f;
                         break;
                 }
@@ -347,7 +347,7 @@ public class Animation : Singleton<Animation>
                         {
                             case 0: HighlightClass(Call.CallerClassName, false); break;
                             case 1: HighlightMethod(Call.CallerClassName, Call.CallerMethodName, false); break;
-                            case 3: HighlightEdge(Call.RelationshipName, false); break;
+                            case 3: if (!Call.NoRelationship) { HighlightEdge(Call.RelationshipName, false); } break;
                             case 4: HighlightClass(Call.CalledClassName, false); break;
                             case 5: HighlightMethod(Call.CalledClassName, Call.CalledMethodName, false); break;
 
@@ -358,7 +358,7 @@ public class Animation : Singleton<Animation>
                         {
                             case 0: HighlightClass(Call.CallerClassName, false); break;
                             case 1: HighlightMethod(Call.CallerClassName, Call.CallerMethodName, false); break;
-                            case 3: HighlightEdge(Call.RelationshipName, false); break;
+                            case 3: if (!Call.NoRelationship) { HighlightEdge(Call.RelationshipName, false); } break;
                             case 4: HighlightClass(Call.CalledClassName, false); break;
                             case 5: HighlightMethod(Call.CalledClassName, Call.CalledMethodName, false); break;
 

@@ -40,6 +40,7 @@ namespace OALProgramControl
                 // We cannot iterate over not existing reference set
                 if (IterableVariable == null)
                 {
+                    UnityEngine.Debug.Log("e1");//
                     return false;
                 }
                 
@@ -52,24 +53,28 @@ namespace OALProgramControl
                 EXEReferencingVariable Variable = SuperScope.FindReferencingVariableByName(this.IterableName);
                 if (Variable == null)
                 {
+                    UnityEngine.Debug.Log("e2");//
                     return false;
                 }
 
                 CDClass VariableClass = OALProgram.ExecutionSpace.getClassByName(Variable.ClassName);
                 if (VariableClass == null)
                 {
+                    UnityEngine.Debug.Log("e3");//
                     return false;
                 }
 
                 CDAttribute Attribute = VariableClass.GetAttributeByName(this.IterableAttributeName);
                 if (Attribute == null)
                 {
+                    UnityEngine.Debug.Log("e4");//
                     return false;
                 }
 
                 // We cannot iterate over reference that is not a set
                 if (!"[]".Equals(Attribute.Type.Substring(Attribute.Type.Length - 2, 2)))
                 {
+                    UnityEngine.Debug.Log("e5");//
                     return false;
                 }
                 
@@ -79,12 +84,14 @@ namespace OALProgramControl
                 CDClassInstance ClassInstance = VariableClass.GetInstanceByID(Variable.ReferencedInstanceId);
                 if (ClassInstance == null)
                 {
+                    UnityEngine.Debug.Log("e6");//
                     return false;
                 }
                 
                 String Values = ClassInstance.GetAttributeValue(this.IterableAttributeName);
                 if (!EXETypes.IsValidReferenceValue(Values, Attribute.Type))
                 {
+                    UnityEngine.Debug.Log("e7");//
                     return false;
                 }
 
@@ -99,6 +106,7 @@ namespace OALProgramControl
             // If iterator already exists and its class does not match the iterable class, we cannot do this
             if (IteratorVariable != null && !IteratorVariable.ClassName.Equals(IterableVariableClassName))
             {
+                UnityEngine.Debug.Log("e8");//
                 return false;
             }
 
@@ -108,6 +116,7 @@ namespace OALProgramControl
                 IteratorVariable = new EXEReferencingVariable(this.IteratorName, IterableVariableClassName, -1);
                 if (!this.GetSuperScope().AddVariable(IteratorVariable))
                 {
+                    UnityEngine.Debug.Log("e9");//
                     return false;
                 }
             }
@@ -121,6 +130,7 @@ namespace OALProgramControl
                 }
                 else
                 {
+                    UnityEngine.Debug.Log("je to dobre");//
                     IteratorVariable.ReferencedInstanceId = ReferencingVariablesIDs[IterableIndex];
                 }
 
@@ -128,14 +138,6 @@ namespace OALProgramControl
                 OALProgram.CommandStack.Enqueue(this);
                 AddCommandsToStack(OALProgram, this.Commands);
                 this.ClearVariables();
-                if (!this.GetSuperScope().AddVariable(IteratorVariable))
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
             }
             
             return true;
