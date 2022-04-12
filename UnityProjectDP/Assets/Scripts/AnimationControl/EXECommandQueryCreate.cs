@@ -116,5 +116,10 @@ namespace OALProgramControl
                 + ("".Equals(this.ReferencingVariableName) ? "" : this.ReferencingAttributeName == null ? (this.ReferencingVariableName + " ") : (this.ReferencingVariableName + "." + this.ReferencingAttributeName + " "))
                 + "of " + this.ClassName;
         }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandQueryCreate(ClassName, ReferencingVariableName, ReferencingAttributeName);
+        }
     }
 }

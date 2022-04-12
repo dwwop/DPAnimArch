@@ -10,5 +10,10 @@
         {
             return "break";
         }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandBreak();
+        }
     }
 }

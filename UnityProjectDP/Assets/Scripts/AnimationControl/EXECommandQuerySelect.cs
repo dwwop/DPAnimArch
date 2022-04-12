@@ -253,5 +253,10 @@ namespace OALProgramControl
             return "select " + this.Cardinality + " " + (this.AttributeName == null ? this.VariableName : (this.VariableName + "." + this.AttributeName))
                 + " from instances of " + this.ClassName + (this.WhereCondition == null ? "" : (" where ") + this.WhereCondition.ToCode());
         }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandQuerySelect(Cardinality, ClassName, VariableName, AttributeName, WhereCondition);
+        }
     }
 }

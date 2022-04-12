@@ -115,5 +115,10 @@ namespace OALProgramControl
                 + " from " + (this.Attribute2Name == null ? this.Variable2Name : (this.Variable2Name + "." + this.Attribute2Name))
                 + " across " + this.RelationshipName;
         }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandQueryUnrelate(Variable1Name, Attribute1Name, Variable2Name, Attribute2Name, RelationshipName);
+        }
     }
 }

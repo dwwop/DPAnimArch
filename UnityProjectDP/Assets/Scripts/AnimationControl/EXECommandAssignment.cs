@@ -264,5 +264,10 @@ namespace OALProgramControl
             Result += " = " + this.AssignedExpression.ToCode();
             return Result;
         }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandAssignment(VariableName, AttributeName, AssignedExpression);
+        }
     }
 }

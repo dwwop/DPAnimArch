@@ -236,5 +236,10 @@ namespace OALProgramControl
 
             return prefix + relationLink + sufix;
         }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandQuerySelectRelatedBy(Cardinality, VariableName, AttributeName, WhereCondition, RelationshipSelection);
+        }
     }
 }

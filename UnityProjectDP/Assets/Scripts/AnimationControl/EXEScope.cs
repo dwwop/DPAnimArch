@@ -506,5 +506,19 @@ namespace OALProgramControl
             }
             return Result;
         }
+
+        public override EXECommand CreateClone()
+        {
+            EXEScope Clone = CreateDuplicateScope();
+            Clone.OALCode = this.OALCode;
+            Clone.Commands = this.Commands.Select(x => x.CreateClone()).ToList();
+
+            return Clone;
+        }
+
+        protected virtual EXEScope CreateDuplicateScope()
+        {
+            return new EXEScope();
+        }
     }
 }

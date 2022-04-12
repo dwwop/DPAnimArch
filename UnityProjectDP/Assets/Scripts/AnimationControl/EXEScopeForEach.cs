@@ -153,5 +153,10 @@ namespace OALProgramControl
             Result += Indent + "end for;\n";
             return Result;
         }
+
+        protected override EXEScope CreateDuplicateScope()
+        {
+            return new EXEScopeForEach(IteratorName, IterableName, IterableAttributeName);
+        }
     }
 }

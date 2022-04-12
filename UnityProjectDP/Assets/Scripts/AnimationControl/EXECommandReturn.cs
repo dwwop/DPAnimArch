@@ -19,5 +19,10 @@ namespace OALProgramControl
         {
             return this.Expression == null ? "return" : ("return " + this.Expression.ToCode());
         }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandReturn(Expression);
+        }
     }
 }

@@ -143,5 +143,10 @@ namespace OALProgramControl
             return (this.AttributeName == null ? this.VariableName : (this.VariableName + "." + this.AttributeName))
                 + " = " + this.ReadType + (this.Prompt != null ? this.Prompt.ToCode() : "") + (this.ReadType.Equals("read(") ? ")" : "))");
         }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandRead(VariableName, AttributeName, ReadType, Prompt);
+        }
     }
 }

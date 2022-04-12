@@ -132,5 +132,10 @@ namespace OALProgramControl
             return "add " + this.Item.ToCode()
                 + " to " + (this.AttributeName == null ? this.VariableName : (this.VariableName + "." + this.AttributeName));
         }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandAddingToList(VariableName, AttributeName, Item);
+        }
     }
 }

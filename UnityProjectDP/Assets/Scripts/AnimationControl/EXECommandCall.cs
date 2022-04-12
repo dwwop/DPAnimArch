@@ -221,5 +221,10 @@ namespace OALProgramControl
         {
             return OALProgram.Instance.RelationshipSpace.GetRelationshipByClasses(CallerMethod, CalledMethod);
         }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandCall(InstanceName, AttributeName, CalledMethod, Parameters);
+        }
     }
 }

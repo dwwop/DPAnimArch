@@ -76,5 +76,10 @@ namespace OALProgramControl
         {
             return "delete object instance " + (this.AttributeName == null ? this.VariableName : (this.VariableName + "." + this.AttributeName));
         }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandQueryDelete(VariableName, AttributeName);
+        }
     }
 }

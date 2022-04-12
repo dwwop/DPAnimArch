@@ -131,5 +131,10 @@ namespace OALProgramControl
             return "remove " + this.Item.ToCode()
                 + " from " + (this.AttributeName == null ? this.VariableName : (this.VariableName + "." + this.AttributeName));
         }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandRemovingFromList(VariableName, AttributeName, Item);
+        }
     }
 }

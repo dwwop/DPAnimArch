@@ -161,5 +161,10 @@ namespace OALProgramControl
             
             return Result;
         }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandCreateList(VariableName, AttributeName, ClassName, Items);
+        }
     }
 }
