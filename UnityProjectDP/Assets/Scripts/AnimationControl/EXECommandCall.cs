@@ -52,6 +52,8 @@ namespace OALProgramControl
                 return false;
             }
 
+            long CalledID = Reference.ReferencedInstanceId;
+
             if (this.AttributeName != null)
             {
                 CDAttribute Attribute = Class.GetAttributeByName(this.AttributeName);
@@ -68,7 +70,8 @@ namespace OALProgramControl
                     return false;
                 }
 
-                Class = AtrributeClass;
+                CalledID = long.Parse(Class.GetInstanceByID(Reference.ReferencedInstanceId).State[Attribute.Name]);
+                Class = AtrributeClass.GetInstanceClassByIDRecursiveDownward(CalledID);
             }
 
             this.CalledClass = Class.Name;
@@ -89,12 +92,11 @@ namespace OALProgramControl
 
             MethodCode.SetSuperScope(null);
             OALProgram.CommandStack.Enqueue(MethodCode);
-            MethodCode.AddVariable(new EXEReferencingVariable("self", CalledClass, Reference.ReferencedInstanceId));//
+            MethodCode.AddVariable(new EXEReferencingVariable("self", CalledClass, CalledID));//
 
             for (int i = 0; i < this.Parameters.Count; i++)
             {
                 CDParameter Parameter = Method.Parameters[i];
-
                 if
                 (
                     !(

@@ -167,7 +167,7 @@ public class ClassDiagram : Singleton<ClassDiagram>
                         string type = tokens[0];
                         string name = tokens[1];
 
-                        Method.Parameters.Add(new CDParameter() { Name = name, Type = type });
+                        Method.Parameters.Add(new CDParameter() { Name = name, Type = EXETypes.ConvertEATypeName(type) });
                     }
                 }
             }

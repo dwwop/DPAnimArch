@@ -184,8 +184,10 @@ namespace OALProgramControl
                 if (ClassInstance.UniqueID == id)
                 {
                     Result = ClassInstance;
+                    break;
                 }
             }
+
             return Result;
         }
 
