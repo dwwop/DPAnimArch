@@ -55,25 +55,25 @@ public class FileLoader : MonoBehaviour
             if (type.Equals("Animation"))
             {
                 //string code = FileBrowserHelpers.ReadTextFromFile(FileBrowser.Result);
-                Anim loadedAnim = new Anim(FileBrowserHelpers.GetFilename(FileBrowser.Result).Replace(".json", ""),"");
+                Anim loadedAnim = new Anim(FileBrowserHelpers.GetFilename(FileBrowser.Result).Replace(".json", ""), "");
                 loadedAnim.LoadCode(FileBrowser.Result);
                 //loadedAnim.Code = GetCleanCode(loadedAnim.Code);
                 AnimationData.Instance.AddAnim(loadedAnim);
                 AnimationData.Instance.selectedAnim = loadedAnim;
                 MenuManager.Instance.UpdateAnimations();
                 MenuManager.Instance.SetSelectedAnimation(loadedAnim.AnimationName);
-            }   
+            }
             else if (type.Equals("Diagram"))
             {
                 string fileName = FileBrowserHelpers.GetFilename(FileBrowser.Result);
                 Debug.Log(FileBrowser.Result);
                 Debug.Log(fileName);
                 AnimationData.Instance.SetDiagramPath(FileBrowser.Result);
-                DiagramPool.Instance.ClassDiagram.LoadDiagram();  
+                DiagramPool.Instance.ClassDiagram.LoadDiagram();
             }
-        
         }
     }
+        
     IEnumerator SaveAnimationCoroutine(Anim newAnim)
     {
         FileBrowser.SetDefaultFilter(".json");

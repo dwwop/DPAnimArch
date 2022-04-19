@@ -15,7 +15,7 @@ namespace AnimArch.Visualization.Diagrams
 
             Line.GetComponent<LineRenderer>().SetPositions
             (
-                new Vector3[]
+                new []
                 {
                     start.GetComponent<RectTransform>().position,
                     end.GetComponent<RectTransform>().position
