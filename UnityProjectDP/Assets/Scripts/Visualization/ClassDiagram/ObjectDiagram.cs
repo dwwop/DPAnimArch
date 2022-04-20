@@ -14,11 +14,13 @@ namespace AnimArch.Visualization.Diagrams
     {
         public Graph graph;
         public List<ObjectInDiagram> Objects { get; private set; }
+
         private void Awake()
         {
             DiagramPool.Instance.ObjectDiagram = this;
             ResetDiagram();
         }
+
         public void ResetDiagram()
         {
             // Get rid of already rendered classes in diagram.
@@ -31,6 +33,7 @@ namespace AnimArch.Visualization.Diagrams
 
                 Objects.Clear();
             }
+
             Objects = new List<ObjectInDiagram>();
 
             if (graph != null)
@@ -39,6 +42,7 @@ namespace AnimArch.Visualization.Diagrams
                 graph = null;
             }
         }
+
         public void LoadDiagram()
         {
             CreateGraph();
@@ -52,15 +56,16 @@ namespace AnimArch.Visualization.Diagrams
             ManualLayout();
             //AutoLayout();
 
-            Objects
-                .ForEach(Object => Object.VisualObject.GetComponent<RectTransform>().Shift(0, 0, 400));
-
+            // Objects
+            //     .ForEach(Object => Object.VisualObject.GetComponent<RectTransform>().Shift(0, 0, 400));
+            graph.transform.position = new Vector3(0, 0, 800);
             //Objects
-                //.ForEach
-                //(
-                //    Object => CreateInterGraphLine(graph, Object.VisualObject, Object.Class.VisualObject)
-                //);
+            //.ForEach
+            //(
+            //    Object => CreateInterGraphLine(graph, Object.VisualObject, Object.Class.VisualObject)
+            //);
         }
+
         public Graph CreateGraph()
         {
             ResetDiagram();
@@ -68,6 +73,7 @@ namespace AnimArch.Visualization.Diagrams
             graph = go.GetComponent<Graph>();
             return graph;
         }
+
         public void ManualLayout()
         {
             int i = 0;
@@ -76,6 +82,7 @@ namespace AnimArch.Visualization.Diagrams
                 Object.VisualObject.GetComponent<RectTransform>().Shift(0, 200 * i++, 0);
             }
         }
+
         private void Generate()
         {
             //Render classes
@@ -100,7 +107,8 @@ namespace AnimArch.Visualization.Diagrams
             //Attributes
             foreach (string AttributeName in Object.Instance.State.Keys)
             {
-                attributes.GetComponent<TextMeshProUGUI>().text += AttributeName + " = " + Object.Instance.State[AttributeName] + "\n";
+                attributes.GetComponent<TextMeshProUGUI>().text +=
+                    AttributeName + " = " + Object.Instance.State[AttributeName] + "\n";
             }
 
             //Add Class to Dictionary
