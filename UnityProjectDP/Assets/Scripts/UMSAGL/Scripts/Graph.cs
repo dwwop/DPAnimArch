@@ -116,8 +116,7 @@ public class Graph : MonoBehaviour
 	{
 		graph = new GeometryGraph();
 		units = transform.Find("Units"); //extra object to center graph
-		BoxCollider2D ramcek = units.gameObject.AddComponent<BoxCollider2D>();
-		
+
 		settings = new SugiyamaLayoutSettings();
 		settings.EdgeRoutingSettings.EdgeRoutingMode = EdgeRoutingMode.RectilinearToCenter;
         GetComponent<Canvas>().worldCamera = Camera.main;

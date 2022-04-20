@@ -3608,10 +3608,7 @@ MonoBehaviour:
     type: 3}
   interGraphLinePrefab: {fileID: 2910138570680623619, guid: 1d27ae98b0c21b54e9cc37aa284dcaba,
     type: 3}
-  interGraphLeftArrowPrefab: {fileID: 2511745522907912916, guid: acc81195bd5b641c3b95dc9f282ab13a,
-    type: 3}
-  interGraphRightArrowPrefab: {fileID: 2511745522907912916, guid: acc81195bd5b641c3b95dc9f282ab13a,
-    type: 3}
+  interGraphArrowPrefab: {fileID: 0}
   ClassDiagram: {fileID: 1164213134}
   ObjectDiagram: {fileID: 0}
   RelationsClassToObject: []

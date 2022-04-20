@@ -20,8 +20,7 @@ namespace AnimArch.Visualization.Diagrams
         public GameObject implementsPrefab;
         public GameObject realisationPrefab;
         public GameObject interGraphLinePrefab;
-        public GameObject interGraphLeftArrowPrefab;
-        public GameObject interGraphRightArrowPrefab;
+        public GameObject interGraphArrowPrefab;
 
         public ClassDiagram ClassDiagram;
         public ObjectDiagram ObjectDiagram;

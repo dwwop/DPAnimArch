@@ -23,7 +23,7 @@ namespace AnimArch.Visualization.Diagrams
             _lineRenderer.textureMode = textureMode;
             _lineRenderer.material = Resources.Load<Material>("Materials/DashedLine");
 
-            _interGraphArrow = Instantiate(DiagramPool.Instance.interGraphLeftArrowPrefab);
+            _interGraphArrow = Instantiate(DiagramPool.Instance.interGraphArrowPrefab);
             _arrow = _interGraphArrow.GetComponent<Arrow>();
             _arrow.GetComponent<Arrow>().Initialize();
         }
