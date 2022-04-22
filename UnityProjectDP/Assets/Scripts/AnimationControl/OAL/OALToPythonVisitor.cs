@@ -506,10 +506,10 @@ namespace AnimationControl.OAL
         {
             String instanceName = context.GetChild(0).GetText();
 
-            if (this.attributesList.Contains(instanceName))
+            /*if (this.attributesList.Contains(instanceName)) //mozno budeme potrebovat
             {
                 instanceName = "self." + instanceName;
-            }
+            }*/
 
             if (context.ChildCount == 1)
             {
@@ -543,10 +543,10 @@ namespace AnimationControl.OAL
                 }
                 else
                 {
-                    if (this.attributesList.Contains(context.GetChild(0).GetText()))
+                    /*if (this.attributesList.Contains(context.GetChild(0).GetText()))  //mozno budeme potrebovat
                     {
                         return "self." + context.GetChild(0).GetText();
-                    }
+                    }*/
 
                     return context.GetChild(0).GetText();
                 }
@@ -608,10 +608,10 @@ namespace AnimationControl.OAL
                 }
                 else
                 {
-                    if (this.attributesList.Contains(context.GetChild(0).GetText()))
+                    /*if (this.attributesList.Contains(context.GetChild(0).GetText()))  //mozno budeme potrebovat
                     {
                         return "self." + context.GetChild(0).GetText() + "." + context.GetChild(2).GetText();
-                    }
+                    }*/
 
                     return context.GetChild(0).GetText() + "." + context.GetChild(2).GetText();
                 }

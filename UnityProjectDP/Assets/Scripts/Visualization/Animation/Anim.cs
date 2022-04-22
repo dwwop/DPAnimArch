@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using Assets.Scripts.AnimationControl.OAL;
+using System;
 
 [System.Serializable]
 public struct Anim
@@ -21,7 +22,8 @@ public struct Anim
     public string StartMethod; //{ set; get; }
     [SerializeField]
     private List<AnimClass> MethodsCodes;
-    public Anim (string animation_name, string code)
+
+    public Anim(string animation_name, string code)
     {
         Code = code;
         AnimationName = animation_name;
@@ -185,9 +187,36 @@ public struct Anim
 
     public string GeneratePythonCode()
     {
+        List<AnimClass> AnimClassQueue = MethodsCodes;
+        List<AnimClass> SortedMethodsCodes = new List<AnimClass>();
+
+        SortedMethodsCodes.AddRange(AnimClassQueue.Where(x => x.SuperClass == ""));
+        AnimClassQueue = AnimClassQueue.Where(x => x.SuperClass != "").ToList();
+        bool changed;
+
+        while (AnimClassQueue.Any())
+        {
+            changed = false;
+            for (int i = AnimClassQueue.Count - 1; i >= 0; i--)
+            {
+                if (SortedMethodsCodes.Select(x => x.Name).Contains(AnimClassQueue[i].SuperClass))
+                {
+                    SortedMethodsCodes.Add(AnimClassQueue[i]);
+                    AnimClassQueue.RemoveAt(i);
+                    changed = true;
+                }
+            }
+
+            if (!changed)
+            {
+                throw new Exception(SortingStatus(SortedMethodsCodes, AnimClassQueue));
+            }
+        }
+
+
         StringBuilder Code = new StringBuilder();
 
-        foreach (AnimClass classItem in MethodsCodes)
+        foreach (AnimClass classItem in SortedMethodsCodes)
         {
             if (string.Empty.Equals(classItem.SuperClass))
             {
@@ -287,5 +316,10 @@ public struct Anim
         }
 
         return Code.ToString();
+    }
+
+    private string SortingStatus(List<AnimClass> SortedMethodsCodes, List<AnimClass> AnimClassQueue)
+    {
+        return "Cyclic inheritance hierarchy.\n SortedMethodsCodes: " + SortedMethodsCodes.Select(x => x.Name).Aggregate("", (acc, x) => acc + x + ",") + "\n AnimClassQueue: " + AnimClassQueue.Select(x => x.Name).Aggregate("", (acc, x) => acc + x + ",");
     }
 }
