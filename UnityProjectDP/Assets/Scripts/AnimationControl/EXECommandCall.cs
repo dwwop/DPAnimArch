@@ -213,10 +213,12 @@ namespace OALProgramControl
 
         public override String ToCodeSimple()
         {
-            MethodCallRecord _CallerMethodInfo = this.CallerMethodInfo;
-            CDRelationship _RelationshipInfo = CallRelationshipInfo(_CallerMethodInfo.ClassName, this.CalledClass);
-            return "call from " + _CallerMethodInfo.ClassName + "::" + _CallerMethodInfo.MethodName + "() to "
-                + this.CalledClass + "::" + this.CalledMethod + "() across " + _RelationshipInfo.RelationshipName;
+            return InstanceName + "." + CalledMethod + "();\n";
+        }
+
+        public override String ToCode(string indent = "")
+        {
+            return indent + InstanceName + "." + CalledMethod + "();\n";
         }
 
         private CDRelationship CallRelationshipInfo(string CallerMethod, string CalledMethod)

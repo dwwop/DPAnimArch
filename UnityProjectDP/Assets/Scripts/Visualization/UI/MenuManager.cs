@@ -85,8 +85,10 @@ public class MenuManager : Singleton<MenuManager>
     public Anim createdAnim;
     public bool isPlaying = false;
     public Button[] playBtns;
-    public GameObject playIntroTexts;
     public List<AnimMethod> animMethods;
+
+    public GameObject PanelChooseAnimationStartMethod;
+    public GameObject PanelSourceCodeAnimation;
     struct InteractiveData
     {
         public string fromClass;
@@ -159,6 +161,7 @@ public class MenuManager : Singleton<MenuManager>
     }
     public void SelectClass(String name)
     {
+        Debug.LogWarning("MenuManager::SelectClass " + (name ?? "NULL"));
         foreach(GameObject button in methodButtons)
         {
             button.SetActive(false);
@@ -357,11 +360,11 @@ public class MenuManager : Singleton<MenuManager>
             isPlaying = true;
             panelAnimationPlay.SetActive(true);
             mainScreen.SetActive(false);
+            introScreen.SetActive(false);
             foreach (Button button in playBtns)
             {
                 button.gameObject.SetActive(false);
             }
-            playIntroTexts.SetActive(true);
             if (Animation.Instance.standardPlayMode)
             {
                 panelStepMode.SetActive(false);
@@ -406,9 +409,11 @@ public class MenuManager : Singleton<MenuManager>
     }
     public void SelectPlayClass(string name)
     {
+        Debug.LogWarning("MenuManager::SelectPlayClass");
+        PanelChooseAnimationStartMethod.SetActive(true);
+        PanelSourceCodeAnimation.SetActive(false);
         Animation.Instance.UnhighlightAll();
         Animation.Instance.HighlightClass(name, true);
-        playIntroTexts.SetActive(false);
         Animation.Instance.startClassName = name;
         foreach (Button button in playBtns)
         {
@@ -419,8 +424,10 @@ public class MenuManager : Singleton<MenuManager>
         int i = 0;
         if (animMethods != null)
         {
+            Debug.LogWarning("MenuManager::SelectPlayClass anim methods is not null");
             foreach (AnimMethod m in animMethods )
             {
+                Debug.LogWarning(m.Name);
                 if (i < 4)
                 {
                     playBtns[i].GetComponentInChildren<TMP_Text>().text = m.Name + "()";
@@ -437,9 +444,9 @@ public class MenuManager : Singleton<MenuManager>
         {
             button.gameObject.SetActive(false);
         }
-        playIntroTexts.SetActive(true);
-        Debug.Log("Selected class: " + Animation.Instance.startClassName + "Selected Method: " + Animation.Instance.startMethodName);
+        Debug.Log("Selected class: " + Animation.Instance.startClassName + " Selected Method: " + Animation.Instance.startMethodName);
         Animation.Instance.HighlightClass(Animation.Instance.startClassName, false);
+        AnimateSourceCodeAtMethodStart(Animation.Instance.startClassName, Animation.Instance.startMethodName);
     }
     public void UnshowAnimation()
     {
@@ -455,5 +462,23 @@ public class MenuManager : Singleton<MenuManager>
         Animation.Instance.startClassName = "";
         Animation.Instance.startMethodName = "";
         ConsoleOutputField.text = "";//
+    }
+
+    public void AnimateSourceCodeAtMethodStart(string className, string methodName)
+    {
+        PanelChooseAnimationStartMethod.SetActive(false);
+        PanelSourceCodeAnimation.SetActive(true);
+
+        PanelSourceCodeAnimation.GetComponent<PanelSourceCodeAnimation>().SetMethodLabelText(className, methodName);
+
+        string sourceCode
+            = OALProgram
+                .Instance
+                .ExecutionSpace
+                .getClassByName(className)
+                .getMethodByName(methodName)
+                .ExecutableCode
+                .ToCode();
+        PanelSourceCodeAnimation.GetComponent<PanelSourceCodeAnimation>().SetSourceCodeText(sourceCode);
     }
 }

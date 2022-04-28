@@ -19,6 +19,7 @@ public class Clickable : MonoBehaviour
 
     private void OnMouseDown()
     {
+        Debug.LogWarning("Clickable::OnMouseDown");
         string temp = ToolManager.Instance.SelectedTool;
         if (temp == "DiagramMovement")
             OnClassSelected();
@@ -53,18 +54,22 @@ public class Clickable : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && ToolManager.Instance.SelectedTool == "Highlighter" && !IsMouseOverUI())
         {
+            Debug.LogWarning("Clickable::OnMouseOver 1st branch");
             triggerHighlighAction.Invoke(gameObject);
         }
         if (Input.GetMouseButtonDown(1) && ToolManager.Instance.SelectedTool == "Highlighter" && !IsMouseOverUI())
         {
+            Debug.LogWarning("Clickable::OnMouseOver 2nd branch");
             triggerUnhighlighAction.Invoke(gameObject);
         }
         if (Input.GetMouseButtonDown(0)&&MenuManager.Instance.isCreating==true)
         {
+            Debug.LogWarning("Clickable::OnMouseOver 3rd branch");
             MenuManager.Instance.SelectClass(this.gameObject.name);
         }
         if (Input.GetMouseButtonDown(0) && MenuManager.Instance.isPlaying == true)
         {
+            Debug.LogWarning("Clickable::OnMouseOver 4th branch");
             MenuManager.Instance.SelectPlayClass(this.gameObject.name);
             Debug.Log("selecting class");
         }

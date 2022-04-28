@@ -107,7 +107,9 @@ public class Animation : Singleton<Animation>
         }
 
         OALProgram.Instance.SuperScope = MethodExecutableCode;//StartMethod.ExecutableCode
-        
+
+        MenuManager.Instance.AnimateSourceCodeAtMethodStart(startClassName, startMethodName);
+
         Debug.Log("Abt to execute program");
         int i = 0;
 
@@ -125,9 +127,12 @@ public class Animation : Singleton<Animation>
                 BarrierSize = 1;
                 CurrentBarrierFill = 0;
 
-                StartCoroutine(ResolveCallFunct(((EXECommandCall)CurrentCommand).CreateOALCall()));
+                OALCall callInfo = ((EXECommandCall)CurrentCommand).CreateOALCall();
+                StartCoroutine(ResolveCallFunct(callInfo));
 
                 yield return StartCoroutine(BarrierFillCheck());
+
+                MenuManager.Instance.AnimateSourceCodeAtMethodStart(callInfo.CalledClassName, callInfo.CalledMethodName);
             }
             else if (CurrentCommand.GetType().Equals(typeof(EXECommandRead)))
             {
