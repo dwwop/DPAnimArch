@@ -478,7 +478,17 @@ public class MenuManager : Singleton<MenuManager>
                 .getClassByName(className)
                 .getMethodByName(methodName)
                 .ExecutableCode
-                .ToCode();
+                .ToFormattedCode();
+        PanelSourceCodeAnimation.GetComponent<PanelSourceCodeAnimation>().SetSourceCodeText(sourceCode);
+    }
+    public void AnimateSourceCodeAtMethodStart(string className, string methodName, EXEScope scope)
+    {
+        PanelChooseAnimationStartMethod.SetActive(false);
+        PanelSourceCodeAnimation.SetActive(true);
+
+        PanelSourceCodeAnimation.GetComponent<PanelSourceCodeAnimation>().SetMethodLabelText(className, methodName);
+
+        string sourceCode = scope.ToFormattedCode();
         PanelSourceCodeAnimation.GetComponent<PanelSourceCodeAnimation>().SetSourceCodeText(sourceCode);
     }
 }

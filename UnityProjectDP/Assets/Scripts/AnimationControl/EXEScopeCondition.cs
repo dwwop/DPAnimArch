@@ -150,31 +150,41 @@ namespace OALProgramControl
         }
         public override String ToCode(String Indent = "")
         {
-            String Result = Indent + "if (" + this.Condition.ToCode() + ")\n";
+            return FormatCode(Indent, false);
+        }
+
+        public override string ToFormattedCode(string Indent = "")
+        {
+            return FormatCode(Indent, IsActive);
+        }
+
+        private string FormatCode(String Indent, bool Highlight)
+        {
+            String Result = HighlightCodeIf(Highlight, Indent + "if (" + this.Condition.ToCode() + ")\n");
             foreach (EXECommand Command in this.Commands)
             {
-                Result += Command.ToCode(Indent + "\t");
+                Result += Command.ToFormattedCode(Indent + "\t");
             }
             if (this.ElifScopes != null)
             {
                 foreach (EXEScopeCondition Elif in this.ElifScopes)
                 {
-                    Result += Indent + "elif (" + Elif.Condition.ToCode() + ")\n";
+                    Result += HighlightCodeIf(Highlight, Indent + "elif (" + Elif.Condition.ToCode() + ")\n");
                     foreach (EXECommand Command in Elif.Commands)
                     {
-                        Result += Command.ToCode(Indent + "\t");
+                        Result += Command.ToFormattedCode(Indent + "\t");
                     }
                 }
             }
             if (this.ElseScope != null)
             {
-                Result += Indent + "else\n";
+                Result += HighlightCodeIf(Highlight, Indent + "else\n");
                 foreach (EXECommand Command in this.ElseScope.Commands)
                 {
-                    Result += Command.ToCode(Indent + "\t");
+                    Result += Command.ToFormattedCode(Indent + "\t");
                 }
             }
-            Result += Indent + "end if;\n";
+            Result += HighlightCodeIf(Highlight, Indent + "end if;\n");
             return Result;
         }
 

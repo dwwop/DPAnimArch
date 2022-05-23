@@ -145,12 +145,28 @@ namespace OALProgramControl
 
         public override String ToCode(String Indent = "")
         {
-            String Result = Indent + "for each " + this.IteratorName + " in " + (this.IterableAttributeName == null ? this.IterableName : (this.IterableName + "." + this.IterableAttributeName)) + "\n";
+            return FormatCode(Indent, false);
+        }
+        public override string ToFormattedCode(string Indent = "")
+        {
+            return FormatCode(Indent, IsActive);
+        }
+        private string FormatCode(String Indent, bool Highlight)
+        {
+            String Result
+                =
+                HighlightCodeIf
+                (
+                    Highlight,
+                    Indent + "for each " + this.IteratorName + " in "
+                    + (this.IterableAttributeName == null ? this.IterableName : (this.IterableName + "." + this.IterableAttributeName))
+                    + "\n"
+                );
             foreach (EXECommand Command in this.Commands)
             {
-                Result += Command.ToCode(Indent + "\t");
+                Result += Command.ToFormattedCode(Indent + "\t");
             }
-            Result += Indent + "end for;\n";
+            Result += HighlightCodeIf(Highlight, Indent + "end for;\n");
             return Result;
         }
 

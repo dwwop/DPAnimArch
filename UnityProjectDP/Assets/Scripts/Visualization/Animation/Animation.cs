@@ -113,14 +113,20 @@ public class Animation : Singleton<Animation>
         Debug.Log("Abt to execute program");
         int i = 0;
 
+        string currentClassName = startClassName;
+        string currentMethodName = startMethodName;
+
         bool Success = true;
         while (Success && Program.CommandStack.HasNext())
         {
 
             EXECommand CurrentCommand = Program.CommandStack.Next();
+            CurrentCommand.ToggleActiveRecursiveBottomUp(true);
             bool ExecutionSuccess = CurrentCommand.PerformExecution(Program);
             
             Debug.Log("Command " + i++.ToString() + ". Success: " + ExecutionSuccess.ToString() + ". Command type: " + CurrentCommand.GetType().Name);
+
+            MenuManager.Instance.AnimateSourceCodeAtMethodStart(currentClassName, currentMethodName, CurrentCommand.GetTopLevelScope());
 
             if (CurrentCommand.GetType().Equals(typeof(EXECommandCall)))
             {
@@ -132,7 +138,8 @@ public class Animation : Singleton<Animation>
 
                 yield return StartCoroutine(BarrierFillCheck());
 
-                MenuManager.Instance.AnimateSourceCodeAtMethodStart(callInfo.CalledClassName, callInfo.CalledMethodName);
+                currentClassName = callInfo.CalledClassName;
+                currentMethodName = callInfo.CalledMethodName;
             }
             else if (CurrentCommand.GetType().Equals(typeof(EXECommandRead)))
             {
@@ -146,10 +153,16 @@ public class Animation : Singleton<Animation>
                 ExecutionSuccess = ExecutionSuccess && ((EXECommandRead)CurrentCommand).AssignReadValue(this.ReadValue, Program);
                 this.ReadValue = null;
             }
+            else
+            {
+                yield return new WaitForSeconds(0.4f);
+            }
+
+            CurrentCommand.ToggleActiveRecursiveBottomUp(false);
 
             Success = Success && ExecutionSuccess;
         }
-        
+
         Debug.Log("Over, Success: " + Success);
         this.AnimationIsRunning = false;
     }

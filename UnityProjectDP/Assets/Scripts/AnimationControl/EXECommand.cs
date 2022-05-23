@@ -4,6 +4,7 @@ namespace OALProgramControl
 {
     public abstract class EXECommand
     {
+        public bool IsActive { get; set; } = false;
         protected EXEScope SuperScope { get; set; }
 
         public Boolean PerformExecution(OALProgram OALProgram)
@@ -21,9 +22,21 @@ namespace OALProgramControl
         {
             this.SuperScope = SuperScope;
         }
-        protected EXEScope GetTopLevelScope()
+        public EXEScope GetTopLevelScope()
         {
             EXEScope CurrentScope = this.SuperScope;
+
+            if (CurrentScope == null)
+            {
+                if (this is EXEScope)
+                {
+                    return this as EXEScope;
+                }
+                else
+                {
+                    throw new Exception("Simple command with no superscope");
+                }
+            }
 
             while (CurrentScope.SuperScope != null)
             {
@@ -44,6 +57,28 @@ namespace OALProgramControl
         public virtual String ToCodeSimple()
         {
             return "Command";
+        }
+        public virtual string ToFormattedCode(String Indent = "")
+        {
+            return HighlightCodeIf(IsActive, ToCode(Indent));
+        }
+        protected string HighlightCodeIf(bool condition, string code)
+        {
+            return condition ? HighlightCode(code) : code;
+        }
+        private string HighlightCode(string code)
+        {
+            return "<b><color=green>" + code + "</color></b>";
+        }
+
+        public void ToggleActiveRecursiveBottomUp(bool active)
+        {
+            this.IsActive = active;
+
+            if (this.SuperScope != null)
+            {
+                this.SuperScope.ToggleActiveRecursiveBottomUp(active);
+            }
         }
     }
 }

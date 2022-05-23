@@ -508,6 +508,16 @@ namespace OALProgramControl
             return Result;
         }
 
+        public override string ToFormattedCode(string Indent = "")
+        {
+            String Result = "";
+            foreach (EXECommand Command in this.Commands)
+            {
+                Result += Command.ToFormattedCode(Indent);
+            }
+            return Result;
+        }
+
         public override EXECommand CreateClone()
         {
             EXEScope Clone = CreateDuplicateScope();

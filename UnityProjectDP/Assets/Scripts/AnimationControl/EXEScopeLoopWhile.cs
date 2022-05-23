@@ -60,15 +60,22 @@ namespace OALProgramControl
 
         public override String ToCode(String Indent = "")
         {
-            String Result = Indent + "while (" + this.Condition.ToCode() + ")\n";
+            return FormatCode(Indent, false);
+        }
+        public override string ToFormattedCode(string Indent = "")
+        {
+            return FormatCode(Indent, IsActive);
+        }
+        private string FormatCode(String Indent, bool Highlight)
+        {
+            String Result = HighlightCodeIf(Highlight, Indent + "while (" + this.Condition.ToCode() + ")\n");
             foreach (EXECommand Command in this.Commands)
             {
-                Result += Command.ToCode(Indent + "\t");
+                Result += Command.ToFormattedCode(Indent + "\t");
             }
-            Result += Indent + "end while;\n";
+            Result += HighlightCodeIf(Highlight, Indent + "end while;\n");
             return Result;
         }
-
         protected override EXEScope CreateDuplicateScope()
         {
             return new EXEScopeLoopWhile(Condition);

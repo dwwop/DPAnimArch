@@ -86,23 +86,30 @@ namespace OALProgramControl
 
         public override String ToCode(String Indent = "")
         {
-            String Result = Indent + "par\n";
+            return FormatCode(Indent, false);
+        }
+        public override string ToFormattedCode(string Indent = "")
+        {
+            return FormatCode(Indent, IsActive);
+        }
+        private string FormatCode(String Indent, bool Highlight)
+        {
+            String Result = HighlightCodeIf(Highlight, Indent + "par\n");
             if (this.Threads != null)
             {
                 foreach (EXEScope Thread in this.Threads)
                 {
-                    Result += Indent + "\tthread\n";
+                    Result += HighlightCodeIf(Highlight, Indent + "\tthread\n");
                     foreach (EXECommand Command in Thread.Commands)
                     {
-                        Result += Command.ToCode(Indent + "\t\t");
+                        Result += Command.ToFormattedCode(Indent + "\t\t");
                     }
-                    Result += Indent + "\tend thread;\n";
+                    Result += HighlightCodeIf(Highlight, Indent + "\tend thread;\n");
                 }
             }
-            Result += Indent + "end par;\n";
+            Result += HighlightCodeIf(Highlight, Indent + "end par;\n");
             return Result;
         }
-
         protected override EXEScope CreateDuplicateScope()
         {
             return new EXEScopeParallel(Threads.Select(x => (EXEScope)x.CreateClone()).ToArray());
