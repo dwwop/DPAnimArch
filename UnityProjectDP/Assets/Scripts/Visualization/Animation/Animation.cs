@@ -126,7 +126,11 @@ public class Animation : Singleton<Animation>
             
             Debug.Log("Command " + i++.ToString() + ". Success: " + ExecutionSuccess.ToString() + ". Command type: " + CurrentCommand.GetType().Name);
 
-            MenuManager.Instance.AnimateSourceCodeAtMethodStart(currentClassName, currentMethodName, CurrentCommand.GetTopLevelScope());
+            EXEScopeMethod CurrentMethodScope = CurrentCommand.GetTopLevelScope() as EXEScopeMethod;
+            currentClassName = CurrentMethodScope.MethodDefinition.ClassName;
+            currentMethodName = CurrentMethodScope.MethodDefinition.MethodName;
+
+            MenuManager.Instance.AnimateSourceCodeAtMethodStart(currentClassName, currentMethodName, CurrentMethodScope);
 
             if (CurrentCommand.GetType().Equals(typeof(EXECommandCall)))
             {
@@ -137,9 +141,6 @@ public class Animation : Singleton<Animation>
                 StartCoroutine(ResolveCallFunct(callInfo));
 
                 yield return StartCoroutine(BarrierFillCheck());
-
-                currentClassName = callInfo.CalledClassName;
-                currentMethodName = callInfo.CalledMethodName;
             }
             else if (CurrentCommand.GetType().Equals(typeof(EXECommandRead)))
             {
