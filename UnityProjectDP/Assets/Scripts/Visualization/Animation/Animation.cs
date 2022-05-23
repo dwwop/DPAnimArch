@@ -113,14 +113,14 @@ public class Animation : Singleton<Animation>
         Debug.Log("Abt to execute program");
         int i = 0;
 
-        string currentClassName = startClassName;
-        string currentMethodName = startMethodName;
+        string currentClassName, currentMethodName;
 
         bool Success = true;
         while (Success && Program.CommandStack.HasNext())
         {
 
             EXECommand CurrentCommand = Program.CommandStack.Next();
+
             CurrentCommand.ToggleActiveRecursiveBottomUp(true);
             bool ExecutionSuccess = CurrentCommand.PerformExecution(Program);
             
@@ -131,6 +131,7 @@ public class Animation : Singleton<Animation>
             currentMethodName = CurrentMethodScope.MethodDefinition.MethodName;
 
             MenuManager.Instance.AnimateSourceCodeAtMethodStart(currentClassName, currentMethodName, CurrentMethodScope);
+            MenuManager.Instance.CallStackPanel.GetComponent<CallStackPanel>().Refresh(Program.CommandStack.CallStack);
 
             if (CurrentCommand.GetType().Equals(typeof(EXECommandCall)))
             {
@@ -166,6 +167,8 @@ public class Animation : Singleton<Animation>
 
         Debug.Log("Over, Success: " + Success);
         this.AnimationIsRunning = false;
+
+        MenuManager.Instance.CallStackPanel.GetComponent<CallStackPanel>().Refresh(new List<MethodCallRecord>());
     }
 
     public void IncrementBarrier()

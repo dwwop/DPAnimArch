@@ -11,10 +11,13 @@ namespace OALProgramControl
         private LinkedList<EXECommand> CommandsToBeCalled;
         private Stack<EXECommand> CommandsThatHaveBeenCalled;
 
+        public readonly List<MethodCallRecord> CallStack;
+
         public EXEExecutionStack()
         {
             this.CommandsToBeCalled = new LinkedList<EXECommand>();
             this.CommandsThatHaveBeenCalled = new Stack<EXECommand>();
+            this.CallStack = new List<MethodCallRecord>();
         }
 
         public void Enqueue(EXECommand Command)

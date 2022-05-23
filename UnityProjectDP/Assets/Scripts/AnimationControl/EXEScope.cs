@@ -43,7 +43,7 @@ namespace OALProgramControl
             return true;
         }
 
-        protected void AddCommandsToStack(OALProgram OALProgram, List<EXECommand> Commands)
+        protected virtual void AddCommandsToStack(OALProgram OALProgram, List<EXECommand> Commands)
         {
             Commands.ForEach(command => command.SetSuperScope(this));
             OALProgram.CommandStack.Enqueue(Commands);

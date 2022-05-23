@@ -87,6 +87,8 @@ public class MenuManager : Singleton<MenuManager>
     public Button[] playBtns;
     public List<AnimMethod> animMethods;
 
+    public GameObject CallStackPanel;
+
     public GameObject PanelChooseAnimationStartMethod;
     public GameObject PanelSourceCodeAnimation;
     struct InteractiveData

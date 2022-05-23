@@ -12,8 +12,18 @@ namespace OALProgramControl
         }
         protected override Boolean Execute(OALProgram OALProgram)
         {
+            EXECommandFinishMethodScope finishCommand = new EXECommandFinishMethodScope(this.MethodDefinition);
+            finishCommand.SetSuperScope(this);
+
+            OALProgram.CommandStack.Enqueue(finishCommand);
             AddCommandsToStack(OALProgram, this.Commands);
             return true;
+        }
+
+        protected override void AddCommandsToStack(OALProgram OALProgram, List<EXECommand> Commands)
+        {
+            base.AddCommandsToStack(OALProgram, Commands);
+            OALProgram.CommandStack.CallStack.Add(this.MethodDefinition);
         }
 
         public override string ToFormattedCode(string Indent = "")
