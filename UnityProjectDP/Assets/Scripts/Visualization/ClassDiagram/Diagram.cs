@@ -22,7 +22,7 @@ namespace AnimArch.Visualization.Diagrams
                 }
             );
 
-            Line.GetComponent<LineRenderer>().widthMultiplier = 6f;
+            Line.GetComponent<LineRenderer>().widthMultiplier = 4f;
             //Line.transform.SetParent(graph.units);
 
             return Line;

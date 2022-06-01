@@ -1,12 +1,10 @@
-﻿using AnimArch.Extensions.Unity;
+﻿using System;
+using AnimArch.Extensions.Unity;
 using OALProgramControl;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI.Extensions;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -14,6 +12,7 @@ namespace AnimArch.Visualization.Diagrams
     {
         public Graph graph;
         public List<ObjectInDiagram> Objects { get; private set; }
+        public List<ObjectRelation> Relations { get; private set; }
 
         private void Awake()
         {
@@ -35,6 +34,7 @@ namespace AnimArch.Visualization.Diagrams
             }
 
             Objects = new List<ObjectInDiagram>();
+            Relations = new List<ObjectRelation>();
 
             if (graph != null)
             {
@@ -79,7 +79,8 @@ namespace AnimArch.Visualization.Diagrams
             int i = 0;
             foreach (ObjectInDiagram Object in Objects)
             {
-                Object.VisualObject.GetComponent<RectTransform>().Shift(0, 200 * i++, 0);
+                Object.VisualObject.GetComponent<RectTransform>().Shift(300 * ((int) (i / 2) - 1), 200 * (i % 2), 0);
+                i++;
             }
         }
 
@@ -89,6 +90,11 @@ namespace AnimArch.Visualization.Diagrams
             for (int i = 0; i < Objects.Count; i++)
             {
                 GenerateObject(Objects[i]);
+            }
+
+            foreach (ObjectRelation relation in Relations)
+            {
+                relation.Generate();
             }
         }
 
@@ -132,38 +138,78 @@ namespace AnimArch.Visualization.Diagrams
 
         private void fakeObjects()
         {
-            Objects.Add
-            (
+            ObjectInDiagram x_leaf =
                 new ObjectInDiagram()
                 {
                     Class = DiagramPool.Instance.ClassDiagram.FindClassByName("ASTLeaf"),
                     Instance = new CDClassInstance(1, new List<CDAttribute>()),
                     VisualObject = null,
-                    VariableName = "Operand01"
-                }
-            );
+                    VariableName = "x"
+                };
 
-            Objects.Add
-            (
+            ObjectInDiagram y_leaf =
                 new ObjectInDiagram()
                 {
                     Class = DiagramPool.Instance.ClassDiagram.FindClassByName("ASTLeaf"),
                     Instance = new CDClassInstance(3, new List<CDAttribute>()),
                     VisualObject = null,
-                    VariableName = "Operand02"
-                }
-            );
+                    VariableName = "y"
+                };
 
-            Objects.Add
-            (
+            ObjectInDiagram composite =
                 new ObjectInDiagram()
                 {
-                    Class = DiagramPool.Instance.ClassDiagram.FindClassByName("ASTLeaf"),
-                    Instance = new CDClassInstance(5, new List<CDAttribute>()),
+                    Class = DiagramPool.Instance.ClassDiagram.FindClassByName("ASTComposite"),
+                    Instance = new CDClassInstance(2, new List<CDAttribute>()),
                     VisualObject = null,
-                    VariableName = "Operand03"
-                }
-            );
+                    VariableName = "Composite"
+                };
+
+            ObjectInDiagram plus_operator = new ObjectInDiagram()
+            {
+                Class = DiagramPool.Instance.ClassDiagram.FindClassByName("Operator"),
+                Instance = new CDClassInstance(6, new List<CDAttribute>()),
+                VisualObject = null,
+                VariableName = "Plus"
+            };
+            ObjectInDiagram evaluator1 = new ObjectInDiagram()
+            {
+                Class = DiagramPool.Instance.ClassDiagram.FindClassByName("OperationEvaluator"),
+                Instance = new CDClassInstance(7, new List<CDAttribute>()),
+                VisualObject = null,
+                VariableName = "x"
+            };
+            ObjectInDiagram evaluator2 = new ObjectInDiagram()
+            {
+                Class = DiagramPool.Instance.ClassDiagram.FindClassByName("OperationEvaluator"),
+                Instance = new CDClassInstance(8, new List<CDAttribute>()),
+                VisualObject = null,
+                VariableName = "y"
+            };
+            ObjectInDiagram evaluator4 = new ObjectInDiagram()
+            {
+                Class = DiagramPool.Instance.ClassDiagram.FindClassByName("OperationEvaluator"),
+                Instance = new CDClassInstance(9, new List<CDAttribute>()),
+                VisualObject = null,
+                VariableName = "composite"
+            };
+
+
+            Objects.Add(evaluator1);
+            Objects.Add(evaluator2);
+            Objects.Add(x_leaf);
+            Objects.Add(y_leaf);
+            Objects.Add(composite);
+            Objects.Add(plus_operator);
+            Objects.Add(evaluator4);
+
+            Relations.Add(new ObjectRelation(graph, x_leaf, composite, "Association"));
+            Relations.Add(new ObjectRelation(graph, y_leaf, composite, "Association"));
+            Relations.Add(new ObjectRelation(graph, composite, plus_operator, "Association"));
+
+            Relations.Add(new ObjectRelation(graph, x_leaf, evaluator1, "Depends"));
+            Relations.Add(new ObjectRelation(graph, y_leaf, evaluator2, "Depends"));
+            Relations.Add(new ObjectRelation(graph, composite, evaluator4, "Depends"));
         }
     }
 }
