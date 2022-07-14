@@ -16,7 +16,7 @@ namespace OALProgramControl
         public String VariableName { get; set; }
         public String AttributeName { get; set; }
         public EXEASTNode WhereCondition { get; set; }
-
+    
         public EXECommandQuerySelect(String Cardinality, String ClassName, String VariableName, String AttributeName)
         {
             this.Cardinality = Cardinality;
