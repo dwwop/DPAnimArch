@@ -1,10 +1,7 @@
-﻿using System;
-using AnimArch.Extensions.Unity;
+﻿using System.Collections.Generic;
 using OALProgramControl;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI.Extensions;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -47,7 +44,7 @@ namespace AnimArch.Visualization.Diagrams
         {
             CreateGraph();
 
-            fakeObjects();
+            GenerateObjects();
 
             //Generate UI objects displaying the diagram
             Generate();
@@ -56,14 +53,42 @@ namespace AnimArch.Visualization.Diagrams
             ManualLayout();
             //AutoLayout();
 
-            // Objects
-            //     .ForEach(Object => Object.VisualObject.GetComponent<RectTransform>().Shift(0, 0, 400));
             graph.transform.position = new Vector3(0, 0, 800);
-            //Objects
-            //.ForEach
-            //(
-            //    Object => CreateInterGraphLine(graph, Object.VisualObject, Object.Class.VisualObject)
-            //);
+        }
+
+        private void GenerateObjects()
+        {
+            // Animating.Animation instance = Animating.Animation.Instance;
+            // if (!string.IsNullOrEmpty(instance.startClassName))
+            // {
+            //     Objects.Add
+            //     (
+            //         new ObjectInDiagram
+            //         {
+            //             Class = DiagramPool.Instance.ClassDiagram.FindClassByName(instance.startClassName),
+            //             Instance = new CDClassInstance(1, new List<CDAttribute>()),
+            //             VisualObject = null,
+            //             VariableName = "client"
+            //         }
+            //     );
+            // }
+            //
+            // foreach (var cdClass in OALProgram.Instance.SuperScope.Commands)
+            // {}
+            // var cd = OALProgram.Instance.ExecutionSpace.ClassPool;
+            // var i = 0;
+            // foreach (var objectInDiagram in cd.Select(classInDiagram => new ObjectInDiagram
+            //          {
+            //              Class = DiagramPool.Instance.ClassDiagram.FindClassByName(classInDiagram.Name),
+            //              Instance = classInDiagram.CreateClassInstance(),
+            //              VisualObject = null,
+            //              VariableName = ""
+            //          }))
+            // {
+            //     Objects.Add(objectInDiagram);
+            //     // classInDiagram.objects.Add(objectInDiagram);
+            //     i++;
+            // }
         }
 
         public Graph CreateGraph()
@@ -77,9 +102,11 @@ namespace AnimArch.Visualization.Diagrams
         public void ManualLayout()
         {
             int i = 0;
-            foreach (ObjectInDiagram Object in Objects)
+            foreach (ObjectInDiagram objectInDiagram in Objects)
             {
-                Object.VisualObject.GetComponent<RectTransform>().Shift(300 * ((int) (i / 2) - 1), 200 * (i % 2), 0);
+                // objectInDiagram.VisualObject.GetComponent<RectTransform>()
+                //     .Shift(300 * ((int) (i / 2) - 1), 200 * (i % 2), 0);
+                objectInDiagram.VisualObject.transform.position = objectInDiagram.Class.VisualObject.transform.position;
                 i++;
             }
         }
@@ -89,6 +116,7 @@ namespace AnimArch.Visualization.Diagrams
             //Render classes
             for (int i = 0; i < Objects.Count; i++)
             {
+                Debug.Log(Objects[i].Class.ClassInfo.Name);
                 GenerateObject(Objects[i]);
             }
 
@@ -102,10 +130,11 @@ namespace AnimArch.Visualization.Diagrams
         {
             //Setting up
             var node = graph.AddNode();
-            node.name = Object.VariableName + ":" + Object.Class.XMIParsedClass.Name;
+            node.name = Object.VariableName + " : " + Object.Class.XMIParsedClass.Name;
             var background = node.transform.Find("Background");
             var header = background.Find("Header");
             var attributes = background.Find("Attributes");
+            var methods = background.Find("Methods");
 
             // Printing the values into diagram
             header.GetComponent<TextMeshProUGUI>().text = node.name;
@@ -115,6 +144,23 @@ namespace AnimArch.Visualization.Diagrams
             {
                 attributes.GetComponent<TextMeshProUGUI>().text +=
                     AttributeName + " = " + Object.Instance.State[AttributeName] + "\n";
+            }
+
+            foreach (Method method in Object.Class.XMIParsedClass.Methods)
+            {
+                string arguments = "(";
+                if (method.arguments != null)
+                    for (int d = 0; d < method.arguments.Count; d++)
+                    {
+                        if (d < method.arguments.Count - 1)
+                            arguments += (method.arguments[d] + ", ");
+                        else arguments += (method.arguments[d]);
+                    }
+
+                arguments += ")";
+
+                methods.GetComponent<TextMeshProUGUI>().text +=
+                    method.Name + arguments + " :" + method.ReturnValue + "\n";
             }
 
             //Add Class to Dictionary
@@ -136,80 +182,22 @@ namespace AnimArch.Visualization.Diagrams
             graph.Layout();
         }
 
-        private void fakeObjects()
+        public void AddObject(string className, string variableName)
         {
-            ObjectInDiagram x_leaf =
-                new ObjectInDiagram()
-                {
-                    Class = DiagramPool.Instance.ClassDiagram.FindClassByName("ASTLeaf"),
-                    Instance = new CDClassInstance(1, new List<CDAttribute>()),
-                    VisualObject = null,
-                    VariableName = "x"
-                };
-
-            ObjectInDiagram y_leaf =
-                new ObjectInDiagram()
-                {
-                    Class = DiagramPool.Instance.ClassDiagram.FindClassByName("ASTLeaf"),
-                    Instance = new CDClassInstance(3, new List<CDAttribute>()),
-                    VisualObject = null,
-                    VariableName = "y"
-                };
-
-            ObjectInDiagram composite =
-                new ObjectInDiagram()
-                {
-                    Class = DiagramPool.Instance.ClassDiagram.FindClassByName("ASTComposite"),
-                    Instance = new CDClassInstance(2, new List<CDAttribute>()),
-                    VisualObject = null,
-                    VariableName = "Composite"
-                };
-
-            ObjectInDiagram plus_operator = new ObjectInDiagram()
+            AddObject(new ObjectInDiagram
             {
-                Class = DiagramPool.Instance.ClassDiagram.FindClassByName("Operator"),
-                Instance = new CDClassInstance(6, new List<CDAttribute>()),
+                Class = DiagramPool.Instance.ClassDiagram.FindClassByName(className),
+                Instance = OALProgram.Instance.ExecutionSpace.getClassByName(className).CreateClassInstance(),
                 VisualObject = null,
-                VariableName = "Plus"
-            };
-            ObjectInDiagram evaluator1 = new ObjectInDiagram()
-            {
-                Class = DiagramPool.Instance.ClassDiagram.FindClassByName("OperationEvaluator"),
-                Instance = new CDClassInstance(7, new List<CDAttribute>()),
-                VisualObject = null,
-                VariableName = "x"
-            };
-            ObjectInDiagram evaluator2 = new ObjectInDiagram()
-            {
-                Class = DiagramPool.Instance.ClassDiagram.FindClassByName("OperationEvaluator"),
-                Instance = new CDClassInstance(8, new List<CDAttribute>()),
-                VisualObject = null,
-                VariableName = "y"
-            };
-            ObjectInDiagram evaluator4 = new ObjectInDiagram()
-            {
-                Class = DiagramPool.Instance.ClassDiagram.FindClassByName("OperationEvaluator"),
-                Instance = new CDClassInstance(9, new List<CDAttribute>()),
-                VisualObject = null,
-                VariableName = "composite"
-            };
+                VariableName = variableName
+            });
+        }
 
-
-            Objects.Add(evaluator1);
-            Objects.Add(evaluator2);
-            Objects.Add(x_leaf);
-            Objects.Add(y_leaf);
-            Objects.Add(composite);
-            Objects.Add(plus_operator);
-            Objects.Add(evaluator4);
-
-            Relations.Add(new ObjectRelation(graph, x_leaf, composite, "Association"));
-            Relations.Add(new ObjectRelation(graph, y_leaf, composite, "Association"));
-            Relations.Add(new ObjectRelation(graph, composite, plus_operator, "Association"));
-
-            Relations.Add(new ObjectRelation(graph, x_leaf, evaluator1, "Depends"));
-            Relations.Add(new ObjectRelation(graph, y_leaf, evaluator2, "Depends"));
-            Relations.Add(new ObjectRelation(graph, composite, evaluator4, "Depends"));
+        public void AddRelation(ObjectInDiagram start, ObjectInDiagram end)
+        {
+            ObjectRelation relation = new ObjectRelation(graph, start, end);
+            Relations.Add(relation);
+            relation.Generate();
         }
     }
 }

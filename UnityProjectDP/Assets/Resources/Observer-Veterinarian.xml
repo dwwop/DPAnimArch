@@ -1,0 +1,1480 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<xmi:XMI xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.1"
+         xmlns:xmi="http://schema.omg.org/spec/XMI/2.1">
+    <xmi:Documentation exporter="Enterprise Architect" exporterVersion="6.5"/>
+    <uml:Model xmi:type="uml:Model" name="EA_Model" visibility="public">
+        <packagedElement xmi:type="uml:Package" xmi:id="EAPK_325FEB78_780A_4e28_9FC3_D1E457A6B48F" name="Observer"
+                         visibility="public">
+            <packagedElement xmi:type="uml:Package" xmi:id="EAPK_66045E95_18E1_469c_9C94_FD84B890F3EF" name="Diagram"
+                             visibility="public">
+                <ownedComment xmi:type="uml:Comment" xmi:id="EAID_0A4BB879_55E8_46fa_B816_4D7F31D92A0A"
+                              body="&lt;b&gt;foreach &lt;/b&gt;(Animal in RegisteredAnimals)&#xA;    Animal.ReceiveVaccine(CurrentDate)">
+                    <annotatedElement xmi:idref="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"/>
+                </ownedComment>
+                <packagedElement xmi:type="uml:Class" xmi:id="EAID_DAD998C8_027B_48c2_AA0F_4F9FEDCEAEF2" name="Cat"
+                                 visibility="public">
+                    <ownedAttribute xmi:type="uml:Property" xmi:id="EAID_424614F5_3CDD_4166_AA9D_7E2C69AE1976"
+                                    name="Veterinarian" visibility="private" isStatic="false" isReadOnly="false"
+                                    isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+                        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000001_3CDD_4166_AA9D_7E2C69AE1976"
+                                    value="1"/>
+                        <upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000002_3CDD_4166_AA9D_7E2C69AE1976"
+                                    value="1"/>
+                        <type xmi:idref="EAJava_Subject"/>
+                    </ownedAttribute>
+                    <ownedAttribute xmi:type="uml:Property" xmi:id="EAID_BEF49FFF_9B63_4fe4_B012_2614CD3F755B"
+                                    name="IsVaccinated" visibility="private" isStatic="false" isReadOnly="false"
+                                    isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+                        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000003_9B63_4fe4_B012_2614CD3F755B"
+                                    value="1"/>
+                        <upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000004_9B63_4fe4_B012_2614CD3F755B"
+                                    value="1"/>
+                        <type xmi:idref="EAJava_boolean"/>
+                    </ownedAttribute>
+                    <ownedAttribute xmi:type="uml:Property" xmi:id="EAID_3B7ACAC7_7A13_4933_A881_E427E529A833"
+                                    name="Name" visibility="public" isStatic="false" isReadOnly="false"
+                                    isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+                        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000005_7A13_4933_A881_E427E529A833"
+                                    value="1"/>
+                        <upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000006_7A13_4933_A881_E427E529A833"
+                                    value="1"/>
+                        <type xmi:idref="EAJava_string"/>
+                    </ownedAttribute>
+                    <ownedAttribute xmi:type="uml:Property" xmi:id="EAID_A7EDF1D3_C73E_4ec7_AD21_32D6157D04BF"
+                                    name="VaccinationDate" visibility="private" isStatic="false" isReadOnly="false"
+                                    isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+                        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000007_C73E_4ec7_AD21_32D6157D04BF"
+                                    value="1"/>
+                        <upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000008_C73E_4ec7_AD21_32D6157D04BF"
+                                    value="1"/>
+                        <type xmi:idref="EAJava_string"/>
+                    </ownedAttribute>
+                    <ownedOperation xmi:id="EAID_EB3535C1_2309_4117_8EB4_C197D939D8C7" name="ReceiveVaccine"
+                                    visibility="public" concurrency="sequential">
+                        <ownedParameter xmi:id="EAID_5F067FD1_4D4A_472a_B573_FF33C0A28BFE" name="Date" direction="in"
+                                        isStream="false" isException="false" isOrdered="false" isUnique="true"
+                                        type="EAJava_string"/>
+                        <ownedParameter xmi:id="EAID_RT000000_2309_4117_8EB4_C197D939D8C7" name="return"
+                                        direction="return" type="EAJava_void"/>
+                    </ownedOperation>
+                    <ownedOperation xmi:id="EAID_29EE7165_649D_42ea_84FE_FAA5D9239B1A" name="SetVaccinationDate"
+                                    visibility="public" concurrency="sequential">
+                        <ownedParameter xmi:id="EAID_764AE385_C7D1_44c5_BA68_1D683628DCB1" name="Date" direction="in"
+                                        isStream="false" isException="false" isOrdered="false" isUnique="true"
+                                        type="EAJava_string"/>
+                        <ownedParameter xmi:id="EAID_RT000000_649D_42ea_84FE_FAA5D9239B1A" name="return"
+                                        direction="return" type="EAJava_void"/>
+                    </ownedOperation>
+                    <generalization xmi:type="uml:Generalization" xmi:id="EAID_AA42D1A6_63A6_4706_A7C0_E87B2EBFC02B"
+                                    general="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333"/>
+                </packagedElement>
+                <packagedElement xmi:type="uml:Association" xmi:id="EAID_95FC3A15_F721_4f58_AA54_1365A0C7060A"
+                                 visibility="public">
+                    <memberEnd xmi:idref="EAID_dstFC3A15_F721_4f58_AA54_1365A0C7060A"/>
+                    <ownedEnd xmi:type="uml:Property" xmi:id="EAID_dstFC3A15_F721_4f58_AA54_1365A0C7060A"
+                              visibility="public" association="EAID_95FC3A15_F721_4f58_AA54_1365A0C7060A"
+                              isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true"
+                              isDerivedUnion="false" aggregation="none">
+                        <type xmi:idref="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"/>
+                        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000009__F721_4f58_AA54_1365A0C7060A"
+                                    value="1"/>
+                        <upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000010__F721_4f58_AA54_1365A0C7060A"
+                                    value="1"/>
+                    </ownedEnd>
+                    <memberEnd xmi:idref="EAID_srcFC3A15_F721_4f58_AA54_1365A0C7060A"/>
+                    <ownedEnd xmi:type="uml:Property" xmi:id="EAID_srcFC3A15_F721_4f58_AA54_1365A0C7060A"
+                              visibility="public" association="EAID_95FC3A15_F721_4f58_AA54_1365A0C7060A"
+                              isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true"
+                              isDerivedUnion="false" aggregation="none">
+                        <type xmi:idref="EAID_DAD998C8_027B_48c2_AA0F_4F9FEDCEAEF2"/>
+                    </ownedEnd>
+                </packagedElement>
+                <packagedElement xmi:type="uml:Class" xmi:id="EAID_F162BCFE_FF1A_4032_AAA7_68BB4F415C2D" name="Client"
+                                 visibility="public">
+                    <ownedOperation xmi:id="EAID_C26EFF17_402D_43bb_9256_0A08F4587A21" name="StartCase"
+                                    visibility="public" concurrency="sequential">
+                        <ownedParameter xmi:id="EAID_RT000000_402D_43bb_9256_0A08F4587A21" name="return"
+                                        direction="return" type="EAJava_void"/>
+                    </ownedOperation>
+                    <ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst3B4941_ECF7_4644_823F_FFB89BAC9072"
+                                    visibility="public" association="EAID_483B4941_ECF7_4644_823F_FFB89BAC9072"
+                                    isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false"
+                                    isUnique="true" isDerivedUnion="false" aggregation="none">
+                        <type xmi:idref="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"/>
+                    </ownedAttribute>
+                </packagedElement>
+                <packagedElement xmi:type="uml:Association" xmi:id="EAID_483B4941_ECF7_4644_823F_FFB89BAC9072"
+                                 visibility="public">
+                    <memberEnd xmi:idref="EAID_dst3B4941_ECF7_4644_823F_FFB89BAC9072"/>
+                    <memberEnd xmi:idref="EAID_src3B4941_ECF7_4644_823F_FFB89BAC9072"/>
+                    <ownedEnd xmi:type="uml:Property" xmi:id="EAID_src3B4941_ECF7_4644_823F_FFB89BAC9072"
+                              visibility="public" association="EAID_483B4941_ECF7_4644_823F_FFB89BAC9072"
+                              isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true"
+                              isDerivedUnion="false" aggregation="none">
+                        <type xmi:idref="EAID_F162BCFE_FF1A_4032_AAA7_68BB4F415C2D"/>
+                    </ownedEnd>
+                </packagedElement>
+                <packagedElement xmi:type="uml:Class" xmi:id="EAID_F1713CB3_4B2C_424f_81EF_F7D66B687E7A" name="Dog"
+                                 visibility="public">
+                    <ownedAttribute xmi:type="uml:Property" xmi:id="EAID_26A8518E_DC59_4657_B185_83CE261C8336"
+                                    name="Veterinarian" visibility="private" isStatic="false" isReadOnly="false"
+                                    isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+                        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000011_DC59_4657_B185_83CE261C8336"
+                                    value="1"/>
+                        <upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000012_DC59_4657_B185_83CE261C8336"
+                                    value="1"/>
+                        <type xmi:idref="EAJava_Subject"/>
+                    </ownedAttribute>
+                    <ownedAttribute xmi:type="uml:Property" xmi:id="EAID_D1A840B6_D53D_41db_9974_2E7F80153432"
+                                    name="IsVaccinated" visibility="private" isStatic="false" isReadOnly="false"
+                                    isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+                        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000013_D53D_41db_9974_2E7F80153432"
+                                    value="1"/>
+                        <upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000014_D53D_41db_9974_2E7F80153432"
+                                    value="1"/>
+                        <type xmi:idref="EAJava_boolean"/>
+                    </ownedAttribute>
+                    <ownedAttribute xmi:type="uml:Property" xmi:id="EAID_D1E36A86_0CD2_4c2f_80DA_E234EB8F310B"
+                                    name="Name" visibility="public" isStatic="false" isReadOnly="false"
+                                    isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+                        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000015_0CD2_4c2f_80DA_E234EB8F310B"
+                                    value="1"/>
+                        <upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000016_0CD2_4c2f_80DA_E234EB8F310B"
+                                    value="1"/>
+                        <type xmi:idref="EAJava_string"/>
+                    </ownedAttribute>
+                    <ownedAttribute xmi:type="uml:Property" xmi:id="EAID_AAF21212_B72A_4575_AEA9_36698E805B56"
+                                    name="VaccinationDate" visibility="private" isStatic="false" isReadOnly="false"
+                                    isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+                        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000017_B72A_4575_AEA9_36698E805B56"
+                                    value="1"/>
+                        <upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000018_B72A_4575_AEA9_36698E805B56"
+                                    value="1"/>
+                        <type xmi:idref="EAJava_string"/>
+                    </ownedAttribute>
+                    <ownedOperation xmi:id="EAID_83ACC4A3_A6A9_449a_A792_25CDB9311061" name="ReceiveVaccine"
+                                    visibility="public" concurrency="sequential">
+                        <ownedParameter xmi:id="EAID_758E17D9_5002_4952_8B68_8D6532513A13" name="Date" direction="in"
+                                        isStream="false" isException="false" isOrdered="false" isUnique="true"
+                                        type="EAJava_string"/>
+                        <ownedParameter xmi:id="EAID_RT000000_A6A9_449a_A792_25CDB9311061" name="return"
+                                        direction="return" type="EAJava_void"/>
+                    </ownedOperation>
+                    <ownedOperation xmi:id="EAID_D09BFC9A_DC8E_46a3_8B74_03C50340EE8C" name="SetVaccinationDate"
+                                    visibility="public" concurrency="sequential">
+                        <ownedParameter xmi:id="EAID_CD7607BD_5408_4669_8B7F_65AE92511744" name="Date" direction="in"
+                                        isStream="false" isException="false" isOrdered="false" isUnique="true"
+                                        type="EAJava_string"/>
+                        <ownedParameter xmi:id="EAID_RT000000_DC8E_46a3_8B74_03C50340EE8C" name="return"
+                                        direction="return" type="EAJava_void"/>
+                    </ownedOperation>
+                    <generalization xmi:type="uml:Generalization" xmi:id="EAID_65068559_4ED0_44b5_9D3F_29177B531DFC"
+                                    general="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333"/>
+                </packagedElement>
+                <packagedElement xmi:type="uml:Association" xmi:id="EAID_86FCC147_C5D4_4a82_A325_0E10CE4F703E"
+                                 visibility="public">
+                    <memberEnd xmi:idref="EAID_dstFCC147_C5D4_4a82_A325_0E10CE4F703E"/>
+                    <ownedEnd xmi:type="uml:Property" xmi:id="EAID_dstFCC147_C5D4_4a82_A325_0E10CE4F703E"
+                              visibility="public" association="EAID_86FCC147_C5D4_4a82_A325_0E10CE4F703E"
+                              isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true"
+                              isDerivedUnion="false" aggregation="none">
+                        <type xmi:idref="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"/>
+                        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000019__C5D4_4a82_A325_0E10CE4F703E"
+                                    value="1"/>
+                        <upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000020__C5D4_4a82_A325_0E10CE4F703E"
+                                    value="1"/>
+                    </ownedEnd>
+                    <memberEnd xmi:idref="EAID_srcFCC147_C5D4_4a82_A325_0E10CE4F703E"/>
+                    <ownedEnd xmi:type="uml:Property" xmi:id="EAID_srcFCC147_C5D4_4a82_A325_0E10CE4F703E"
+                              visibility="public" association="EAID_86FCC147_C5D4_4a82_A325_0E10CE4F703E"
+                              isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true"
+                              isDerivedUnion="false" aggregation="none">
+                        <type xmi:idref="EAID_F1713CB3_4B2C_424f_81EF_F7D66B687E7A"/>
+                    </ownedEnd>
+                </packagedElement>
+                <packagedElement xmi:type="uml:Class" xmi:id="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333" name="Observer"
+                                 visibility="public">
+                    <ownedOperation xmi:id="EAID_AEC084ED_DC33_4f10_B5D6_DA913E5F8C00" name="ReceiveVaccine"
+                                    visibility="public" concurrency="sequential">
+                        <ownedParameter xmi:id="EAID_6B181763_23A6_4314_8A6C_200D34675EEF" name="Date" direction="in"
+                                        isStream="false" isException="false" isOrdered="false" isUnique="true"
+                                        type="EAJava_string"/>
+                        <ownedParameter xmi:id="EAID_RT000000_DC33_4f10_B5D6_DA913E5F8C00" name="return"
+                                        direction="return" type="EAJava_void"/>
+                    </ownedOperation>
+                    <ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dstBB704C_281C_43c3_86CA_CC04AC1ACC80"
+                                    visibility="public" association="EAID_63BB704C_281C_43c3_86CA_CC04AC1ACC80"
+                                    isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false"
+                                    isUnique="true" isDerivedUnion="false" aggregation="none">
+                        <type xmi:idref="EAID_8CC4A6AA_45DB_44d3_8630_693082503FA2"/>
+                    </ownedAttribute>
+                </packagedElement>
+                <packagedElement xmi:type="uml:Association" xmi:id="EAID_63BB704C_281C_43c3_86CA_CC04AC1ACC80"
+                                 visibility="public">
+                    <memberEnd xmi:idref="EAID_dstBB704C_281C_43c3_86CA_CC04AC1ACC80"/>
+                    <memberEnd xmi:idref="EAID_srcBB704C_281C_43c3_86CA_CC04AC1ACC80"/>
+                    <ownedEnd xmi:type="uml:Property" xmi:id="EAID_srcBB704C_281C_43c3_86CA_CC04AC1ACC80"
+                              visibility="public" association="EAID_63BB704C_281C_43c3_86CA_CC04AC1ACC80"
+                              isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true"
+                              isDerivedUnion="false" aggregation="shared">
+                        <type xmi:idref="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333"/>
+                        <lowerValue xmi:type="uml:LiteralUnlimitedNatural"
+                                    xmi:id="EAID_LI000021__281C_43c3_86CA_CC04AC1ACC80" value="-1"/>
+                        <upperValue xmi:type="uml:LiteralUnlimitedNatural"
+                                    xmi:id="EAID_LI000022__281C_43c3_86CA_CC04AC1ACC80" value="-1"/>
+                    </ownedEnd>
+                </packagedElement>
+                <packagedElement xmi:type="uml:Class" xmi:id="EAID_8CC4A6AA_45DB_44d3_8630_693082503FA2" name="Subject"
+                                 visibility="public">
+                    <ownedOperation xmi:id="EAID_07E22FA3_D872_4e69_BF13_B316A911EE40" name="Register"
+                                    visibility="public" concurrency="sequential">
+                        <ownedParameter xmi:id="EAID_0533C390_947B_4297_B9EF_59FC7B023EAB" name="Obs" direction="in"
+                                        isStream="false" isException="false" isOrdered="false" isUnique="true"
+                                        type="EAJava_Observer"/>
+                        <ownedParameter xmi:id="EAID_F2BB411F_D30B_4771_9D9D_6FAEB540D1F1" name="Date" direction="in"
+                                        isStream="false" isException="false" isOrdered="false" isUnique="true"
+                                        type="EAJava_string"/>
+                        <ownedParameter xmi:id="EAID_RT000000_D872_4e69_BF13_B316A911EE40" name="return"
+                                        direction="return" type="EAJava_void"/>
+                    </ownedOperation>
+                    <ownedOperation xmi:id="EAID_DDD53624_4DCA_41fa_B180_044FE9B3386A" name="Unregister"
+                                    visibility="public" concurrency="sequential">
+                        <ownedParameter xmi:id="EAID_7BF9FDD8_8153_442d_B132_9DD170BB0C2A" name="Obs" direction="in"
+                                        isStream="false" isException="false" isOrdered="false" isUnique="true"
+                                        type="EAJava_Observer"/>
+                        <ownedParameter xmi:id="EAID_RT000000_4DCA_41fa_B180_044FE9B3386A" name="return"
+                                        direction="return" type="EAJava_void"/>
+                    </ownedOperation>
+                    <ownedOperation xmi:id="EAID_526929F8_B1C3_4461_A9A9_A5B7718E3085" name="VaccinateAnimals"
+                                    visibility="public" concurrency="sequential">
+                        <ownedParameter xmi:id="EAID_RT000000_B1C3_4461_A9A9_A5B7718E3085" name="return"
+                                        direction="return" type="EAJava_void"/>
+                    </ownedOperation>
+                </packagedElement>
+                <packagedElement xmi:type="uml:Class" xmi:id="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"
+                                 name="Veterinarian" visibility="public">
+                    <ownedAttribute xmi:type="uml:Property" xmi:id="EAID_14201902_5E0B_46fe_96A9_DA1F2A8AE880"
+                                    name="CurrentDate" visibility="private" isStatic="false" isReadOnly="false"
+                                    isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+                        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000023_5E0B_46fe_96A9_DA1F2A8AE880"
+                                    value="1"/>
+                        <upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000024_5E0B_46fe_96A9_DA1F2A8AE880"
+                                    value="1"/>
+                        <type xmi:idref="EAJava_string"/>
+                    </ownedAttribute>
+                    <ownedAttribute xmi:type="uml:Property" xmi:id="EAID_4467CEFA_1941_4403_BC8E_72FD0823B647"
+                                    name="RegisteredAnimals" visibility="private" isStatic="false" isReadOnly="false"
+                                    isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+                        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000025_1941_4403_BC8E_72FD0823B647"
+                                    value="1"/>
+                        <upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000026_1941_4403_BC8E_72FD0823B647"
+                                    value="1"/>
+                        <type xmi:idref="EAJava_Observer__"/>
+                    </ownedAttribute>
+                    <ownedOperation xmi:id="EAID_97118E44_C241_4b72_BBB2_99397FE7CBDF" name="Register"
+                                    visibility="public" concurrency="sequential">
+                        <ownedParameter xmi:id="EAID_0EA57E46_2FB5_48ca_9DE2_CE3F4EFB98D3" name="Obs" direction="in"
+                                        isStream="false" isException="false" isOrdered="false" isUnique="true"
+                                        type="EAJava_Observer"/>
+                        <ownedParameter xmi:id="EAID_6DB3EFF0_9BE7_4744_ACA6_5F36DF934946" name="Date" direction="in"
+                                        isStream="false" isException="false" isOrdered="false" isUnique="true"
+                                        type="EAJava_string"/>
+                        <ownedParameter xmi:id="EAID_RT000000_C241_4b72_BBB2_99397FE7CBDF" name="return"
+                                        direction="return" type="EAJava_void"/>
+                    </ownedOperation>
+                    <ownedOperation xmi:id="EAID_91AAF848_8C61_43a3_962B_3943F734A4B5" name="Unregister"
+                                    visibility="public" concurrency="sequential">
+                        <ownedParameter xmi:id="EAID_6B9733DE_2360_497e_BC10_309BC80EE908" name="Obs" direction="in"
+                                        isStream="false" isException="false" isOrdered="false" isUnique="true"
+                                        type="EAJava_Observer"/>
+                        <ownedParameter xmi:id="EAID_RT000000_8C61_43a3_962B_3943F734A4B5" name="return"
+                                        direction="return" type="EAJava_void"/>
+                    </ownedOperation>
+                    <ownedOperation xmi:id="EAID_C5946BF3_0891_4898_9178_00F7C212FE31" name="VaccinateAnimals"
+                                    visibility="public" concurrency="sequential">
+                        <ownedParameter xmi:id="EAID_RT000000_0891_4898_9178_00F7C212FE31" name="return"
+                                        direction="return" type="EAJava_void"/>
+                    </ownedOperation>
+                    <ownedOperation xmi:id="EAID_C9AB9C8A_8DE7_4322_925C_079029F8FFE3" name="SetDate"
+                                    visibility="public" concurrency="sequential">
+                        <ownedParameter xmi:id="EAID_C8162ACC_68C4_45b4_B929_98B252C4D04C" name="Date" direction="in"
+                                        isStream="false" isException="false" isOrdered="false" isUnique="true"
+                                        type="EAJava_string"/>
+                        <ownedParameter xmi:id="EAID_RT000000_8DE7_4322_925C_079029F8FFE3" name="return"
+                                        direction="return" type="EAJava_void"/>
+                    </ownedOperation>
+                    <generalization xmi:type="uml:Generalization" xmi:id="EAID_50C86063_0D5F_4132_85F6_87B268A63993"
+                                    general="EAID_8CC4A6AA_45DB_44d3_8630_693082503FA2"/>
+                </packagedElement>
+            </packagedElement>
+        </packagedElement>
+    </uml:Model>
+    <xmi:Extension extender="Enterprise Architect" extenderID="6.5">
+        <elements>
+            <element xmi:idref="EAPK_325FEB78_780A_4e28_9FC3_D1E457A6B48F">
+                <packageproperties version="1.0" tpos="3"/>
+                <paths/>
+                <times created="2022-04-08 00:00:00" modified="2022-04-08 00:00:00"/>
+                <flags iscontrolled="FALSE" isprotected="FALSE" usedtd="FALSE" logxml="FALSE"
+                       packageFlags="isModel=1;"/>
+            </element>
+            <element xmi:idref="EAPK_66045E95_18E1_469c_9C94_FD84B890F3EF" xmi:type="uml:Package" name="Diagram"
+                     scope="public">
+                <model package2="EAID_66045E95_18E1_469c_9C94_FD84B890F3EF"
+                       package="EAPK_325FEB78_780A_4e28_9FC3_D1E457A6B48F" tpos="0" ea_localid="3"
+                       ea_eleType="package"/>
+                <properties isSpecification="false" sType="Package" nType="0" scope="public"/>
+                <project author="lukas" version="1.0" phase="1.0" created="2022-04-08 09:46:21"
+                         modified="2022-04-08 09:46:21" complexity="1" status="Proposed"/>
+                <code gentype="Java"/>
+                <style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+                <tags/>
+                <xrefs/>
+                <extendedProperties tagged="0" package_name="Observer"/>
+                <packageproperties version="1.0"/>
+                <paths/>
+                <times created="2022-04-08 09:46:21" modified="2022-04-08 09:46:21"/>
+                <flags iscontrolled="FALSE" isprotected="FALSE" usedtd="FALSE" logxml="FALSE"
+                       packageFlags="isModel=1;VICON=3;"/>
+            </element>
+            <element xmi:idref="EAID_DAD998C8_027B_48c2_AA0F_4F9FEDCEAEF2" xmi:type="uml:Class" name="Cat"
+                     scope="public">
+                <model package="EAPK_66045E95_18E1_469c_9C94_FD84B890F3EF" tpos="0" ea_localid="7"
+                       ea_eleType="element"/>
+                <properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false"
+                            isAbstract="false" isActive="false"/>
+                <project author="lukas" version="1.0" phase="1.0" created="2022-04-08 09:58:16"
+                         modified="2022-04-08 09:58:19" complexity="1" status="Proposed"/>
+                <code product_name="Java" gentype="Java"/>
+                <style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+                <tags/>
+                <xrefs/>
+                <extendedProperties tagged="0" package_name="Diagram"/>
+                <attributes>
+                    <attribute xmi:idref="EAID_424614F5_3CDD_4166_AA9D_7E2C69AE1976" name="Veterinarian"
+                               scope="Private">
+                        <initial/>
+                        <documentation/>
+                        <model ea_localid="7" ea_guid="{424614F5-3CDD-4166-AA9D-7E2C69AE1976}"/>
+                        <properties type="Subject" collection="false" duplicates="0" changeability="changeable"/>
+                        <coords ordered="0"/>
+                        <containment containment="Not Specified" position="0"/>
+                        <stereotype/>
+                        <bounds lower="1" upper="1"/>
+                        <options/>
+                        <style/>
+                        <styleex value="volatile=0;"/>
+                        <tags/>
+                        <xrefs/>
+                    </attribute>
+                    <attribute xmi:idref="EAID_BEF49FFF_9B63_4fe4_B012_2614CD3F755B" name="IsVaccinated"
+                               scope="Private">
+                        <initial/>
+                        <documentation/>
+                        <model ea_localid="8" ea_guid="{BEF49FFF-9B63-4fe4-B012-2614CD3F755B}"/>
+                        <properties type="boolean" collection="false" duplicates="0" changeability="changeable"/>
+                        <coords ordered="0"/>
+                        <containment containment="Not Specified" position="1"/>
+                        <stereotype/>
+                        <bounds lower="1" upper="1"/>
+                        <options/>
+                        <style/>
+                        <styleex value="volatile=0;"/>
+                        <tags/>
+                        <xrefs/>
+                    </attribute>
+                    <attribute xmi:idref="EAID_3B7ACAC7_7A13_4933_A881_E427E529A833" name="Name" scope="Public">
+                        <initial/>
+                        <documentation/>
+                        <model ea_localid="9" ea_guid="{3B7ACAC7-7A13-4933-A881-E427E529A833}"/>
+                        <properties type="string" collection="false" duplicates="0" changeability="changeable"/>
+                        <coords ordered="0"/>
+                        <containment containment="Not Specified" position="2"/>
+                        <stereotype/>
+                        <bounds lower="1" upper="1"/>
+                        <options/>
+                        <style/>
+                        <styleex value="volatile=0;"/>
+                        <tags/>
+                        <xrefs/>
+                    </attribute>
+                    <attribute xmi:idref="EAID_A7EDF1D3_C73E_4ec7_AD21_32D6157D04BF" name="VaccinationDate"
+                               scope="Private">
+                        <initial/>
+                        <documentation/>
+                        <model ea_localid="10" ea_guid="{A7EDF1D3-C73E-4ec7-AD21-32D6157D04BF}"/>
+                        <properties type="string" collection="false" duplicates="0" changeability="changeable"/>
+                        <coords ordered="0"/>
+                        <containment containment="Not Specified" position="3"/>
+                        <stereotype/>
+                        <bounds lower="1" upper="1"/>
+                        <options/>
+                        <style/>
+                        <styleex value="volatile=0;"/>
+                        <tags/>
+                        <xrefs/>
+                    </attribute>
+                </attributes>
+                <operations>
+                    <operation xmi:idref="EAID_EB3535C1_2309_4117_8EB4_C197D939D8C7" name="ReceiveVaccine"
+                               scope="Public">
+                        <properties position="0"/>
+                        <stereotype/>
+                        <model ea_guid="{EB3535C1-2309-4117-8EB4-C197D939D8C7}" ea_localid="12"/>
+                        <type type="void" const="false" static="false" isAbstract="false" synchronised="0"
+                              concurrency="Sequential" pure="0" isQuery="false"/>
+                        <behaviour/>
+                        <code/>
+                        <style/>
+                        <styleex/>
+                        <documentation/>
+                        <tags/>
+                        <parameters>
+                            <parameter xmi:idref="EAID_RETURNID_2309_4117_8EB4_C197D939D8C7" visibility="public">
+                                <properties pos="0" type="void" const="false"
+                                            ea_guid="{RETURNID-2309-4117-8EB4-C197D939D8C7}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                            <parameter xmi:idref="EAID_5F067FD1_4D4A_472a_B573_FF33C0A28BFE" visibility="public">
+                                <properties pos="0" type="string" const="false"
+                                            ea_guid="{5F067FD1-4D4A-472a-B573-FF33C0A28BFE}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                        </parameters>
+                        <xrefs/>
+                    </operation>
+                    <operation xmi:idref="EAID_29EE7165_649D_42ea_84FE_FAA5D9239B1A" name="SetVaccinationDate"
+                               scope="Public">
+                        <properties position="1"/>
+                        <stereotype/>
+                        <model ea_guid="{29EE7165-649D-42ea-84FE-FAA5D9239B1A}" ea_localid="13"/>
+                        <type type="void" const="false" static="false" isAbstract="false" synchronised="0"
+                              concurrency="Sequential" pure="0" isQuery="false"/>
+                        <behaviour/>
+                        <code/>
+                        <style/>
+                        <styleex/>
+                        <documentation/>
+                        <tags/>
+                        <parameters>
+                            <parameter xmi:idref="EAID_RETURNID_649D_42ea_84FE_FAA5D9239B1A" visibility="public">
+                                <properties pos="0" type="void" const="false"
+                                            ea_guid="{RETURNID-649D-42ea-84FE-FAA5D9239B1A}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                            <parameter xmi:idref="EAID_764AE385_C7D1_44c5_BA68_1D683628DCB1" visibility="public">
+                                <properties pos="0" type="string" const="false"
+                                            ea_guid="{764AE385-C7D1-44c5-BA68-1D683628DCB1}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                        </parameters>
+                        <xrefs/>
+                    </operation>
+                </operations>
+                <links>
+                    <Association xmi:id="EAID_95FC3A15_F721_4f58_AA54_1365A0C7060A"
+                                 start="EAID_DAD998C8_027B_48c2_AA0F_4F9FEDCEAEF2"
+                                 end="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"/>
+                    <Generalization xmi:id="EAID_AA42D1A6_63A6_4706_A7C0_E87B2EBFC02B"
+                                    start="EAID_DAD998C8_027B_48c2_AA0F_4F9FEDCEAEF2"
+                                    end="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333"/>
+                </links>
+            </element>
+            <element xmi:idref="EAID_F162BCFE_FF1A_4032_AAA7_68BB4F415C2D" xmi:type="uml:Class" name="Client"
+                     scope="public">
+                <model package="EAPK_66045E95_18E1_469c_9C94_FD84B890F3EF" tpos="0" ea_localid="5"
+                       ea_eleType="element"/>
+                <properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false"
+                            isAbstract="false" isActive="false"/>
+                <project author="lukas" version="1.0" phase="1.0" created="2022-04-08 09:53:53"
+                         modified="2022-04-08 09:53:57" complexity="1" status="Proposed"/>
+                <code product_name="Java" gentype="Java"/>
+                <style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+                <tags/>
+                <xrefs/>
+                <extendedProperties tagged="0" package_name="Diagram"/>
+                <operations>
+                    <operation xmi:idref="EAID_C26EFF17_402D_43bb_9256_0A08F4587A21" name="StartCase" scope="Public">
+                        <properties position="0"/>
+                        <stereotype/>
+                        <model ea_guid="{C26EFF17-402D-43bb-9256-0A08F4587A21}" ea_localid="9"/>
+                        <type type="void" const="false" static="false" isAbstract="false" synchronised="0"
+                              concurrency="Sequential" pure="0" isQuery="false"/>
+                        <behaviour/>
+                        <code/>
+                        <style/>
+                        <styleex/>
+                        <documentation/>
+                        <tags/>
+                        <parameters>
+                            <parameter xmi:idref="EAID_RETURNID_402D_43bb_9256_0A08F4587A21" visibility="public">
+                                <properties pos="0" type="void" const="false"
+                                            ea_guid="{RETURNID-402D-43bb-9256-0A08F4587A21}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                        </parameters>
+                        <xrefs/>
+                    </operation>
+                </operations>
+                <links>
+                    <Association xmi:id="EAID_483B4941_ECF7_4644_823F_FFB89BAC9072"
+                                 start="EAID_F162BCFE_FF1A_4032_AAA7_68BB4F415C2D"
+                                 end="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"/>
+                </links>
+            </element>
+            <element xmi:idref="EAID_F1713CB3_4B2C_424f_81EF_F7D66B687E7A" xmi:type="uml:Class" name="Dog"
+                     scope="public">
+                <model package="EAPK_66045E95_18E1_469c_9C94_FD84B890F3EF" tpos="0" ea_localid="6"
+                       ea_eleType="element"/>
+                <properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false"
+                            isAbstract="false" isActive="false"/>
+                <project author="lukas" version="1.0" phase="1.0" created="2022-04-08 09:55:18"
+                         modified="2022-04-08 09:55:26" complexity="1" status="Proposed"/>
+                <code product_name="Java" gentype="Java"/>
+                <style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+                <tags/>
+                <xrefs/>
+                <extendedProperties tagged="0" package_name="Diagram"/>
+                <attributes>
+                    <attribute xmi:idref="EAID_26A8518E_DC59_4657_B185_83CE261C8336" name="Veterinarian"
+                               scope="Private">
+                        <initial/>
+                        <documentation/>
+                        <model ea_localid="3" ea_guid="{26A8518E-DC59-4657-B185-83CE261C8336}"/>
+                        <properties type="Subject" collection="false" duplicates="0" changeability="changeable"/>
+                        <coords ordered="0"/>
+                        <containment containment="Not Specified" position="0"/>
+                        <stereotype/>
+                        <bounds lower="1" upper="1"/>
+                        <options/>
+                        <style/>
+                        <styleex value="volatile=0;"/>
+                        <tags/>
+                        <xrefs/>
+                    </attribute>
+                    <attribute xmi:idref="EAID_D1A840B6_D53D_41db_9974_2E7F80153432" name="IsVaccinated"
+                               scope="Private">
+                        <initial/>
+                        <documentation/>
+                        <model ea_localid="4" ea_guid="{D1A840B6-D53D-41db-9974-2E7F80153432}"/>
+                        <properties type="boolean" collection="false" duplicates="0" changeability="changeable"/>
+                        <coords ordered="0"/>
+                        <containment containment="Not Specified" position="1"/>
+                        <stereotype/>
+                        <bounds lower="1" upper="1"/>
+                        <options/>
+                        <style/>
+                        <styleex value="volatile=0;"/>
+                        <tags/>
+                        <xrefs/>
+                    </attribute>
+                    <attribute xmi:idref="EAID_D1E36A86_0CD2_4c2f_80DA_E234EB8F310B" name="Name" scope="Public">
+                        <initial/>
+                        <documentation/>
+                        <model ea_localid="5" ea_guid="{D1E36A86-0CD2-4c2f-80DA-E234EB8F310B}"/>
+                        <properties type="string" collection="false" duplicates="0" changeability="changeable"/>
+                        <coords ordered="0"/>
+                        <containment containment="Not Specified" position="2"/>
+                        <stereotype/>
+                        <bounds lower="1" upper="1"/>
+                        <options/>
+                        <style/>
+                        <styleex value="volatile=0;"/>
+                        <tags/>
+                        <xrefs/>
+                    </attribute>
+                    <attribute xmi:idref="EAID_AAF21212_B72A_4575_AEA9_36698E805B56" name="VaccinationDate"
+                               scope="Private">
+                        <initial/>
+                        <documentation/>
+                        <model ea_localid="6" ea_guid="{AAF21212-B72A-4575-AEA9-36698E805B56}"/>
+                        <properties type="string" collection="false" duplicates="0" changeability="changeable"/>
+                        <coords ordered="0"/>
+                        <containment containment="Not Specified" position="3"/>
+                        <stereotype/>
+                        <bounds lower="1" upper="1"/>
+                        <options/>
+                        <style/>
+                        <styleex value="volatile=0;"/>
+                        <tags/>
+                        <xrefs/>
+                    </attribute>
+                </attributes>
+                <operations>
+                    <operation xmi:idref="EAID_83ACC4A3_A6A9_449a_A792_25CDB9311061" name="ReceiveVaccine"
+                               scope="Public">
+                        <properties position="0"/>
+                        <stereotype/>
+                        <model ea_guid="{83ACC4A3-A6A9-449a-A792-25CDB9311061}" ea_localid="10"/>
+                        <type type="void" const="false" static="false" isAbstract="false" synchronised="0"
+                              concurrency="Sequential" pure="0" isQuery="false"/>
+                        <behaviour/>
+                        <code/>
+                        <style/>
+                        <styleex/>
+                        <documentation/>
+                        <tags/>
+                        <parameters>
+                            <parameter xmi:idref="EAID_RETURNID_A6A9_449a_A792_25CDB9311061" visibility="public">
+                                <properties pos="0" type="void" const="false"
+                                            ea_guid="{RETURNID-A6A9-449a-A792-25CDB9311061}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                            <parameter xmi:idref="EAID_758E17D9_5002_4952_8B68_8D6532513A13" visibility="public">
+                                <properties pos="0" type="string" const="false"
+                                            ea_guid="{758E17D9-5002-4952-8B68-8D6532513A13}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                        </parameters>
+                        <xrefs/>
+                    </operation>
+                    <operation xmi:idref="EAID_D09BFC9A_DC8E_46a3_8B74_03C50340EE8C" name="SetVaccinationDate"
+                               scope="Public">
+                        <properties position="1"/>
+                        <stereotype/>
+                        <model ea_guid="{D09BFC9A-DC8E-46a3-8B74-03C50340EE8C}" ea_localid="11"/>
+                        <type type="void" const="false" static="false" isAbstract="false" synchronised="0"
+                              concurrency="Sequential" pure="0" isQuery="false"/>
+                        <behaviour/>
+                        <code/>
+                        <style/>
+                        <styleex/>
+                        <documentation/>
+                        <tags/>
+                        <parameters>
+                            <parameter xmi:idref="EAID_RETURNID_DC8E_46a3_8B74_03C50340EE8C" visibility="public">
+                                <properties pos="0" type="void" const="false"
+                                            ea_guid="{RETURNID-DC8E-46a3-8B74-03C50340EE8C}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                            <parameter xmi:idref="EAID_CD7607BD_5408_4669_8B7F_65AE92511744" visibility="public">
+                                <properties pos="0" type="string" const="false"
+                                            ea_guid="{CD7607BD-5408-4669-8B7F-65AE92511744}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                        </parameters>
+                        <xrefs/>
+                    </operation>
+                </operations>
+                <links>
+                    <Generalization xmi:id="EAID_65068559_4ED0_44b5_9D3F_29177B531DFC"
+                                    start="EAID_F1713CB3_4B2C_424f_81EF_F7D66B687E7A"
+                                    end="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333"/>
+                    <Association xmi:id="EAID_86FCC147_C5D4_4a82_A325_0E10CE4F703E"
+                                 start="EAID_F1713CB3_4B2C_424f_81EF_F7D66B687E7A"
+                                 end="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"/>
+                </links>
+            </element>
+            <element xmi:idref="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333" xmi:type="uml:Class" name="Observer"
+                     scope="public">
+                <model package="EAPK_66045E95_18E1_469c_9C94_FD84B890F3EF" tpos="0" ea_localid="3"
+                       ea_eleType="element"/>
+                <properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false"
+                            isAbstract="false" isActive="false"/>
+                <project author="lukas" version="1.0" phase="1.0" created="2022-04-08 09:49:50"
+                         modified="2022-04-08 09:50:02" complexity="1" status="Proposed"/>
+                <code product_name="Java" gentype="Java"/>
+                <style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+                <tags/>
+                <xrefs/>
+                <extendedProperties tagged="0" package_name="Diagram"/>
+                <operations>
+                    <operation xmi:idref="EAID_AEC084ED_DC33_4f10_B5D6_DA913E5F8C00" name="ReceiveVaccine"
+                               scope="Public">
+                        <properties position="0"/>
+                        <stereotype/>
+                        <model ea_guid="{AEC084ED-DC33-4f10-B5D6-DA913E5F8C00}" ea_localid="4"/>
+                        <type type="void" const="false" static="false" isAbstract="false" synchronised="0"
+                              concurrency="Sequential" pure="0" isQuery="false"/>
+                        <behaviour/>
+                        <code/>
+                        <style/>
+                        <styleex/>
+                        <documentation/>
+                        <tags/>
+                        <parameters>
+                            <parameter xmi:idref="EAID_RETURNID_DC33_4f10_B5D6_DA913E5F8C00" visibility="public">
+                                <properties pos="0" type="void" const="false"
+                                            ea_guid="{RETURNID-DC33-4f10-B5D6-DA913E5F8C00}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                            <parameter xmi:idref="EAID_6B181763_23A6_4314_8A6C_200D34675EEF" visibility="public">
+                                <properties pos="0" type="string" const="false"
+                                            ea_guid="{6B181763-23A6-4314-8A6C-200D34675EEF}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                        </parameters>
+                        <xrefs/>
+                    </operation>
+                </operations>
+                <links>
+                    <Aggregation xmi:id="EAID_63BB704C_281C_43c3_86CA_CC04AC1ACC80"
+                                 start="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333"
+                                 end="EAID_8CC4A6AA_45DB_44d3_8630_693082503FA2"/>
+                    <Generalization xmi:id="EAID_65068559_4ED0_44b5_9D3F_29177B531DFC"
+                                    start="EAID_F1713CB3_4B2C_424f_81EF_F7D66B687E7A"
+                                    end="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333"/>
+                    <Generalization xmi:id="EAID_AA42D1A6_63A6_4706_A7C0_E87B2EBFC02B"
+                                    start="EAID_DAD998C8_027B_48c2_AA0F_4F9FEDCEAEF2"
+                                    end="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333"/>
+                </links>
+            </element>
+            <element xmi:idref="EAID_8CC4A6AA_45DB_44d3_8630_693082503FA2" xmi:type="uml:Class" name="Subject"
+                     scope="public">
+                <model package="EAPK_66045E95_18E1_469c_9C94_FD84B890F3EF" tpos="0" ea_localid="2"
+                       ea_eleType="element"/>
+                <properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false"
+                            isAbstract="false" isActive="false"/>
+                <project author="lukas" version="1.0" phase="1.0" created="2022-04-08 09:47:07"
+                         modified="2022-04-08 09:47:32" complexity="1" status="Proposed"/>
+                <code product_name="Java" gentype="Java"/>
+                <style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+                <tags/>
+                <xrefs/>
+                <extendedProperties tagged="0" package_name="Diagram"/>
+                <operations>
+                    <operation xmi:idref="EAID_07E22FA3_D872_4e69_BF13_B316A911EE40" name="Register" scope="Public">
+                        <properties position="0"/>
+                        <stereotype/>
+                        <model ea_guid="{07E22FA3-D872-4e69-BF13-B316A911EE40}" ea_localid="1"/>
+                        <type type="void" const="false" static="false" isAbstract="false" synchronised="0"
+                              concurrency="Sequential" pure="0" isQuery="false"/>
+                        <behaviour/>
+                        <code/>
+                        <style/>
+                        <styleex/>
+                        <documentation/>
+                        <tags/>
+                        <parameters>
+                            <parameter xmi:idref="EAID_RETURNID_D872_4e69_BF13_B316A911EE40" visibility="public">
+                                <properties pos="0" type="void" const="false"
+                                            ea_guid="{RETURNID-D872-4e69-BF13-B316A911EE40}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                            <parameter xmi:idref="EAID_0533C390_947B_4297_B9EF_59FC7B023EAB" visibility="public">
+                                <properties pos="0" type="Observer" const="false"
+                                            ea_guid="{0533C390-947B-4297-B9EF-59FC7B023EAB}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                            <parameter xmi:idref="EAID_F2BB411F_D30B_4771_9D9D_6FAEB540D1F1" visibility="public">
+                                <properties pos="1" type="string" const="false"
+                                            ea_guid="{F2BB411F-D30B-4771-9D9D-6FAEB540D1F1}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                        </parameters>
+                        <xrefs/>
+                    </operation>
+                    <operation xmi:idref="EAID_DDD53624_4DCA_41fa_B180_044FE9B3386A" name="Unregister" scope="Public">
+                        <properties position="1"/>
+                        <stereotype/>
+                        <model ea_guid="{DDD53624-4DCA-41fa-B180-044FE9B3386A}" ea_localid="2"/>
+                        <type type="void" const="false" static="false" isAbstract="false" synchronised="0"
+                              concurrency="Sequential" pure="0" isQuery="false"/>
+                        <behaviour/>
+                        <code/>
+                        <style/>
+                        <styleex/>
+                        <documentation/>
+                        <tags/>
+                        <parameters>
+                            <parameter xmi:idref="EAID_RETURNID_4DCA_41fa_B180_044FE9B3386A" visibility="public">
+                                <properties pos="0" type="void" const="false"
+                                            ea_guid="{RETURNID-4DCA-41fa-B180-044FE9B3386A}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                            <parameter xmi:idref="EAID_7BF9FDD8_8153_442d_B132_9DD170BB0C2A" visibility="public">
+                                <properties pos="0" type="Observer" const="false"
+                                            ea_guid="{7BF9FDD8-8153-442d-B132-9DD170BB0C2A}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                        </parameters>
+                        <xrefs/>
+                    </operation>
+                    <operation xmi:idref="EAID_526929F8_B1C3_4461_A9A9_A5B7718E3085" name="VaccinateAnimals"
+                               scope="Public">
+                        <properties position="2"/>
+                        <stereotype/>
+                        <model ea_guid="{526929F8-B1C3-4461-A9A9-A5B7718E3085}" ea_localid="3"/>
+                        <type type="void" const="false" static="false" isAbstract="false" synchronised="0"
+                              concurrency="Sequential" pure="0" isQuery="false"/>
+                        <behaviour/>
+                        <code/>
+                        <style/>
+                        <styleex/>
+                        <documentation/>
+                        <tags/>
+                        <parameters>
+                            <parameter xmi:idref="EAID_RETURNID_B1C3_4461_A9A9_A5B7718E3085" visibility="public">
+                                <properties pos="0" type="void" const="false"
+                                            ea_guid="{RETURNID-B1C3-4461-A9A9-A5B7718E3085}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                        </parameters>
+                        <xrefs/>
+                    </operation>
+                </operations>
+                <links>
+                    <Generalization xmi:id="EAID_50C86063_0D5F_4132_85F6_87B268A63993"
+                                    start="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"
+                                    end="EAID_8CC4A6AA_45DB_44d3_8630_693082503FA2"/>
+                    <Aggregation xmi:id="EAID_63BB704C_281C_43c3_86CA_CC04AC1ACC80"
+                                 start="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333"
+                                 end="EAID_8CC4A6AA_45DB_44d3_8630_693082503FA2"/>
+                </links>
+            </element>
+            <element xmi:idref="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4" xmi:type="uml:Class" name="Veterinarian"
+                     scope="public">
+                <model package="EAPK_66045E95_18E1_469c_9C94_FD84B890F3EF" tpos="0" ea_localid="4"
+                       ea_eleType="element"/>
+                <properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false"
+                            isAbstract="false" isActive="false"/>
+                <project author="lukas" version="1.0" phase="1.0" created="2022-04-08 09:51:02"
+                         modified="2022-04-08 09:51:08" complexity="1" status="Proposed"/>
+                <code product_name="Java" gentype="Java"/>
+                <style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+                <tags/>
+                <xrefs/>
+                <extendedProperties tagged="0" package_name="Diagram"/>
+                <attributes>
+                    <attribute xmi:idref="EAID_14201902_5E0B_46fe_96A9_DA1F2A8AE880" name="CurrentDate" scope="Private">
+                        <initial/>
+                        <documentation/>
+                        <model ea_localid="1" ea_guid="{14201902-5E0B-46fe-96A9-DA1F2A8AE880}"/>
+                        <properties type="string" collection="false" duplicates="0" changeability="changeable"/>
+                        <coords ordered="0"/>
+                        <containment containment="Not Specified" position="0"/>
+                        <stereotype/>
+                        <bounds lower="1" upper="1"/>
+                        <options/>
+                        <style/>
+                        <styleex value="volatile=0;"/>
+                        <tags/>
+                        <xrefs/>
+                    </attribute>
+                    <attribute xmi:idref="EAID_4467CEFA_1941_4403_BC8E_72FD0823B647" name="RegisteredAnimals"
+                               scope="Private">
+                        <initial/>
+                        <documentation/>
+                        <model ea_localid="2" ea_guid="{4467CEFA-1941-4403-BC8E-72FD0823B647}"/>
+                        <properties type="Observer[]" collection="false" duplicates="0" changeability="changeable"/>
+                        <coords ordered="0"/>
+                        <containment containment="Not Specified" position="1"/>
+                        <stereotype/>
+                        <bounds lower="1" upper="1"/>
+                        <options/>
+                        <style/>
+                        <styleex value="volatile=0;"/>
+                        <tags/>
+                        <xrefs/>
+                    </attribute>
+                </attributes>
+                <operations>
+                    <operation xmi:idref="EAID_97118E44_C241_4b72_BBB2_99397FE7CBDF" name="Register" scope="Public">
+                        <properties position="0"/>
+                        <stereotype/>
+                        <model ea_guid="{97118E44-C241-4b72-BBB2-99397FE7CBDF}" ea_localid="5"/>
+                        <type type="void" const="false" static="false" isAbstract="false" synchronised="0"
+                              concurrency="Sequential" pure="0" isQuery="false"/>
+                        <behaviour/>
+                        <code/>
+                        <style/>
+                        <styleex/>
+                        <documentation/>
+                        <tags/>
+                        <parameters>
+                            <parameter xmi:idref="EAID_RETURNID_C241_4b72_BBB2_99397FE7CBDF" visibility="public">
+                                <properties pos="0" type="void" const="false"
+                                            ea_guid="{RETURNID-C241-4b72-BBB2-99397FE7CBDF}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                            <parameter xmi:idref="EAID_0EA57E46_2FB5_48ca_9DE2_CE3F4EFB98D3" visibility="public">
+                                <properties pos="0" type="Observer" const="false"
+                                            ea_guid="{0EA57E46-2FB5-48ca-9DE2-CE3F4EFB98D3}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                            <parameter xmi:idref="EAID_6DB3EFF0_9BE7_4744_ACA6_5F36DF934946" visibility="public">
+                                <properties pos="1" type="string" const="false"
+                                            ea_guid="{6DB3EFF0-9BE7-4744-ACA6-5F36DF934946}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                        </parameters>
+                        <xrefs/>
+                    </operation>
+                    <operation xmi:idref="EAID_91AAF848_8C61_43a3_962B_3943F734A4B5" name="Unregister" scope="Public">
+                        <properties position="1"/>
+                        <stereotype/>
+                        <model ea_guid="{91AAF848-8C61-43a3-962B-3943F734A4B5}" ea_localid="6"/>
+                        <type type="void" const="false" static="false" isAbstract="false" synchronised="0"
+                              concurrency="Sequential" pure="0" isQuery="false"/>
+                        <behaviour/>
+                        <code/>
+                        <style/>
+                        <styleex/>
+                        <documentation/>
+                        <tags/>
+                        <parameters>
+                            <parameter xmi:idref="EAID_RETURNID_8C61_43a3_962B_3943F734A4B5" visibility="public">
+                                <properties pos="0" type="void" const="false"
+                                            ea_guid="{RETURNID-8C61-43a3-962B-3943F734A4B5}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                            <parameter xmi:idref="EAID_6B9733DE_2360_497e_BC10_309BC80EE908" visibility="public">
+                                <properties pos="0" type="Observer" const="false"
+                                            ea_guid="{6B9733DE-2360-497e-BC10-309BC80EE908}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                        </parameters>
+                        <xrefs/>
+                    </operation>
+                    <operation xmi:idref="EAID_C5946BF3_0891_4898_9178_00F7C212FE31" name="VaccinateAnimals"
+                               scope="Public">
+                        <properties position="2"/>
+                        <stereotype/>
+                        <model ea_guid="{C5946BF3-0891-4898-9178-00F7C212FE31}" ea_localid="7"/>
+                        <type type="void" const="false" static="false" isAbstract="false" synchronised="0"
+                              concurrency="Sequential" pure="0" isQuery="false"/>
+                        <behaviour/>
+                        <code/>
+                        <style/>
+                        <styleex/>
+                        <documentation/>
+                        <tags/>
+                        <parameters>
+                            <parameter xmi:idref="EAID_RETURNID_0891_4898_9178_00F7C212FE31" visibility="public">
+                                <properties pos="0" type="void" const="false"
+                                            ea_guid="{RETURNID-0891-4898-9178-00F7C212FE31}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                        </parameters>
+                        <xrefs/>
+                    </operation>
+                    <operation xmi:idref="EAID_C9AB9C8A_8DE7_4322_925C_079029F8FFE3" name="SetDate" scope="Public">
+                        <properties position="3"/>
+                        <stereotype/>
+                        <model ea_guid="{C9AB9C8A-8DE7-4322-925C-079029F8FFE3}" ea_localid="8"/>
+                        <type type="void" const="false" static="false" isAbstract="false" synchronised="0"
+                              concurrency="Sequential" pure="0" isQuery="false"/>
+                        <behaviour/>
+                        <code/>
+                        <style/>
+                        <styleex/>
+                        <documentation/>
+                        <tags/>
+                        <parameters>
+                            <parameter xmi:idref="EAID_RETURNID_8DE7_4322_925C_079029F8FFE3" visibility="public">
+                                <properties pos="0" type="void" const="false"
+                                            ea_guid="{RETURNID-8DE7-4322-925C-079029F8FFE3}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                            <parameter xmi:idref="EAID_C8162ACC_68C4_45b4_B929_98B252C4D04C" visibility="public">
+                                <properties pos="0" type="string" const="false"
+                                            ea_guid="{C8162ACC-68C4-45b4-B929-98B252C4D04C}"/>
+                                <style/>
+                                <styleex/>
+                                <documentation/>
+                                <tags/>
+                                <xrefs/>
+                            </parameter>
+                        </parameters>
+                        <xrefs/>
+                    </operation>
+                </operations>
+                <links>
+                    <Generalization xmi:id="EAID_50C86063_0D5F_4132_85F6_87B268A63993"
+                                    start="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"
+                                    end="EAID_8CC4A6AA_45DB_44d3_8630_693082503FA2"/>
+                    <NoteLink xmi:id="EAID_3C5E6AD2_0B36_4f0f_A8D2_2B36AB9DD20E"
+                              start="EAID_0A4BB879_55E8_46fa_B816_4D7F31D92A0A"
+                              end="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"/>
+                    <Association xmi:id="EAID_483B4941_ECF7_4644_823F_FFB89BAC9072"
+                                 start="EAID_F162BCFE_FF1A_4032_AAA7_68BB4F415C2D"
+                                 end="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"/>
+                    <Association xmi:id="EAID_86FCC147_C5D4_4a82_A325_0E10CE4F703E"
+                                 start="EAID_F1713CB3_4B2C_424f_81EF_F7D66B687E7A"
+                                 end="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"/>
+                    <Association xmi:id="EAID_95FC3A15_F721_4f58_AA54_1365A0C7060A"
+                                 start="EAID_DAD998C8_027B_48c2_AA0F_4F9FEDCEAEF2"
+                                 end="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"/>
+                </links>
+            </element>
+            <element xmi:idref="EAID_0A4BB879_55E8_46fa_B816_4D7F31D92A0A" xmi:type="uml:Note" scope="public">
+                <model package="EAPK_66045E95_18E1_469c_9C94_FD84B890F3EF" tpos="0" ea_localid="8"
+                       ea_eleType="element"/>
+                <properties
+                        documentation="&lt;b&gt;foreach &lt;/b&gt;(Animal in RegisteredAnimals)&#xA;    Animal.ReceiveVaccine(CurrentDate)"
+                        isSpecification="false" sType="Note" nType="0" scope="public"/>
+                <project author="lukas" version="1.0" phase="1.0" created="2022-04-08 10:05:01"
+                         modified="2022-04-08 10:05:44" complexity="1" status="Proposed"/>
+                <code gentype="&lt;none&gt;"/>
+                <style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+                <tags/>
+                <xrefs/>
+                <extendedProperties tagged="0" package_name="Diagram"/>
+                <links>
+                    <NoteLink xmi:id="EAID_3C5E6AD2_0B36_4f0f_A8D2_2B36AB9DD20E"
+                              start="EAID_0A4BB879_55E8_46fa_B816_4D7F31D92A0A"
+                              end="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4"/>
+                </links>
+            </element>
+        </elements>
+        <connectors>
+            <connector xmi:idref="EAID_95FC3A15_F721_4f58_AA54_1365A0C7060A">
+                <source xmi:idref="EAID_DAD998C8_027B_48c2_AA0F_4F9FEDCEAEF2">
+                    <model ea_localid="7" type="Class" name="Cat"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </source>
+                <target xmi:idref="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4">
+                    <model ea_localid="4" type="Class" name="Veterinarian"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type multiplicity="1" aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </target>
+                <model ea_localid="7"/>
+                <properties ea_type="Association" direction="Unspecified"/>
+                <modifiers isRoot="false" isLeaf="false"/>
+                <parameterSubstitutions/>
+                <documentation/>
+                <appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+                <labels rb="1"/>
+                <extendedProperties virtualInheritance="0"/>
+                <style/>
+                <xrefs/>
+                <tags/>
+            </connector>
+            <connector xmi:idref="EAID_AA42D1A6_63A6_4706_A7C0_E87B2EBFC02B">
+                <source xmi:idref="EAID_DAD998C8_027B_48c2_AA0F_4F9FEDCEAEF2">
+                    <model ea_localid="7" type="Class" name="Cat"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </source>
+                <target xmi:idref="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333">
+                    <model ea_localid="3" type="Class" name="Observer"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </target>
+                <model ea_localid="5"/>
+                <properties ea_type="Generalization" direction="Source -&gt; Destination"/>
+                <parameterSubstitutions/>
+                <documentation/>
+                <appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+                <labels/>
+                <extendedProperties virtualInheritance="0"/>
+                <style/>
+                <xrefs/>
+                <tags/>
+            </connector>
+            <connector xmi:idref="EAID_483B4941_ECF7_4644_823F_FFB89BAC9072">
+                <source xmi:idref="EAID_F162BCFE_FF1A_4032_AAA7_68BB4F415C2D">
+                    <model ea_localid="5" type="Class" name="Client"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </source>
+                <target xmi:idref="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4">
+                    <model ea_localid="4" type="Class" name="Veterinarian"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </target>
+                <model ea_localid="3"/>
+                <properties ea_type="Association" direction="Source -&gt; Destination"/>
+                <modifiers isRoot="false" isLeaf="false"/>
+                <parameterSubstitutions/>
+                <documentation/>
+                <appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+                <labels/>
+                <extendedProperties/>
+                <style/>
+                <xrefs/>
+                <tags/>
+            </connector>
+            <connector xmi:idref="EAID_65068559_4ED0_44b5_9D3F_29177B531DFC">
+                <source xmi:idref="EAID_F1713CB3_4B2C_424f_81EF_F7D66B687E7A">
+                    <model ea_localid="6" type="Class" name="Dog"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </source>
+                <target xmi:idref="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333">
+                    <model ea_localid="3" type="Class" name="Observer"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </target>
+                <model ea_localid="4"/>
+                <properties ea_type="Generalization" direction="Source -&gt; Destination"/>
+                <parameterSubstitutions/>
+                <documentation/>
+                <appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+                <labels/>
+                <extendedProperties virtualInheritance="0"/>
+                <style/>
+                <xrefs/>
+                <tags/>
+            </connector>
+            <connector xmi:idref="EAID_86FCC147_C5D4_4a82_A325_0E10CE4F703E">
+                <source xmi:idref="EAID_F1713CB3_4B2C_424f_81EF_F7D66B687E7A">
+                    <model ea_localid="6" type="Class" name="Dog"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </source>
+                <target xmi:idref="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4">
+                    <model ea_localid="4" type="Class" name="Veterinarian"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type multiplicity="1" aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </target>
+                <model ea_localid="6"/>
+                <properties ea_type="Association" direction="Unspecified"/>
+                <modifiers isRoot="false" isLeaf="false"/>
+                <parameterSubstitutions/>
+                <documentation/>
+                <appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+                <labels rb="1"/>
+                <extendedProperties virtualInheritance="0"/>
+                <style/>
+                <xrefs/>
+                <tags/>
+            </connector>
+            <connector xmi:idref="EAID_63BB704C_281C_43c3_86CA_CC04AC1ACC80">
+                <source xmi:idref="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333">
+                    <model ea_localid="3" type="Class" name="Observer"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type multiplicity="*" aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </source>
+                <target xmi:idref="EAID_8CC4A6AA_45DB_44d3_8630_693082503FA2">
+                    <model ea_localid="2" type="Class" name="Subject"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type aggregation="shared" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </target>
+                <model ea_localid="1"/>
+                <properties ea_type="Aggregation" subtype="Weak" direction="Source -&gt; Destination"/>
+                <modifiers isRoot="false" isLeaf="false"/>
+                <documentation/>
+                <appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+                <labels lb="*"/>
+                <extendedProperties virtualInheritance="0"/>
+                <style/>
+                <xrefs/>
+                <tags/>
+            </connector>
+            <connector xmi:idref="EAID_50C86063_0D5F_4132_85F6_87B268A63993">
+                <source xmi:idref="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4">
+                    <model ea_localid="4" type="Class" name="Veterinarian"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </source>
+                <target xmi:idref="EAID_8CC4A6AA_45DB_44d3_8630_693082503FA2">
+                    <model ea_localid="2" type="Class" name="Subject"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </target>
+                <model ea_localid="2"/>
+                <properties ea_type="Generalization" direction="Source -&gt; Destination"/>
+                <parameterSubstitutions/>
+                <documentation/>
+                <appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+                <labels/>
+                <extendedProperties virtualInheritance="0"/>
+                <style/>
+                <xrefs/>
+                <tags/>
+            </connector>
+            <connector xmi:idref="EAID_3C5E6AD2_0B36_4f0f_A8D2_2B36AB9DD20E">
+                <source xmi:idref="EAID_0A4BB879_55E8_46fa_B816_4D7F31D92A0A">
+                    <model ea_localid="8" type="Note"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </source>
+                <target xmi:idref="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4">
+                    <model ea_localid="4" type="Class" name="Veterinarian"/>
+                    <role visibility="Public" targetScope="instance"/>
+                    <type aggregation="none" containment="Unspecified"/>
+                    <constraints/>
+                    <modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+                    <style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+                    <documentation/>
+                    <xrefs/>
+                    <tags/>
+                </target>
+                <model ea_localid="8"/>
+                <properties ea_type="NoteLink" direction="Source -&gt; Destination"/>
+                <modifiers isRoot="false" isLeaf="false"/>
+                <documentation/>
+                <appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+                <labels/>
+                <extendedProperties virtualInheritance="0"/>
+                <style/>
+                <xrefs/>
+                <tags/>
+            </connector>
+        </connectors>
+        <primitivetypes>
+            <packagedElement xmi:type="uml:Package" xmi:id="EAPrimitiveTypesPackage" name="EA_PrimitiveTypes_Package"
+                             visibility="public">
+                <packagedElement xmi:type="uml:Package" xmi:id="EAJavaTypesPackage" name="EA_Java_Types_Package"
+                                 visibility="public">
+                    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_Subject" name="Subject"
+                                     visibility="public"/>
+                    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_boolean" name="boolean"
+                                     visibility="public">
+                        <generalization xmi:type="uml:Generalization" xmi:id="EAJava_boolean_General">
+                            <general href="http://schema.omg.org/spec/UML/2.1/uml.xml#Boolean"/>
+                        </generalization>
+                    </packagedElement>
+                    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_string" name="string"
+                                     visibility="public"/>
+                    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_void" name="void" visibility="public"/>
+                    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_Observer" name="Observer"
+                                     visibility="public"/>
+                    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_Observer__" name="Observer[]"
+                                     visibility="public"/>
+                </packagedElement>
+            </packagedElement>
+        </primitivetypes>
+        <profiles/>
+        <diagrams>
+            <diagram xmi:id="EAID_72839130_642B_4fb4_8A3E_AD5041495700">
+                <model package="EAPK_66045E95_18E1_469c_9C94_FD84B890F3EF" localID="1"
+                       owner="EAPK_66045E95_18E1_469c_9C94_FD84B890F3EF"/>
+                <properties name="Observer" type="Logical"/>
+                <project author="lukas" version="1.0" created="2022-04-08 00:00:00" modified="2022-04-08 11:10:57"/>
+                <style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=1;PPgs.cy=1;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+                <style2 value="ExcludeRTF=0;DocAll=0;HideQuals=0;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=1;MatrixActive=0;SwimlanesActive=1;KanbanActive=0;MatrixLineWidth=1;MatrixLineClr=0;MatrixLocked=0;TConnectorNotation=UML 2.1;TExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ProfileData=;MDGDgm=;STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;SuppressedCompartments=;Theme=:119;SaveTag=C66B7E5D;"/>
+                <swimlanes
+                        value="locked=false;orientation=0;width=0;inbar=false;names=false;color=-1;bold=false;fcol=0;tcol=-1;ofCol=-1;ufCol=-1;hl=0;ufh=0;cls=0;SwimlaneFont=lfh:-13,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;"/>
+                <matrixitems
+                        value="locked=false;matrixactive=false;swimlanesactive=true;kanbanactive=false;width=1;clrLine=0;"/>
+                <extendedProperties/>
+                <elements>
+                    <element geometry="Left=66;Top=463;Right=256;Bottom=517;"
+                             subject="EAID_0A4BB879_55E8_46fa_B816_4D7F31D92A0A" seqno="1" style="DUID=2247E2EF;"/>
+                    <element geometry="Left=645;Top=270;Right=800;Bottom=392;"
+                             subject="EAID_DAD998C8_027B_48c2_AA0F_4F9FEDCEAEF2" seqno="2" style="DUID=2B1B23C8;"/>
+                    <element geometry="Left=447;Top=267;Right=602;Bottom=389;"
+                             subject="EAID_F1713CB3_4B2C_424f_81EF_F7D66B687E7A" seqno="3" style="DUID=DCD64ED6;"/>
+                    <element geometry="Left=44;Top=272;Right=134;Bottom=342;"
+                             subject="EAID_F162BCFE_FF1A_4032_AAA7_68BB4F415C2D" seqno="4" style="DUID=B9B768C0;"/>
+                    <element geometry="Left=216;Top=267;Right=367;Bottom=389;"
+                             subject="EAID_77B8DA88_5809_44e1_B61E_D14D1AD192B4" seqno="5" style="DUID=EC8A78B6;"/>
+                    <element geometry="Left=552;Top=82;Right=691;Bottom=152;"
+                             subject="EAID_5F6C2359_10A2_40c3_9C73_7B9FDF583333" seqno="6" style="DUID=C0AC2378;"/>
+                    <element geometry="Left=215;Top=79;Right=366;Bottom=149;"
+                             subject="EAID_8CC4A6AA_45DB_44d3_8630_693082503FA2" seqno="7" style="DUID=F237EA18;"/>
+                    <element
+                            geometry="SX=0;SY=0;EX=-74;EY=-49;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=161:-377$;"
+                            subject="EAID_3C5E6AD2_0B36_4f0f_A8D2_2B36AB9DD20E"
+                            style="Mode=3;EOID=EC8A78B6;SOID=2247E2EF;Color=-1;LWidth=0;Hidden=0;"/>
+                    <element
+                            geometry="SX=-1;SY=9;EX=0;EY=0;EDGE=3;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=CX=5:CY=13:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:DIR=0:ROT=0;IRHS=;ILHS=;Path=721:-481$290:-481$;"
+                            subject="EAID_95FC3A15_F721_4f58_AA54_1365A0C7060A"
+                            style="Mode=3;EOID=EC8A78B6;SOID=2B1B23C8;Color=-1;LWidth=0;Hidden=0;"/>
+                    <element
+                            geometry="SX=-2;SY=-47;EX=38;EY=-48;EDGE=3;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=CX=5:CY=13:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:DIR=0:ROT=0;IRHS=;ILHS=;Path=522:-440$328:-440$;"
+                            subject="EAID_86FCC147_C5D4_4a82_A325_0E10CE4F703E"
+                            style="Mode=3;EOID=EC8A78B6;SOID=DCD64ED6;Color=-1;LWidth=0;Hidden=0;"/>
+                    <element
+                            geometry="SX=4;SY=35;EX=5;EY=-1;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=726:-219$626:-219$;"
+                            subject="EAID_AA42D1A6_63A6_4706_A7C0_E87B2EBFC02B"
+                            style="Mode=3;EOID=C0AC2378;SOID=2B1B23C8;Color=-1;LWidth=0;Hidden=0;"/>
+                    <element
+                            geometry="SX=0;SY=0;EX=5;EY=1;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=526:-220$626:-220$;"
+                            subject="EAID_65068559_4ED0_44b5_9D3F_29177B531DFC"
+                            style="Mode=3;EOID=C0AC2378;SOID=DCD64ED6;Color=-1;LWidth=0;Hidden=0;"/>
+                    <element
+                            geometry="SX=42;SY=-3;EX=-75;EY=18;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;"
+                            subject="EAID_483B4941_ECF7_4644_823F_FFB89BAC9072"
+                            style="Mode=3;EOID=EC8A78B6;SOID=B9B768C0;Color=-1;LWidth=0;Hidden=0;"/>
+                    <element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;"
+                             subject="EAID_50C86063_0D5F_4132_85F6_87B268A63993"
+                             style="Mode=3;EOID=F237EA18;SOID=EC8A78B6;Color=-1;LWidth=0;Hidden=0;"/>
+                    <element
+                            geometry="SX=-68;SY=3;EX=0;EY=0;EDGE=4;$LLB=CX=5:CY=13:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:DIR=0:ROT=0;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;"
+                            subject="EAID_63BB704C_281C_43c3_86CA_CC04AC1ACC80"
+                            style="Mode=3;EOID=F237EA18;SOID=C0AC2378;Color=-1;LWidth=0;Hidden=0;"/>
+                </elements>
+            </diagram>
+        </diagrams>
+    </xmi:Extension>
+</xmi:XMI>

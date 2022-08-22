@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace OALProgramControl
 {
     public class EXECommandQueryCreate : EXECommand
     {
-        private String ReferencingVariableName { get; }
-        private String ClassName { get; }
+        public String ReferencingVariableName { get; }
+        public String ClassName { get; }
 
         public EXECommandQueryCreate(String ClassName, String ReferencingVariableName)
         {
@@ -53,7 +54,6 @@ namespace OALProgramControl
             {
                 if (Variable != null)
                 {
-                    
                     Variable.ReferencedInstanceId = Instance.UniqueID;
                 }
                 else
@@ -65,11 +65,12 @@ namespace OALProgramControl
 
             return true;
         }
+
         public override string ToCodeSimple()
         {
             return "create object instance "
-                + ("".Equals(this.ReferencingVariableName) ? "" : (this.ReferencingVariableName + " "))
-                + "of " + this.ClassName;
+                   + ("".Equals(this.ReferencingVariableName) ? "" : (this.ReferencingVariableName + " "))
+                   + "of " + this.ClassName;
         }
     }
 }

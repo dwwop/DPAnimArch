@@ -87,6 +87,10 @@ namespace AnimArch.Visualization.Animating
                 }
             }
 
+            DiagramPool.Instance.ObjectDiagram.ResetDiagram();
+            DiagramPool.Instance.ObjectDiagram.LoadDiagram();
+            DiagramPool.Instance.ObjectDiagram.AddObject(startClassName, "client");
+
             CDClass startClass = Program.ExecutionSpace.getClassByName(startClassName);
             if (startClass == null)
             {
@@ -129,7 +133,32 @@ namespace AnimArch.Visualization.Animating
 
                     StartCoroutine(ResolveCallFunct(((EXECommandCall)CurrentCommand).CreateOALCall()));
 
+
+                    ObjectDiagram od = DiagramPool.Instance.ObjectDiagram;
+                    ObjectInDiagram start = null;
+                    ObjectInDiagram end = null;
+                    foreach (var objectInDiagram in od.Objects)
+                    {
+                        var className = objectInDiagram.Class.ClassInfo.Name;
+                        if (className.Equals(((EXECommandCall) CurrentCommand).CallerMethodInfo.ClassName))
+                        {
+                            start = objectInDiagram;
+                        }
+                        else if (className.Equals(((EXECommandCall) CurrentCommand).CalledClass))
+                        {
+                            end = objectInDiagram;
+                        }
+                    }
+
+                    od.AddRelation(start, end);
+
+                    Debug.LogError(start.VariableName + " " + end.VariableName);
                     yield return StartCoroutine(BarrierFillCheck());
+                }
+                else if (CurrentCommand.GetType() == typeof(EXECommandQueryCreate))
+                {
+                    ResolveCreateObject(((EXECommandQueryCreate) CurrentCommand).ClassName,
+                        ((EXECommandQueryCreate) CurrentCommand).ReferencingVariableName);
                 }
 
                 Success = Success && ExecutionSuccess;
@@ -167,6 +196,13 @@ namespace AnimArch.Visualization.Animating
             */
             Debug.Log("Over");
             this.AnimationIsRunning = false;
+        }
+
+        private void ResolveCreateObject(string className, string varName)
+        {
+            // DiagramPool.Instance.ObjectDiagram.ResetDiagram();
+            // DiagramPool.Instance.ObjectDiagram.LoadDiagram();
+            DiagramPool.Instance.ObjectDiagram.AddObject(className, varName);
         }
 
         public void IncrementBarrier()
@@ -235,6 +271,7 @@ namespace AnimArch.Visualization.Animating
                 }
             }
         }
+
         //Method used to Highlight/Unhighlight single class by name, depending on bool value of argument 
         public void HighlightClass(string className, bool isToBeHighlighted)
         {
@@ -248,6 +285,7 @@ namespace AnimArch.Visualization.Animating
             {
                 Debug.Log("Node " + className + " not found");
             }
+
             if (bh != null)
             {
                 if (isToBeHighlighted)
@@ -262,9 +300,10 @@ namespace AnimArch.Visualization.Animating
             }
             else
             {
-                Debug.Log("Highligher component not found");
+                Debug.Log("Highlighter component not found");
             }
         }
+
         //Method used to Highlight/Unhighlight single method by name, depending on bool value of argument 
         public void HighlightMethod(string className, string methodName, bool isToBeHighlighted)
         {
@@ -278,6 +317,7 @@ namespace AnimArch.Visualization.Animating
             {
                 Debug.Log("Node " + className + " not found");
             }
+
             if (th != null)
             {
                 if (isToBeHighlighted)
@@ -289,13 +329,13 @@ namespace AnimArch.Visualization.Animating
                 {
                     th.UnHighlightLine(methodName);
                 }
-
             }
             else
             {
                 Debug.Log("TextHighligher component not found");
             }
         }
+
         //Method used to Highlight/Unhighlight single edge by name, depending on bool value of argument 
         public void HighlightEdge(string relationshipName, bool isToBeHighlighted)
         {
@@ -318,6 +358,7 @@ namespace AnimArch.Visualization.Animating
                 Debug.Log(relationshipName + " NULL Edge ");
             }
         }
+
         //Couroutine used to Resolve one OALCall consisting of Caller class, caller method, edge, called class, called method
         // Same coroutine is called for play or step mode
         public IEnumerator ResolveCallFunct(OALCall Call)
@@ -350,6 +391,7 @@ namespace AnimArch.Visualization.Animating
                             timeModifier = 1f;
                             break;
                     }
+
                     step++;
                     if (standardPlayMode)
                     {
@@ -375,6 +417,7 @@ namespace AnimArch.Visualization.Animating
                                 case 5: HighlightMethod(Call.CalledClassName, Call.CalledMethodName, false); break;
 
                             }
+
                             if (step > -1) step--;
                             if (step == 2) step = 1;
                             switch (step)
@@ -387,6 +430,7 @@ namespace AnimArch.Visualization.Animating
 
                             }
                         }
+
                         yield return new WaitForFixedUpdate();
                         nextStep = false;
                         prevStep = false;
@@ -403,16 +447,20 @@ namespace AnimArch.Visualization.Animating
             {
                 return ColorUtility.ToHtmlStringRGB(classColor);
             }
+
             if (type == "method")
             {
                 return ColorUtility.ToHtmlStringRGB(methodColor);
             }
+
             if (type == "relation")
             {
                 return ColorUtility.ToHtmlStringRGB(relationColor);
             }
+
             return "";
         }
+
         //Method used to stop all animations and unhighlight all objects
         public void UnhighlightAll()
         {
@@ -428,11 +476,13 @@ namespace AnimArch.Visualization.Animating
                             HighlightMethod(c.Name, m.Name, false);
                         }
                 }
+
             if (DiagramPool.Instance.ClassDiagram.GetRelationList() != null)
                 foreach (Relation r in DiagramPool.Instance.ClassDiagram.GetRelationList())
                 {
                     HighlightEdge(r.OALName, false);
                 }
+
             AnimationIsRunning = false;
         }
 
@@ -447,6 +497,7 @@ namespace AnimArch.Visualization.Animating
                 isPaused = true;
             }
         }
+
         public void NextStep()
         {
             if (AnimationIsRunning == false)
@@ -454,6 +505,7 @@ namespace AnimArch.Visualization.Animating
             else
                 nextStep = true;
         }
+
         public void PrevStep()
         {
             nextStep = true;

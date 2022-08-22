@@ -99,7 +99,8 @@ namespace AnimArch.Visualization.Diagrams
                 (
                     Class => CreateInterGraphLine(graph, Class.VisualObject, CLASS.VisualObject)
                 );*/
-            DiagramPool.Instance.ObjectDiagram.LoadDiagram();
+            
+            // DiagramPool.Instance.ObjectDiagram.LoadDiagram();
         }
         public Graph CreateGraph()
         {

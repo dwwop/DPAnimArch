@@ -1,0 +1,172 @@
+{
+  "Code": "",
+  "AnimationName": "Mediator-FontDirectorCase",
+  "StartClass": "User",
+  "StartMethod": "StartCase",
+  "MethodsCodes": [
+    {
+      "Name": "Button",
+      "SuperClass": "Component",
+      "Attributes": [
+        "Director",
+        "Text"
+      ],
+      "Methods": [
+        {
+          "Name": "OnClick",
+          "Parameters": [
+            "Position",
+            "Text"
+          ],
+          "Code": "self.Director.ComponentClicked(self);"
+        },
+        {
+          "Name": "SetText",
+          "Parameters": [
+            "Text"
+          ],
+          "Code": "self.Text = Text;"
+        }
+      ]
+    },
+    {
+      "Name": "Component",
+      "SuperClass": "",
+      "Attributes": [],
+      "Methods": [
+        {
+          "Name": "OnClick",
+          "Parameters": [
+            "Position",
+            "Text"
+          ],
+          "Code": ""
+        }
+      ]
+    },
+    {
+      "Name": "EntryField",
+      "SuperClass": "Component",
+      "Attributes": [
+        "Director",
+        "Text"
+      ],
+      "Methods": [
+        {
+          "Name": "OnClick",
+          "Parameters": [
+            "Position",
+            "Text"
+          ],
+          "Code": "self.SetText(Text);\r\nself.Director.ComponentClicked(self);\r\n"
+        },
+        {
+          "Name": "SetText",
+          "Parameters": [
+            "Text"
+          ],
+          "Code": "self.Text = Text;"
+        }
+      ]
+    },
+    {
+      "Name": "Font",
+      "SuperClass": "",
+      "Attributes": [
+        "Name"
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "FontDialogDirector",
+      "SuperClass": "Mediator",
+      "Attributes": [
+        "FontList",
+        "FontName",
+        "OkButton",
+        "FinalFont"
+      ],
+      "Methods": [
+        {
+          "Name": "ComponentClicked",
+          "Parameters": [
+            "Widget"
+          ],
+          "Code": "if (Widget == self.FontList)\r\nselect many Fonts from instances of Font;\r\nFontListTemp = self.FontList;\r\nPosition = FontListTemp.ItemPosition;\r\ni = 0;\n\r\nfor each FontItem in Fonts\r\nif (i == Position)\r\nself.FontName.SetText(FontItem.Name);\r\nbreak;\r\nend if;\r\ni = i + 1;\r\nend for;\r\nelif (Widget == self.FontName)\r\nselect many Fonts from instances of Font;\r\nFound = FALSE;\r\ni = 0;\nFontNameTemp = self.FontName;\nTypedFont = FontNameTemp.Text;\n\rfor each FontItem in Fonts\r\nif ( FontItem.Name == TypedFont)\r\nTempList = self.FontList;\nTempList.ItemPosition = i;\r\nFound = TRUE;\r\nbreak;\r\nend if;\r\ni = i + 1;\r\nend for;\r\n\r\nif (not Found)\r\ncreate object instance NewFont of Font;\r\nNewFont.Name = TypedFont;\r\nFontListTemp = self.FontList;\nadd NewFont to FontListTemp.ListItems;\r\nend if;\r\nelif (Widget == self.OkButton)\r\n    self.CloseDialog();\r\nend if;\r"
+        },
+        {
+          "Name": "CreateComponents",
+          "Parameters": [],
+          "Code": "create object instance FontList of ListBox;\r\nself.FontList = FontList;\r\nFontList.Director = self;\r\ncreate object instance Font1 of Font;\r\nFont1.Name = \"Times New Roman\";\r\ncreate object instance Font2 of Font;\r\nFont2.Name = \"Calibri\";\r\ncreate object instance Font3 of Font;\r\nFont3.Name = \"Arial\";\r\ncreate list ListItems of Font {Font1, Font2, Font3};\r\nFontList.SetListItems(ListItems);\r        \ncreate object instance FontName of EntryField;\r\nself.FontName = FontName;\r\nFontName.Director = self;\r\nFontName.SetText(\"\");\r\n\rcreate object instance OkButton of Button;\r\nself.OkButton = OkButton;\r\nOkButton.Director = self;\r\nOkButton.SetText(\"OK\");\r\nself.FinalFont = \"\";\r\n"
+        },
+        {
+          "Name": "ShowDialog",
+          "Parameters": [],
+          "Code": "self.CreateComponents();"
+        },
+        {
+          "Name": "CloseDialog",
+          "Parameters": [],
+          "Code": "FinalFontName = self.FontName;\nself.FinalFont= FinalFontName.Text;\r\n"
+        }
+      ]
+    },
+    {
+      "Name": "ListBox",
+      "SuperClass": "Component",
+      "Attributes": [
+        "Director",
+        "ListItems",
+        "ItemPosition"
+      ],
+      "Methods": [
+        {
+          "Name": "OnClick",
+          "Parameters": [
+            "Position",
+            "Text"
+          ],
+          "Code": "self.ItemPosition=Position;\r\nself.Director.ComponentClicked(self);\r\n"
+        },
+        {
+          "Name": "SetListItems",
+          "Parameters": [
+            "ListItems"
+          ],
+          "Code": "self.ListItems = ListItems;"
+        }
+      ]
+    },
+    {
+      "Name": "Mediator",
+      "SuperClass": "",
+      "Attributes": [],
+      "Methods": [
+        {
+          "Name": "ComponentClicked",
+          "Parameters": [
+            "Widget"
+          ],
+          "Code": ""
+        },
+        {
+          "Name": "CreateComponents",
+          "Parameters": [],
+          "Code": ""
+        }
+      ]
+    },
+    {
+      "Name": "User",
+      "SuperClass": "",
+      "Attributes": [],
+      "Methods": [
+        {
+          "Name": "StartCase",
+          "Parameters": [],
+          "Code": "create object instance FontDialogDirector1 of FontDialogDirector;\r\nFontDialogDirector1.ShowDialog();\r\nFontDialogDirector1.FontList.OnClick(2,UNDEFINED);\nFontDialogDirector1.FontName.OnClick(UNDEFINED, \"Cambria\"); \r\nFontDialogDirector1.OkButton.OnClick(UNDEFINED, UNDEFINED); \r\n"
+        }
+      ]
+    }
+  ]
+}

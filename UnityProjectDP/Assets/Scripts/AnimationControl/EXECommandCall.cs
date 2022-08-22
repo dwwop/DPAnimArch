@@ -6,12 +6,12 @@ namespace OALProgramControl
 {
     public class EXECommandCall : EXECommand
     {
-        private String CalledClass { get; set; }
+        public String CalledClass { get; set; }
         private String CalledMethod { get; }
         private String InstanceName { get; }
         private String AttributeName { get; }
         private List<EXEASTNode> Parameters { get; }
-        private MethodCallRecord CallerMethodInfo
+        public MethodCallRecord CallerMethodInfo
         {
             get
             {

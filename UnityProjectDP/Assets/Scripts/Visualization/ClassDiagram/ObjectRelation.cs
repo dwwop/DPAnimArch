@@ -10,43 +10,32 @@ namespace AnimArch.Visualization.Diagrams
 {
     public class ObjectRelation
     {
-        public Graph graph;
-        public ObjectInDiagram start;
-        public ObjectInDiagram end;
-        public string type;
+        private readonly Graph _graph;
+        private readonly ObjectInDiagram _start;
+        private readonly ObjectInDiagram _end;
 
-        public ObjectRelation(Graph graph, ObjectInDiagram start, ObjectInDiagram end, string type)
+        public ObjectRelation(Graph graph, ObjectInDiagram start, ObjectInDiagram end)
         {
-            this.graph = graph;
-            this.start = start;
-            this.end = end;
-            this.type = type;
+            _graph = graph;
+            _start = start;
+            _end = end;
         }
 
         public void Generate()
         {
-            GameObject edge = InitEdge();
-            UEdge uEdge = edge.GetComponent<UEdge>();
+            var edge = InitEdge();
+            var uEdge = edge.GetComponent<UEdge>();
             uEdge.Points = new Vector2[]
             {
-                start.VisualObject.transform.position,
-                end.VisualObject.transform.position
+                _start.VisualObject.transform.position,
+                _end.VisualObject.transform.position
             };
         }
 
         private GameObject InitEdge()
         {
-            if (type.Equals("Association"))
-            {
-                return graph.AddEdge(start.VisualObject, end.VisualObject, DiagramPool.Instance.associationNonePrefab);
-            }
-
-            if (type.Equals("Depends"))
-            {
-                return graph.AddEdge(start.VisualObject, end.VisualObject, DiagramPool.Instance.dependsPrefab);
-            }
-
-            return new GameObject();
+            return _graph.AddEdge(_start.VisualObject, _end.VisualObject,
+                DiagramPool.Instance.associationNonePrefab);
         }
     }
 }
