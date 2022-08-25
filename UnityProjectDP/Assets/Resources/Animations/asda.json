@@ -1,1 +1,6 @@
-{"Code":"create object instance astleaf_1 of ASTLeaf;\nastleaf_1.getType();\n","AnimationName":"asda","MethodsCodes":[{"Name":"AST","Methods":[{"Name":"printPretty","Code":"create object instance astleaf_1 of ASTLeaf;\nastleaf_1.getType();\n"}]}]}
+{"Code":"create object instance astleaf_1 of ASTLeaf;\nastleaf_1.getType();\n",
+  "AnimationName":"asda",
+  "MethodsCodes":
+  [{"Name":"AST","Methods":[{"Name":"printPretty",
+  "Code":"create object instance astleaf_1 of ASTLeaf;\nastleaf_1.type=\"1\";\nastleaf_1.getType();\n"
+  }]}]}
