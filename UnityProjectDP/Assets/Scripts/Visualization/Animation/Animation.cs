@@ -134,31 +134,31 @@ namespace AnimArch.Visualization.Animating
                     StartCoroutine(ResolveCallFunct(((EXECommandCall)CurrentCommand).CreateOALCall()));
 
 
-                    ObjectDiagram od = DiagramPool.Instance.ObjectDiagram;
-                    ObjectInDiagram start = null;
-                    ObjectInDiagram end = null;
-                    foreach (var objectInDiagram in od.Objects)
-                    {
-                        var className = objectInDiagram.Class.ClassInfo.Name;
-                        if (className.Equals(((EXECommandCall) CurrentCommand).CallerMethodInfo.ClassName))
-                        {
-                            start = objectInDiagram;
-                        }
-                        else if (className.Equals(((EXECommandCall) CurrentCommand).CalledClass))
-                        {
-                            end = objectInDiagram;
-                        }
-                    }
+                    // ObjectDiagram od = DiagramPool.Instance.ObjectDiagram;
+                    // ObjectInDiagram start = null;
+                    // ObjectInDiagram end = null;
+                    // foreach (var objectInDiagram in od.Objects)
+                    // {
+                    //     var className = objectInDiagram.Class.ClassInfo.Name;
+                    //     if (className.Equals(((EXECommandCall) CurrentCommand).CallerMethodInfo.ClassName))
+                    //     {
+                    //         start = objectInDiagram;
+                    //     }
+                    //     else if (className.Equals(((EXECommandCall) CurrentCommand).CalledClass))
+                    //     {
+                    //         end = objectInDiagram;
+                    //     }
+                    // }
+                    //
+                    // od.AddRelation(start, end);
 
-                    od.AddRelation(start, end);
-
-                    Debug.LogError(start.VariableName + " " + end.VariableName);
+                    // Debug.LogError(start.VariableName + " " + end.VariableName);
                     yield return StartCoroutine(BarrierFillCheck());
                 }
                 else if (CurrentCommand.GetType() == typeof(EXECommandQueryCreate))
                 {
-                    ResolveCreateObject(((EXECommandQueryCreate) CurrentCommand).ClassName,
-                        ((EXECommandQueryCreate) CurrentCommand).ReferencingVariableName);
+                    // ResolveCreateObject(((EXECommandQueryCreate) CurrentCommand).ClassName,
+                    //     ((EXECommandQueryCreate) CurrentCommand).ReferencingVariableName);
                 }
 
                 Success = Success && ExecutionSuccess;
