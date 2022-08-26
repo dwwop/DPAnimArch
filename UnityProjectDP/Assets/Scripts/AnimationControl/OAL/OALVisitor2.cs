@@ -167,15 +167,14 @@ namespace AnimationControl.OAL
 
             return null;
             //return base.VisitExeCommandAssignment(context);*/
-			
 			_ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(1)) : Visit(context.GetChild(0));
 			String VariableName =  this.instanceName;
             String AttributeName = this.attributeName;
-			
-			_ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(3)) : Visit(context.GetChild(2));
-			EXEASTNode expression = stackEXEASTNode.Peek();
-			
-			stackEXEScope.Peek().AddCommand(new EXECommandAssignment(VariableName, AttributeName, expression));
+
+            _ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(3)) : Visit(context.GetChild(2));
+            EXEASTNode expression = stackEXEASTNode.Peek();
+
+            stackEXEScope.Peek().AddCommand(new EXECommandAssignment(VariableName, AttributeName, expression));
 
             stackEXEASTNode.Clear();
 
@@ -186,10 +185,6 @@ namespace AnimationControl.OAL
 
         public override object VisitExpr([NotNull] OALParser.ExprContext context)
         {
-
-            //Console.WriteLine("Expr: " + context.ChildCount);
-            //Console.WriteLine(context.GetChild(0).GetType().Name);
-            
             if (context.ChildCount == 1)
             {
                 if (context.GetChild(0).GetType().Name.Contains("TerminalNode") && stackEXEASTNode.Count() == 0)
@@ -200,7 +195,15 @@ namespace AnimationControl.OAL
                 }
                 else
                 {
-                    ((EXEASTNodeComposite) stackEXEASTNode.Peek()).AddOperand(new EXEASTNodeLeaf(ParseUtil.StripWhiteSpace(context.GetChild(0).GetText())));
+                    EXEASTNodeLeaf newOperand = new EXEASTNodeLeaf(ParseUtil.StripWhiteSpace(context.GetChild(0).GetText()));
+                    if (stackEXEASTNode.Any())
+                    {
+                        ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(newOperand);
+                    }
+                    else
+                    {
+                        stackEXEASTNode.Push(newOperand);
+                    }
                 }
             }
             else if(context.ChildCount == 2)
