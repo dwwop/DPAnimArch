@@ -1,0 +1,1 @@
+{"Code":"create object instance astleaf_1 of ASTLeaf;\nastleaf_1.getType();\ncreate object instance astleaf_1 of ASTLeaf;\nastleaf_1.getType();\n","AnimationName":"ab","MethodsCodes":[{"Name":"AST","Methods":[{"Name":"printPretty","Code":"create object instance astleaf_1 of ASTLeaf;\nastleaf_1.type=\"ad\";\nastleaf_1.getType();\n"}]}]}
