@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace Assets.Scripts.AnimationControl.OAL
 {
@@ -47,6 +46,37 @@ namespace Assets.Scripts.AnimationControl.OAL
             }
 
             return test.globalExeScope;
+        }
+
+        public static String PythonParse(String Code, List<String> Attributes)
+        {
+            OALParser parser = null;
+            try
+            {
+                ICharStream target = new AntlrInputStream(Code);
+                ITokenSource lexer = new OALLexer(target);
+                ITokenStream tokens = new CommonTokenStream(lexer);
+                parser = new OALParser(tokens);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            OALParser.LinesContext result = parser.lines();
+            OALToPythonVisitor visitor = new OALToPythonVisitor(Attributes);
+            String pythonCode = "";
+
+            try
+            {
+                pythonCode = visitor.VisitLines(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            return pythonCode;
         }
     }
 }

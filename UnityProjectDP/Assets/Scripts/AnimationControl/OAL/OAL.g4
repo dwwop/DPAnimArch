@@ -18,8 +18,10 @@ line
 	|	exeCommandCall
 	|	exeCommandCreateList
 	|	exeCommandAddingToList
+    |	exeCommandRemovingFromList
 	|	exeCommandWrite
 	|	exeCommandRead
+    |	returnCommand
 	|	continueCommand
 	|	breakCommand
 	|	whileCommand
@@ -30,7 +32,7 @@ line
 	;
 
 parCommand
-    :   'par' 'thread' line+ 'end thread' ';' ('thread' line+ 'end thread' ';')+ 'end par' ';'    //oni nemaju 2 az n
+    :   'par' 'thread' line+ 'end thread' ';' ('thread' line+ 'end thread' ';')+ 'end par' ';'
     ;
 
 ifCommand
@@ -46,8 +48,8 @@ foreachCommand
     ;
 
 continueCommand
-	:   'continue' ';'
-	;
+    :   'continue' ';'
+    ;
 
 breakCommand
     :   'break' ';'
@@ -72,8 +74,8 @@ exeCommandQuerySelect
     ;
 
 exeCommandQuerySelectRelatedBy
-    :   'select any ' instanceHandle ' related by ' start '->' className relationshipLink ('->' className relationshipLink)* (' where ' whereExpression)? ';'
-    |   'select many ' instanceHandle ' related by ' start '->' className relationshipLink ('->' className relationshipLink)* (' where ' whereExpression)? ';'
+    :   'select any ' instanceHandle ' related by ' instanceHandle '->' className relationshipLink ('->' className relationshipLink)* (' where ' whereExpression)? ';'
+    |   'select many ' instanceHandle ' related by ' instanceHandle '->' className relationshipLink ('->' className relationshipLink)* (' where ' whereExpression)? ';'
     ;
 
 exeCommandQueryDelete
@@ -89,8 +91,8 @@ exeCommandAssignment
     ;
 
 exeCommandCall
-    :   instanceHandle '.' methodName ('()' | '(' expr? (',' expr)* ')') ';'
-    |   'call from ' keyLetter '::' methodName '() to ' keyLetter '::' methodName '()' (' across ' relationshipSpecification)? ';'
+    :   instanceHandle '.' methodName '(' (expr (',' expr)*)? ')' ';'
+    // |   'call from ' keyLetter '::' methodName '(' ')' ' to ' keyLetter '::' methodName '(' ')' (' across ' relationshipSpecification)? ';'
     ;
 
 exeCommandCreateList
@@ -101,17 +103,30 @@ exeCommandAddingToList
     :   'add ' instanceHandle ' to ' instanceHandle ';'
     ;
 
+exeCommandRemovingFromList
+    :   'remove ' instanceHandle ' from ' instanceHandle ';'
+    ;
+
 exeCommandWrite
-    :   'write(' (expr (',' expr)*)? ')' ';'
+    :   'write' '(' (expr (',' expr)*)? ')' ';'
     ;
 
 exeCommandRead
-    :   ('assign ')? instanceHandle '=' ('read(' string? ')' | 'int(read(' string? '))' | 'real(read(' string? '))' | 'bool(read(' string? '))') ';'
+    :   ('assign ')? instanceHandle '=' (
+                                        'read(' expr? ')'
+                                        | 'int(read(' expr? ')' ')'
+                                        | 'real(read(' expr? ')' ')'
+                                        | 'bool(read(' expr? ')' ')'
+                                        ) ';'
+    ;
+
+returnCommand
+    :   'return' expr? ';'
     ;
 
 expr
-    :   NUM | variableName | BOOL | string
-    |   variableName '.' variableName
+    :   NUM | NAME | BOOL | STRING
+    |   NAME '.' NAME
     |   'cardinality ' instanceHandle
     |   ('empty ' | 'not_empty ') instanceHandle
     |   '(' expr ')'
@@ -138,32 +153,24 @@ keyLetter
     ;
 
 whereExpression
-	:   expr
-	;
-
-start
-	:	NAME
-	;
+    :   expr
+    ;
 
 className
-	:	NAME
-	;
+    :	NAME
+    ;
 
 variableName
-	:	NAME
-	;
+    :	NAME
+    ;
 
 methodName
-	:	NAME
-	;
+    :	NAME
+    ;
 
 attribute
-	:	NAME
-	;
-
-string
-    :   STRING
-    ;  
+    :	NAME
+    ;
 
 relationshipLink
     :   '['RELATIONSHIP_SPECIFICATION']'
@@ -188,7 +195,8 @@ NAME
     ;
 
 STRING
-    :   '"' .*? '"' ;
+    :   '"' (~'"' | '\\"')* '"'
+    ;
 
 NUM
     :   INT | DECIMAL

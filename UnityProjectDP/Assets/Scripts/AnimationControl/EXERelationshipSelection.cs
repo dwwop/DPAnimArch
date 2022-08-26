@@ -8,16 +8,19 @@ namespace OALProgramControl
 {
     public class EXERelationshipSelection
     {
-        public String StartingVariable { get; }
+        public String StartingVariableName { get; }
+        public String StartingAttributeName { get; }
         private List<EXERelationshipLink> RelationshipSpecification { get; }
-        public EXERelationshipSelection(String StartingVariable)
+        public EXERelationshipSelection(String StartingVariableName, String StartingAttributeName)
         {
-            this.StartingVariable = StartingVariable;
+            this.StartingVariableName = StartingVariableName;
+            this.StartingAttributeName = StartingAttributeName;
             this.RelationshipSpecification = new List<EXERelationshipLink>();
         }
-        public EXERelationshipSelection(String StartingVariable, EXERelationshipLink[] RelLinks)
+        public EXERelationshipSelection(String StartingVariableName, String StartingAttributeName, EXERelationshipLink[] RelLinks)
         {
-            this.StartingVariable = StartingVariable;
+            this.StartingVariableName = StartingVariableName;
+            this.StartingAttributeName = StartingAttributeName;
             this.RelationshipSpecification = RelLinks.ToList();
         }
         public void AddRelationshipLink(EXERelationshipLink RelationshipLink)
@@ -25,31 +28,122 @@ namespace OALProgramControl
             this.RelationshipSpecification.Add(RelationshipLink);
         }
 
-        public List<long> Evaluate(CDRelationshipPool RelationshipSpace, EXEScope Scope)
+        public List<long> Evaluate(OALProgram OALProgram, EXEScope Scope)
         {
             List<long> Result = null;
-            EXEReferenceHandle StartVariable = Scope.FindReferenceHandleByName(this.StartingVariable);
-            if (StartVariable != null && this.RelationshipSpecification.Any())
+            String CurrentClass = "";
+            List<long> CurrentIds = new List<long>(new long[] { });
+
+            if (this.StartingAttributeName == null)
             {
-                List<long> CurrentIds = StartVariable.GetReferencedIds();
+                EXEReferenceHandle StartVariable = Scope.FindReferenceHandleByName(this.StartingVariableName);
+                if (StartVariable == null || !this.RelationshipSpecification.Any())
+                {
+                    return null;
+                }
+
+                CurrentIds = StartVariable.GetReferencedIds();
                 if (CurrentIds == null)
                 {
                     return null;
                 }
 
-                String CurrentClass = StartVariable.ClassName;
-                foreach(EXERelationshipLink RelationshipLink in this.RelationshipSpecification)
-                {
-                    if (CurrentIds == null || !CurrentIds.Any())
-                    {
-                        break;
-                    }
-                    CurrentIds = RelationshipLink.RetrieveIds(CurrentIds, CurrentClass, RelationshipSpace);
-                    CurrentClass = RelationshipLink.ClassName;
-                }
-                Result = CurrentIds;
+                CurrentClass = StartVariable.ClassName;
             }
-            return Result;
+            else
+            {
+                EXEReferencingVariable Variable = Scope.FindReferencingVariableByName(this.StartingVariableName);
+                if (Variable == null || !this.RelationshipSpecification.Any())
+                {
+                    return null;
+                }
+
+                CDClass VariableClass = OALProgram.ExecutionSpace.getClassByName(Variable.ClassName);
+                if (VariableClass == null)
+                {
+                    return null;
+                }
+
+                CDAttribute Attribute = VariableClass.GetAttributeByName(this.StartingAttributeName);
+                if (Attribute == null)
+                {
+                    return null;
+                }
+
+                CDClassInstance ClassInstance = VariableClass.GetInstanceByID(Variable.ReferencedInstanceId);
+                if (ClassInstance == null)
+                {
+                    return null;
+                }
+
+                String IDValue = ClassInstance.GetAttributeValue(this.StartingAttributeName);
+
+                if (!EXETypes.IsValidReferenceValue(IDValue, Attribute.Type))
+                {
+                    return null;
+                }
+
+                if ("[]".Equals(Attribute.Type.Substring(Attribute.Type.Length - 2, 2)))
+                {
+                    CurrentClass = Attribute.Type.Substring(0, Attribute.Type.Length - 2);
+
+                    CDClass AttributeClass = OALProgram.ExecutionSpace.getClassByName(CurrentClass);
+                    if (AttributeClass == null)
+                    {
+                        return null;
+                    }
+
+                    if (!String.Empty.Equals(IDValue))
+                    {
+                        CurrentIds = IDValue.Split(',').Select(id => long.Parse(id)).ToList().FindAll(x => x >= 0);
+                    }
+
+                    CDClassInstance Instance;
+                    foreach (long ID in CurrentIds)
+                    {
+                        Instance = AttributeClass.GetInstanceByID(ID);
+                        if (Instance == null)
+                        {
+                            return null;
+                        }
+                    }
+                }
+                else
+                {
+                    CurrentClass = Attribute.Type;
+
+                    CDClass AttributeClass = OALProgram.ExecutionSpace.getClassByName(CurrentClass);
+                    if (AttributeClass == null)
+                    {
+                        return null;
+                    }
+
+                    long ID = long.Parse(IDValue);
+                    if (ID >= 0)
+                    {
+                        CDClassInstance Instance = AttributeClass.GetInstanceByID(ID);
+                        if (Instance == null)
+                        {
+                            return null;
+                        }
+
+                        CurrentIds.Add(ID);
+                    }
+                }
+            }
+
+            foreach (EXERelationshipLink RelationshipLink in this.RelationshipSpecification)
+            {
+                if (CurrentIds == null || !CurrentIds.Any())
+                {
+                    break;
+                }
+                CurrentIds = RelationshipLink.RetrieveIds(CurrentIds, CurrentClass, OALProgram.RelationshipSpace);
+                CurrentClass = RelationshipLink.ClassName;
+            }
+            Result = CurrentIds;
+
+            return Result;  
         }
         public String GetLastClassName()
         {
@@ -62,7 +156,7 @@ namespace OALProgramControl
         }
         public String ToCode()
         {
-            String Result = this.StartingVariable;
+            String Result = (this.StartingAttributeName == null ? this.StartingVariableName : (this.StartingVariableName + "." + this.StartingAttributeName));
             foreach (EXERelationshipLink Link in this.RelationshipSpecification)
             {
                 Result += "->" + Link.ClassName + "[" + Link.RelationshipName + "]";

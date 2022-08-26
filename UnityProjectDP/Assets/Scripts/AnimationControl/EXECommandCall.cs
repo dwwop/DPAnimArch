@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AnimArch.Extensions;
 
 namespace OALProgramControl
 {
     public class EXECommandCall : EXECommand
     {
-        public String CalledClass { get; set; }
+        private String CalledClass { get; set; }
         private String CalledMethod { get; }
         private String InstanceName { get; }
         private String AttributeName { get; }
         private List<EXEASTNode> Parameters { get; }
-        public MethodCallRecord CallerMethodInfo
+        private MethodCallRecord CallerMethodInfo
         {
             get
             {
@@ -44,6 +45,15 @@ namespace OALProgramControl
                 return false;
             }
 
+            Class = Class.GetInstanceClassByIDRecursiveDownward(Reference.ReferencedInstanceId);
+
+            if (Class == null)
+            {
+                return false;
+            }
+
+            long CalledID = Reference.ReferencedInstanceId;
+
             if (this.AttributeName != null)
             {
                 CDAttribute Attribute = Class.GetAttributeByName(this.AttributeName);
@@ -60,7 +70,8 @@ namespace OALProgramControl
                     return false;
                 }
 
-                Class = AtrributeClass;
+                CalledID = long.Parse(Class.GetInstanceByID(Reference.ReferencedInstanceId).State[Attribute.Name]);
+                Class = AtrributeClass.GetInstanceClassByIDRecursiveDownward(CalledID);
             }
 
             this.CalledClass = Class.Name;
@@ -81,21 +92,42 @@ namespace OALProgramControl
 
             MethodCode.SetSuperScope(null);
             OALProgram.CommandStack.Enqueue(MethodCode);
+            MethodCode.AddVariable(new EXEReferencingVariable("self", CalledClass, CalledID));//
 
             for (int i = 0; i < this.Parameters.Count; i++)
             {
                 CDParameter Parameter = Method.Parameters[i];
+                if
+                (
+                    !(
+                        Parameter.Type != null
+                        &&
+                        this.Parameters[i].IsReference().Implies
+                        (
+                            Object.Equals(Parameter.Type, this.SuperScope.DetermineVariableType(this.Parameters[i].AccessChain(), OALProgram.ExecutionSpace))
+                        )
+                    )
+                    &&
+                    !(
+                        OALProgram.Instance.ExecutionSpace.ClassExists(Parameter.Type)
+                        ||
+                        OALProgram.Instance.ExecutionSpace.ClassExists(Parameter.Type.Substring(0, Parameter.Type.Length - 2))
+                    )
+                )
+                {
+                    return false;
+                }
 
                 if (EXETypes.IsPrimitive(Parameter.Type))
                 {
-                    String Value = Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
+                    String Value = this.Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
 
                     if (!EXETypes.IsValidValue(Value, Parameter.Type))
                     {
                         return false;
                     }
 
-                    MethodCode.AddVariable(new EXEPrimitiveVariable(Parameter.Name, Value));
+                    MethodCode.AddVariable(new EXEPrimitiveVariable(Parameter.Name, Value, Parameter.Type));
                 }
                 else if ("[]".Equals(Parameter.Type.Substring(Parameter.Type.Length - 2, 2)))
                 {
@@ -104,18 +136,18 @@ namespace OALProgramControl
                     {
                         return false;
                     }
-                    //co ak value je integer napr. 5 a nie id, zistime to? netreba parsovat aj do long ?
-                    String Values = Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
+
+                    String Values = this.Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
 
                     if (!EXETypes.IsValidReferenceValue(Values, Parameter.Type))
                     {
                         return false;
                     }
 
-                    int[] IDs = Values.Split(',').Select(id => int.Parse(id)).ToArray();
+                    long[] IDs = String.Empty.Equals(Values) ? new long[] { } : Values.Split(',').Select(id => long.Parse(id)).ToArray();
 
                     CDClassInstance ClassInstance;
-                    foreach (int ID in IDs)
+                    foreach (long ID in IDs)
                     {
                         ClassInstance = ClassDefinition.GetInstanceByID(ID);
                         if (ClassInstance == null)
@@ -126,7 +158,7 @@ namespace OALProgramControl
 
                     EXEReferencingSetVariable CreatedSetVariable = new EXEReferencingSetVariable(Parameter.Name, ClassDefinition.Name);
 
-                    foreach (int ID in IDs)
+                    foreach (long ID in IDs)
                     {
                         CreatedSetVariable.AddReferencingVariable(new EXEReferencingVariable("", ClassDefinition.Name, ID));
                     }
@@ -140,17 +172,17 @@ namespace OALProgramControl
                     {
                         return false;
                     }
-                    //co ak value je integer napr. 5 a nie id, zistime to? netreba parsovat aj do long ?
-                    String Value = Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
+
+                    string Value = Parameters[i].Evaluate(this.SuperScope, OALProgram.ExecutionSpace);
 
                     if (!EXETypes.IsValidReferenceValue(Value, Parameter.Type))
                     {
                         return false;
                     }
 
-                    int ID = int.Parse(Value);
+                    long ID = long.Parse(Value);
 
-                    CDClassInstance ClassInstance = ClassDefinition.GetInstanceByID(ID);
+                    CDClassInstance ClassInstance = ClassDefinition.GetInstanceByIDRecursiveDownward(ID);
                     if (ClassInstance == null)
                     {
                         return false;
@@ -167,13 +199,15 @@ namespace OALProgramControl
         {
             MethodCallRecord _CallerMethodInfo = this.CallerMethodInfo;
             CDRelationship _RelationshipInfo = CallRelationshipInfo(_CallerMethodInfo.ClassName, this.CalledClass);
+            bool IsSelfCall = string.Equals(this.CalledClass, _CallerMethodInfo.ClassName);
             return new OALCall
             (
                 _CallerMethodInfo.ClassName,
                 _CallerMethodInfo.MethodName,
-                _RelationshipInfo.RelationshipName,
+                IsSelfCall ? null : _RelationshipInfo.RelationshipName,
                 this.CalledClass,
-                this.CalledMethod
+                this.CalledMethod,
+                IsSelfCall
             );
         }
 
@@ -188,6 +222,11 @@ namespace OALProgramControl
         private CDRelationship CallRelationshipInfo(string CallerMethod, string CalledMethod)
         {
             return OALProgram.Instance.RelationshipSpace.GetRelationshipByClasses(CallerMethod, CalledMethod);
+        }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandCall(InstanceName, AttributeName, CalledMethod, Parameters);
         }
     }
 }

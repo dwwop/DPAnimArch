@@ -452,6 +452,51 @@ namespace OALProgramControl
             }
         }
 
+        public String DetermineVariableType(List<String> AccesChain, CDClassPool ClassPool)
+        {
+            if (AccesChain == null || !AccesChain.Any())
+            {
+                return null;
+            }
+
+            EXEPrimitiveVariable PrimitiveVariable = FindPrimitiveVariableByName(AccesChain[0]);
+            if (PrimitiveVariable != null)
+            {
+                return AccesChain.Count > 1 ? null : PrimitiveVariable.Type;
+            }
+
+            EXEReferencingSetVariable SetVariable = FindSetReferencingVariableByName(AccesChain[0]);
+            if (SetVariable != null)
+            {
+                return AccesChain.Count > 1 ? null : SetVariable.Type ;
+            }
+
+            EXEReferencingVariable ReferencingVariable = FindReferencingVariableByName(AccesChain[0]);
+            if (ReferencingVariable == null)
+            {
+                return null;
+            }
+
+            if (AccesChain.Count == 1)
+            {
+                return ReferencingVariable.ClassName;
+            }
+
+            CDClass Class = ClassPool.getClassByName(ReferencingVariable.ClassName);
+            if (Class == null)
+            {
+                return null;
+            }
+
+            CDAttribute Attribute = Class.GetAttributeByName(AccesChain[1]);
+            if (Attribute == null)
+            {
+                return null;
+            }
+
+            return Attribute.Type;
+        }
+
         public override String ToCode(String Indent = "")
         {
             String Result = "";
@@ -460,6 +505,20 @@ namespace OALProgramControl
                 Result += Command.ToCode(Indent);
             }
             return Result;
+        }
+
+        public override EXECommand CreateClone()
+        {
+            EXEScope Clone = CreateDuplicateScope();
+            Clone.OALCode = this.OALCode;
+            Clone.Commands = this.Commands.Select(x => x.CreateClone()).ToList();
+
+            return Clone;
+        }
+
+        protected virtual EXEScope CreateDuplicateScope()
+        {
+            return new EXEScope();
         }
     }
 }

@@ -12,13 +12,13 @@ using OALProgramControl;
 
 namespace AnimationControl.OAL
 {
-    public class OALVisitor2:OALBaseVisitor<object>
+    public class OALVisitor2 : OALBaseVisitor<object>
     {
         public EXEScopeMethod globalExeScope;
         private Stack<EXEScope> stackEXEScope;
         private Stack<EXEASTNode> stackEXEASTNode;
-		private String instanceName;
-		private String attributeName;
+        private String instanceName;
+        private String attributeName;
 
         public OALVisitor2()
         {
@@ -26,9 +26,9 @@ namespace AnimationControl.OAL
             this.stackEXEASTNode = new Stack<EXEASTNode>();
             this.stackEXEScope = new Stack<EXEScope>();
             this.stackEXEScope.Push(this.globalExeScope);
-			
-			this.instanceName = null;
-			this.attributeName = null;
+
+            this.instanceName = null;
+            this.attributeName = null;
         }
 
 
@@ -36,6 +36,7 @@ namespace AnimationControl.OAL
         {
             String ClassName = null;
             String InstanceName = null;
+            String AttributeName = null;
 
             foreach (IParseTree child in context.children)
             {
@@ -48,39 +49,44 @@ namespace AnimationControl.OAL
 
                 if (child.GetType().ToString().Contains("InstanceHandle"))
                 {
-					Visit(child);
+                    Visit(child);
                     InstanceName = ParseUtil.StripWhiteSpace(this.instanceName);
-                    Console.WriteLine("Instance name---" + InstanceName + "---");
+                    AttributeName = ParseUtil.StripWhiteSpace(this.attributeName); //can be null
+
+                    String Instance = (AttributeName == null) ? InstanceName : (InstanceName + "." + AttributeName);
+                    Console.WriteLine("Instance name---" + Instance + "---");
                 }
-                
+
             }
-            
+
             if (InstanceName != null)
             {
-                stackEXEScope.Peek().AddCommand(new EXECommandQueryCreate(ClassName, InstanceName));
+                stackEXEScope.Peek().AddCommand(new EXECommandQueryCreate(ClassName, InstanceName, AttributeName));
             }
             else
             {
                 stackEXEScope.Peek().AddCommand(new EXECommandQueryCreate(ClassName));
             }
-            
+
             return null;
         }
 
 
         public override object VisitExeCommandQueryRelate([NotNull] OALParser.ExeCommandQueryRelateContext context)
         {
-			Visit(context.GetChild(1));
+            Visit(context.GetChild(1));
             String VariableName1 = this.instanceName;
-			Visit(context.GetChild(3));
+            String AttributeName1 = this.attributeName; //can be null
+            Visit(context.GetChild(3));
             String VariableName2 = this.instanceName;
+            String AttributeName2 = this.attributeName; //can be null
             String RelationshipName = context.GetChild(5).GetText();
 
             //Console.WriteLine(VariableName1);
             //Console.WriteLine(VariableName2);
             //Console.WriteLine(RelationshipName);
 
-            stackEXEScope.Peek().AddCommand(new EXECommandQueryRelate(VariableName1, VariableName2, RelationshipName));
+            stackEXEScope.Peek().AddCommand(new EXECommandQueryRelate(VariableName1, AttributeName1, VariableName2, AttributeName2, RelationshipName));
 
             return null;
             //return base.VisitExeCommandQueryRelate(context);
@@ -90,23 +96,24 @@ namespace AnimationControl.OAL
         public override object VisitExeCommandQuerySelect([NotNull] OALParser.ExeCommandQuerySelectContext context)
         {
             String Cardinality = context.GetChild(0).GetText().Contains("many") ? "many" : "any";
-			Visit(context.GetChild(1));
+            Visit(context.GetChild(1));
             String VariableName = this.instanceName;
+            String AttributeName = this.attributeName; //can be null
             String ClassName = context.GetChild(3).GetText();
             EXEASTNode WhereExpression;
 
-            if(context.GetChild(4).GetText().Contains("where"))
+            if (context.GetChild(4).GetText().Contains("where"))
             {
                 //Console.WriteLine("where");
                 Visit(context.GetChild(5));
                 //Console.WriteLine("pocet v zasobniku: " + stackEXEASTNode.Count);
 
                 WhereExpression = stackEXEASTNode.Peek();
-                stackEXEScope.Peek().AddCommand(new EXECommandQuerySelect(Cardinality, ClassName, VariableName, WhereExpression));
+                stackEXEScope.Peek().AddCommand(new EXECommandQuerySelect(Cardinality, ClassName, VariableName, AttributeName, WhereExpression));
             }
             else
             {
-                stackEXEScope.Peek().AddCommand(new EXECommandQuerySelect(Cardinality, ClassName, VariableName));
+                stackEXEScope.Peek().AddCommand(new EXECommandQuerySelect(Cardinality, ClassName, VariableName, AttributeName));
             }
 
             //Console.WriteLine("ending execommandqueryselect");
@@ -119,13 +126,15 @@ namespace AnimationControl.OAL
 
         public override object VisitExeCommandQueryUnrelate([NotNull] OALParser.ExeCommandQueryUnrelateContext context)
         {
-			Visit(context.GetChild(1));
+            Visit(context.GetChild(1));
             String VariableName1 = this.instanceName;
-			Visit(context.GetChild(3));
+            String AttributeName1 = this.attributeName; //can be null
+            Visit(context.GetChild(3));
             String VariableName2 = this.instanceName;
+            String AttributeName2 = this.attributeName; //can be null
             String RelationshipName = context.GetChild(5).GetText();
 
-            stackEXEScope.Peek().AddCommand(new EXECommandQueryUnrelate(VariableName1, VariableName2, RelationshipName));
+            stackEXEScope.Peek().AddCommand(new EXECommandQueryUnrelate(VariableName1, AttributeName1, VariableName2, AttributeName2, RelationshipName));
 
             return null;
             //return base.VisitExeCommandQueryUnrelate(context);
@@ -134,10 +143,11 @@ namespace AnimationControl.OAL
 
         public override object VisitExeCommandQueryDelete([NotNull] OALParser.ExeCommandQueryDeleteContext context)
         {
-			Visit(context.GetChild(1));
+            Visit(context.GetChild(1));
             String VariableName = this.instanceName;
+            String AttributeName = this.attributeName; //can be null
 
-            stackEXEScope.Peek().AddCommand(new EXECommandQueryDelete(VariableName));
+            stackEXEScope.Peek().AddCommand(new EXECommandQueryDelete(VariableName, AttributeName));
 
             return null;
             //return base.VisitExeCommandQueryDelete(context);
@@ -145,31 +155,10 @@ namespace AnimationControl.OAL
 
 
         public override object VisitExeCommandAssignment([NotNull] OALParser.ExeCommandAssignmentContext context)
-        {//TODO priradenie atributu
-            /*String VariableName =  context.GetChild(0).GetText().Equals("assign ") ? context.GetChild(1).GetText() : context.GetChild(0).GetText();
-            String AttributeName = null;
-
-            if((context.GetChild(0).GetText().Equals("assign ") ? context.GetChild(2).GetText() : context.GetChild(1).GetText()).Equals("."))
-            {
-                AttributeName = context.GetChild(0).GetText().Equals("assign ") ? context.GetChild(3).GetText() : context.GetChild(2).GetText();
-                _ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(5)) : Visit(context.GetChild(4));
-            }
-            else
-            {
-                _ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(3)) : Visit(context.GetChild(2));
-            }
-
-            EXEASTNode expression = stackEXEASTNode.Peek();
-
-            stackEXEScope.Peek().AddCommand(new EXECommandAssignment(VariableName, AttributeName, expression));
-
-            stackEXEASTNode.Clear();
-
-            return null;
-            //return base.VisitExeCommandAssignment(context);*/
-			_ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(1)) : Visit(context.GetChild(0));
-			String VariableName =  this.instanceName;
-            String AttributeName = this.attributeName;
+        {
+            _ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(1)) : Visit(context.GetChild(0));
+            String VariableName = this.instanceName;
+            String AttributeName = this.attributeName; //can be null
 
             _ = context.GetChild(0).GetText().Equals("assign ") ? Visit(context.GetChild(3)) : Visit(context.GetChild(2));
             EXEASTNode expression = stackEXEASTNode.Peek();
@@ -179,12 +168,15 @@ namespace AnimationControl.OAL
             stackEXEASTNode.Clear();
 
             return null;
-			//return base.VisitExeCommandAssignment(context);
+            //return base.VisitExeCommandAssignment(context);
         }
 
 
         public override object VisitExpr([NotNull] OALParser.ExprContext context)
         {
+
+            //Console.WriteLine("Expr: " + context.ChildCount);
+            //Console.WriteLine(context.GetChild(0).GetType().Name);
             if (context.ChildCount == 1)
             {
                 if (context.GetChild(0).GetType().Name.Contains("TerminalNode") && stackEXEASTNode.Count() == 0)
@@ -206,67 +198,61 @@ namespace AnimationControl.OAL
                     }
                 }
             }
-            else if(context.ChildCount == 2)
-            {               
-                EXEASTNodeComposite ast = new EXEASTNodeComposite(ParseUtil.StripWhiteSpace(context.GetChild(0).GetText()));
+            else if (context.ChildCount == 2)
+            {
+                EXEASTNodeComposite ast = new EXEASTNodeComposite(ParseUtil.StripWhiteSpace(context.GetChild(0).GetText().ToLower()));
                 stackEXEASTNode.Push(ast);
-                
+
                 base.VisitExpr(context);
 
                 if (context.GetChild(0).GetType().Name.Contains("TerminalNode") && !context.GetChild(0).GetText().ToLower().Equals("not ") && !context.GetChild(0).GetText().Equals("-"))
-                { 
-					Visit(context.GetChild(1));
-					String InstanceName =  this.instanceName;
-					String AttributeName = this.attributeName;
+                {
+                    Visit(context.GetChild(1));
+                    String InstanceName = this.instanceName;
+                    String AttributeName = this.attributeName;
                     EXEASTNode newOperand = null;
 
                     if (AttributeName == null)
-					{
-						newOperand = new EXEASTNodeLeaf(ParseUtil.StripWhiteSpace(InstanceName));
-					}
-					else
-					{
-						newOperand = new EXEASTNodeComposite(".");
+                    {
+                        newOperand = new EXEASTNodeLeaf(ParseUtil.StripWhiteSpace(InstanceName));
+                    }
+                    else
+                    {
+                        newOperand = new EXEASTNodeComposite(".");
                         ((EXEASTNodeComposite)newOperand).AddOperand(new EXEASTNodeLeaf(ParseUtil.StripWhiteSpace(InstanceName)));
                         ((EXEASTNodeComposite)newOperand).AddOperand(new EXEASTNodeLeaf(ParseUtil.StripWhiteSpace(AttributeName)));
-					}
+                    }
 
                     ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(newOperand);
+                }
+
+                if (stackEXEASTNode.Count() > 1)
+                {
                     EXEASTNode temp = stackEXEASTNode.Pop();
                     ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(temp);
                 }
-                else if(context.GetChild(0).GetText().ToLower().Equals("not ") || context.GetChild(0).GetText().Equals("-"))
-                {
-                    if (stackEXEASTNode.Count() > 1)
-                    {
-                        EXEASTNode temp = stackEXEASTNode.Pop();
-                        ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(temp);
-                    }
-                }
             }
-            else if(context.ChildCount == 3)
+            else if (context.ChildCount == 3)
             {
                 if (!context.GetChild(0).GetText().Equals("("))
                 {
-                    EXEASTNodeComposite ast = new EXEASTNodeComposite(ParseUtil.StripWhiteSpace(context.GetChild(1).GetText()));
+                    EXEASTNodeComposite ast = new EXEASTNodeComposite(ParseUtil.StripWhiteSpace(context.GetChild(1).GetText().ToLower()));
                     stackEXEASTNode.Push(ast);
                 }
 
                 base.VisitExpr(context);
-                
+
                 if (context.GetChild(0).GetType().Name.Contains("TerminalNode") && !context.GetChild(0).GetText().Equals("("))
                 {
                     ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(new EXEASTNodeLeaf(ParseUtil.StripWhiteSpace(context.GetChild(0).GetText())));
                     ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(new EXEASTNodeLeaf(ParseUtil.StripWhiteSpace(context.GetChild(2).GetText())));
-                    EXEASTNode temp = stackEXEASTNode.Pop();
-                    ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(temp);
                 }
-                else if (stackEXEASTNode.Count > 1 && !context.GetChild(0).GetText().Equals("("))
+                
+                if (stackEXEASTNode.Count > 1 && !context.GetChild(0).GetText().Equals("("))
                 {
                     EXEASTNode temp = stackEXEASTNode.Pop();
                     ((EXEASTNodeComposite)stackEXEASTNode.Peek()).AddOperand(temp);
                 }
-
             }
 
             return null;
@@ -279,22 +265,27 @@ namespace AnimationControl.OAL
             String Cardinality = context.GetChild(0).GetText().Contains("many") ? "many" : "any";
             Console.WriteLine("Cardinality = " + Cardinality);
 
-			Visit(context.GetChild(1));
+            Visit(context.GetChild(1));
             String VariableName = this.instanceName;
-            Console.WriteLine("VariableName = " + VariableName);
+            String AttributeName = this.attributeName; //can be null
+            String Variable = (AttributeName == null) ? VariableName : (VariableName + "." + AttributeName);
+            Console.WriteLine("VariableName = " + Variable);
 
-            String StartingVariable = context.GetChild(3).GetText();
+            Visit(context.GetChild(3));
+            String StartingVariableName = this.instanceName;
+            String StartingAttributeName = this.attributeName; //can be null
+            String StartingVariable = (StartingAttributeName == null) ? StartingVariableName : (StartingVariableName + "." + StartingAttributeName);
             Console.WriteLine("StartingVariable = " + StartingVariable);
 
             String ClassName = context.GetChild(5).GetText();
             Console.WriteLine("ClassName = " + ClassName);
 
-            String RelationshipName = context.GetChild(6).GetText().Replace('[',' ').Replace(']',' ').Trim();
+            String RelationshipName = context.GetChild(6).GetText().Replace('[', ' ').Replace(']', ' ').Trim();
             Console.WriteLine("RelationshipName = " + RelationshipName);
 
             List<EXERelationshipLink> list = new List<EXERelationshipLink>();
             EXERelationshipLink eXERelationshipLink = new EXERelationshipLink(RelationshipName, ClassName);
-            EXERelationshipSelection eXERelationshipSelection = new EXERelationshipSelection(StartingVariable);
+            EXERelationshipSelection eXERelationshipSelection = new EXERelationshipSelection(StartingVariableName, StartingAttributeName);
             eXERelationshipSelection.AddRelationshipLink(eXERelationshipLink);
             EXEASTNode WhereExpression = null;
 
@@ -318,7 +309,7 @@ namespace AnimationControl.OAL
                 Visit(context.GetChild(context.ChildCount - 2));
                 WhereExpression = stackEXEASTNode.Peek();
             }
-            stackEXEScope.Peek().AddCommand(new EXECommandQuerySelectRelatedBy(Cardinality, VariableName, WhereExpression, eXERelationshipSelection));
+            stackEXEScope.Peek().AddCommand(new EXECommandQuerySelectRelatedBy(Cardinality, VariableName, AttributeName, WhereExpression, eXERelationshipSelection));
 
             stackEXEASTNode.Clear();
 
@@ -341,39 +332,41 @@ namespace AnimationControl.OAL
 
             return null;
             //return base.VisitExeCommandCall(context);*/
-			
-			Visit(context.GetChild(0));
-            String InstanceName = this.instanceName;
-			String AttributeName = this.attributeName;
-			String MethodName = ParseUtil.StripWhiteSpace(context.GetChild(2).GetText());
-			
-			List<EXEASTNode> Parameters = new List<EXEASTNode>();
-			
-			if (context.GetChild(3).GetText().Equals("("))  
-			{
-				for (int i = 4; i < context.ChildCount - 2; i++)
-				{
-					if (context.GetChild(i).GetType().Name.Contains("ExprContext"))
-					{
-						Visit(context.GetChild(i));
-						EXEASTNode parameter = stackEXEASTNode.Peek();
-						Parameters.Add(parameter);
-						
-						stackEXEASTNode.Clear();
-					}
-				}
-			}
 
-            stackEXEScope.Peek().AddCommand(new EXECommandCall(InstanceName, AttributeName, MethodName, Parameters));
-			
-			return null;
+            Visit(context.GetChild(0));
+            String InstanceName = this.instanceName;
+            String AttributeName = this.attributeName; //can be null
+            String MethodName = ParseUtil.StripWhiteSpace(context.GetChild(2).GetText());
+
+            List<EXEASTNode> ParametersList = new List<EXEASTNode>();
+
+            if (!context.GetChild(4).GetText().Equals(")"))
+            {
+                EXEASTNode Parameter;
+
+                for (int i = 4; i < context.ChildCount - 2; i++)
+                {
+                    if (context.GetChild(i).GetType().Name.Contains("ExprContext"))
+                    {
+                        Visit(context.GetChild(i));
+                        Parameter = stackEXEASTNode.Peek();
+                        ParametersList.Add(Parameter);
+
+                        stackEXEASTNode.Clear();
+                    }
+                }
+            }
+
+            stackEXEScope.Peek().AddCommand(new EXECommandCall(InstanceName, AttributeName, MethodName, ParametersList));
+
+            return null;
             //return base.VisitExeCommandCall(context);
         }
 
         public override object VisitBreakCommand([NotNull] OALParser.BreakCommandContext context)
         {
             stackEXEScope.Peek().AddCommand(new EXECommandBreak());
-            
+
             return null;
             //return base.VisitBreakCommand(context);
         }
@@ -405,7 +398,7 @@ namespace AnimationControl.OAL
                     EXEScope temp = stackEXEScope.Pop();
                     stackEXEScope.Peek().AddCommand(temp);
                 }
-                
+
             }
             return null;
             //return base.VisitWhileCommand(context);
@@ -414,10 +407,11 @@ namespace AnimationControl.OAL
         public override object VisitForeachCommand([NotNull] OALParser.ForeachCommandContext context)
         {
             String Iterator = context.GetChild(1).GetText();
-			Visit(context.GetChild(3));
+            Visit(context.GetChild(3));
             String Iterable = this.instanceName;
+            String IterableAttribute = this.attributeName; //can be null
 
-            stackEXEScope.Push(new EXEScopeForEach(Iterator, Iterable));
+            stackEXEScope.Push(new EXEScopeForEach(Iterator, Iterable, IterableAttribute));
 
             for (int i = 4; i < context.ChildCount; i++)
             {
@@ -531,8 +525,8 @@ namespace AnimationControl.OAL
 
                     if (elif && !els)
                     {
-                        ((EXEScopeCondition) stackEXEScope.Peek()).AddElifScope((EXEScopeCondition) temp);
-                        EXEScopeCondition temp2 = ((EXEScopeCondition) stackEXEScope.Pop());
+                        ((EXEScopeCondition)stackEXEScope.Peek()).AddElifScope((EXEScopeCondition)temp);
+                        EXEScopeCondition temp2 = ((EXEScopeCondition)stackEXEScope.Pop());
                         stackEXEScope.Peek().AddCommand(temp2);
                     }
                 }
@@ -540,40 +534,204 @@ namespace AnimationControl.OAL
             return null;
             //return base.VisitIfCommnad(context);
         }
-		
-		public override object VisitExeCommandCreateList([NotNull] OALParser.ExeCommandCreateListContext context)
+
+        public override object VisitExeCommandCreateList([NotNull] OALParser.ExeCommandCreateListContext context)
         {
-			return null;
-		}
-		
-		public override object VisitExeCommandAddingToList([NotNull] OALParser.ExeCommandAddingToListContext context) 
+            Visit(context.GetChild(1));
+            String VariableName = this.instanceName;
+            String AttributeName = this.attributeName; //can be null
+            String ClassName = context.GetChild(3).GetText();
+
+            List<EXEASTNode> ItemsList = new List<EXEASTNode>();
+
+            if (context.GetChild(4).GetText().Equals('{'))
+            {
+                EXEASTNode Item;
+
+                for (int i = 5; i < context.ChildCount - 2; i++)
+                {
+                    if (context.GetChild(i).GetType().Name.Contains("InstanceHandleContext"))
+                    {
+                        Visit(context.GetChild(i)); // We get this.instanceName and this.attributeName(can be null)
+
+                        if (this.attributeName == null)
+                        {
+                            Item = new EXEASTNodeLeaf(this.instanceName);
+                        }
+                        else
+                        {
+                            Item = new EXEASTNodeComposite(".");
+                            ((EXEASTNodeComposite)Item).AddOperand(new EXEASTNodeLeaf(this.instanceName));
+                            ((EXEASTNodeComposite)Item).AddOperand(new EXEASTNodeLeaf(this.attributeName));
+                        }
+
+                        ItemsList.Add(Item);
+                    }
+                }
+            }
+
+            stackEXEScope.Peek().AddCommand(new EXECommandCreateList(VariableName, AttributeName, ClassName, ItemsList));
+
+            return null;
+            //return base.VisitExeCommandCreateList(context);
+        }
+
+        public override object VisitExeCommandAddingToList([NotNull] OALParser.ExeCommandAddingToListContext context)
         {
-			return null;
-		}
-		
-		public override object VisitExeCommandWrite([NotNull] OALParser.ExeCommandWriteContext context)
+            EXEASTNode Item;
+
+            Visit(context.GetChild(1)); // We get this.instanceName and this.attributeName(can be null)
+            if (this.attributeName == null)
+            {
+                Item = new EXEASTNodeLeaf(this.instanceName);
+            }
+            else
+            {
+                Item = new EXEASTNodeComposite(".");
+                ((EXEASTNodeComposite)Item).AddOperand(new EXEASTNodeLeaf(this.instanceName));
+                ((EXEASTNodeComposite)Item).AddOperand(new EXEASTNodeLeaf(this.attributeName));
+            }
+
+            Visit(context.GetChild(3));
+            String VariableName = this.instanceName;
+            String AttributeName = this.attributeName; //can be null
+
+            stackEXEScope.Peek().AddCommand(new EXECommandAddingToList(VariableName, AttributeName, Item));
+
+            return null;
+            //return base.VisitExeCommandAddingToList(context);
+        }
+
+        public override object VisitExeCommandRemovingFromList([NotNull] OALParser.ExeCommandRemovingFromListContext context)
         {
-			return null;
-		}
-		
-		public override object VisitExeCommandRead([NotNull] OALParser.ExeCommandReadContext context)
+            EXEASTNode Item;
+
+            Visit(context.GetChild(1)); // We get this.instanceName and this.attributeName(can be null)
+            if (this.attributeName == null)
+            {
+                Item = new EXEASTNodeLeaf(this.instanceName);
+            }
+            else
+            {
+                Item = new EXEASTNodeComposite(".");
+                ((EXEASTNodeComposite)Item).AddOperand(new EXEASTNodeLeaf(this.instanceName));
+                ((EXEASTNodeComposite)Item).AddOperand(new EXEASTNodeLeaf(this.attributeName));
+            }
+
+            Visit(context.GetChild(3));
+            String VariableName = this.instanceName;
+            String AttributeName = this.attributeName; //can be null
+
+            stackEXEScope.Peek().AddCommand(new EXECommandRemovingFromList(VariableName, AttributeName, Item));
+
+            return null;
+            //return base.VisitExeCommandRemovingFromList(context);
+        }
+
+        public override object VisitExeCommandWrite([NotNull] OALParser.ExeCommandWriteContext context)
         {
-			return null;
-		}
-		
-		public override object VisitInstanceHandle([NotNull] OALParser.InstanceHandleContext context)
-		{
-			this.instanceName = context.GetChild(0).GetText();
-			this.attributeName = null;
-			
-			if (context.ChildCount == 3)
+            List<EXEASTNode> ArgumentsList = new List<EXEASTNode>();
+
+            if (!context.GetChild(2).GetText().Equals(")"))
+            {
+                EXEASTNode Argument;
+
+                for (int i = 2; i < context.ChildCount - 2; i++)
+                {
+                    if (context.GetChild(i).GetType().Name.Contains("ExprContext"))
+                    {
+                        Visit(context.GetChild(i));
+                        Argument = stackEXEASTNode.Peek();
+                        ArgumentsList.Add(Argument);
+
+                        stackEXEASTNode.Clear();
+                    }
+                }
+            }
+
+            stackEXEScope.Peek().AddCommand(new EXECommandWrite(ArgumentsList));
+
+            return null;
+            //return base.VisitExeCommandWrite(context);
+        }
+
+        public override object VisitExeCommandRead([NotNull] OALParser.ExeCommandReadContext context)
+        {
+            String VariableName;
+            String AttributeName;
+            String ReadType;
+            EXEASTNode Prompt = null;
+
+            if (context.GetChild(0).GetText().Equals("assign "))
+            {
+                Visit(context.GetChild(1));
+                VariableName = this.instanceName;
+                AttributeName = this.attributeName; //can be null
+
+                ReadType = context.GetChild(3).GetText();
+
+                if (context.GetChild(4).GetType().Name.Contains("ExprContext"))
+                {
+                    Visit(context.GetChild(4));
+                    Prompt = stackEXEASTNode.Peek();
+
+                    stackEXEASTNode.Clear();
+                }
+            }
+            else
+            {
+                Visit(context.GetChild(0));
+                VariableName = this.instanceName;
+                AttributeName = this.attributeName; //can be null
+
+                ReadType = context.GetChild(2).GetText();
+
+                if (context.GetChild(3).GetType().Name.Contains("ExprContext"))
+                {
+                    Visit(context.GetChild(3));
+                    Prompt = stackEXEASTNode.Peek();
+
+                    stackEXEASTNode.Clear();
+                }
+            }
+
+            stackEXEScope.Peek().AddCommand(new EXECommandRead(VariableName, AttributeName, ReadType, Prompt));
+
+            return null;
+            //return base.VisitExeCommandRead(context);
+        }
+
+        public override object VisitReturnCommand([NotNull] OALParser.ReturnCommandContext context)
+        {
+            EXEASTNode Expression = null;
+
+            if (context.GetChild(1).GetType().Name.Contains("ExprContext"))
+            {
+                Visit(context.GetChild(1));
+                Expression = stackEXEASTNode.Peek();
+
+                stackEXEASTNode.Clear();
+            }
+
+            stackEXEScope.Peek().AddCommand(new EXECommandReturn(Expression));
+
+            return null;
+            //return base.VisitReturnCommand(context);
+        }
+
+        public override object VisitInstanceHandle([NotNull] OALParser.InstanceHandleContext context)
+        {
+            this.instanceName = context.GetChild(0).GetText();
+            this.attributeName = null;
+
+            if (context.ChildCount == 3)
             {
                 this.attributeName = context.GetChild(2).GetText();
             }
             return null;
             //return base.VisitInstanceHandle(context);
         }
-		
-		
+
+
     }
 }

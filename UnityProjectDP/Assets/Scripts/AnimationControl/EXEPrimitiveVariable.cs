@@ -20,6 +20,18 @@ namespace OALProgramControl
             this.Type = EXETypes.DetermineVariableType(Name, Value);
         }
 
+        public EXEPrimitiveVariable(String Name, String Value, String Type)
+        {
+            this.Name = Name;
+            this.Value = Value;
+            this.Type = Type;
+
+            if (!EXETypes.IsValidValue(Value, Type))
+            {
+                throw new Exception(String.Format("Value: \"{0}\"\nType: \"{1}\"\nName: \"{2}\"", Value, Type, Name));
+            }
+        }
+
         public Boolean AssignValue(String name, String NewValue)
         {
 
@@ -30,12 +42,12 @@ namespace OALProgramControl
 
             if (EXETypes.UnitializedName.Equals(this.Type))
             {
-                this.Value = NewValue;
-                return true;
+                //this.Value = NewValue;
+                return false;
             }
 
             String NewValueType = EXETypes.DetermineVariableType(name, NewValue);
-            if (NewValueType == this.Type)
+            if (NewValueType == this.Type || EXETypes.UnitializedName.Equals(NewValue))
             {
                 this.Value = NewValue;
                 return true;

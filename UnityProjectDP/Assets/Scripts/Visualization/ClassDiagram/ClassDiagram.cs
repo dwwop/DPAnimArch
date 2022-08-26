@@ -169,7 +169,17 @@ namespace AnimArch.Visualization.Diagrams
                     foreach (Method CurrentMethod in CurrentClass.Methods)
                     {
                         CurrentMethod.Name = CurrentMethod.Name.Replace(" ", "_");
-                        TempCDClass.AddMethod(new CDMethod(TempCDClass, CurrentMethod.Name, EXETypes.ConvertEATypeName(CurrentMethod.ReturnValue)));
+                        CDMethod Method = new CDMethod(TempCDClass, CurrentMethod.Name, EXETypes.ConvertEATypeName(CurrentMethod.ReturnValue));
+                        TempCDClass.AddMethod(Method);
+
+                        foreach (string arg in CurrentMethod.arguments)
+                        {
+                            string[] tokens = arg.Split(' ');
+                            string type = tokens[0];
+                            string name = tokens[1];
+
+                            Method.Parameters.Add(new CDParameter() { Name = name, Type = EXETypes.ConvertEATypeName(type) });
+                        }
                     }
                 }
                 CurrentClass.Top *= -1;
@@ -209,6 +219,17 @@ namespace AnimArch.Visualization.Diagrams
 
                 TempCDRelationship = OALProgram.Instance.RelationshipSpace.SpawnRelationship(Relation.FromClass, Relation.ToClass);
                 Relation.OALName = TempCDRelationship.RelationshipName;
+
+                if ("Generalization".Equals(Relation.PropertiesEa_type) || "Realisation".Equals(Relation.PropertiesEa_type))
+                {
+                    CDClass FromClass = OALProgram.Instance.ExecutionSpace.getClassByName(Relation.FromClass);
+                    CDClass ToClass = OALProgram.Instance.ExecutionSpace.getClassByName(Relation.ToClass);
+
+                    if (FromClass != null && ToClass != null)
+                    {
+                        FromClass.SuperClass = ToClass;
+                    }
+                }
 
                 Relations.Add(new RelationInDiagram() { XMIParsedRelation = Relation, RelationInfo = TempCDRelationship });
             }

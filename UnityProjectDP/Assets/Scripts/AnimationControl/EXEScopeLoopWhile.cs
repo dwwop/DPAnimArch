@@ -68,5 +68,10 @@ namespace OALProgramControl
             Result += Indent + "end while;\n";
             return Result;
         }
+
+        protected override EXEScope CreateDuplicateScope()
+        {
+            return new EXEScopeLoopWhile(Condition);
+        }
     }
 }

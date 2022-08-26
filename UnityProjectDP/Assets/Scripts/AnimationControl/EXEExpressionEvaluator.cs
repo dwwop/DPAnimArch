@@ -20,6 +20,7 @@ namespace OALProgramControl
         {
             List<String> Operands = PromoteIntegers(InOperands);
 
+            //TODO Lukas: Better check all operands
             if (!this.CanBeEvaluated(Operator, Operands)) return null;
 
             //Console.WriteLine("Can be evaluated");
@@ -63,10 +64,10 @@ namespace OALProgramControl
                     {
                         //add string in list and return result 
                         //remove \" from Operands  
-                        List<String> StringList = Operands.Select(s => s.Replace("\"", "")).ToList();
+                        List<String> StringList = Operands.Select(s => s.Substring(1, s.Length - 2)).ToList();
 
                         //add strings in list and return result
-                        return CreateEXETypeString(StringList.Aggregate((a, x) => a + x).ToString());
+                        return CreateEXETypeString(StringList.Aggregate((a, x) => a + x));
                     }
                     break;
                 case "-": //int, real
@@ -75,8 +76,14 @@ namespace OALProgramControl
                     {
                         //convert to list of int
                         List<int> IntList = Operands.Select(int.Parse).ToList();
+                        int first = IntList[0];
+                        IntList.RemoveAt(0);
+                        if (!IntList.Any())
+                        {
+                            return (-first).ToString();
+                        }
                         //sub numbers in list and return result 
-                        return IntList.Aggregate(0, (a, x) => a - x).ToString();
+                        return IntList.Aggregate(first, (a, x) => a - x).ToString();
                     }
                     //true if Operands are real numbers
                     if (String.Equals(EXETypes.RealTypeName, VariableType))
@@ -95,8 +102,14 @@ namespace OALProgramControl
                                 return EXETypes.BooleanFalse;
                             }
                         }
+                        decimal first = DoubleList[0];
+                        DoubleList.RemoveAt(0);
+                        if (!DoubleList.Any())
+                        {
+                            return (-first).ToString();
+                        }
                         //sub numbers in list and return result
-                        return EXETypes.AdjustAssignedValue(EXETypes.RealTypeName, DoubleList.Aggregate((decimal)0, (a, x) => a - x).ToString());
+                        return EXETypes.AdjustAssignedValue(EXETypes.RealTypeName, DoubleList.Aggregate(first, (a, x) => a - x).ToString());
                     }
                     break;
                 case "*": //int, real
@@ -580,7 +593,7 @@ namespace OALProgramControl
 
             }
 
-            //check if it is boolean type
+            //check if it is string type
             if (String.Equals(ParamType, EXETypes.StringTypeName))
             {
                 if (oper == ">" || oper == "<" || oper == "<=" || oper == ">=" || oper == "==" || oper == "!=")

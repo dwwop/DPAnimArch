@@ -102,5 +102,10 @@ namespace OALProgramControl
             Result += Indent + "end par;\n";
             return Result;
         }
+
+        protected override EXEScope CreateDuplicateScope()
+        {
+            return new EXEScopeParallel(Threads.Select(x => (EXEScope)x.CreateClone()).ToArray());
+        }
     }
 }
