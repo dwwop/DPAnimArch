@@ -36,6 +36,7 @@ namespace OALProgramControl
         {
             return false;
         }
+        public abstract EXECommand CreateClone();
         public virtual String ToCode(String Indent = "")
         {
             return Indent + ToCodeSimple() + ";\n";

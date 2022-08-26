@@ -7,6 +7,13 @@ namespace OALProgramControl
     public class EXEReferencingSetVariable : EXEReferenceHandle
     {
         private List<EXEReferencingVariable> ReferencingVariables;
+        public String Type
+        {
+            get
+            {
+                return this.ClassName + "[]";
+            }
+        }
         public bool Sealed;
         public EXEReferencingSetVariable(String Name, String ClassName) : base(Name, ClassName)
         {
@@ -46,7 +53,7 @@ namespace OALProgramControl
 
         public override List<long> GetReferencedIds()
         {
-            return this.ReferencingVariables.Select(x => { return x.ReferencedInstanceId; }).ToList().FindAll(x => x >= 0).ToList();
+            return this.ReferencingVariables.Select(x => x.ReferencedInstanceId).ToList().FindAll(x => x >= 0);
         }
 
         public bool IsNotEmpty()
@@ -71,6 +78,11 @@ namespace OALProgramControl
                 }
             }
             return Result;
+        }
+
+        public void ClearVariables()
+        {
+            this.ReferencingVariables.Clear();
         }
     }
 }

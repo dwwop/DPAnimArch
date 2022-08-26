@@ -28,6 +28,7 @@ namespace OALProgramControl
         private static readonly List<String> BoolNames = new List<string>(new String[] { "bool", "boolean"});
         private static readonly List<String> StringNames = new List<string>(new String[] { "string", "char[]", "char", "List<char>" });
         private static readonly List<String> PrimitiveNames = new List<string>(new String[] { IntegerTypeName, RealTypeName, BooleanTypeName, StringTypeName, DateTypeName, UniqueIDTypeName });
+        private static readonly Dictionary<Char, String> EscapeChars = new Dictionary<Char, String>() { { '\"', "\"" }, { '\'', "\'" }, { 't', "\t" }, { 'n', "\n" }, { '\\', "\\" } };
 
         public static bool IsPrimitive(String typeName)
         {
@@ -74,11 +75,15 @@ namespace OALProgramControl
                 return StringTypeName;
             }
 
-
             return ReferenceTypeName;
         }
         public static Boolean IsValidValue(String Value, String Type)
         {
+            if (UnitializedName.Equals(Value))
+            {
+                return true;
+            }
+
             Boolean Result = false;
             switch (Type)
             {
@@ -88,7 +93,7 @@ namespace OALProgramControl
                 case "real":
                     try
                     {
-                        double.Parse(Value, CultureInfo.InvariantCulture);
+                        decimal.Parse(Value, CultureInfo.InvariantCulture);
                         Result = true;
                     }
                     catch (Exception e)
@@ -97,7 +102,7 @@ namespace OALProgramControl
                     }
                     break;
                 case "boolean":
-                    Result = Boolean.TryParse(Value, out _);
+                    Result = (Value == EXETypes.BooleanTrue || Value == EXETypes.BooleanFalse);
                     break;
                 case "unique_ID":
                     //Result = Name == UniqueIDTypeName;
@@ -118,12 +123,17 @@ namespace OALProgramControl
         }
         public static Boolean IsValidReferenceValue(String Value, String Type)
         {
-            if (!Value.Split(',').Select(id => int.TryParse(id, out _)).Aggregate(true, (acc, x) => acc && x))
+            if
+            (
+                !Value.Split(',').Select(id => long.TryParse(id, out _)).Aggregate(true, (acc, x) => acc && x)
+                &&
+                !String.Empty.Equals(Value)
+            )
             {
                 return false;
             }
 
-            int[] IDs = Value.Split(',').Select(id => int.Parse(id)).ToArray();
+            long[] IDs = String.Empty.Equals(Value) ? new long[] { } : Value.Split(',').Select(id => long.Parse(id)).ToArray();
 
             if (IDs.Length != 1 && !"[]".Equals(Type.Substring(Type.Length - 2, 2)))
             {
@@ -152,7 +162,7 @@ namespace OALProgramControl
                 return StringTypeName;
             }
 
-            return null;
+            return EAType;
         }
         public static bool CanBeAssignedToAttribute(String AttributeName, String AttributeType, String NewValueType)
         {
@@ -166,7 +176,20 @@ namespace OALProgramControl
                 return false;
             }
 
+            if (EXETypes.UnitializedName.Equals(NewValueType) && EXETypes.IsPrimitive(AttributeType))
+            {
+                return true;
+            }
+
             if (String.Equals(AttributeType, NewValueType))
+            {
+                return true;
+            }
+
+            CDClass NewValueTypeClass = OALProgram.Instance.ExecutionSpace.getClassByName(NewValueType);
+            CDClass AttributeTypeClass = OALProgram.Instance.ExecutionSpace.getClassByName(AttributeType);
+
+            if (NewValueTypeClass != null && AttributeTypeClass != null && NewValueTypeClass.CanBeAssignedTo(AttributeTypeClass))
             {
                 return true;
             }
@@ -193,35 +216,7 @@ namespace OALProgramControl
         }
         public static bool CanBeAssignedToVariable(String VariableType, String NewValueType)
         {
-            if (VariableType == null || NewValueType == null)
-            {
-                return false;
-            }
-
-            if (String.Equals(VariableType, NewValueType))
-            {
-                return true;
-            }
-
-            if (
-                EXEExecutionGlobals.AllowLossyAssignmentOfRealToInteger
-                && EXETypes.IntegerTypeName.Equals(VariableType)
-                && EXETypes.RealTypeName.Equals(NewValueType)
-            )
-            {
-                return true;
-            }
-
-            if (
-               EXEExecutionGlobals.AllowPromotionOfIntegerToReal
-               && EXETypes.RealTypeName.Equals(VariableType)
-               && EXETypes.IntegerTypeName.Equals(NewValueType)
-            )
-            {
-                return true;
-            }
-
-            return false;
+            return CanBeAssignedToAttribute("", VariableType, NewValueType);
         }
         public static String AdjustAssignedValue(String VariableType, String NewValue)
         {
@@ -255,6 +250,30 @@ namespace OALProgramControl
             }
 
             return NewValue;
+        }
+
+        public static String EvaluateEscapeSequences(String Value)
+        {
+            int index = Value.IndexOf('\\', 0);
+            String EscChar;
+
+            while (index != -1)
+            {
+                if ((index + 1) >= Value.Length)
+                {
+                    break;
+                }
+
+                if (EXETypes.EscapeChars.TryGetValue(Value[index + 1], out EscChar))
+                {
+                    Value = Value.Remove(index, 2)
+                                 .Insert(index, EscChar);
+                }
+
+                index = Value.IndexOf('\\', index + 1);
+            }
+
+            return Value;
         }
     }
 }

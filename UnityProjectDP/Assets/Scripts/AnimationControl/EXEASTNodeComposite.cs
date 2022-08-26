@@ -64,7 +64,7 @@ namespace OALProgramControl
                 {
                     EvaluatedOperands.Add(Operand.Evaluate(Scope, ExecutionSpace));
                 }
-                if (EvaluatedOperands.Contains(null))
+                if (EvaluatedOperands.Contains(null) || EvaluatedOperands.Contains(EXETypes.UnitializedName))
                 {
                     return Result;
                 }
@@ -95,8 +95,84 @@ namespace OALProgramControl
             // If we have handle operators
             else if (HandleEvaluator.IsHandleOperator(this.Operation))
             {
-                Console.WriteLine("We have handle operator");
-                Result = HandleEvaluator.Evaluate(this.Operation, this.Operands.Select(x => ((EXEASTNodeLeaf)x).GetNodeValue()).ToList(), Scope);
+                if (this.Operands.Count == 1)
+                {     
+                    if (this.Operands[0].IsReference() || EXETypes.UnitializedName.Equals(this.Operands[0].GetNodeValue()))
+                    {
+                        String OperandType = EXETypes.UnitializedName.Equals(this.Operands[0].GetNodeValue())
+                                             ?
+                                             EXETypes.UnitializedName
+                                             :
+                                             Scope.DetermineVariableType(this.Operands[0].AccessChain(), ExecutionSpace);
+
+                        if
+                        (
+                            !EXETypes.IsPrimitive(OperandType)
+                            &&
+                            !EXETypes.ReferenceTypeName.Equals(OperandType)
+                        )
+                        {
+                            String OperandValue = null;
+
+                            if (EXETypes.UnitializedName.Equals(OperandType))
+                            {
+                                OperandValue = "";
+                            }
+                            else if ("[]".Equals(OperandType.Substring(OperandType.Length - 2, 2)))
+                            {
+                                CDClass Class = ExecutionSpace.getClassByName(OperandType.Substring(0, OperandType.Length - 2));
+                                if (Class == null)
+                                {
+                                    return Result;
+                                }
+
+                                OperandValue = this.Operands[0].Evaluate(Scope, ExecutionSpace);
+
+                                if (!EXETypes.IsValidReferenceValue(OperandValue, OperandType))
+                                {
+                                    return Result;
+                                }
+
+                                long[] IDs = String.Empty.Equals(OperandValue) ? new long[] { } : OperandValue.Split(',').Select(id => long.Parse(id)).ToArray();
+
+                                CDClassInstance ClassInstance;
+                                foreach (long ID in IDs)
+                                {
+                                    ClassInstance = Class.GetInstanceByID(ID);
+                                    if (ClassInstance == null)
+                                    {
+                                        return Result;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                CDClass Class = ExecutionSpace.getClassByName(OperandType);
+                                if (Class == null)
+                                {
+                                    return Result;
+                                }
+
+                                OperandValue = this.Operands[0].Evaluate(Scope, ExecutionSpace);
+
+                                if (!EXETypes.IsValidReferenceValue(OperandValue, OperandType))
+                                {
+                                    return Result;
+                                }
+
+                                long ID = long.Parse(OperandValue);
+
+                                CDClassInstance ClassInstance = Class.GetInstanceByID(ID);
+                                if (ClassInstance == null)
+                                {
+                                    return Result;
+                                }
+                            }
+
+                            Result = HandleEvaluator.Evaluate(this.Operation, OperandValue);
+                        }
+                    }
+                }
             }
             // If we have access operator - we either access attribute or have decimal number. There are always 2 operands
             else if (".".Equals(this.Operation) && this.Operands.Count == 2)
@@ -139,9 +215,17 @@ namespace OALProgramControl
             // If we have handle operators
             else if (HandleEvaluator.IsHandleOperator(this.Operation))
             {
-                if (this.Operands.Count() == 1 && Scope.FindReferenceHandleByName(((EXEASTNodeLeaf)this.Operands[0]).GetNodeValue()) != null)
+                if (this.Operands.Count() == 1)
                 {
-                    Result = true;
+                    String OperandType = Scope.DetermineVariableType(this.Operands[0].AccessChain(), ExecutionSpace);
+
+                    if (OperandType != null)
+                    {
+                        if (!EXETypes.IsPrimitive(OperandType) && !EXETypes.ReferenceTypeName.Equals(OperandType))
+                        {
+                            Result = true;
+                        }
+                    }
                 }
             }
             // If we have access operator - we either access attribute or have decimal number. There are always 2 operands
@@ -274,6 +358,28 @@ namespace OALProgramControl
                 }
             }
             return -1;
+        }
+
+        public List<string> AccessChain()
+        {
+            if (!".".Equals(this.Operation))
+            {
+                return null;
+            }
+
+            List<List<String>> SubLists = this.Operands.Select(x => x.AccessChain()).ToList();
+
+            if (SubLists.Contains(null))
+            {
+                return null;
+            }
+
+            return SubLists.Aggregate(new List<String>(), (acc,x) => acc.Concat(x).ToList());
+        }
+
+        public bool IsReference()
+        {
+            return ".".Equals(this.Operation) && this.Operands.Select(x => x.IsReference()).Aggregate(true, (acc, x) => acc && x);
         }
     }
 }

@@ -13,12 +13,12 @@ namespace OALProgramControl
             return ValidOperators.Contains(Operator);
         }
 
-        public String Evaluate(String Operator, List<String> Operands, EXEScope Scope)
+        public String Evaluate(String Operator, String OperandValue)
         {
             Console.WriteLine("EXEEvaluatorHandleOperators.Evaluate");
             String Result = null;
 
-            if (Operator == null || Operands == null)
+            if (Operator == null || OperandValue == null)
             {
                 return Result;
             }
@@ -30,72 +30,47 @@ namespace OALProgramControl
                 return Result;
             }
 
-            if (Operands.Count == 1)
-            {
-                switch (Operator) {
-                    case "empty":
-                        Console.WriteLine("Time to evaluate 'empty' operator");
-                        Result = EvaluateEmpty(Operands.First(), Scope);
-                        break;
-                    case "not_empty":
-                        Result = EvaluateNotEmpty(Operands.First(), Scope);
-                        break;
-                    case "cardinality":
-                        Result = EvaluateCardinality(Operands.First(), Scope);
-                        break;
-                }
-            }
+            long[] Values = String.Empty.Equals(OperandValue) ? new long[] {} : OperandValue.Split(',').Select(id => long.Parse(id)).ToArray(); 
 
-            return Result;
+            switch (Operator)
+            {
+                case "empty":
+                    Console.WriteLine("Time to evaluate 'empty' operator");
+                    Result = EvaluateEmpty(Values);
+                    break;
+                case "not_empty":
+                    Result = EvaluateNotEmpty(Values);
+                    break;
+                case "cardinality":
+                    Result = EvaluateCardinality(Values);
+                    break;
+            }
+            
+            return Result; 
         }
 
-        public String EvaluateEmpty(String Operand, EXEScope Scope)
+        public String EvaluateEmpty(long[] OperandValues)
         {
-            String Result = null;
-
-            if (EXETypes.UnitializedName.Equals(Operand))
+            if (OperandValues.Any())
             {
-                Result = EXETypes.BooleanTrue;
-                return Result;
-            }
-           
-            EXEReferencingVariable SingleInstanceVariable = Scope.FindReferencingVariableByName(Operand);
-            if (SingleInstanceVariable != null)
-            {
-                if (SingleInstanceVariable.IsInitialized())
+                if (OperandValues.Count() == 1)
                 {
-                    Result = EXETypes.BooleanFalse;
-                }
-                else
-                {
-                    Result = EXETypes.BooleanTrue;
+                    if (OperandValues[0] < 0)
+                    {
+                        return EXETypes.BooleanTrue;
+                    }
                 }
 
-                return Result;
+                return EXETypes.BooleanFalse;
             }
 
-            EXEReferencingSetVariable MultiInstanceVariable = Scope.FindSetReferencingVariableByName(Operand);
-            if (MultiInstanceVariable != null)
-            {
-                if (MultiInstanceVariable.GetReferencingVariables().Any())
-                {
-                    Result = EXETypes.BooleanFalse;
-                }
-                else
-                {
-                    Result = EXETypes.BooleanTrue;
-                }
-
-                return Result;
-            }
-
-            return Result;
+            return EXETypes.BooleanTrue; 
         }
 
-        public String EvaluateNotEmpty(String Operand, EXEScope Scope)
+        public String EvaluateNotEmpty(long[] OperandValues)
         {
             String Result = null;
-            String TempResult = EvaluateEmpty(Operand, Scope);
+            String TempResult = EvaluateEmpty(OperandValues);
 
             if (EXETypes.BooleanTrue.Equals(TempResult))
             {
@@ -106,49 +81,25 @@ namespace OALProgramControl
                 Result = EXETypes.BooleanTrue;
             }
 
-            return Result;
+            return Result; 
         }
-        public String EvaluateCardinality(String Operand, EXEScope Scope)
+
+        public String EvaluateCardinality(long[] OperandValues)
         {
-            String Result = null;
-
-            if (EXETypes.UnitializedName.Equals(Operand))
+            if (OperandValues.Any())
             {
-                Result = "0";
-                return Result;
+                if (OperandValues.Count() == 1)
+                {
+                    if (OperandValues[0] < 0)
+                    {
+                        return "0";
+                    }
+                }
+
+                return OperandValues.Count().ToString();
             }
 
-            EXEReferencingVariable SingleInstanceVariable = Scope.FindReferencingVariableByName(Operand);
-            if (SingleInstanceVariable != null)
-            {
-                if (SingleInstanceVariable.IsInitialized())
-                {
-                    Result = "1";
-                }
-                else
-                {
-                    Result = "0";
-                }
-
-                return Result;
-            }
-
-            EXEReferencingSetVariable MultiInstanceVariable = Scope.FindSetReferencingVariableByName(Operand);
-            if (MultiInstanceVariable != null)
-            {
-                if (MultiInstanceVariable.GetReferencingVariables().Any())
-                {
-                    Result = MultiInstanceVariable.GetReferencingVariables().Count.ToString();
-                }
-                else
-                {
-                    Result = "0";
-                }
-
-                return Result;
-            }
-
-            return Result;
+            return "0";
         }
     }
 }

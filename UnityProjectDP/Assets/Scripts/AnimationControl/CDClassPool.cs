@@ -19,10 +19,12 @@ namespace OALProgramControl
         public CDClassInstance GetClassInstanceById(String ClassName, long Id)
         {
             CDClassInstance Result = null;
-            foreach(CDClass Class in this.ClassPool)
+            foreach (CDClass Class in this.ClassPool)
             {
-                if (String.Equals(Class.Name, ClassName)){
+                if (String.Equals(Class.Name, ClassName))
+                {
                     Result = Class.GetInstanceByID(Id);
+                    break;
                 }
             }
 
