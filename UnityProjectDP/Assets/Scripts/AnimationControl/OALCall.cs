@@ -14,14 +14,16 @@ namespace OALProgramControl
         public String RelationshipName { get; }
         public String CalledClassName { get; }
         public String CalledMethodName { get; }
+        public Boolean NoRelationship { get; }
 
-        public OALCall(String CallerClassName, String CallerMethodName, String RelationshipName, String CalledClassName, String CalledMethodName)
+        public OALCall(String CallerClassName, String CallerMethodName, String RelationshipName, String CalledClassName, String CalledMethodName, Boolean NoRelationship)
         {
             this.CallerClassName = CallerClassName;
             this.CallerMethodName = CallerMethodName;
             this.RelationshipName = RelationshipName;
             this.CalledClassName = CalledClassName;
             this.CalledMethodName = CalledMethodName;
+            this.NoRelationship = NoRelationship;
         }
     }
 }

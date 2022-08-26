@@ -10,5 +10,10 @@
         {
             return "continue";
         }
+
+        public override EXECommand CreateClone()
+        {
+            return new EXECommandContinue();
+        }
     }
 }

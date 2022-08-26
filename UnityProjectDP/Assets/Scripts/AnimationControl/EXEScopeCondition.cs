@@ -177,5 +177,14 @@ namespace OALProgramControl
             Result += Indent + "end if;\n";
             return Result;
         }
+
+        protected override EXEScope CreateDuplicateScope()
+        {
+            return new EXEScopeCondition(Condition)
+            {
+                ElifScopes = ElifScopes == null ? null : ElifScopes.Select(x => (EXEScopeCondition)x.CreateClone()).ToList(),
+                ElseScope = ElseScope == null ? null : (EXEScope)ElseScope.CreateClone()
+            };
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace OALProgramControl
@@ -29,7 +30,15 @@ namespace OALProgramControl
             // If we have simple value, e.g. 5, 3.14, "hi Madelyn", we are good
             if (!EXETypes.ReferenceTypeName.Equals(ValueType))
             {
-                Result = this.Value;
+                if (EXETypes.StringTypeName.Equals(ValueType))
+                {
+                    Result = EXETypes.EvaluateEscapeSequences(this.Value.Substring(1, this.Value.Length - 2));
+                    Result = '\"' + Result + '\"';
+                }
+                else
+                {
+                    Result = this.Value;
+                }
             }
             // We got here because we have a variable name, the variable is of primitive value, or object reference, or set reference
             else
@@ -88,6 +97,16 @@ namespace OALProgramControl
                 indent += "| ";
             }
             Console.WriteLine(this.Value);
+        }
+
+        public List<string> AccessChain()
+        {
+            return new List<string>(new string[] { this.Value });
+        }
+
+        public bool IsReference()
+        {
+            return EXETypes.ReferenceTypeName.Equals(EXETypes.DetermineVariableType("", this.Value));
         }
 
         public string ToCode()

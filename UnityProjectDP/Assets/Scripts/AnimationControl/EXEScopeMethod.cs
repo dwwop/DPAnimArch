@@ -15,18 +15,10 @@ namespace OALProgramControl
             AddCommandsToStack(OALProgram, this.Commands);
             return true;
         }
-        public EXEScopeMethod CreateClone()
+
+        protected override EXEScope CreateDuplicateScope()
         {
-            EXEScopeMethod Clone = new EXEScopeMethod
-            {
-                MethodDefinition = this.MethodDefinition,
-                Commands = new List<EXECommand>(),
-                OALCode = this.OALCode
-            };
-
-            Clone.Commands.AddRange(this.Commands);
-
-            return Clone;
+            return new EXEScopeMethod() { MethodDefinition = MethodDefinition };
         }
     }
 }
