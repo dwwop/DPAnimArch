@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OALProgramControl
 {
     public class EXECommandQueryCreate : EXECommand
     {
-        private String ReferencingVariableName { get; }
+        public String ReferencingVariableName { get; }
         private String ReferencingAttributeName { get; }
-        private String ClassName { get; }
+        public String ClassName { get; }
 
         public EXECommandQueryCreate(String ClassName, String ReferencingVariableName, String ReferencingAttributeName)
         {
@@ -21,8 +17,8 @@ namespace OALProgramControl
 
         public EXECommandQueryCreate(String ClassName)
         {
-            this.ReferencingVariableName = "";
-            this.ReferencingAttributeName = null;
+            ReferencingVariableName = "";
+            ReferencingAttributeName = null;
             this.ClassName = ClassName;
         }
 
@@ -31,22 +27,19 @@ namespace OALProgramControl
         {
             //Create an instance of given class -> will affect ExecutionSpace.
             //If ReferencingVariableName is provided (is not ""), create a referencing variable pointing to this instance -> will affect scope
-            CDClass Class = OALProgram.ExecutionSpace.getClassByName(this.ClassName);
+            CDClass Class = OALProgram.ExecutionSpace.getClassByName(ClassName);
             if (Class == null)
             {
                 return false;
             }
 
-            EXEReferencingVariable Variable = SuperScope.FindReferencingVariableByName(this.ReferencingVariableName);
+            EXEReferencingVariable Variable = SuperScope.FindReferencingVariableByName(ReferencingVariableName);
 
-            if (this.ReferencingAttributeName == null)
+            if (ReferencingAttributeName == null)
             {
-                if (Variable != null)
+                if (Variable != null && !String.Equals(ClassName, Variable.ClassName))
                 {
-                    if (!String.Equals(this.ClassName, Variable.ClassName))
-                    {
-                        return false;
-                    }
+                    return false;
                 }
 
                 CDClassInstance NewInstance = Class.CreateClassInstance();
@@ -55,16 +48,16 @@ namespace OALProgramControl
                     return false;
                 }
 
-                if (!"".Equals(this.ReferencingVariableName))
+                if (!"".Equals(ReferencingVariableName))
                 {
                     if (Variable != null)
                     {
-
                         Variable.ReferencedInstanceId = NewInstance.UniqueID;
                     }
                     else
                     {
-                        Variable = new EXEReferencingVariable(this.ReferencingVariableName, Class.Name, NewInstance.UniqueID);
+                        Variable = new EXEReferencingVariable(ReferencingVariableName, Class.Name,
+                            NewInstance.UniqueID);
                         return SuperScope.AddVariable(Variable);
                     }
                 }
@@ -82,17 +75,17 @@ namespace OALProgramControl
                     return false;
                 }
 
-                CDAttribute Attribute = VariableClass.GetAttributeByName(this.ReferencingAttributeName);
+                CDAttribute Attribute = VariableClass.GetAttributeByName(ReferencingAttributeName);
                 if (Attribute == null)
                 {
                     return false;
                 }
 
-                if (!String.Equals(this.ClassName, Attribute.Type))
+                if (!String.Equals(ClassName, Attribute.Type))
                 {
                     return false;
                 }
-                
+
                 CDClassInstance ClassInstance = VariableClass.GetInstanceByID(Variable.ReferencedInstanceId);
                 if (ClassInstance == null)
                 {
@@ -105,16 +98,19 @@ namespace OALProgramControl
                     return false;
                 }
 
-                return ClassInstance.SetAttribute(this.ReferencingAttributeName, NewInstance.UniqueID.ToString());
+                return ClassInstance.SetAttribute(ReferencingAttributeName, NewInstance.UniqueID.ToString());
             }
 
             return true;
         }
+
         public override string ToCodeSimple()
         {
             return "create object instance "
-                + ("".Equals(this.ReferencingVariableName) ? "" : this.ReferencingAttributeName == null ? (this.ReferencingVariableName + " ") : (this.ReferencingVariableName + "." + this.ReferencingAttributeName + " "))
-                + "of " + this.ClassName;
+                   + ("".Equals(ReferencingVariableName) ? "" :
+                       ReferencingAttributeName == null ? (ReferencingVariableName + " ") :
+                       (ReferencingVariableName + "." + ReferencingAttributeName + " "))
+                   + "of " + ClassName;
         }
 
         public override EXECommand CreateClone()

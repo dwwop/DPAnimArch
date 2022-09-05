@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 using Assets.Scripts.AnimationControl.OAL;
 using AnimArch.Visualization.Diagrams;
+using Object = System.Object;
 
 namespace AnimArch.Visualization.Animating
 {
@@ -21,18 +22,16 @@ namespace AnimArch.Visualization.Animating
         public GameObject LineFill;
         private int BarrierSize;
         private int CurrentBarrierFill;
-        [HideInInspector]
-        public bool AnimationIsRunning = false;
-        [HideInInspector]
-        public bool isPaused = false;
-        [HideInInspector]
-        public bool standardPlayMode = true;
+        [HideInInspector] public bool AnimationIsRunning = false;
+        [HideInInspector] public bool isPaused = false;
+        [HideInInspector] public bool standardPlayMode = true;
         public bool nextStep = false;
         private bool prevStep = false;
         private List<GameObject> Fillers;
 
         public string startClassName;
         public string startMethodName;
+
         private void Awake()
         {
             classDiagram = GameObject.Find("ClassDiagram").GetComponent<ClassDiagram>();
@@ -62,12 +61,12 @@ namespace AnimArch.Visualization.Animating
             }
 
             OALProgram Program = OALProgram.Instance;
-            List<AnimClass> MethodsCodes = selectedAnimation.GetMethodsCodesList();//Filip
-            string Code = selectedAnimation.Code;   //toto potom mozno pojde prec
+            List<AnimClass> MethodsCodes = selectedAnimation.GetMethodsCodesList(); //Filip
+            string Code = selectedAnimation.Code; //toto potom mozno pojde prec
             Debug.Log("Code: ");
             Debug.Log(Code);
 
-            foreach (AnimClass classItem in MethodsCodes)   //Filip
+            foreach (AnimClass classItem in MethodsCodes) //Filip
             {
                 CDClass Class = Program.ExecutionSpace.getClassByName(classItem.Name);
 
@@ -87,10 +86,6 @@ namespace AnimArch.Visualization.Animating
                 }
             }
 
-            DiagramPool.Instance.ObjectDiagram.ResetDiagram();
-            DiagramPool.Instance.ObjectDiagram.LoadDiagram();
-            DiagramPool.Instance.ObjectDiagram.AddObject(startClassName, "client");
-
             CDClass startClass = Program.ExecutionSpace.getClassByName(startClassName);
             if (startClass == null)
             {
@@ -104,14 +99,15 @@ namespace AnimArch.Visualization.Animating
             }
 
             //najdeme startMethod z daneho class stringu a method stringu, ak startMethod.ExecutableCode je null tak return null alebo yield break
-            EXEScopeMethod MethodExecutableCode = Program.ExecutionSpace.getClassByName(startClassName).getMethodByName(startMethodName).ExecutableCode;
+            EXEScopeMethod MethodExecutableCode = Program.ExecutionSpace.getClassByName(startClassName)
+                .getMethodByName(startMethodName).ExecutableCode;
             if (MethodExecutableCode == null)
             {
                 Debug.Log("Warning, EXEScopeMethod of selected Method is null");
                 yield break;
             }
 
-            OALProgram.Instance.SuperScope = MethodExecutableCode;//StartMethod.ExecutableCode
+            OALProgram.Instance.SuperScope = MethodExecutableCode; //StartMethod.ExecutableCode
             //OALProgram.Instance.SuperScope = OALParserBridge.Parse(Code); //Method.ExecutableCode dame namiesto OALParserBridge.Parse(Code) pre metodu ktora bude zacinat
 
             Debug.Log("Abt to execute program");
@@ -120,49 +116,71 @@ namespace AnimArch.Visualization.Animating
             bool Success = true;
             while (Success && Program.CommandStack.HasNext())
             {
-
                 EXECommand CurrentCommand = Program.CommandStack.Next();
                 bool ExecutionSuccess = CurrentCommand.PerformExecution(Program);
 
-                Debug.Log("Command " + i++.ToString() + ". Success: " + ExecutionSuccess.ToString() + ". Command type: " + CurrentCommand.GetType().Name);
+                Debug.Log("Command " + i++.ToString() + ". Success: " + ExecutionSuccess.ToString() +
+                          ". Command type: " + CurrentCommand.GetType().Name);
 
                 if (CurrentCommand.GetType().Equals(typeof(EXECommandCall)))
                 {
                     BarrierSize = 1;
                     CurrentBarrierFill = 0;
 
-                    StartCoroutine(ResolveCallFunct(((EXECommandCall)CurrentCommand).CreateOALCall()));
+                    StartCoroutine(ResolveCallFunct(((EXECommandCall) CurrentCommand).CreateOALCall()));
 
 
-                    // ObjectDiagram od = DiagramPool.Instance.ObjectDiagram;
-                    // ObjectInDiagram start = null;
-                    // ObjectInDiagram end = null;
-                    // foreach (var objectInDiagram in od.Objects)
-                    // {
-                    //     var className = objectInDiagram.Class.ClassInfo.Name;
-                    //     if (className.Equals(((EXECommandCall) CurrentCommand).CallerMethodInfo.ClassName))
-                    //     {
-                    //         start = objectInDiagram;
-                    //     }
-                    //     else if (className.Equals(((EXECommandCall) CurrentCommand).CalledClass))
-                    //     {
-                    //         end = objectInDiagram;
-                    //     }
-                    // }
-                    //
-                    // od.AddRelation(start, end);
+                    ObjectDiagram od = DiagramPool.Instance.ObjectDiagram;
+                    ObjectInDiagram start = null;
+                    ObjectInDiagram end = null;
+                    foreach (var objectInDiagram in od.Objects)
+                    {
+                        var className = objectInDiagram.Class.ClassInfo.Name;
+                        if (className.Equals(((EXECommandCall) CurrentCommand).CallerMethodInfo.ClassName))
+                        {
+                            start = objectInDiagram;
+                        }
+                        else if (className.Equals(((EXECommandCall) CurrentCommand).CalledClass))
+                        {
+                            end = objectInDiagram;
+                        }
+                    }
+
+                    od.AddRelation(start, end);
 
                     // Debug.LogError(start.VariableName + " " + end.VariableName);
                     yield return StartCoroutine(BarrierFillCheck());
                 }
                 else if (CurrentCommand.GetType() == typeof(EXECommandQueryCreate))
                 {
-                    // ResolveCreateObject(((EXECommandQueryCreate) CurrentCommand).ClassName,
-                    //     ((EXECommandQueryCreate) CurrentCommand).ReferencingVariableName);
+                    string ReferencingVariableName = ((EXECommandQueryCreate) CurrentCommand).ReferencingVariableName;
+                    string className = ((EXECommandQueryCreate) CurrentCommand).ClassName;
+                    long instanciId = CurrentCommand.GetSuperScope()
+                        .FindReferencingVariableByName(ReferencingVariableName).ReferencedInstanceId;
+
+                    CDClass VariableClass = OALProgram.Instance.ExecutionSpace.getClassByName(className);
+
+                    CDClassInstance ClassInstance = VariableClass.GetInstanceByID(instanciId);
+                    ResolveCreateObject(className, ReferencingVariableName, ClassInstance);
+                }
+                else if (CurrentCommand.GetType() == typeof(EXECommandAssignment))
+                {
+                    EXECommandAssignment assignment = (EXECommandAssignment) CurrentCommand;
+
+                    if (assignment.AttributeName != null)
+                    {
+                        EXEReferencingVariable variable =
+                            assignment.GetSuperScope().FindReferencingVariableByName(assignment.VariableName);
+                        long instanceId = variable.ReferencedInstanceId;
+                        Debug.LogError(instanceId);
+                        DiagramPool.Instance.ObjectDiagram.AddAttributeValue(instanceId,
+                            assignment.AttributeName, assignment.AssignedExpression.ToCode());
+                    }
                 }
 
                 Success = Success && ExecutionSuccess;
             }
+
             /*
             if (Success)
             {
@@ -198,21 +216,21 @@ namespace AnimArch.Visualization.Animating
             this.AnimationIsRunning = false;
         }
 
-        private void ResolveCreateObject(string className, string varName)
+        private void ResolveCreateObject(string className, string varName, CDClassInstance instance)
         {
-            // DiagramPool.Instance.ObjectDiagram.ResetDiagram();
-            // DiagramPool.Instance.ObjectDiagram.LoadDiagram();
-            DiagramPool.Instance.ObjectDiagram.AddObject(className, varName);
+            ObjectInDiagram addedObject = DiagramPool.Instance.ObjectDiagram.AddObject(className, varName, instance);
         }
 
         public void IncrementBarrier()
         {
             this.CurrentBarrierFill++;
         }
+
         public IEnumerator BarrierFillCheck()
         {
             yield return new WaitUntil(() => CurrentBarrierFill >= BarrierSize);
         }
+
         public void StartAnimation()
         {
             isPaused = false;
@@ -225,7 +243,6 @@ namespace AnimArch.Visualization.Animating
             HighlightClass(className, true);
             yield return new WaitForSeconds(animationLength);
             HighlightClass(className, false);
-
         }
 
         //Couroutine that can be used to Highlight method for a given duration of time
@@ -234,8 +251,8 @@ namespace AnimArch.Visualization.Animating
             HighlightMethod(className, methodName, true);
             yield return new WaitForSeconds(animationLength);
             HighlightMethod(className, methodName, false);
-
         }
+
         //Couroutine that can be used to Highlight edge for a given duration of time
         public IEnumerator AnimateEdge(string relationshipName, float animationLength)
         {
@@ -243,13 +260,15 @@ namespace AnimArch.Visualization.Animating
             yield return new WaitForSeconds(animationLength);
             HighlightEdge(relationshipName, false);
         }
+
         public IEnumerator AnimateFill(OALCall Call)
         {
             //Debug.Log("Filip, hrana: " + Call.RelationshipName); //Filip
             GameObject edge = classDiagram.FindEdge(Call.RelationshipName);
             if (edge != null)
             {
-                if (edge.CompareTag("Generalization") || edge.CompareTag("Implements") || edge.CompareTag("Realisation"))
+                if (edge.CompareTag("Generalization") || edge.CompareTag("Implements") ||
+                    edge.CompareTag("Realisation"))
                 {
                     HighlightEdge(Call.RelationshipName, true);
                     yield return new WaitForSeconds(AnimationData.Instance.AnimSpeed / 2);
@@ -263,10 +282,13 @@ namespace AnimArch.Visualization.Animating
                     newFiller.transform.localScale = new Vector3(1, 1, 1);
                     LineFiller lf = newFiller.GetComponent<LineFiller>();
                     bool flip = false;
-                    if (classDiagram.FindOwnerOfRelation(/*Call.CallerClassName, Call.CalledClassName*/Call.RelationshipName).Equals(Call.CalledClassName))
+                    if (classDiagram
+                        .FindOwnerOfRelation( /*Call.CallerClassName, Call.CalledClassName*/Call.RelationshipName)
+                        .Equals(Call.CalledClassName))
                     {
                         flip = true;
                     }
+
                     yield return lf.StartCoroutine(lf.AnimateFlow(edge.GetComponent<UILineRenderer>().Points, flip));
                 }
             }
@@ -376,12 +398,28 @@ namespace AnimArch.Visualization.Animating
                 {
                     switch (step)
                     {
-                        case 0: HighlightClass(Call.CallerClassName, true); break;
-                        case 1: HighlightMethod(Call.CallerClassName, Call.CallerMethodName, true); break;
-                        case 2: yield return StartCoroutine(AnimateFill(Call)); timeModifier = 0f; break;
-                        case 3: HighlightEdge(Call.RelationshipName, true); timeModifier = 0.5f; break;
-                        case 4: HighlightClass(Call.CalledClassName, true); timeModifier = 1f; break;
-                        case 5: HighlightMethod(Call.CalledClassName, Call.CalledMethodName, true); timeModifier = 1.25f; break;
+                        case 0:
+                            HighlightClass(Call.CallerClassName, true);
+                            break;
+                        case 1:
+                            HighlightMethod(Call.CallerClassName, Call.CallerMethodName, true);
+                            break;
+                        case 2:
+                            yield return StartCoroutine(AnimateFill(Call));
+                            timeModifier = 0f;
+                            break;
+                        case 3:
+                            HighlightEdge(Call.RelationshipName, true);
+                            timeModifier = 0.5f;
+                            break;
+                        case 4:
+                            HighlightClass(Call.CalledClassName, true);
+                            timeModifier = 1f;
+                            break;
+                        case 5:
+                            HighlightMethod(Call.CalledClassName, Call.CalledMethodName, true);
+                            timeModifier = 1.25f;
+                            break;
                         case 6:
                             HighlightClass(Call.CallerClassName, false);
                             HighlightMethod(Call.CallerClassName, Call.CallerMethodName, false);
@@ -410,24 +448,42 @@ namespace AnimArch.Visualization.Animating
                             if (step == 2) step = 1;
                             switch (step)
                             {
-                                case 0: HighlightClass(Call.CallerClassName, false); break;
-                                case 1: HighlightMethod(Call.CallerClassName, Call.CallerMethodName, false); break;
-                                case 3: HighlightEdge(Call.RelationshipName, false); break;
-                                case 4: HighlightClass(Call.CalledClassName, false); break;
-                                case 5: HighlightMethod(Call.CalledClassName, Call.CalledMethodName, false); break;
-
+                                case 0:
+                                    HighlightClass(Call.CallerClassName, false);
+                                    break;
+                                case 1:
+                                    HighlightMethod(Call.CallerClassName, Call.CallerMethodName, false);
+                                    break;
+                                case 3:
+                                    HighlightEdge(Call.RelationshipName, false);
+                                    break;
+                                case 4:
+                                    HighlightClass(Call.CalledClassName, false);
+                                    break;
+                                case 5:
+                                    HighlightMethod(Call.CalledClassName, Call.CalledMethodName, false);
+                                    break;
                             }
 
                             if (step > -1) step--;
                             if (step == 2) step = 1;
                             switch (step)
                             {
-                                case 0: HighlightClass(Call.CallerClassName, false); break;
-                                case 1: HighlightMethod(Call.CallerClassName, Call.CallerMethodName, false); break;
-                                case 3: HighlightEdge(Call.RelationshipName, false); break;
-                                case 4: HighlightClass(Call.CalledClassName, false); break;
-                                case 5: HighlightMethod(Call.CalledClassName, Call.CalledMethodName, false); break;
-
+                                case 0:
+                                    HighlightClass(Call.CallerClassName, false);
+                                    break;
+                                case 1:
+                                    HighlightMethod(Call.CallerClassName, Call.CallerMethodName, false);
+                                    break;
+                                case 3:
+                                    HighlightEdge(Call.RelationshipName, false);
+                                    break;
+                                case 4:
+                                    HighlightClass(Call.CalledClassName, false);
+                                    break;
+                                case 5:
+                                    HighlightMethod(Call.CalledClassName, Call.CalledMethodName, false);
+                                    break;
                             }
                         }
 
