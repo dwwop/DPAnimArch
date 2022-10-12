@@ -5,9 +5,9 @@ namespace OALProgramControl
 {
     public class EXECommandAssignment : EXECommand
     {
-        private String VariableName { get; }
-        private String AttributeName { get; }
-        private EXEASTNode AssignedExpression { get; }
+        public String VariableName { get; }
+        public String AttributeName { get; }
+        public EXEASTNode AssignedExpression { get; }
 
         public EXECommandAssignment(String VariableName, EXEASTNode AssignedExpression)
         {

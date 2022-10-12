@@ -56,6 +56,20 @@ namespace AnimArch.Visualization.Diagrams
             graph.transform.position = new Vector3(0, 0, 800);
         }
 
+        public void LoadDiagram1()
+        {
+            GenerateObjects();
+
+            //Generate UI objects displaying the diagram
+            Generate();
+
+            //Set the layout of diagram so it is corresponding to EA view
+            ManualLayout();
+            //AutoLayout();
+
+            graph.transform.position = new Vector3(0, 0, 800);
+        }
+
         private void GenerateObjects()
         {
             // Animating.Animation instance = Animating.Animation.Instance;
@@ -182,15 +196,17 @@ namespace AnimArch.Visualization.Diagrams
             graph.Layout();
         }
 
-        public void AddObject(string className, string variableName)
+        public ObjectInDiagram AddObject(string className, string variableName, CDClassInstance instance)
         {
-            AddObject(new ObjectInDiagram
+            ObjectInDiagram objectInDiagram = new ObjectInDiagram
             {
                 Class = DiagramPool.Instance.ClassDiagram.FindClassByName(className),
-                Instance = OALProgram.Instance.ExecutionSpace.getClassByName(className).CreateClassInstance(),
+                Instance = instance,
                 VisualObject = null,
                 VariableName = variableName
-            });
+            };
+            AddObject(objectInDiagram);
+            return objectInDiagram;
         }
 
         public void AddRelation(ObjectInDiagram start, ObjectInDiagram end)
@@ -198,6 +214,42 @@ namespace AnimArch.Visualization.Diagrams
             ObjectRelation relation = new ObjectRelation(graph, start, end);
             Relations.Add(relation);
             relation.Generate();
+        }
+
+        public ObjectInDiagram FindByID(long instanceID)
+        {
+            foreach (var objectInDiagram in Objects)
+            {
+                if (objectInDiagram.Instance.UniqueID == instanceID)
+                {
+                    return objectInDiagram;
+                }
+            }
+
+            return null;
+        }
+
+        public bool AddAttributeValue(long instanceID, string attr, string expr)
+        {
+            ObjectInDiagram objectInDiagram = FindByID(instanceID);
+            if (objectInDiagram == null)
+            {
+                return false;
+            }
+
+            objectInDiagram.Instance.SetAttribute(attr, expr);
+            var background = objectInDiagram.VisualObject.transform.Find("Background");
+            var attributes = background.Find("Attributes");
+            attributes.GetComponent<TextMeshProUGUI>().text = "";
+
+            //Attributes
+            foreach (string AttributeName in objectInDiagram.Instance.State.Keys)
+            {
+                attributes.GetComponent<TextMeshProUGUI>().text +=
+                    AttributeName + " = " + objectInDiagram.Instance.State[AttributeName] + "\n";
+            }
+
+            return true;
         }
     }
 }
