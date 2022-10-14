@@ -49,6 +49,7 @@ namespace AnimArch.Visualization.UI
         [SerializeField] private TMP_InputField sepInput;
         [SerializeField] private TMP_Text classTxt;
         [SerializeField] private TMP_Text methodTxt;
+        [SerializeField] private Toggle hideRelToggle;
         public Anim createdAnim;
         public bool isPlaying = false;
         public Button[] playBtns;
@@ -465,6 +466,24 @@ namespace AnimArch.Visualization.UI
 
             Animating.Animation.Instance.startClassName = "";
             Animating.Animation.Instance.startMethodName = "";
+        }
+
+        public void HideGraphRelations()
+        {
+            if (hideRelToggle.isOn)
+            {
+                foreach (var interGraphRelation in DiagramPool.Instance.RelationsClassToObject)
+                {
+                    interGraphRelation.Show();
+                }
+            }
+            else
+            {
+                foreach (var interGraphRelation in DiagramPool.Instance.RelationsClassToObject)
+                {
+                    interGraphRelation.Hide();
+                }
+            }
         }
     }
 }

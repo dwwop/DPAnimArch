@@ -16,6 +16,7 @@ namespace AnimArch.Visualization.Animating
     public class Animation : Singleton<Animation>
     {
         private ClassDiagram classDiagram;
+        private ObjectDiagram objectDiagram;
         public Color classColor;
         public Color methodColor;
         public Color relationColor;
@@ -35,6 +36,7 @@ namespace AnimArch.Visualization.Animating
         private void Awake()
         {
             classDiagram = GameObject.Find("ClassDiagram").GetComponent<ClassDiagram>();
+            objectDiagram = GameObject.Find("ObjectDiagram").GetComponent<ObjectDiagram>();
             standardPlayMode = true;
         }
 
@@ -127,55 +129,27 @@ namespace AnimArch.Visualization.Animating
                     BarrierSize = 1;
                     CurrentBarrierFill = 0;
 
-                    StartCoroutine(ResolveCallFunct(((EXECommandCall) CurrentCommand).CreateOALCall()));
+                    var oalCall = ((EXECommandCall) CurrentCommand).CreateOALCall();
+                    StartCoroutine(ResolveCallFunct(oalCall));
 
+                    var referencingVariableName = ((EXECommandCall) CurrentCommand).InstanceName;
+                    long instanceId = CurrentCommand.GetSuperScope()
+                        .FindReferencingVariableByName(referencingVariableName).ReferencedInstanceId;
 
-                    ObjectDiagram od = DiagramPool.Instance.ObjectDiagram;
-                    ObjectInDiagram start = null;
-                    ObjectInDiagram end = null;
-                    foreach (var objectInDiagram in od.Objects)
-                    {
-                        var className = objectInDiagram.Class.ClassInfo.Name;
-                        if (className.Equals(((EXECommandCall) CurrentCommand).CallerMethodInfo.ClassName))
-                        {
-                            start = objectInDiagram;
-                        }
-                        else if (className.Equals(((EXECommandCall) CurrentCommand).CalledClass))
-                        {
-                            end = objectInDiagram;
-                        }
-                    }
+                    Debug.Log("tu " + ((EXECommandCall) CurrentCommand).InstanceName + " " + instanceId);
 
-                    od.AddRelation(start, end);
+                    objectDiagram.AddRelation(((EXECommandCall) CurrentCommand).CallerMethodInfo.ClassName,
+                        instanceId, ((EXECommandCall) CurrentCommand).CalledClass, "ASSOCIATION");
 
-                    // Debug.LogError(start.VariableName + " " + end.VariableName);
                     yield return StartCoroutine(BarrierFillCheck());
                 }
                 else if (CurrentCommand.GetType() == typeof(EXECommandQueryCreate))
                 {
-                    string ReferencingVariableName = ((EXECommandQueryCreate) CurrentCommand).ReferencingVariableName;
-                    string className = ((EXECommandQueryCreate) CurrentCommand).ClassName;
-                    long instanciId = CurrentCommand.GetSuperScope()
-                        .FindReferencingVariableByName(ReferencingVariableName).ReferencedInstanceId;
-
-                    CDClass VariableClass = OALProgram.Instance.ExecutionSpace.getClassByName(className);
-
-                    CDClassInstance ClassInstance = VariableClass.GetInstanceByID(instanciId);
-                    ResolveCreateObject(className, ReferencingVariableName, ClassInstance);
+                    ResolveCreateObject(CurrentCommand);
                 }
                 else if (CurrentCommand.GetType() == typeof(EXECommandAssignment))
                 {
-                    EXECommandAssignment assignment = (EXECommandAssignment) CurrentCommand;
-
-                    if (assignment.AttributeName != null)
-                    {
-                        EXEReferencingVariable variable =
-                            assignment.GetSuperScope().FindReferencingVariableByName(assignment.VariableName);
-                        long instanceId = variable.ReferencedInstanceId;
-                        Debug.LogError(instanceId);
-                        DiagramPool.Instance.ObjectDiagram.AddAttributeValue(instanceId,
-                            assignment.AttributeName, assignment.AssignedExpression.ToCode());
-                    }
+                    ResolveAssignment(CurrentCommand);
                 }
 
                 Success = Success && ExecutionSuccess;
@@ -216,9 +190,30 @@ namespace AnimArch.Visualization.Animating
             this.AnimationIsRunning = false;
         }
 
-        private void ResolveCreateObject(string className, string varName, CDClassInstance instance)
+        private void ResolveAssignment(EXECommand CurrentCommand)
         {
-            ObjectInDiagram addedObject = DiagramPool.Instance.ObjectDiagram.AddObject(className, varName, instance);
+            EXECommandAssignment assignment = (EXECommandAssignment) CurrentCommand;
+
+            if (assignment.AttributeName != null)
+            {
+                EXEReferencingVariable variable =
+                    assignment.GetSuperScope().FindReferencingVariableByName(assignment.VariableName);
+                objectDiagram.AddAttributeValue(variable.ReferencedInstanceId,
+                    assignment.AttributeName, assignment.AssignedExpression.ToCode());
+            }
+        }
+
+        private void ResolveCreateObject(EXECommand CurrentCommand)
+        {
+            string referencingVariableName = ((EXECommandQueryCreate) CurrentCommand).ReferencingVariableName;
+            string className = ((EXECommandQueryCreate) CurrentCommand).ClassName;
+            long instanceId = CurrentCommand.GetSuperScope()
+                .FindReferencingVariableByName(referencingVariableName).ReferencedInstanceId;
+
+            CDClass variableClass = OALProgram.Instance.ExecutionSpace.getClassByName(className);
+
+            CDClassInstance classInstance = variableClass.GetInstanceByID(instanceId);
+            objectDiagram.AddObject(className, referencingVariableName, classInstance);
         }
 
         public void IncrementBarrier()
@@ -254,11 +249,11 @@ namespace AnimArch.Visualization.Animating
         }
 
         //Couroutine that can be used to Highlight edge for a given duration of time
-        public IEnumerator AnimateEdge(string relationshipName, float animationLength)
+        public IEnumerator AnimateEdge(string relationshipName, float animationLength, OALCall call)
         {
-            HighlightEdge(relationshipName, true);
+            HighlightEdge(relationshipName, true, call);
             yield return new WaitForSeconds(animationLength);
-            HighlightEdge(relationshipName, false);
+            HighlightEdge(relationshipName, false, call);
         }
 
         public IEnumerator AnimateFill(OALCall Call)
@@ -270,7 +265,7 @@ namespace AnimArch.Visualization.Animating
                 if (edge.CompareTag("Generalization") || edge.CompareTag("Implements") ||
                     edge.CompareTag("Realisation"))
                 {
-                    HighlightEdge(Call.RelationshipName, true);
+                    HighlightEdge(Call.RelationshipName, true, Call);
                     yield return new WaitForSeconds(AnimationData.Instance.AnimSpeed / 2);
                 }
                 else
@@ -298,6 +293,7 @@ namespace AnimArch.Visualization.Animating
         public void HighlightClass(string className, bool isToBeHighlighted)
         {
             GameObject node = classDiagram.FindNode(className);
+
             BackgroundHighlighter bh = null;
             if (node != null)
             {
@@ -324,12 +320,69 @@ namespace AnimArch.Visualization.Animating
             {
                 Debug.Log("Highlighter component not found");
             }
+
+            HighlightObjects(className, isToBeHighlighted);
+        }
+
+        public void HighlightObjects(string className, bool isToBeHighlighted)
+        {
+            ClassInDiagram classByName = classDiagram.FindClassByName(className);
+
+            if (classByName == null)
+            {
+                Debug.Log("Node " + className + " not found");
+            }
+
+            if (classByName != null)
+            {
+                foreach (var classInfoInstance in classByName.ClassInfo.Instances)
+                {
+                    long id = classInfoInstance.UniqueID;
+                    HighlightObject(id, isToBeHighlighted);
+                }
+            }
+            else
+            {
+                Debug.Log("Highlighter component not found");
+            }
+        }
+
+        //Method used to Highlight/Unhighlight single class by name, depending on bool value of argument 
+        public void HighlightObject(long objectUniqueId, bool isToBeHighlighted)
+        {
+            GameObject node = objectDiagram.FindByID(objectUniqueId).VisualObject;
+            BackgroundHighlighter bh = null;
+            if (node != null)
+            {
+                bh = node.GetComponent<BackgroundHighlighter>();
+            }
+            else
+            {
+                Debug.Log("Node " + objectUniqueId + " not found");
+            }
+
+            if (bh != null)
+            {
+                if (isToBeHighlighted)
+                {
+                    bh.HighlightBackground();
+                }
+                else
+                {
+                    bh.UnhighlightBackground();
+                }
+            }
+            else
+            {
+                Debug.Log("Highlighter component not found");
+            }
         }
 
         //Method used to Highlight/Unhighlight single method by name, depending on bool value of argument 
         public void HighlightMethod(string className, string methodName, bool isToBeHighlighted)
         {
             GameObject node = classDiagram.FindNode(className);
+            List<CDClassInstance> instances = classDiagram.FindClassByName(className).ClassInfo.Instances;
             TextHighlighter th = null;
             if (node != null)
             {
@@ -346,33 +399,78 @@ namespace AnimArch.Visualization.Animating
                 {
                     th.HighlightLine(methodName);
                     //Debug.Log("Filip, metoda: " + methodName); //Filip
+
+                    foreach (CDClassInstance cdClassInstance in instances)
+                    {
+                        long uniqueId = cdClassInstance.UniqueID;
+                        var textHighlighter = objectDiagram.FindByID(uniqueId).VisualObject
+                            .GetComponent<TextHighlighter>();
+                        if (textHighlighter != null)
+                        {
+                            textHighlighter.HighlightLine(methodName);
+                        }
+                    }
                 }
                 else
                 {
                     th.UnHighlightLine(methodName);
+
+                    foreach (CDClassInstance cdClassInstance in instances)
+                    {
+                        long uniqueId = cdClassInstance.UniqueID;
+                        var textHighlighter = objectDiagram.FindByID(uniqueId).VisualObject
+                            .GetComponent<TextHighlighter>();
+                        if (textHighlighter != null)
+                        {
+                            textHighlighter.UnHighlightLine(methodName);
+                        }
+                    }
                 }
             }
             else
             {
-                Debug.Log("TextHighligher component not found");
+                Debug.Log("TextHighlighter component not found");
             }
         }
 
         //Method used to Highlight/Unhighlight single edge by name, depending on bool value of argument 
-        public void HighlightEdge(string relationshipName, bool isToBeHighlighted)
+        public void HighlightEdge(string relationshipName, bool isToBeHighlighted, OALCall Call)
         {
-            GameObject edge = classDiagram.FindEdge(relationshipName);
+            RelationInDiagram relationInDiagram = classDiagram.FindEdgeInfo(relationshipName);
+            
+            GameObject edge = relationInDiagram?.VisualObject;
+
+            var callerClassName =
+                DiagramPool.Instance.ClassDiagram.FindClassByName(relationInDiagram?.RelationInfo.FromClass);
+            var calledClassName =
+                DiagramPool.Instance.ClassDiagram.FindClassByName(relationInDiagram?.RelationInfo.ToClass);
+
             if (edge != null)
             {
                 if (isToBeHighlighted)
                 {
                     edge.GetComponent<UEdge>().ChangeColor(relationColor);
                     edge.GetComponent<UILineRenderer>().LineThickness = 8;
+                    HighlightObjectRelation(true, Call);
                 }
                 else
                 {
                     edge.GetComponent<UEdge>().ChangeColor(Color.white);
                     edge.GetComponent<UILineRenderer>().LineThickness = 5;
+                    if (Call == null) // unhighlight all
+                    {
+                        foreach (var callerInstance in callerClassName.ClassInfo.Instances)
+                        {
+                            foreach (var calledInstance in calledClassName.ClassInfo.Instances)
+                            {
+                                HighlightObjectRelation(callerInstance.UniqueID, calledInstance.UniqueID, false);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        HighlightObjectRelation(false, Call);
+                    }
                 }
             }
             else
@@ -381,7 +479,38 @@ namespace AnimArch.Visualization.Animating
             }
         }
 
-        //Couroutine used to Resolve one OALCall consisting of Caller class, caller method, edge, called class, called method
+        private void HighlightObjectRelation(bool isToBeHighlighted, OALCall Call)
+        {
+            var callerClassName =
+                DiagramPool.Instance.ClassDiagram.FindClassByName(Call.CallerClassName);
+            foreach (var callerInstance in callerClassName.ClassInfo.Instances)
+            {
+                HighlightObjectRelation(callerInstance.UniqueID, Call.CalledInstanceId, isToBeHighlighted);
+            }
+        }
+
+        private void HighlightObjectRelation(long callerInstance, long instanceId, bool isToBeHighlighted)
+        {
+            if (callerInstance == instanceId)
+            {
+                return;
+            }
+            var objectRelation =
+                DiagramPool.Instance.ObjectDiagram.FindRelation(callerInstance, instanceId).GameObject;
+            
+            if (isToBeHighlighted)
+            {
+                objectRelation.GetComponent<UEdge>().ChangeColor(relationColor);
+                objectRelation.GetComponent<UILineRenderer>().LineThickness = 8;
+            }
+            else
+            {
+                objectRelation.GetComponent<UEdge>().ChangeColor(Color.white);
+                objectRelation.GetComponent<UILineRenderer>().LineThickness = 5;
+            }
+        }
+
+        // Couroutine used to Resolve one OALCall consisting of Caller class, caller method, edge, called class, called method
         // Same coroutine is called for play or step mode
         public IEnumerator ResolveCallFunct(OALCall Call)
         {
@@ -409,7 +538,7 @@ namespace AnimArch.Visualization.Animating
                             timeModifier = 0f;
                             break;
                         case 3:
-                            HighlightEdge(Call.RelationshipName, true);
+                            HighlightEdge(Call.RelationshipName, true, Call);
                             timeModifier = 0.5f;
                             break;
                         case 4:
@@ -425,7 +554,7 @@ namespace AnimArch.Visualization.Animating
                             HighlightMethod(Call.CallerClassName, Call.CallerMethodName, false);
                             HighlightClass(Call.CalledClassName, false);
                             HighlightMethod(Call.CalledClassName, Call.CalledMethodName, false);
-                            HighlightEdge(Call.RelationshipName, false);
+                            HighlightEdge(Call.RelationshipName, false, Call);
                             timeModifier = 1f;
                             break;
                     }
@@ -455,7 +584,7 @@ namespace AnimArch.Visualization.Animating
                                     HighlightMethod(Call.CallerClassName, Call.CallerMethodName, false);
                                     break;
                                 case 3:
-                                    HighlightEdge(Call.RelationshipName, false);
+                                    HighlightEdge(Call.RelationshipName, false, Call);
                                     break;
                                 case 4:
                                     HighlightClass(Call.CalledClassName, false);
@@ -476,7 +605,7 @@ namespace AnimArch.Visualization.Animating
                                     HighlightMethod(Call.CallerClassName, Call.CallerMethodName, false);
                                     break;
                                 case 3:
-                                    HighlightEdge(Call.RelationshipName, false);
+                                    HighlightEdge(Call.RelationshipName, false, Call);
                                     break;
                                 case 4:
                                     HighlightClass(Call.CalledClassName, false);
@@ -536,7 +665,7 @@ namespace AnimArch.Visualization.Animating
             if (DiagramPool.Instance.ClassDiagram.GetRelationList() != null)
                 foreach (Relation r in DiagramPool.Instance.ClassDiagram.GetRelationList())
                 {
-                    HighlightEdge(r.OALName, false);
+                    HighlightEdge(r.OALName, false, null);
                 }
 
             AnimationIsRunning = false;

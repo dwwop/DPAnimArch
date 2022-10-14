@@ -32,6 +32,26 @@ namespace AnimArch.Visualization.Diagrams
 
             Objects = new List<ObjectInDiagram>();
             Relations = new List<ObjectRelation>();
+            DiagramPool.Instance.RelationsClassToObject = new List<InterGraphRelation>();
+            // if (Relations != null)
+            // {
+            //     foreach (ObjectRelation rel in Relations)
+            //     {
+            //         Destroy(rel.GameObject);
+            //     }
+            //
+            //     Relations.Clear();
+            // }
+            //
+            // if (DiagramPool.Instance.RelationsClassToObject != null)
+            // {
+            //     foreach (InterGraphRelation igr in DiagramPool.Instance.RelationsClassToObject)
+            //     {
+            //         Destroy(igr);
+            //     }
+            //
+            //     DiagramPool.Instance.RelationsClassToObject.Clear();
+            // }
 
             if (graph != null)
             {
@@ -56,53 +76,8 @@ namespace AnimArch.Visualization.Diagrams
             graph.transform.position = new Vector3(0, 0, 800);
         }
 
-        public void LoadDiagram1()
-        {
-            GenerateObjects();
-
-            //Generate UI objects displaying the diagram
-            Generate();
-
-            //Set the layout of diagram so it is corresponding to EA view
-            ManualLayout();
-            //AutoLayout();
-
-            graph.transform.position = new Vector3(0, 0, 800);
-        }
-
         private void GenerateObjects()
         {
-            // Animating.Animation instance = Animating.Animation.Instance;
-            // if (!string.IsNullOrEmpty(instance.startClassName))
-            // {
-            //     Objects.Add
-            //     (
-            //         new ObjectInDiagram
-            //         {
-            //             Class = DiagramPool.Instance.ClassDiagram.FindClassByName(instance.startClassName),
-            //             Instance = new CDClassInstance(1, new List<CDAttribute>()),
-            //             VisualObject = null,
-            //             VariableName = "client"
-            //         }
-            //     );
-            // }
-            //
-            // foreach (var cdClass in OALProgram.Instance.SuperScope.Commands)
-            // {}
-            // var cd = OALProgram.Instance.ExecutionSpace.ClassPool;
-            // var i = 0;
-            // foreach (var objectInDiagram in cd.Select(classInDiagram => new ObjectInDiagram
-            //          {
-            //              Class = DiagramPool.Instance.ClassDiagram.FindClassByName(classInDiagram.Name),
-            //              Instance = classInDiagram.CreateClassInstance(),
-            //              VisualObject = null,
-            //              VariableName = ""
-            //          }))
-            // {
-            //     Objects.Add(objectInDiagram);
-            //     // classInDiagram.objects.Add(objectInDiagram);
-            //     i++;
-            // }
         }
 
         public Graph CreateGraph()
@@ -196,7 +171,7 @@ namespace AnimArch.Visualization.Diagrams
             graph.Layout();
         }
 
-        public ObjectInDiagram AddObject(string className, string variableName, CDClassInstance instance)
+        public void AddObject(string className, string variableName, CDClassInstance instance)
         {
             ObjectInDiagram objectInDiagram = new ObjectInDiagram
             {
@@ -206,14 +181,26 @@ namespace AnimArch.Visualization.Diagrams
                 VariableName = variableName
             };
             AddObject(objectInDiagram);
-            return objectInDiagram;
         }
 
-        public void AddRelation(ObjectInDiagram start, ObjectInDiagram end)
+        public void AddRelation(string start, long end, string endClass, string type)
         {
-            ObjectRelation relation = new ObjectRelation(graph, start, end);
-            Relations.Add(relation);
-            relation.Generate();
+            if (start.Equals(endClass))
+            {
+                return;
+            }
+
+            CDClass startClass = OALProgram.Instance.ExecutionSpace.getClassByName(start);
+            foreach (var startClassInstance in startClass.Instances)
+            {
+                ObjectRelation relation = new ObjectRelation(graph, startClassInstance.UniqueID,
+                    end, type, "R" + Relations.Count);
+                if (!ContainsObjectRelation(relation))
+                {
+                    Relations.Add(relation);
+                    relation.Generate();
+                }
+            }
         }
 
         public ObjectInDiagram FindByID(long instanceID)
@@ -250,6 +237,34 @@ namespace AnimArch.Visualization.Diagrams
             }
 
             return true;
+        }
+
+        private bool ContainsObjectRelation(ObjectRelation objectRelation)
+        {
+            foreach (var relation in Relations)
+            {
+                if (relation.Equals(objectRelation))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public ObjectRelation FindRelation(long callerInstanceId, long calledInstanceId)
+        {
+            foreach (var objectRelation in Relations)
+            {
+                if ((objectRelation.startUniqueId == callerInstanceId &&
+                     objectRelation.endUniqueId == calledInstanceId) ||
+                    objectRelation.startUniqueId == calledInstanceId && objectRelation.endUniqueId == callerInstanceId)
+                {
+                    return objectRelation;
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -48,5 +48,23 @@ namespace AnimArch.Visualization.Diagrams
                 _lineRenderer.textureMode = textureMode;
             }
         }
+
+        public void Hide()
+        {
+            _lineRenderer.enabled = false;
+            _interGraphArrow.GetComponent<LineRenderer>().enabled = false;
+        }
+        
+        public void Show()
+        {
+            _lineRenderer.enabled = true;
+            _interGraphArrow.GetComponent<LineRenderer>().enabled = true;
+        }
+
+        public void Destroy()
+        {
+            Destroy(_lineRenderer);
+            Destroy(_interGraphArrow);
+        }
     }
 }

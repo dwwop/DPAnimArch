@@ -488,6 +488,14 @@ namespace AnimArch.Visualization.Diagrams
                 .FirstOrDefault()?
                 .VisualObject;
         }
+        
+        public RelationInDiagram FindEdgeInfo(string RelationshipName)
+        {
+            return Relations
+                .Where(relation => string.Equals(RelationshipName, relation.RelationInfo.RelationshipName))
+                .FirstOrDefault();
+        }
+        
         public String FindOwnerOfRelation(String RelationName)
         {
             return Relations

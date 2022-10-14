@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using AnimArch.Extensions;
+using UnityEngine;
+using Object = System.Object;
 
 namespace OALProgramControl
 {
@@ -9,10 +11,10 @@ namespace OALProgramControl
     {
         public String CalledClass { get; set; }
         private String CalledMethod { get; }
-        private String InstanceName { get; }
-        private String AttributeName { get; }
+        public String InstanceName { get; }
+        public String AttributeName { get; }
         private List<EXEASTNode> Parameters { get; }
-
+        
         public MethodCallRecord CallerMethodInfo
         {
             get
@@ -208,6 +210,7 @@ namespace OALProgramControl
                 IsSelfCall ? null : _RelationshipInfo.RelationshipName,
                 this.CalledClass,
                 this.CalledMethod,
+                SuperScope.FindReferencingVariableByName(InstanceName).ReferencedInstanceId,
                 IsSelfCall
             );
         }
