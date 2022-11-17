@@ -1,0 +1,1 @@
+{"Code":"create object instance ast_1 of AST;\nast_1.printPretty();\n","AnimationName":"test","MethodsCodes":[{"Name":"OperationEvaluator","Methods":[{"Name":"tellType","Code":"create object instance ast_1 of AST;\nast_1.printPretty();\n"}]}]}

@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEditor;
 using System;
-using System.Text.RegularExpressions;
 using OALProgramControl;
 using AnimArch.Visualization.Animating;
 using AnimArch.Visualization.Diagrams;
@@ -54,7 +51,8 @@ namespace AnimArch.Visualization.UI
         public Button[] playBtns;
         public GameObject playIntroTexts;
         public List<AnimMethod> animMethods;
-
+        public bool isSelectingNode;
+        
         struct InteractiveData
         {
             public string fromClass;

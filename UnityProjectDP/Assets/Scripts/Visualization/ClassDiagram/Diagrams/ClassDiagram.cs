@@ -4,14 +4,11 @@ using System;
 using System.Linq;
 using UnityEngine;
 using TMPro;
-using System.Xml;
 using OALProgramControl;
 using UnityEngine.UI;
 using AnimArch.Extensions;
 using AnimArch.Visualization.Animating;
-using AnimArch.Visualization.UI;
 using AnimArch.XMIParsing;
-using AnimArch.Extensions.Unity;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -197,41 +194,7 @@ namespace AnimArch.Visualization.Diagrams
             //Parse all Relations between classes
             foreach (Relation Relation in XMIRelationList)
             {
-                Relation.FromClass = Relation.SourceModelName.Replace(" ", "_");
-                Relation.ToClass = Relation.TargetModelName.Replace(" ", "_");
-                //Here you assign prefabs for each type of relation
-                switch (Relation.PropertiesEa_type)
-                {
-                    case "Association":
-                        switch (Relation.ProperitesDirection)
-                        {
-                            case "Source -> Destination": Relation.PrefabType = DiagramPool.Instance.associationSDPrefab; break;
-                            case "Destination -> Source": Relation.PrefabType = DiagramPool.Instance.associationDSPrefab; break;
-                            case "Bi-Directional": Relation.PrefabType = DiagramPool.Instance.associationFullPrefab; break;
-                            default: Relation.PrefabType = DiagramPool.Instance.associationNonePrefab; break;
-                        }
-                        break;
-                    case "Generalization": Relation.PrefabType = DiagramPool.Instance.generalizationPrefab; break;
-                    case "Dependency": Relation.PrefabType = DiagramPool.Instance.dependsPrefab; break;
-                    case "Realisation": Relation.PrefabType = DiagramPool.Instance.realisationPrefab; break;
-                    default: Relation.PrefabType = DiagramPool.Instance.associationNonePrefab; break;
-                }
-
-                TempCDRelationship = OALProgram.Instance.RelationshipSpace.SpawnRelationship(Relation.FromClass, Relation.ToClass);
-                Relation.OALName = TempCDRelationship.RelationshipName;
-
-                if ("Generalization".Equals(Relation.PropertiesEa_type) || "Realisation".Equals(Relation.PropertiesEa_type))
-                {
-                    CDClass FromClass = OALProgram.Instance.ExecutionSpace.getClassByName(Relation.FromClass);
-                    CDClass ToClass = OALProgram.Instance.ExecutionSpace.getClassByName(Relation.ToClass);
-
-                    if (FromClass != null && ToClass != null)
-                    {
-                        FromClass.SuperClass = ToClass;
-                    }
-                }
-
-                Relations.Add(new RelationInDiagram() { XMIParsedRelation = Relation, RelationInfo = TempCDRelationship });
+                CreateRelationEdge(Relation);
             }
         }
 
@@ -385,32 +348,29 @@ namespace AnimArch.Visualization.Diagrams
                     )
                     .FirstOrDefault();
         }
-        public bool AddMethod(String targetClass, Method methodToAdd)
+        public bool AddMethod(string targetClass, Method methodToAdd)
         {
-            ClassInDiagram c = FindClassByName(targetClass);
+            var c = FindClassByName(targetClass);
             if (c == null)
             {
                 return false;
             }
+            
+            if (c.XMIParsedClass.Methods == null) 
+                c.XMIParsedClass.Methods = new List<Method>();
+            if (c.XMIParsedClass.methods == null)
+                c.XMIParsedClass.methods = new List<Method>();
 
-            if (FindMethodByName(targetClass, methodToAdd.Name) == null)
-            {
-                if (c.XMIParsedClass.Methods == null)
-                {
-                    c.XMIParsedClass.Methods = new List<Method>();
-                }
-                c.XMIParsedClass.Methods.Add(methodToAdd);
-                if (OALProgram.Instance.ExecutionSpace.ClassExists(targetClass))
-                {
-                    CDClass CDClass = OALProgram.Instance.ExecutionSpace.getClassByName(targetClass);
-                    CDClass.AddMethod(new CDMethod(CDClass, methodToAdd.Name, methodToAdd.ReturnValue));
-                }
-            }
-            else
-            {
-                return false;
-            }
-
+            if (FindMethodByName(targetClass, methodToAdd.Name) != null) return false;
+            
+            c.XMIParsedClass.Methods.Add(methodToAdd);
+            c.XMIParsedClass.methods.Add(methodToAdd);
+            
+            if (!OALProgram.Instance.ExecutionSpace.ClassExists(targetClass)) return true;
+            
+            var cdClass = OALProgram.Instance.ExecutionSpace.getClassByName(targetClass);
+            cdClass.AddMethod(new CDMethod(cdClass, methodToAdd.Name, EXETypes.ConvertEATypeName(methodToAdd.ReturnValue)));
+        
             return true;
         }
         public Attribute FindAttributeByName(String className, String attributeName)
@@ -447,23 +407,37 @@ namespace AnimArch.Visualization.Diagrams
                 return false;
             }
 
-            bool result = false;
+            if (c.XMIParsedClass.Attributes == null)
+                c.XMIParsedClass.Attributes = new List<Attribute>();
 
-            if (FindAttributeByName(targetClass, attributeToAdd.Name) == null)
-            {
-                if (c.XMIParsedClass.Attributes == null)
-                {
-                    c.XMIParsedClass.Attributes = new List<Attribute>();
-                }
+            if (c.XMIParsedClass.attributes == null)
+                c.XMIParsedClass.attributes = new List<Attribute>();
+            
 
-                c.XMIParsedClass.Attributes.Add(attributeToAdd);
-
-                result = true;
-            }
-
-            return result;
+            if (FindAttributeByName(targetClass, attributeToAdd.Name) != null) return false;
+            c.XMIParsedClass.Attributes.Add(attributeToAdd);
+            c.XMIParsedClass.attributes.Add(attributeToAdd);
+            return true;
         }
 
+        public void ChangeName(string targetClass, string newName)
+        {
+            var c = FindClassByName(targetClass);
+            if (c == null)
+            {
+                return;
+            }
+
+            c.ClassInfo.Name = newName;
+            c.XMIParsedClass.Name = newName;
+            c.VisualObject.name = newName;
+            
+            var background = c.VisualObject.transform.Find("Background");
+            var header = background.Find("Header");
+
+            header.GetComponent<TextMeshProUGUI>().text = newName;
+        }
+        
         public GameObject FindNode(String name)
         {
             GameObject g;
@@ -510,9 +484,60 @@ namespace AnimArch.Visualization.Diagrams
         {
             return Relations.Select(relationInDiagram => relationInDiagram.XMIParsedRelation);
         }
-        public void CreateRelationEdge(GameObject node1, GameObject node2)
+
+        public void CreateRelation(GameObject node1, GameObject node2, string type, bool noDirection = false)
         {
-            GameObject edge = graph.AddEdge(node1, node2, DiagramPool.Instance.associationFullPrefab);
+            var relation = new Relation
+            {
+                SourceModelName = node1.name,
+                TargetModelName = node2.name,
+                PropertiesEa_type = type,
+                ProperitesDirection = noDirection ? "none" : "Source -> Destination"
+            };
+
+            var relInDiag = CreateRelationEdge(relation);
+            relInDiag.VisualObject = graph.AddEdge(node1, node2, relation.PrefabType);
+        }
+
+        private RelationInDiagram CreateRelationEdge(Relation relation)
+        {
+            relation.FromClass = relation.SourceModelName.Replace(" ", "_");
+            relation.ToClass = relation.TargetModelName.Replace(" ", "_");
+            
+            switch (relation.PropertiesEa_type)
+            {
+                case "Association":
+                    switch (relation.ProperitesDirection)
+                    {
+                        case "Source -> Destination": relation.PrefabType = DiagramPool.Instance.associationSDPrefab; break;
+                        case "Destination -> Source": relation.PrefabType = DiagramPool.Instance.associationDSPrefab; break;
+                        case "Bi-Directional": relation.PrefabType = DiagramPool.Instance.associationFullPrefab; break;
+                        default: relation.PrefabType = DiagramPool.Instance.associationNonePrefab; break;
+                    }
+                    break;
+                case "Generalization": relation.PrefabType = DiagramPool.Instance.generalizationPrefab; break;
+                case "Dependency": relation.PrefabType = DiagramPool.Instance.dependsPrefab; break;
+                case "Realisation": relation.PrefabType = DiagramPool.Instance.realisationPrefab; break;
+                default: relation.PrefabType = DiagramPool.Instance.associationNonePrefab; break;
+            }
+
+            var tempCdRelationship = OALProgram.Instance.RelationshipSpace.SpawnRelationship(relation.FromClass, relation.ToClass) 
+                                     ?? throw new ArgumentNullException(nameof(relation));
+            relation.OALName = tempCdRelationship.RelationshipName;
+            
+            if ("Generalization".Equals(relation.PropertiesEa_type) || "Realisation".Equals(relation.PropertiesEa_type))
+            {
+                var fromClass = OALProgram.Instance.ExecutionSpace.getClassByName(relation.FromClass);
+                var toClass = OALProgram.Instance.ExecutionSpace.getClassByName(relation.ToClass);
+                
+                if (fromClass != null && toClass != null)
+                {
+                    fromClass.SuperClass = toClass;
+                }
+            }
+            var relInDiag = new RelationInDiagram { XMIParsedRelation = relation, RelationInfo = tempCdRelationship };
+            Relations.Add(relInDiag);
+            return relInDiag;
         }
         public void fakeObjects()
         {
