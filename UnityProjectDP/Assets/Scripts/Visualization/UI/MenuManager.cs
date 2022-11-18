@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEditor;
 using System;
-using System.Text.RegularExpressions;
 using OALProgramControl;
 using AnimArch.Visualization.Animating;
 using AnimArch.Visualization.Diagrams;
@@ -49,12 +46,14 @@ namespace AnimArch.Visualization.UI
         [SerializeField] private TMP_InputField sepInput;
         [SerializeField] private TMP_Text classTxt;
         [SerializeField] private TMP_Text methodTxt;
+        [SerializeField] private Toggle hideRelToggle;
         public Anim createdAnim;
         public bool isPlaying = false;
         public Button[] playBtns;
         public GameObject playIntroTexts;
         public List<AnimMethod> animMethods;
-
+        public bool isSelectingNode;
+        
         struct InteractiveData
         {
             public string fromClass;
@@ -156,7 +155,7 @@ namespace AnimArch.Visualization.UI
 
                         if (interactiveData.fromClass != null)
                         {
-                            Animating.Animation.Instance.HighlightClass(interactiveData.fromClass, false);
+                            Animating.Animation.Instance.HighlightClass(interactiveData.fromClass, false, -1);
                         }
 
                         interactiveData.fromClass = name;
@@ -405,8 +404,12 @@ namespace AnimArch.Visualization.UI
 
         public void SelectPlayClass(string name)
         {
+            DiagramPool.Instance.ObjectDiagram.ResetDiagram();
+            DiagramPool.Instance.ObjectDiagram.LoadDiagram();
+
             Animating.Animation.Instance.UnhighlightAll();
             Animating.Animation.Instance.HighlightClass(name, true);
+
             playIntroTexts.SetActive(false);
             Animating.Animation.Instance.startClassName = name;
             foreach (Button button in playBtns)
@@ -430,10 +433,11 @@ namespace AnimArch.Visualization.UI
                 }
             }
 
-            DiagramPool.Instance.ObjectDiagram.ResetDiagram();
-            DiagramPool.Instance.ObjectDiagram.LoadDiagram();
             CDClassInstance instance = OALProgram.Instance.ExecutionSpace.getClassByName(name).CreateClassInstance();
-            DiagramPool.Instance.ObjectDiagram.AddObject(name, "client", instance);
+            ObjectInDiagram od = DiagramPool.Instance.ObjectDiagram.AddObject(name, "client", instance);
+            DiagramPool.Instance.ObjectDiagram.AddObject(od);
+            DiagramPool.Instance.ObjectDiagram.ShowObject(od);
+            DiagramPool.Instance.RelationsClassToObject[0].Show();
         }
 
         public void SelectPlayMethod(int id)
@@ -465,6 +469,24 @@ namespace AnimArch.Visualization.UI
 
             Animating.Animation.Instance.startClassName = "";
             Animating.Animation.Instance.startMethodName = "";
+        }
+
+        public void HideGraphRelations()
+        {
+            if (hideRelToggle.isOn)
+            {
+                foreach (var interGraphRelation in DiagramPool.Instance.RelationsClassToObject)
+                {
+                    interGraphRelation.Show();
+                }
+            }
+            else
+            {
+                foreach (var interGraphRelation in DiagramPool.Instance.RelationsClassToObject)
+                {
+                    interGraphRelation.Hide();
+                }
+            }
         }
     }
 }

@@ -6,15 +6,27 @@ using System.Threading.Tasks;
 
 namespace OALProgramControl
 {
-
     public class CDClass
     {
         public string Name { get; set; }
         public List<CDAttribute> Attributes { get; }
-        public List<CDMethod> Methods { get;  }
-        private List<CDClassInstance> Instances { get; }
+        public List<CDMethod> Methods { get; }
+        public List<CDClassInstance> Instances { get; }
         private CDClass _SuperClass { get; set; }
-        public CDClass SuperClass { get { return _SuperClass; } set { _SuperClass = value; if (_SuperClass != null) { SuperClass.SubClasses.Add(this); } } }
+
+        public CDClass SuperClass
+        {
+            get { return _SuperClass; }
+            set
+            {
+                _SuperClass = value;
+                if (_SuperClass != null)
+                {
+                    SuperClass.SubClasses.Add(this);
+                }
+            }
+        }
+
         public List<CDClass> SubClasses { get; }
 
         public CDClass(String Name)
@@ -31,7 +43,8 @@ namespace OALProgramControl
 
             this.SubClasses = new List<CDClass>();
         }
-        public CDClass(String Name, CDAttribute [] Attributes)
+
+        public CDClass(String Name, CDAttribute[] Attributes)
         {
             this.Name = Name;
 
@@ -45,6 +58,7 @@ namespace OALProgramControl
 
             this.SubClasses = new List<CDClass>();
         }
+
         public CDClass(String Name, CDMethod[] Methods)
         {
             this.Name = Name;
@@ -59,6 +73,7 @@ namespace OALProgramControl
 
             this.SubClasses = new List<CDClass>();
         }
+
         public CDClass(String Name, CDAttribute[] Attributes, CDMethod[] Methods)
         {
             this.Name = Name;
@@ -95,7 +110,8 @@ namespace OALProgramControl
             }
             else if (RemovedCount > 1)
             {
-                throw new Exception("We removed more than 1 instance of class " + this.Name + " with given ID (" + InstanceId.ToString() + "), something must have gone terribly wrong");
+                throw new Exception("We removed more than 1 instance of class " + this.Name + " with given ID (" +
+                                    InstanceId.ToString() + "), something must have gone terribly wrong");
             }
 
             return Result;
@@ -112,6 +128,7 @@ namespace OALProgramControl
                     break;
                 }
             }
+
             if (Result)
             {
                 this.Methods.Add(NewMethod);
@@ -131,6 +148,7 @@ namespace OALProgramControl
                     break;
                 }
             }
+
             if (Result)
             {
                 this.Attributes.Add(NewAttribute);
@@ -176,7 +194,7 @@ namespace OALProgramControl
             return this.Instances.Count;
         }
 
-        public CDClassInstance GetInstanceByID (long id)
+        public CDClassInstance GetInstanceByID(long id)
         {
             CDClassInstance Result = null;
             foreach (CDClassInstance ClassInstance in this.Instances)
@@ -248,6 +266,7 @@ namespace OALProgramControl
                     break;
                 }
             }
+
             return Result;
         }
 
@@ -272,7 +291,7 @@ namespace OALProgramControl
 
             return false;
         }
-        
+
         private int PowerOf(int x, int power)
         {
             int result = 1;
@@ -288,7 +307,7 @@ namespace OALProgramControl
         {
             return this.Instances.Select(x => x.UniqueID).ToList();
         }
-        
+
         public void AppendToInstanceDatabase(Dictionary<String, long> InstanceDatabase)
         {
             foreach (CDClassInstance Instance in this.Instances)
