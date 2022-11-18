@@ -14,12 +14,12 @@ namespace OALProgramControl
         public String InstanceName { get; }
         public String AttributeName { get; }
         private List<EXEASTNode> Parameters { get; }
-        
+
         public MethodCallRecord CallerMethodInfo
         {
             get
             {
-                EXEScopeMethod TopScope = (EXEScopeMethod)GetTopLevelScope();
+                EXEScopeMethod TopScope = (EXEScopeMethod) GetTopLevelScope();
                 return TopScope.MethodDefinition;
             }
         }
@@ -95,7 +95,7 @@ namespace OALProgramControl
 
             MethodCode.SetSuperScope(null);
             OALProgram.CommandStack.Enqueue(MethodCode);
-            MethodCode.AddVariable(new EXEReferencingVariable("self", CalledClass, CalledID));//
+            MethodCode.AddVariable(new EXEReferencingVariable("self", CalledClass, CalledID)); //
 
             for (int i = 0; i < this.Parameters.Count; i++)
             {
@@ -107,14 +107,17 @@ namespace OALProgramControl
                         &&
                         this.Parameters[i].IsReference().Implies
                         (
-                            Object.Equals(Parameter.Type, this.SuperScope.DetermineVariableType(this.Parameters[i].AccessChain(), OALProgram.ExecutionSpace))
+                            Object.Equals(Parameter.Type,
+                                this.SuperScope.DetermineVariableType(this.Parameters[i].AccessChain(),
+                                    OALProgram.ExecutionSpace))
                         )
                     )
                     &&
                     !(
                         OALProgram.Instance.ExecutionSpace.ClassExists(Parameter.Type)
                         ||
-                        OALProgram.Instance.ExecutionSpace.ClassExists(Parameter.Type.Substring(0, Parameter.Type.Length - 2))
+                        OALProgram.Instance.ExecutionSpace.ClassExists(
+                            Parameter.Type.Substring(0, Parameter.Type.Length - 2))
                     )
                 )
                 {
@@ -134,7 +137,9 @@ namespace OALProgramControl
                 }
                 else if ("[]".Equals(Parameter.Type.Substring(Parameter.Type.Length - 2, 2)))
                 {
-                    CDClass ClassDefinition = OALProgram.ExecutionSpace.getClassByName(Parameter.Type.Substring(0, Parameter.Type.Length - 2));
+                    CDClass ClassDefinition =
+                        OALProgram.ExecutionSpace.getClassByName(Parameter.Type.Substring(0,
+                            Parameter.Type.Length - 2));
                     if (ClassDefinition == null)
                     {
                         return false;
@@ -147,7 +152,9 @@ namespace OALProgramControl
                         return false;
                     }
 
-                    long[] IDs = String.Empty.Equals(Values) ? new long[] { } : Values.Split(',').Select(id => long.Parse(id)).ToArray();
+                    long[] IDs = String.Empty.Equals(Values)
+                        ? new long[] { }
+                        : Values.Split(',').Select(id => long.Parse(id)).ToArray();
 
                     CDClassInstance ClassInstance;
                     foreach (long ID in IDs)
@@ -159,11 +166,13 @@ namespace OALProgramControl
                         }
                     }
 
-                    EXEReferencingSetVariable CreatedSetVariable = new EXEReferencingSetVariable(Parameter.Name, ClassDefinition.Name);
+                    EXEReferencingSetVariable CreatedSetVariable =
+                        new EXEReferencingSetVariable(Parameter.Name, ClassDefinition.Name);
 
                     foreach (long ID in IDs)
                     {
-                        CreatedSetVariable.AddReferencingVariable(new EXEReferencingVariable("", ClassDefinition.Name, ID));
+                        CreatedSetVariable.AddReferencingVariable(
+                            new EXEReferencingVariable("", ClassDefinition.Name, ID));
                     }
 
                     MethodCode.AddVariable(CreatedSetVariable);
@@ -220,7 +229,7 @@ namespace OALProgramControl
             MethodCallRecord _CallerMethodInfo = this.CallerMethodInfo;
             CDRelationship _RelationshipInfo = CallRelationshipInfo(_CallerMethodInfo.ClassName, this.CalledClass);
             return "call from " + _CallerMethodInfo.ClassName + "::" + _CallerMethodInfo.MethodName + "() to "
-                + this.CalledClass + "::" + this.CalledMethod + "() across " + _RelationshipInfo.RelationshipName;
+                   + this.CalledClass + "::" + this.CalledMethod + "() across " + _RelationshipInfo.RelationshipName;
         }
 
         private CDRelationship CallRelationshipInfo(string CallerMethod, string CalledMethod)

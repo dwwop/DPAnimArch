@@ -1,0 +1,34 @@
+{
+  "Code": "",
+  "AnimationName": "as",
+  "MethodsCodes": [
+    {
+      "Name": "Cat",
+      "Methods": [
+        {
+          "Name": "ReceiveVaccine",
+          "Parameters": [
+            "Date"
+          ],
+          "Code": "if (self.VaccinationDate ==  Date)\nself.IsVaccinated = TRUE;\r\nend if;\n\n\r\n"
+        },
+        {
+          "Name": "SetVaccinationDate",
+          "Parameters": [
+            "Date"
+          ],
+          "Code": "self.VaccinationDate = Date;"
+        }
+      ]
+    },
+    {
+      "Name": "Client",
+      "Methods": [
+        {
+          "Name": "StartCase",
+          "Code": "create object instance vet of Veterinarian;\ncreate list Vet.RegisteredAnimals of Observer;\ncreate object instance Husky of Dog;\nvet.VaccinateAnimals()\n"
+        }
+      ]
+    }
+  ]
+}

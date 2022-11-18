@@ -19,6 +19,11 @@ namespace AnimArch.Visualization.Diagrams
 
         public void ResetDiagram()
         {
+            foreach (var classDiagramClass in DiagramPool.Instance.ClassDiagram.Classes)
+            {
+                classDiagramClass.ClassInfo.Instances.Clear();
+            }
+
             // Get rid of already rendered classes in diagram.
             if (Objects != null)
             {
@@ -26,13 +31,10 @@ namespace AnimArch.Visualization.Diagrams
                 {
                     Destroy(Object.VisualObject);
                 }
-
-                Objects.Clear();
             }
 
             Objects = new List<ObjectInDiagram>();
             Relations = new List<ObjectRelation>();
-            DiagramPool.Instance.RelationsClassToObject = new List<InterGraphRelation>();
             // if (Relations != null)
             // {
             //     foreach (ObjectRelation rel in Relations)
@@ -43,15 +45,16 @@ namespace AnimArch.Visualization.Diagrams
             //     Relations.Clear();
             // }
             //
-            // if (DiagramPool.Instance.RelationsClassToObject != null)
-            // {
-            //     foreach (InterGraphRelation igr in DiagramPool.Instance.RelationsClassToObject)
-            //     {
-            //         Destroy(igr);
-            //     }
-            //
-            //     DiagramPool.Instance.RelationsClassToObject.Clear();
-            // }
+            if (DiagramPool.Instance.RelationsClassToObject != null)
+            {
+                foreach (InterGraphRelation igr in DiagramPool.Instance.RelationsClassToObject)
+                {
+                    Destroy(igr);
+                    igr.Destroy();
+                }
+
+                DiagramPool.Instance.RelationsClassToObject = new List<InterGraphRelation>();
+            }
 
             if (graph != null)
             {
@@ -119,6 +122,7 @@ namespace AnimArch.Visualization.Diagrams
         {
             //Setting up
             var node = graph.AddNode();
+            node.SetActive(false);
             node.name = Object.VariableName + " : " + Object.Class.XMIParsedClass.Name;
             var background = node.transform.Find("Background");
             var header = background.Find("Header");
@@ -162,6 +166,7 @@ namespace AnimArch.Visualization.Diagrams
             (
                 InterGraphLine.GetComponent<InterGraphRelation>()
             );
+            InterGraphLine.GetComponent<InterGraphRelation>().Hide();
         }
 
         public void AddObject(ObjectInDiagram Object)
@@ -171,7 +176,13 @@ namespace AnimArch.Visualization.Diagrams
             graph.Layout();
         }
 
-        public void AddObject(string className, string variableName, CDClassInstance instance)
+        public void ShowObject(ObjectInDiagram Object)
+        {
+            Object.VisualObject.SetActive(true);
+            graph.Layout();
+        }
+
+        public ObjectInDiagram AddObject(string className, string variableName, CDClassInstance instance)
         {
             ObjectInDiagram objectInDiagram = new ObjectInDiagram
             {
@@ -180,7 +191,7 @@ namespace AnimArch.Visualization.Diagrams
                 VisualObject = null,
                 VariableName = variableName
             };
-            AddObject(objectInDiagram);
+            return objectInDiagram;
         }
 
         public void AddRelation(string start, long end, string endClass, string type)

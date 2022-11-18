@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using AnimArch.Visualization.Animating;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -11,9 +12,9 @@ namespace AnimArch.Visualization.Diagrams
 
         private GameObject _interGraphArrow;
         private Arrow _arrow;
-
+        
         private LineRenderer _lineRenderer;
-        public LineTextureMode textureMode = LineTextureMode.Tile;
+        public LineTextureMode textureMode = LineTextureMode.RepeatPerSegment;
 
         public void Initialize(ObjectInDiagram Object, ClassInDiagram Class)
         {
@@ -22,7 +23,9 @@ namespace AnimArch.Visualization.Diagrams
             _lineRenderer = GetComponent<LineRenderer>();
             _lineRenderer.textureMode = textureMode;
             _lineRenderer.material = Resources.Load<Material>("Materials/DashedLine");
-
+            
+            // _lineRenderer.material.SetTextureScale("_MainTex", new Vector2(100, 1));
+             
             _interGraphArrow = Instantiate(DiagramPool.Instance.interGraphArrowPrefab);
             _arrow = _interGraphArrow.GetComponent<Arrow>();
             _arrow.GetComponent<Arrow>().Initialize();
@@ -65,6 +68,18 @@ namespace AnimArch.Visualization.Diagrams
         {
             Destroy(_lineRenderer);
             Destroy(_interGraphArrow);
+        }
+
+        public void Highlight()
+        {
+            _lineRenderer.startColor = Animating.Animation.Instance.relationColor;
+            _lineRenderer.endColor = Animating.Animation.Instance.relationColor;
+        }
+        
+        public void UnHighlight()
+        {
+            _lineRenderer.startColor = Color.white;
+            _lineRenderer.endColor = Color.white;
         }
     }
 }

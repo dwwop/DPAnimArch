@@ -1,0 +1,20 @@
+Spravene:
+    * vytvorenie clienta (ten kto spusta celu animaciu)
+    * vytvorenie vsetkych objektov co vznikaju pocas animacie
+    * vytvorenie vztahu medzi objektmi
+    * zmena hodnotu atributu
+    * teleport medzi vrstvami
+    * vztah pri vytvarani
+    
+Dokoncit:
+    * zrusenie objektov
+    * animacia
+    * nuansy s execommandassignment
+
+Myslienky:
+    * objektova spredu
+    * vysvietenie objektov a hrany medzi vrstvami
+    
+
+asociacia = pri volani a vytvarani
+agregacia = pri assignment (vymazat pri zmene atributu)
