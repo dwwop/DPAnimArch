@@ -1,7 +1,6 @@
 using AnimArch.Visualization.Diagrams;
 using AnimArch.Visualization.UI;
 using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -9,70 +8,90 @@ using UnityEngine.EventSystems;
 namespace AnimArch.Visualization
 {
     [Serializable]
-    public class GameObjectEvent : UnityEvent<GameObject> { };
+    public class GameObjectEvent : UnityEvent<GameObject>
+    {
+    };
+
     public class Clickable : MonoBehaviour
     {
         public GameObjectEvent triggerHighlighAction;
         public GameObjectEvent triggerUnhighlighAction;
-        private Vector3 screenPoint;
-        private Vector3 offset;
+        private Vector3 _screenPoint;
+        private Vector3 _offset;
 
-        private bool selectedElement = false;
+        private bool _selectedElement;
+        private bool _changedPos;
 
 
         private void OnMouseDown()
         {
-            string temp = ToolManager.Instance.SelectedTool;
+            var temp = ToolManager.Instance.SelectedTool;
             if (temp == "DiagramMovement")
                 OnClassSelected();
         }
 
         private void OnClassSelected()
         {
-            selectedElement = true;
-            screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
-            ClassEditor.Instance.SelectNode(this.gameObject);
-            offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+            _selectedElement = true;
+            var position = gameObject.transform.position;
+            if (Camera.main == null) return;
+            _screenPoint = Camera.main.WorldToScreenPoint(position);
+            _offset = position -
+                     Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y,
+                         _screenPoint.z));
         }
 
-        void OnMouseUp()
+        private void OnMouseUp()
         {
-            selectedElement = false;
-        }
-
-        void OnMouseDrag()
-        {
-            if (selectedElement == false || ToolManager.Instance.SelectedTool != "DiagramMovement"|| IsMouseOverUI())
+            if (!_changedPos && MenuManager.Instance.isSelectingNode)
             {
-                return;
+                ClassEditor.Instance.SelectNode(gameObject);
             }
 
-            Vector3 cursorPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
-            Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorPoint) + offset;
+            _changedPos = false;
+            _selectedElement = false;
+        }
+
+        private void OnMouseDrag()
+        {
+            if (_selectedElement == false ||
+                (ToolManager.Instance.SelectedTool != "DiagramMovement" && !MenuManager.Instance.isSelectingNode)
+                || IsMouseOverUI())
+                return;
+
+            var cursorPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z);
+            if (Camera.main == null) return;
+            var cursorPosition = Camera.main.ScreenToWorldPoint(cursorPoint) + _offset;
             cursorPosition.z = transform.position.z;
+            if (transform.position == cursorPosition) return;
+            _changedPos = true;
             transform.position = cursorPosition;
         }
-        void OnMouseOver()
+
+        private void OnMouseOver()
         {
             if (Input.GetMouseButtonDown(0) && ToolManager.Instance.SelectedTool == "Highlighter" && !IsMouseOverUI())
             {
                 triggerHighlighAction.Invoke(gameObject);
             }
+
             if (Input.GetMouseButtonDown(1) && ToolManager.Instance.SelectedTool == "Highlighter" && !IsMouseOverUI())
             {
                 triggerUnhighlighAction.Invoke(gameObject);
             }
-            if (Input.GetMouseButtonDown(0) && MenuManager.Instance.isCreating==true)
+
+            if (Input.GetMouseButtonDown(0) && MenuManager.Instance.isCreating)
             {
-                MenuManager.Instance.SelectClass(this.gameObject.name);
+                MenuManager.Instance.SelectClass(gameObject.name);
             }
-            if (Input.GetMouseButtonDown(0) && MenuManager.Instance.isPlaying == true)
+
+            if (Input.GetMouseButtonDown(0) && MenuManager.Instance.isPlaying)
             {
-                MenuManager.Instance.SelectPlayClass(this.gameObject.name);
-                Debug.Log("selecting class");
+                MenuManager.Instance.SelectPlayClass(gameObject.name);
             }
         }
-        private bool IsMouseOverUI()
+
+        private static bool IsMouseOverUI()
         {
             return EventSystem.current.IsPointerOverGameObject();
         }
