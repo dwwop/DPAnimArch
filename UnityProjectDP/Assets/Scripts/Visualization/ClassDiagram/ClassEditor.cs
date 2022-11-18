@@ -1,76 +1,122 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using AnimArch.Visualization.UI;
+using OALProgramControl;
 
 namespace AnimArch.Visualization.Diagrams
 {
     public class ClassEditor : Singleton<ClassEditor>
     {
-        Graph graph;
-        int id = 0;
-        bool active = false;
-        GameObject node1;
-        GameObject node2;
+        private Graph _graph;
+        private int _id;
+        private bool _active;
+        private GameObject _node;
+        private string _relType;
 
-        public GameObject methodMenu;
-        public GameObject attributeMenu;
-        public AttributeMenu atrMenu;
-        public MethodMenu mtdMenu;
+        public AttributePopUp atrPopUp;
+        public MethodPopUp mtdPopUp;
+        public ClassPopUp classPopUp;
+
         public void InitializeCreation()
         {
-            graph = DiagramPool.Instance.ClassDiagram.CreateGraph();
-            active = true;
-
+            _graph = DiagramPool.Instance.ClassDiagram.CreateGraph();
+            _active = true;
+            _id = 0;
         }
+
+        public void Uninitialize()
+        {
+            _active = false;
+            MenuManager.Instance.isSelectingNode = false;
+        }
+
         public void CreateNode()
         {
-            var node = graph.AddNode();
-            node.name = "NewClass " + id;
+            var node = _graph.AddNode();
+            node.name = "NewClass " + _id;
             var background = node.transform.Find("Background");
             var header = background.Find("Header");
-            header.GetComponent<TMP_Text>().text = node.name;
-            var attributes = background.Find("Attributes");
-            var methods = background.Find("Methods");
-            RectTransform rc = node.GetComponent<RectTransform>();
-            rc.position = new Vector3(100f, 200f, 1);
-            id++;
+            // var attributes = background.Find("Attributes");
+            // var methods = background.Find("Methods");
 
+            header.GetComponent<TextMeshProUGUI>().text = node.name;
+            var rc = node.GetComponent<RectTransform>();
+            rc.position = new Vector3(100f, 200f, 1);
+            _id++;
+
+
+            var newClass = new Class
+            {
+                Name = node.name
+            };
+            var pos = node.transform.position;
+            newClass.Left = pos.x / 1.25f;
+            newClass.Top = pos.y / 1.25f;
+
+            CDClass TempCDClass = null;
+            var i = 0;
+            var currentName = node.name;
+            var baseName = node.name;
+            while (TempCDClass == null)
+            {
+                currentName = baseName + (i == 0 ? "" : i.ToString());
+                TempCDClass = OALProgram.Instance.ExecutionSpace.SpawnClass(currentName);
+                i++;
+                if (i > 1000)
+                {
+                    break;
+                }
+            }
+
+            node.name = currentName;
+            DiagramPool.Instance.ClassDiagram.Classes.Add(new ClassInDiagram
+                { XMIParsedClass = newClass, ClassInfo = TempCDClass, VisualObject = node });
         }
+
         public void SelectNode(GameObject selected)
         {
-            if (active)
+            if (!_active || !MenuManager.Instance.isSelectingNode) return;
+            if (selected == _node)
             {
-                if (node1 == null)
-                {
-                    node1 = selected;
-                    Debug.Log("node 1 added");
-                }
-                else if (node2 == null)
-                {
-                    node2 = selected;
-                    Debug.Log("node 2 added");
-                }
-                else
-                {
-                    node2 = node1;
-                    node1 = selected;
-                }
+                Animating.Animation.Instance.HighlightClass(_node.name, false);
+                _node = null;
             }
-
-
+            else if (_node == null)
+            {
+                _node = selected;
+                Animating.Animation.Instance.HighlightClass(_node.name, true);
+            }
+            else
+            {
+                DrawRelation(selected);
+            }
         }
-        public void DrawRelation()
-        {
-            if (node1 != null && node2 != null)
-            {
-                DiagramPool.Instance.ClassDiagram.CreateRelationEdge(node1, node2);
-                node1 = null;
-                node2 = null;
-                graph.UpdateGraph();
-            }
 
+        private void DrawRelation(GameObject secondNode)
+        {
+            if (_node == null || secondNode == null) return;
+            var type = _relType.Split();
+            if (type.Length > 1)
+                DiagramPool.Instance.ClassDiagram.CreateRelation(_node, secondNode, type[1], true);
+            else
+                DiagramPool.Instance.ClassDiagram.CreateRelation(_node, secondNode, type[0]);
+            EndSelection();
+        }
+
+        private void EndSelection()
+        {
+            _relType = null;
+            _node = null;
+            _graph.UpdateGraph();
+            MenuManager.Instance.isSelectingNode = false;
+            Animating.Animation.Instance.UnhighlightAll();
+            GameObject.Find("Selection RightPanel").SetActive(false);
+        }
+
+        public void StartSelection(string type)
+        {
+            MenuManager.Instance.isSelectingNode = true;
+            _relType = type;
         }
     }
 }
