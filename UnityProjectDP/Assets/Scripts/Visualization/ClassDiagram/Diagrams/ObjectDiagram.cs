@@ -19,9 +19,12 @@ namespace AnimArch.Visualization.Diagrams
 
         public void ResetDiagram()
         {
-            foreach (var classDiagramClass in DiagramPool.Instance.ClassDiagram.Classes)
+            if (DiagramPool.Instance.ClassDiagram && DiagramPool.Instance.ClassDiagram.Classes != null)
             {
-                classDiagramClass.ClassInfo.Instances.Clear();
+                foreach (var classDiagramClass in DiagramPool.Instance.ClassDiagram.Classes)
+                {
+                    classDiagramClass.ClassInfo.Instances.Clear();
+                }
             }
 
             // Get rid of already rendered classes in diagram.

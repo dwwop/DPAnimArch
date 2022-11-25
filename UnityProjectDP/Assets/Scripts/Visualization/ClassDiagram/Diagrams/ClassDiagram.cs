@@ -21,8 +21,8 @@ namespace AnimArch.Visualization.Diagrams
         //Awake is called before the first frame and before Start()
         private void Awake()
         {
+            Classes = new List<ClassInDiagram>();
             DiagramPool.Instance.ClassDiagram = this;
-            // Before the first frame.
             ResetDiagram();
         }
         public void ResetDiagram()

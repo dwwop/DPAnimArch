@@ -85,8 +85,11 @@ namespace AnimArch.Visualization.UI
                 options.Add(anim.AnimationName);
             }
 
-            animationsDropdown.ClearOptions();
-            animationsDropdown.AddOptions(options);
+            if (animationsDropdown != null)
+            {
+                animationsDropdown.ClearOptions();
+                animationsDropdown.AddOptions(options);
+            }
         }
 
         public void SetSelectedAnimation(string name)
@@ -333,8 +336,11 @@ namespace AnimArch.Visualization.UI
 
         public void UpdateSpeed()
         {
-            AnimationData.Instance.AnimSpeed = speedSlider.value;
-            speedLabel.text = speedSlider.value.ToString() + "s";
+            if (speedSlider && speedLabel)
+            {
+                AnimationData.Instance.AnimSpeed = speedSlider.value;
+                speedLabel.text = speedSlider.value.ToString() + "s";
+            }
         }
 
         public void PlayAnimation()
