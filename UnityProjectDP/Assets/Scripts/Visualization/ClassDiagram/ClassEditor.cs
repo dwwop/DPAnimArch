@@ -17,12 +17,15 @@ namespace AnimArch.Visualization.Diagrams
         public AttributePopUp atrPopUp;
         public MethodPopUp mtdPopUp;
         public ClassPopUp classPopUp;
-
+        
         public void InitializeCreation()
         {
-            _graph = DiagramPool.Instance.ClassDiagram.CreateGraph();
+            if (!_graph)
+            {
+                _graph = DiagramPool.Instance.ClassDiagram.CreateGraph();
+                _id = 0;
+            }
             _active = true;
-            _id = 0;
         }
 
         public void Uninitialize()
@@ -33,28 +36,28 @@ namespace AnimArch.Visualization.Diagrams
 
         public void CreateNodeFromRpc()
         {
-            CreateNode2();
+            GenerateNode();
         }
 
         public void CreateNode()
         {
             Spawner.Instance.SpawnClass();
-            CreateNode2();
+            GenerateNode();
         }
-        public void CreateNode2()
+
+        private void GenerateNode()
         {
+            if (!_graph)
+                InitializeCreation();
             var node = _graph.AddNode();
             node.name = "NewClass " + _id;
             var background = node.transform.Find("Background");
             var header = background.Find("Header");
-            // var attributes = background.Find("Attributes");
-            // var methods = background.Find("Methods");
 
             header.GetComponent<TextMeshProUGUI>().text = node.name;
             var rc = node.GetComponent<RectTransform>();
             rc.position = new Vector3(100f, 200f, 1);
             _id++;
-
 
             var newClass = new Class
             {
@@ -128,6 +131,27 @@ namespace AnimArch.Visualization.Diagrams
         {
             MenuManager.Instance.isSelectingNode = true;
             _relType = type;
+        }
+        
+        public void SetClassName(string targetClass, string newName, bool fromRpc)
+        {
+            if (!fromRpc)
+                Spawner.Instance.SetClassName(targetClass, newName);
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
+            if (classInDiagram == null)
+            {
+                return;
+            }
+
+            classInDiagram.ClassInfo.Name = newName;
+            classInDiagram.XMIParsedClass.Name = newName;
+            classInDiagram.VisualObject.name = newName;
+
+            classInDiagram.VisualObject.transform
+                .Find("Background")
+                .Find("Header")
+                .GetComponent<TextMeshProUGUI>()
+                .text = newName;
         }
     }
 }

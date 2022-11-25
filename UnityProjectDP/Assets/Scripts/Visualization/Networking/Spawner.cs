@@ -33,8 +33,7 @@ namespace Networking
         [ServerRpc(RequireOwnership = false)]
         public void SpawnClassServerRpc(ServerRpcParams rpcParams = default)
         {
-            Debug.Log("Executing spawn class RPC");
-            ClassEditor.Instance.CreateNodeFromRpc();
+           ClassEditor.Instance.CreateNodeFromRpc();
         }
 
         [ClientRpc]
@@ -42,13 +41,33 @@ namespace Networking
         {
             if (IsServer)
                 return;
-            Debug.Log("Executing spawn class RPC");
-            ClassEditor.Instance.CreateNodeFromRpc();
+           ClassEditor.Instance.CreateNodeFromRpc();
         }
 
-        public void SetClassName()
+        [ServerRpc(RequireOwnership = false)]
+        public void SetClassNameServerRpc(string targetClass, string newName)
         {
+            ClassEditor.Instance.SetClassName(targetClass, newName, true);
+        }
 
+        [ClientRpc]
+        public void SetClassNameClientRpc(string targetClass, string newName)
+        {
+            if (IsServer)
+                return;
+            ClassEditor.Instance.SetClassName(targetClass, newName, true);
+        }
+
+        public void SetClassName(string targetClass, string newName)
+        {
+            if (IsServer)
+            {
+                SetClassNameClientRpc(targetClass, newName);
+            }
+            else
+            {
+                SetClassNameServerRpc(targetClass, newName);
+            }
         }
     }
 }

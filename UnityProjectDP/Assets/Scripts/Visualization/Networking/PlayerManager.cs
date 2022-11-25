@@ -11,11 +11,6 @@ namespace Networking
 
         private void Start()
         {
-            NetworkManager.Singleton.OnServerStarted += () =>
-            {
-                Spawner.Instance.GetComponent<NetworkObject>().Spawn();
-            };
-
             NetworkManager.Singleton.OnClientConnectedCallback += (id) => { };
         }
         private void Awake()

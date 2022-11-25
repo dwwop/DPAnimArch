@@ -420,24 +420,6 @@ namespace AnimArch.Visualization.Diagrams
             return true;
         }
 
-        public void ChangeName(string targetClass, string newName)
-        {
-            var c = FindClassByName(targetClass);
-            if (c == null)
-            {
-                return;
-            }
-
-            c.ClassInfo.Name = newName;
-            c.XMIParsedClass.Name = newName;
-            c.VisualObject.name = newName;
-            
-            var background = c.VisualObject.transform.Find("Background");
-            var header = background.Find("Header");
-
-            header.GetComponent<TextMeshProUGUI>().text = newName;
-        }
-        
         public GameObject FindNode(String name)
         {
             GameObject g;
