@@ -11,21 +11,12 @@ namespace Networking
 
         private void Start()
         {
-            NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
+            NetworkManager.Singleton.OnServerStarted += () =>
             {
-                var playerObject = NetworkManager.LocalClient.PlayerObject;
-                var no = playerObject.GetComponent<NetworkObject>();
-                if (id == 0)
-                {
-                    var player = playerObject.GetComponent<Player>();
-                    player.Color = Color.green;
-                }
-                else
-                {
-                    var player = playerObject.GetComponent<Player>();
-                    player.Color = Color.cyan;
-                }
+                Spawner.Instance.GetComponent<NetworkObject>().Spawn();
             };
+
+            NetworkManager.Singleton.OnClientConnectedCallback += (id) => { };
         }
         private void Awake()
         {

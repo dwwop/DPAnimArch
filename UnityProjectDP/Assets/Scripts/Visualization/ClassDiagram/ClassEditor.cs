@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using AnimArch.Visualization.UI;
+using Networking;
 using OALProgramControl;
 
 namespace AnimArch.Visualization.Diagrams
@@ -30,7 +31,17 @@ namespace AnimArch.Visualization.Diagrams
             MenuManager.Instance.isSelectingNode = false;
         }
 
+        public void CreateNodeFromRpc()
+        {
+            CreateNode2();
+        }
+
         public void CreateNode()
+        {
+            Spawner.Instance.SpawnClass();
+            CreateNode2();
+        }
+        public void CreateNode2()
         {
             var node = _graph.AddNode();
             node.name = "NewClass " + _id;
