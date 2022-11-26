@@ -22,7 +22,14 @@ namespace AnimArch.Visualization.Diagrams
         {
             if (!_graph)
             {
-                _graph = DiagramPool.Instance.ClassDiagram.CreateGraph();
+                if (!DiagramPool.Instance.ClassDiagram.graph)
+                {
+                    _graph = DiagramPool.Instance.ClassDiagram.CreateGraph();
+                }
+                else
+                {
+                    _graph = DiagramPool.Instance.ClassDiagram.graph;
+                }
                 _id = 0;
             }
             _active = true;
@@ -36,55 +43,93 @@ namespace AnimArch.Visualization.Diagrams
 
         public void CreateNodeFromRpc()
         {
-            GenerateNode();
+            var newClass = new Class
+            {
+                Name = "NewClass_" + _id++
+            };
+            GenerateNode(newClass);
+        }
+
+        public void CreateNodeFromRpc(string name)
+        {
+            var newClass = new Class
+            {
+                Name = name
+            };
+            GenerateNode(newClass);
         }
 
         public void CreateNode()
         {
-            Spawner.Instance.SpawnClass();
-            GenerateNode();
-        }
-
-        private void GenerateNode()
-        {
-            if (!_graph)
-                InitializeCreation();
-            var node = _graph.AddNode();
-            node.name = "NewClass " + _id;
-            var background = node.transform.Find("Background");
-            var header = background.Find("Header");
-
-            header.GetComponent<TextMeshProUGUI>().text = node.name;
-            var rc = node.GetComponent<RectTransform>();
-            rc.position = new Vector3(100f, 200f, 1);
-            _id++;
-
             var newClass = new Class
             {
-                Name = node.name
+                Name = "NewClass_" + _id++
             };
-            var pos = node.transform.position;
-            newClass.Left = pos.x / 1.25f;
-            newClass.Top = pos.y / 1.25f;
+            Spawner.Instance.SpawnClass(newClass.Name);
+            GenerateNode(newClass);
+        }
 
-            CDClass TempCDClass = null;
+        public CDClass CreateNode(Class newClass)
+        {
+            Spawner.Instance.SpawnClass(newClass.Name);
+            return GenerateNode(newClass);
+        }
+
+        public CDClass GenerateNode(Class newClass)
+        {
+            CDClass tempCdClass = null;
+            var name = CurrentClassName(newClass.Name, ref tempCdClass);
+            if (tempCdClass == null)
+                return null;
+
+            DiagramPool.Instance.ClassDiagram.Classes.Add(new ClassInDiagram
+                { XMIParsedClass = newClass, ClassInfo = tempCdClass});
+            var node = AddClassToGraph(name);
+            SetPosition(node);
+            return tempCdClass;
+        }
+
+        public static string CurrentClassName(string name, ref CDClass TempCdClass)
+        {
+            TempCdClass = null;
             var i = 0;
-            var currentName = node.name;
-            var baseName = node.name;
-            while (TempCDClass == null)
+            var currentName = name;
+            var baseName = name;
+            while (TempCdClass == null)
             {
                 currentName = baseName + (i == 0 ? "" : i.ToString());
-                TempCDClass = OALProgram.Instance.ExecutionSpace.SpawnClass(currentName);
+                TempCdClass = OALProgram.Instance.ExecutionSpace.SpawnClass(currentName);
                 i++;
                 if (i > 1000)
                 {
                     break;
                 }
             }
+            return currentName;
+        }
 
-            node.name = currentName;
-            DiagramPool.Instance.ClassDiagram.Classes.Add(new ClassInDiagram
-                { XMIParsedClass = newClass, ClassInfo = TempCDClass, VisualObject = node });
+        private void SetPosition(GameObject node)
+        {
+            var rect = node.GetComponent<RectTransform>();
+            rect.position = new Vector3(100f, 200f, 1);
+        }
+
+        public GameObject AddClassToGraph(string name)
+        {
+            var currentClass = DiagramPool.Instance.ClassDiagram.Classes.Find(item => item.XMIParsedClass.Name == name)
+                .XMIParsedClass;
+            if (!_graph)
+                InitializeCreation();
+            var node = _graph.AddNode();
+            node.name = name;
+
+            SetClassTmProName(node, name);
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(name);
+            if (classInDiagram != null)
+            {
+                classInDiagram.VisualObject = node;
+            }
+            return node;
         }
 
         public void SelectNode(GameObject selected)
@@ -146,12 +191,16 @@ namespace AnimArch.Visualization.Diagrams
             classInDiagram.ClassInfo.Name = newName;
             classInDiagram.XMIParsedClass.Name = newName;
             classInDiagram.VisualObject.name = newName;
+            SetClassTmProName(classInDiagram.VisualObject, newName);
+        }
 
-            classInDiagram.VisualObject.transform
+        public static void SetClassTmProName(GameObject classGo, string name)
+        {
+            classGo.transform
                 .Find("Background")
                 .Find("Header")
                 .GetComponent<TextMeshProUGUI>()
-                .text = newName;
+                .text = name;
         }
     }
 }

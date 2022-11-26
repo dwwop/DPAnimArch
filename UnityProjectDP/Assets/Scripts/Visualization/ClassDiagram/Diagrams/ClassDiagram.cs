@@ -64,7 +64,6 @@ namespace AnimArch.Visualization.Diagrams
         public void LoadDiagram()
         {
             CreateGraph();
-            //Call parser to load data from specified path to 
             int k = 0;
             // A trick used to skip empty diagrams in XMI file from EA
             while (Classes.Count < 1 && k < 10)
@@ -73,31 +72,8 @@ namespace AnimArch.Visualization.Diagrams
                 k++;
                 AnimationData.Instance.diagramId++;
             }
-
-            //fakeObjects();
-
-            //Generate UI objects displaying the diagram
             Generate();
-
-
-            //Set the layout of diagram so it is coresponding to EA view
             ManualLayout();
-            //AutoLayout();
-
-            /*Classes
-                .Where(Class => Class.isObject)
-                .ForEach(Class => Class.VisualObject.GetComponent<RectTransform>().Shift(0, 0, 200));
-
-
-            ClassInDiagram CLASS = FindClassByName("ASTLeaf");
-            Classes
-                .Where(Class => Class.isObject)
-                .ForEach
-                (
-                    Class => CreateInterGraphLine(graph, Class.VisualObject, CLASS.VisualObject)
-                );*/
-            
-            // DiagramPool.Instance.ObjectDiagram.LoadDiagram();
         }
         public Graph CreateGraph()
         {
@@ -123,25 +99,11 @@ namespace AnimArch.Visualization.Diagrams
             {
                 CurrentClass.Name = CurrentClass.Name.Replace(" ", "_");
 
-                TempCDClass = null;
-                int i = 0;
-                string currentName = CurrentClass.Name;
-                string baseName = CurrentClass.Name;
-                while (TempCDClass == null)
-                {
-                    currentName = baseName + (i == 0 ? "" : i.ToString());
-                    TempCDClass = OALProgram.Instance.ExecutionSpace.SpawnClass(currentName);
-                    i++;
-                    if (i > 1000)
-                    {
-                        break;
-                    }
-                }
-                CurrentClass.Name = currentName;
+                // CurrentClass.Name = ClassEditor.CurrentClassName(CurrentClass.Name, ref TempCDClass);
+                TempCDClass = ClassEditor.Instance.CreateNode(CurrentClass);
                 if (TempCDClass == null)
-                {
                     continue;
-                }
+                //Classes.Add( new ClassInDiagram() { XMIParsedClass = CurrentClass, ClassInfo = TempCDClass });
 
                 if (CurrentClass.Attributes != null)
                 {
@@ -180,7 +142,6 @@ namespace AnimArch.Visualization.Diagrams
                     }
                 }
                 CurrentClass.Top *= -1;
-                Classes.Add( new ClassInDiagram() { XMIParsedClass = CurrentClass, ClassInfo = TempCDClass });
             }
 
             List<Relation> XMIRelationList = XMIParser.ParseRelations();
@@ -222,10 +183,8 @@ namespace AnimArch.Visualization.Diagrams
         //Create GameObjects from the parsed data sotred in list of Classes and Relations
         public void Generate()
         {
-            Debug.Log("DIAGRAM CLASSES COUNT" + Classes.Count);
-            Debug.Log("RELATION COUNT" + Relations.Count);
             //Render classes
-            for (int i = 0; i < Classes.Count; i++)
+            for (var i = 0; i < Classes.Count; i++)
             {
                 if (Classes[i].isObject)
                 {
@@ -233,16 +192,12 @@ namespace AnimArch.Visualization.Diagrams
                 }
 
                 //Setting up
-                var node = graph.AddNode();
-                node.name = Classes[i].XMIParsedClass.Name;
+                var node = FindClassByName(Classes[i].XMIParsedClass.Name).VisualObject;
+
                 var background = node.transform.Find("Background");
-                var header = background.Find("Header");
                 var attributes = background.Find("Attributes");
                 var methods = background.Find("Methods");
-
-                // Printing the values into diagram
-                header.GetComponent<TextMeshProUGUI>().text = Classes[i].XMIParsedClass.Name;
-
+                
                 //Attributes
                 if (Classes[i].XMIParsedClass.Attributes != null)
                     foreach (Attribute attr in Classes[i].XMIParsedClass.Attributes)
@@ -269,7 +224,7 @@ namespace AnimArch.Visualization.Diagrams
                     }
 
                 //Add Class to Dictionary
-                FindClassByName(node.name).VisualObject = node;
+                //FindClassByName(node.name).VisualObject = node;
             }
 
             //Render Relations between classes

@@ -17,31 +17,31 @@ namespace Networking
             DontDestroyOnLoad(gameObject);
         }
 
-        public void SpawnClass()
+        public void SpawnClass(string name)
         {
             if (IsServer)
             {
-                SpawnClassClientRpc();
+                SpawnClassClientRpc(name);
             }
             else
             {
-                SpawnClassServerRpc();
+                SpawnClassServerRpc(name);
             }
         }
 
         // Server RPC - if client creates instance, server RPC is called and instance is created at server side.
         [ServerRpc(RequireOwnership = false)]
-        public void SpawnClassServerRpc(ServerRpcParams rpcParams = default)
+        public void SpawnClassServerRpc(string name)
         {
-           ClassEditor.Instance.CreateNodeFromRpc();
+           ClassEditor.Instance.CreateNodeFromRpc(name);
         }
 
         [ClientRpc]
-        public void SpawnClassClientRpc()
+        public void SpawnClassClientRpc(string name)
         {
             if (IsServer)
                 return;
-           ClassEditor.Instance.CreateNodeFromRpc();
+           ClassEditor.Instance.CreateNodeFromRpc(name);
         }
 
         [ServerRpc(RequireOwnership = false)]
