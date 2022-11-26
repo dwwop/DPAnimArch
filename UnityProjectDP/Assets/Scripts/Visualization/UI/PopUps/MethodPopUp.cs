@@ -8,12 +8,12 @@ namespace AnimArch.Visualization.UI
     public class MethodPopUp : AbstractPopUp
     {
         public TMP_Dropdown dropdown;
-        private TMP_Text _mtdTxt;
+        private TMP_Text _methodText;
 
         public void ActivateCreation(TMP_Text classTxt, TMP_Text mtdTxt)
         {
             ActivateCreation(classTxt);
-            _mtdTxt = mtdTxt;
+            _methodText = mtdTxt;
         }
 
         public override void Confirmation()
@@ -23,30 +23,14 @@ namespace AnimArch.Visualization.UI
                 Deactivate();
                 return;
             }
-            var mtd = new Method
+
+            //TODO: Method args
+            var method = new Method
             {
                 Name = inp.text,
                 ReturnValue = dropdown.options[dropdown.value].text
             };
-
-            // var tempCdClass = DiagramPool.Instance.ClassDiagram.FindClassByName(ClassTxt.text).ClassInfo;
-            // mtd.Name = mtd.Name.Replace(" ", "_");
-            // var cdMethod = new CDMethod(tempCdClass, mtd.Name, EXETypes.ConvertEATypeName(mtd.ReturnValue));
-            // tempCdClass.AddMethod(cdMethod);
-            
-            // foreach (var arg in mtd.arguments)
-            // {
-            //     var tokens = arg.Split(' ');
-            //     var type = tokens[0];
-            //     var mName = tokens[1];
-            //
-            //     Method.Parameters.Add(new CDParameter{ Name = mName, Type = EXETypes.ConvertEATypeName(type) });
-            // }
-            
-            if (DiagramPool.Instance.ClassDiagram.AddMethod(ClassTxt.text, mtd))
-            {
-                _mtdTxt.text += mtd.Name + "() :" + mtd.ReturnValue + "\n";
-            }
+            ClassEditor.AddMethod(ClassTxt.text, method, ClassEditor.Source.editor);
 
             Deactivate();
         }

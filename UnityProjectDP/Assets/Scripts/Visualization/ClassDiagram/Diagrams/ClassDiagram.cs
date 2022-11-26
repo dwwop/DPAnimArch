@@ -99,11 +99,9 @@ namespace AnimArch.Visualization.Diagrams
             {
                 CurrentClass.Name = CurrentClass.Name.Replace(" ", "_");
 
-                // CurrentClass.Name = ClassEditor.CurrentClassName(CurrentClass.Name, ref TempCDClass);
                 TempCDClass = ClassEditor.Instance.CreateNode(CurrentClass);
                 if (TempCDClass == null)
                     continue;
-                //Classes.Add( new ClassInDiagram() { XMIParsedClass = CurrentClass, ClassInfo = TempCDClass });
 
                 if (CurrentClass.Attributes != null)
                 {
@@ -125,13 +123,13 @@ namespace AnimArch.Visualization.Diagrams
 
                 if (CurrentClass.Methods != null)
                 {
-                    foreach (Method CurrentMethod in CurrentClass.Methods)
+                    foreach (Method method in CurrentClass.Methods)
                     {
-                        CurrentMethod.Name = CurrentMethod.Name.Replace(" ", "_");
-                        CDMethod Method = new CDMethod(TempCDClass, CurrentMethod.Name, EXETypes.ConvertEATypeName(CurrentMethod.ReturnValue));
+                        method.Name = method.Name.Replace(" ", "_");
+                        CDMethod Method = new CDMethod(TempCDClass, method.Name, EXETypes.ConvertEATypeName(method.ReturnValue));
                         TempCDClass.AddMethod(Method);
 
-                        foreach (string arg in CurrentMethod.arguments)
+                        foreach (string arg in method.arguments)
                         {
                             string[] tokens = arg.Split(' ');
                             string type = tokens[0];
@@ -139,6 +137,7 @@ namespace AnimArch.Visualization.Diagrams
 
                             Method.Parameters.Add(new CDParameter() { Name = name, Type = EXETypes.ConvertEATypeName(type) });
                         }
+                        ClassEditor.AddMethod(CurrentClass.Name, method, ClassEditor.Source.loader);
                     }
                 }
                 CurrentClass.Top *= -1;
@@ -196,7 +195,6 @@ namespace AnimArch.Visualization.Diagrams
 
                 var background = node.transform.Find("Background");
                 var attributes = background.Find("Attributes");
-                var methods = background.Find("Methods");
                 
                 //Attributes
                 if (Classes[i].XMIParsedClass.Attributes != null)
@@ -205,26 +203,6 @@ namespace AnimArch.Visualization.Diagrams
                         attributes.GetComponent<TextMeshProUGUI>().text += attr.Name + ": " + attr.Type + "\n";
                     }
 
-
-                //Methods
-                if (Classes[i].XMIParsedClass.Methods != null)
-                    foreach (Method method in Classes[i].XMIParsedClass.Methods)
-                    {
-                        string arguments = "(";
-                        if (method.arguments != null)
-                            for (int d = 0; d < method.arguments.Count; d++)
-                            {
-                                if (d < method.arguments.Count - 1)
-                                    arguments += (method.arguments[d] + ", ");
-                                else arguments += (method.arguments[d]);
-                            }
-                        arguments += ")";
-
-                        methods.GetComponent<TextMeshProUGUI>().text += method.Name + arguments + " :" + method.ReturnValue + "\n";
-                    }
-
-                //Add Class to Dictionary
-                //FindClassByName(node.name).VisualObject = node;
             }
 
             //Render Relations between classes
@@ -303,31 +281,7 @@ namespace AnimArch.Visualization.Diagrams
                     )
                     .FirstOrDefault();
         }
-        public bool AddMethod(string targetClass, Method methodToAdd)
-        {
-            var c = FindClassByName(targetClass);
-            if (c == null)
-            {
-                return false;
-            }
-            
-            if (c.XMIParsedClass.Methods == null) 
-                c.XMIParsedClass.Methods = new List<Method>();
-            if (c.XMIParsedClass.methods == null)
-                c.XMIParsedClass.methods = new List<Method>();
 
-            if (FindMethodByName(targetClass, methodToAdd.Name) != null) return false;
-            
-            c.XMIParsedClass.Methods.Add(methodToAdd);
-            c.XMIParsedClass.methods.Add(methodToAdd);
-            
-            if (!OALProgram.Instance.ExecutionSpace.ClassExists(targetClass)) return true;
-            
-            var cdClass = OALProgram.Instance.ExecutionSpace.getClassByName(targetClass);
-            cdClass.AddMethod(new CDMethod(cdClass, methodToAdd.Name, EXETypes.ConvertEATypeName(methodToAdd.ReturnValue)));
-        
-            return true;
-        }
         public Attribute FindAttributeByName(String className, String attributeName)
         {
             ClassInDiagram _class = FindClassByName(className);
@@ -484,41 +438,7 @@ namespace AnimArch.Visualization.Diagrams
             Relations.Add(relInDiag);
             return relInDiag;
         }
-        public void fakeObjects()
-        {
-            List<DiagramObject> dos = new List<DiagramObject>(new DiagramObject[] {
-                new DiagramObject("Operand1", "ASTLeaf", new List<(string, string, string)>( new [] {
-                    ("value", "string", "string"),
-                    ("type", "string", "\"Due to false \"")
-                })),
-                new DiagramObject("Operand2", "ASTLeaf", new List<(string, string, string)>( new [] {
-                    ("value", "string", "string"),
-                    ("type", "string", "\"pandemic narrative.\"")
-                }))
-            });
-
-            int i = 0;
-            foreach (DiagramObject dgo in dos)
-            {
-                AddDiagramObject(dgo);
-                dgo.VisualObject.GetComponent<RectTransform>().position
-                    = new Vector3
-                    (
-                        0,
-                        300 * i++
-                    );
-            }
-
-            /*GameObject Line = Instantiate(interGraphLinePrefab);
-            Line.GetComponent<LineRenderer>().SetPositions(
-                new Vector3[]
-                {
-                    dos[0].VisualObject.GetComponent<RectTransform>().position,
-                    dos[1].VisualObject.GetComponent<RectTransform>().position
-                }
-            );
-            Line.GetComponent<LineRenderer>().widthMultiplier = 6f;*/
-        }
+        
         // Lukas
         public class DiagramObject
         {
@@ -559,55 +479,6 @@ namespace AnimArch.Visualization.Diagrams
                     isObject = true
                 }
             );
-            /*
-            GameObject prefab = dependsPrefab;
-            GameObject startingClass = FindClassByName(DiagramObject.VisualObject.name)?.VisualObject;
-            GameObject finishingClass = FindClassByName(DiagramObject.className)?.VisualObject;
-            if (startingClass != null && finishingClass != null)
-            {
-                GameObject edge = graph.AddEdge(startingClass, finishingClass, prefab);
-                Relations.Add
-                (
-                    new RelationInDiagram()
-                    {
-                        VisualObject = edge,
-                        XMIParsedRelation
-                            = new Relation()
-                            {
-                                OALName = DiagramObject.VisualObject.name,
-                                FromClass = startingClass.name,
-                                ToClass = finishingClass.name
-                            },
-                        RelationInfo
-                            = new CDRelationship
-                            (
-                                startingClass.name,
-                                finishingClass.name,
-                                DiagramObject.VisualObject.name
-                            )
-                    }
-                );
-
-                //Quickfix
-                if (edge.gameObject.transform.childCount > 0)
-                {
-                    StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
-                }
-
-                edge.GetComponent<UEdge>().GraphEdge.Color = Color.cyan;
-            }
-            else
-            {
-                Debug.LogError
-                (
-                    string.Format
-                    (
-                        "Can't find specified Edge \"{0}\"->\"{1}\"",
-                        DiagramObject.VisualObject.name,
-                        DiagramObject.className
-                    )
-                );
-            }*/
         }
     }
 }

@@ -44,6 +44,18 @@ namespace Networking
            ClassEditor.Instance.CreateNodeFromRpc(name);
         }
 
+        public void SetClassName(string targetClass, string newName)
+        {
+            if (IsServer)
+            {
+                SetClassNameClientRpc(targetClass, newName);
+            }
+            else
+            {
+                SetClassNameServerRpc(targetClass, newName);
+            }
+        }
+
         [ServerRpc(RequireOwnership = false)]
         public void SetClassNameServerRpc(string targetClass, string newName)
         {
@@ -58,16 +70,40 @@ namespace Networking
             ClassEditor.Instance.SetClassName(targetClass, newName, true);
         }
 
-        public void SetClassName(string targetClass, string newName)
+        public void AddMethod(string targetClass, string name, string returnValue)
         {
             if (IsServer)
             {
-                SetClassNameClientRpc(targetClass, newName);
+                AddMethodClientRpc(targetClass, name, returnValue);
             }
             else
             {
-                SetClassNameServerRpc(targetClass, newName);
+                AddMethodServerRpc(targetClass, name, returnValue);
             }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void AddMethodServerRpc(string targetClass, string name, string returnValue)
+        {
+            var method = new Method
+            {
+                Name = name,
+                ReturnValue = returnValue
+            };
+            ClassEditor.AddMethod(targetClass, method, ClassEditor.Source.RPC);
+        }
+
+        [ClientRpc]
+        public void AddMethodClientRpc(string targetClass, string name, string returnValue)
+        {
+            if (IsServer)
+                return;
+            var method = new Method
+            {
+                Name = name,
+                ReturnValue = returnValue
+            };
+            ClassEditor.AddMethod(targetClass, method, ClassEditor.Source.RPC);
         }
     }
 }
