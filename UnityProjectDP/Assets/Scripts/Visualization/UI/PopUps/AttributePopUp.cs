@@ -27,11 +27,11 @@ namespace AnimArch.Visualization.UI
             var atr = new Attribute
             {
                 Name = inp.text,
-                Type = dropdown.options[dropdown.value].text
+                Type = (isArray.isOn ? "[]: " : ": ") + dropdown.options[dropdown.value].text
             };
             if (DiagramPool.Instance.ClassDiagram.AddAtr(ClassTxt.text, atr))
             {
-                _atrTxt.text += atr.Name + (isArray ? "[]: " : ": ") + atr.Type + "\n";
+                _atrTxt.text += atr.Name + atr.Type + "\n";
             }
 
             Deactivate();

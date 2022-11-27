@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using AnimArch.Visualization.UI;
 using Networking;
+using AnimArch.XMIParsing;
 using OALProgramControl;
 using Unity.Netcode;
 
@@ -66,7 +67,9 @@ namespace AnimArch.Visualization.Diagrams
         {
             var newClass = new Class
             {
-                Name = name
+                Name = name,
+                XmiId = _id.ToString(),
+                Type = "uml:Class"
             };
             GenerateNode(newClass);
         }
@@ -167,11 +170,11 @@ namespace AnimArch.Visualization.Diagrams
         }
         private void EndSelection()
         {
+            Animating.Animation.Instance.HighlightClass(_node.name, false);
             _relType = null;
             _node = null;
             _graph.UpdateGraph();
             MenuManager.Instance.isSelectingNode = false;
-            Animating.Animation.Instance.UnhighlightAll();
             GameObject.Find("SelectionPanel").SetActive(false);
         }
 
@@ -297,6 +300,11 @@ namespace AnimArch.Visualization.Diagrams
                 .Find("Methods")
                 .GetComponent<TextMeshProUGUI>()
                 .text += method;
+        }
+
+        public void SaveDiagram()
+        {
+            XMIParser.ParseDiagramIntoXmi();
         }
     }
 }

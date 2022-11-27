@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using AnimArch.Extensions;
 using AnimArch.Visualization.Animating;
 using AnimArch.XMIParsing;
+using JetBrains.Annotations;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -308,9 +309,9 @@ namespace AnimArch.Visualization.Diagrams
                     )
                     .FirstOrDefault();
         }
-        public bool AddAtr(String targetClass, Attribute attributeToAdd)
+        public bool AddAtr(string targetClass, Attribute attributeToAdd)
         {
-            ClassInDiagram c = FindClassByName(targetClass);
+            var c = FindClassByName(targetClass);
             if (c == null)
             {
                 return false;
@@ -321,8 +322,9 @@ namespace AnimArch.Visualization.Diagrams
 
             if (c.XMIParsedClass.attributes == null)
                 c.XMIParsedClass.attributes = new List<Attribute>();
-            
 
+
+            attributeToAdd.Id = (c.XMIParsedClass.attributes.Count + 1).ToString();
             if (FindAttributeByName(targetClass, attributeToAdd.Name) != null) return false;
             c.XMIParsedClass.Attributes.Add(attributeToAdd);
             c.XMIParsedClass.attributes.Add(attributeToAdd);
@@ -346,6 +348,7 @@ namespace AnimArch.Visualization.Diagrams
             }
             return Result;
         }
+        
         public GameObject FindEdge(string RelationshipName)
         {
             return Relations
