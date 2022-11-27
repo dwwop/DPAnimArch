@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using AnimArch.Visualization.UI;
+using AnimArch.XMIParsing;
 using OALProgramControl;
 
 namespace AnimArch.Visualization.Diagrams
@@ -33,7 +34,7 @@ namespace AnimArch.Visualization.Diagrams
         public void CreateNode()
         {
             var node = _graph.AddNode();
-            node.name = "NewClass " + _id;
+            node.name = "NewClass_" + _id;
             var background = node.transform.Find("Background");
             var header = background.Find("Header");
             // var attributes = background.Find("Attributes");
@@ -47,7 +48,9 @@ namespace AnimArch.Visualization.Diagrams
 
             var newClass = new Class
             {
-                Name = node.name
+                Name = node.name,
+                XmiId = _id.ToString(),
+                Type = "uml:Class"
             };
             var pos = node.transform.position;
             newClass.Left = pos.x / 1.25f;
@@ -105,18 +108,23 @@ namespace AnimArch.Visualization.Diagrams
 
         private void EndSelection()
         {
+            Animating.Animation.Instance.HighlightClass(_node.name, false);
             _relType = null;
             _node = null;
             _graph.UpdateGraph();
             MenuManager.Instance.isSelectingNode = false;
-            Animating.Animation.Instance.UnhighlightAll();
-            GameObject.Find("Selection RightPanel").SetActive(false);
+            GameObject.Find("SelectionPanel").SetActive(false);
         }
 
         public void StartSelection(string type)
         {
             MenuManager.Instance.isSelectingNode = true;
             _relType = type;
+        }
+
+        public void SaveDiagram()
+        {
+            XMIParser.ParseDiagramIntoXmi();
         }
     }
 }

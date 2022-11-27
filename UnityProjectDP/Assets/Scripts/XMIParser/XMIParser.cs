@@ -1,58 +1,47 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
+using System.Linq;
 using System.Xml;
-using System.Xml.XPath;
-using UnityEngine;
 using System.Text;
 using AnimArch.Visualization.Diagrams;
 using AnimArch.Visualization.Animating;
+using Attribute = AnimArch.Visualization.Diagrams.Attribute;
 
 namespace AnimArch.XMIParsing
 {
     public static class XMIParser
     {
-        //static String path = "C:/AnimArch/exportedXMI.xml";
-        //static String path = "C:/TPFIIT/visitor_v2_s_client_metodami.xml";
-        //static String currDiagramIDPath = "C:/AnimArch/currDiagramID.txt";
-        public static List<String> parseCurrentDiagramElementsIDs()
+        private static List<string> ParseCurrentDiagramElementsIDs()
         {
             //Document
-            XmlDocument xmlDoc = new XmlDocument(); // Create an XML document object
+            var xmlDoc = new XmlDocument(); // Create an XML document object
             var encoding = Encoding.GetEncoding("UTF-8");
             //System.IO.StreamReader reader = new System.IO.StreamReader(path, System.Text.Encoding.GetEncoding("Windows-1252"), true);
-            string xmlText= System.IO.File.ReadAllText(AnimationData.Instance.GetDiagramPath(), encoding);
-            // XmlTextReader xmlReader = new XmlTextReader(reader);
+            var xmlText = System.IO.File.ReadAllText(AnimationData.Instance.GetDiagramPath(), encoding);
             xmlDoc.LoadXml(xmlText); // Load the XML document from the specified file
 
-            string currDiagramID = AnimationData.Instance.diagramId.ToString();
+            var currDiagramID = AnimationData.Instance.diagramId.ToString();
             //pridaj vsetky elementy patriace current otvorenemu diagramu
-            List<string> currDiagramElements = new List<string>();
-            XmlNodeList diagrams = xmlDoc.GetElementsByTagName("diagrams");
-            XmlNodeList d = diagrams[0].ChildNodes;
+            var currDiagramElements = new List<string>();
+            var diagrams = xmlDoc.GetElementsByTagName("diagrams");
+            var d = diagrams[0].ChildNodes;
 
             foreach (XmlNode diagram in d)
             {
-                XmlNodeList diagramNodes = diagram.ChildNodes;
+                var diagramNodes = diagram.ChildNodes;
 
                 foreach (XmlNode node in diagramNodes)
                 {
                     if (node.Name == "model")
                     {
-                        if ((node.Attributes["localID"].Value == currDiagramID) == false) break;
+                        if (node.Attributes?["localID"].Value == currDiagramID == false) break;
                     }
 
-                    if (node.Name == "elements")
-                    {
-                        XmlNodeList diagramElements = node.ChildNodes;
-                        foreach (XmlNode diagramElement in diagramElements)
-                        {
-                            currDiagramElements.Add(diagramElement.Attributes["subject"].Value);
-                        }
-                    }
-
+                    if (node.Name != "elements") continue;
+                    var diagramElements = node.ChildNodes;
+                    currDiagramElements.AddRange(from XmlNode diagramElement in diagramElements
+                        select diagramElement.Attributes?["subject"].Value);
                 }
-
             }
 
             return currDiagramElements;
@@ -60,392 +49,515 @@ namespace AnimArch.XMIParsing
 
         public static List<Class> ParseClasses()
         {
-            List<Class> XMIClassList = new List<Class>();
-            XmlDocument xmlDoc = new XmlDocument(); // Create an XML document object
+            var XMIClassList = new List<Class>();
+            var xmlDoc = new XmlDocument(); // Create an XML document object
             // Load the XML document from the specified file
-            string xml = System.IO.File.ReadAllText(AnimationData.Instance.GetDiagramPath());
+            var encoding = Encoding.GetEncoding("UTF-8");
+            var xml = System.IO.File.ReadAllText(AnimationData.Instance.GetDiagramPath(), encoding);
             xmlDoc.LoadXml(xml);
-            string currDiagramID = AnimationData.Instance.diagramId.ToString();
+            var currDiagramID = AnimationData.Instance.diagramId.ToString();
             //string currDiagramID = System.IO.File.ReadAllText(currDiagramIDPath);
-            List<String> currDiagramElements = parseCurrentDiagramElementsIDs();
+            var currDiagramElements = ParseCurrentDiagramElementsIDs();
 
             // Get elements
-            XmlNodeList classNodeList = xmlDoc.GetElementsByTagName("UML:Class");
-            XmlNodeList classIndices = xmlDoc.GetElementsByTagName("UML:DiagramElement");
-            XmlNodeList elementClass = xmlDoc.GetElementsByTagName("elements");
+            // var classNodeList = xmlDoc.GetElementsByTagName("UML:Class");
+            // var classIndices = xmlDoc.GetElementsByTagName("UML:DiagramElement");
+            var elementClass = xmlDoc.GetElementsByTagName("elements");
 
-        
-            XmlNodeList elementsClass = elementClass[0].ChildNodes;
+
+            var elementsClass = elementClass[0].ChildNodes;
             //XmlNodeList geometryElements = elementClass[1].ChildNodes; //todo fix for current diagram
             XmlNodeList geometryElements = null;
 
-            for(int i = 1; i < elementClass.Count; i++)
+            for (var i = 1; i < elementClass.Count; i++)
             {
-                XmlNode parentDiagram = elementClass[i].ParentNode;
-                XmlNodeList parentDiagramNodes = parentDiagram.ChildNodes;
-                foreach (XmlNode node in parentDiagramNodes)
+                var parentDiagram = elementClass[i].ParentNode;
+                var parentDiagramNodes = parentDiagram?.ChildNodes;
+                if (parentDiagramNodes.Cast<XmlNode>().Where(node => node.Name == "model")
+                    .Any(node => node.Attributes?["localID"].Value == currDiagramID))
                 {
-                    if(node.Name == "model")
-                    {
-                        if(node.Attributes["localID"].Value == currDiagramID)
-                        {
-                            geometryElements = elementClass[i].ChildNodes;
-                            break;
-                        }
-                    }
+                    geometryElements = elementClass[i].ChildNodes;
                 }
             }
 
 
-            for (int i = 1; i < elementsClass.Count; i++)
+            for (var i = 1; i < elementsClass.Count; i++)
             {
-                Class XMIClass = new Class();
-                XMIClass.Type = elementsClass[i].Attributes["xmi:type"].Value;
+                var XMIClass = new Class
+                {
+                    Type = elementsClass[i].Attributes["xmi:type"].Value
+                };
                 try
                 {
                     XMIClass.Name = elementsClass[i].Attributes["name"].Value;
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
+
                 XMIClass.XmiId = elementsClass[i].Attributes["xmi:idref"].Value;
                 //  XMIClassList.Add(XMIClass);
                 if (!(XMIClass.Type.Equals("uml:Interface") || XMIClass.Type.Equals("uml:Class"))) continue;
 
                 if (elementsClass[i].HasChildNodes)
                 {
-                    XmlNodeList test = elementsClass[i].ChildNodes;
+                    var test = elementsClass[i].ChildNodes;
                     foreach (XmlNode node in test)
                     {
-                        if (node.Name == "attributes")
+                        switch (node.Name)
                         {
-                            XmlNodeList attributes = node.ChildNodes;
-                            XMIClass.Attributes = new List<Visualization.Diagrams.Attribute>();
-
-                            foreach (XmlNode attribute in attributes)
+                            case "attributes":
                             {
-                                string type = "";
-                                string id = attribute.Attributes["xmi:idref"].Value;
-                                string name = attribute.Attributes["name"].Value;
+                                var attributes = node.ChildNodes;
+                                XMIClass.Attributes = new List<Attribute>();
 
-                                XmlNodeList attributeAttributes = attribute.ChildNodes;
-                                foreach (XmlNode attributeAttribute in attributeAttributes)
+                                foreach (XmlNode attribute in attributes)
                                 {
-                                    if (attributeAttribute.Name == "properties")
+                                    var type = "";
+                                    var id = attribute.Attributes["xmi:idref"].Value;
+                                    var name = attribute.Attributes["name"].Value;
+
+                                    var attributeAttributes = attribute.ChildNodes;
+                                    foreach (XmlNode attributeAttribute in attributeAttributes)
                                     {
-
-                                        type = attributeAttribute.Attributes["type"].Value;
-
+                                        if (attributeAttribute.Name == "properties")
+                                        {
+                                            type = attributeAttribute.Attributes["type"].Value;
+                                        }
                                     }
+
+                                    var attr = new Attribute(id, name, type);
+                                    XMIClass.Attributes.Add(attr);
                                 }
 
-                                Visualization.Diagrams.Attribute attr = new Visualization.Diagrams.Attribute(id, name, type);
-                                XMIClass.Attributes.Add(attr);
+                                break;
                             }
-                        }
-                        else if (node.Name == "operations")
-                        {
-                            XmlNodeList operations = node.ChildNodes;
-                            XMIClass.Methods = new List<Method>();
-
-                            foreach (XmlNode operation in operations)
+                            case "operations":
                             {
-                                string name = operation.Attributes["name"].Value;
-                                string id = operation.Attributes["xmi:idref"].Value;
-                                string returnType = "";
-                                List<string> arguments = new List<string>();
+                                var operations = node.ChildNodes;
+                                XMIClass.Methods = new List<Method>();
 
-                                Method oper = new Method();
-                                oper.Name = name;
-                                oper.Id = id;
-
-
-                                XmlNodeList operationProperties = operation.ChildNodes;
-
-                                foreach (XmlNode operationProperty in operationProperties)
+                                foreach (XmlNode operation in operations)
                                 {
-                                    //TODO
-                                    if (operationProperty.Name == "parameters")
+                                    var name = operation.Attributes["name"].Value;
+                                    var id = operation.Attributes["xmi:idref"].Value;
+                                    var arguments = new List<string>();
+
+                                    var oper = new Method
                                     {
+                                        Name = name,
+                                        Id = id
+                                    };
 
-                                        XmlNodeList parameters = operationProperty.ChildNodes;
 
-                                        int count = 0;
-                                        foreach (XmlNode parameter in parameters)
+                                    var operationProperties = operation.ChildNodes;
+
+                                    foreach (XmlNode operationProperty in operationProperties)
+                                    {
+                                        switch (operationProperty.Name)
                                         {
-                                            if (count++ > 0)
+                                            //TODO
+                                            case "parameters":
                                             {
-                                                var nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
-                                                nsmgr.AddNamespace("xmi", "http://schema.omg.org/spec/XMI/2.1");
-                                                var xmi_id = parameter.Attributes["xmi:idref"].Value;
-                                                var refnode = xmlDoc.SelectSingleNode("//*[@xmi:id='"+xmi_id+"']", nsmgr);
-                                               // XmlNode refnode = xmlDoc.SelectSingleNode("//*[@xmi:id='EAID_855A1E81_E810_4e59_B919_A02E42179E4F']", nsmgr);
-    
-                                          
-                                                var argname = refnode.Attributes["name"].Value;
-                                            
+                                                var parameters = operationProperty.ChildNodes;
 
-                                                XmlNodeList parameterProperties = parameter.ChildNodes;
-
-                                                foreach (XmlNode parameterProperty in parameter)
+                                                var count = 0;
+                                                foreach (XmlNode parameter in parameters)
                                                 {
-                                                    if (parameterProperty.Name == "properties")
-                                                    {
-                                                        //arguments.Add(parameterProperty.Attributes["type"].Value);
-                                                        var argpom = parameterProperty.Attributes["type"].Value;
-                                                        arguments.Add(argpom + " " + argname);
-                                                    }
+                                                    if (count++ <= 0) continue;
+                                                    var nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
+                                                    nsmgr.AddNamespace("xmi", "http://schema.omg.org/spec/XMI/2.1");
+                                                    var xmiID = parameter.Attributes["xmi:idref"].Value;
+                                                    var refnode = xmlDoc.SelectSingleNode(
+                                                        "//*[@xmi:id='" + xmiID + "']",
+                                                        nsmgr);
+                                                    // XmlNode refnode = xmlDoc.SelectSingleNode("//*[@xmi:id='EAID_855A1E81_E810_4e59_B919_A02E42179E4F']", nsmgr);
+
+
+                                                    var argname = refnode.Attributes["name"].Value;
+
+
+                                                    var parameterProperties = parameter.ChildNodes;
+
+                                                    arguments.AddRange(from XmlNode parameterProperty in parameter
+                                                        where parameterProperty.Name == "properties"
+                                                        select parameterProperty.Attributes["type"].Value
+                                                        into argpom
+                                                        select argpom + " " + argname);
                                                 }
+
+                                                //Method oper = new Method(name, id, returnType);   
+                                                oper.arguments = arguments;
+                                                break;
+                                            }
+                                            case "type":
+                                            {
+                                                var returnType = operationProperty.Attributes["type"].Value;
+                                                /*Method oper = new Method(name, id, returnType);
+                                        XMIClass.Methods.Add(oper);*/
+                                                oper.ReturnValue = returnType;
+
+                                                XMIClass.Methods.Add(oper);
+                                                break;
                                             }
                                         }
-                                        //Method oper = new Method(name, id, returnType);   
-                                        oper.arguments = arguments;
-
-                                        /*Debug.Log(oper.Name);
-                                        Debug.Log(oper.ReturnValue);
-                                        if(oper.arguments.Count > 0)
-                                            Debug.Log(oper.arguments[0]);*/
-
                                     }
-
-                                    if (operationProperty.Name == "type")
-                                    {
-                                        returnType = operationProperty.Attributes["type"].Value;
-                                        /*Method oper = new Method(name, id, returnType);
-                                        XMIClass.Methods.Add(oper);*/
-                                        oper.ReturnValue = returnType;
-
-                                        XMIClass.Methods.Add(oper);
-                                    }
-
                                 }
 
+                                break;
                             }
                         }
-
-
-
                     }
                 }
-                if(currDiagramElements.Contains(XMIClass.XmiId)) XMIClassList.Add(XMIClass);
+
+                if (currDiagramElements.Contains(XMIClass.XmiId)) XMIClassList.Add(XMIClass);
             }
+
             if (geometryElements == null)
             {
                 return null;
             }
+
             for (int i = 0; i < geometryElements.Count; i++)
             {
-                string subject = geometryElements[i].Attributes["subject"].Value;
-                foreach (var item in XMIClassList)
+                var subject = geometryElements[i].Attributes["subject"].Value;
+                foreach (var item in XMIClassList.Where(item => item.XmiId == subject))
                 {
-                    if (item.XmiId == subject)
-                    {
-                        item.Geometry = geometryElements[i].Attributes["geometry"].Value;
+                    item.Geometry = geometryElements[i].Attributes["geometry"].Value;
 
-                        string[] words = item.Geometry.Split(';');
-                        foreach (string word in words)
+                    var words = item.Geometry.Split(';');
+                    foreach (var word in words)
+                    {
+                        //aby som nedostal IndexOutOfRangeException... 
+                        if (string.IsNullOrEmpty(word)) break;
+                        var values = word.Split('=');
+                        switch (values[0])
                         {
-                            //aby som nedostal IndexOutOfRangeException... 
-                            if (String.IsNullOrEmpty(word)) break;
-                            string[] values = word.Split('=');
-                            switch (values[0])
-                            {
-                                case "Left":
-                                    item.Left = int.Parse(values[1]);
-                                    break;
-                                case "Top":
-                                    item.Top = int.Parse(values[1]);
-                                    break;
-                                case "Right":
-                                    item.Right = int.Parse(values[1]);
-                                    break;
-                                case "Bottom":
-                                    item.Bottom = int.Parse(values[1]);
-                                    break;
-                            }
+                            case "Left":
+                                item.Left = int.Parse(values[1]);
+                                break;
+                            case "Top":
+                                item.Top = int.Parse(values[1]);
+                                break;
+                            case "Right":
+                                item.Right = int.Parse(values[1]);
+                                break;
+                            case "Bottom":
+                                item.Bottom = int.Parse(values[1]);
+                                break;
                         }
                     }
                 }
             }
+
             return XMIClassList;
         }
 
         public static List<Relation> ParseRelations()
         {
-            List<Relation> connetorClassesList = new List<Relation>();
+            var connectorClassesList = new List<Relation>();
 
-            XmlDocument xmlDoc = new XmlDocument(); // Create an XML document object
+            var xmlDoc = new XmlDocument(); // Create an XML document object
             var encoding = Encoding.GetEncoding("UTF-8");
-            string xmlText = System.IO.File.ReadAllText(AnimationData.Instance.GetDiagramPath(), encoding);
+            var xmlText = System.IO.File.ReadAllText(AnimationData.Instance.GetDiagramPath(), encoding);
             // XmlTextReader xmlReader = new XmlTextReader(reader);
             xmlDoc.LoadXml(xmlText); // Load the XML document from the specified file
-            List<String> currDiagramElements = parseCurrentDiagramElementsIDs();
+            var currDiagramElements = ParseCurrentDiagramElementsIDs();
 
-            XmlNodeList connectorClass = xmlDoc.GetElementsByTagName("connectors");
+            var connectorClass = xmlDoc.GetElementsByTagName("connectors");
 
 
             foreach (XmlNode connector in connectorClass)
             {
-
-
-                if (connector.HasChildNodes)
+                if (!connector.HasChildNodes) continue;
+                var childNodeList = connector.ChildNodes;
+                //prejde vsetky <connector>
+                foreach (XmlNode childNode in childNodeList)
                 {
-                    XmlNodeList childNodeList = connector.ChildNodes;
-                    //prejde vsetky <connector>
-                    foreach (XmlNode childNode in childNodeList)
+                    var xmiConnectorClass = new Relation
                     {
-                        Relation xmiConnetorClass = new Relation();
-                        xmiConnetorClass.ConnectorXmiId = childNode.Attributes["xmi:idref"].Value;
+                        ConnectorXmiId = childNode.Attributes["xmi:idref"].Value
+                    };
 
-                        if (childNode.HasChildNodes)
+                    if (childNode.HasChildNodes)
+                    {
+                        var childNodeNextList = childNode.ChildNodes;
+
+                        foreach (XmlNode nodeNext in childNodeNextList)
                         {
-                            XmlNodeList childNodeNextList = childNode.ChildNodes;
+                            var name = nodeNext.Name;
 
-                            foreach (XmlNode nodeNext in childNodeNextList)
+                            switch (name)
                             {
-                                String name = nodeNext.Name;
+                                case "source":
+                                    xmiConnectorClass.SourceXmiId = nodeNext.Attributes["xmi:idref"].Value;
+                                    xmiConnectorClass.SourceName = nodeNext.Name; //wtf?
 
-                                switch (name)
-                                {
-                                    case "source":
-                                        xmiConnetorClass.SourceXmiId = nodeNext.Attributes["xmi:idref"].Value;
-                                        xmiConnetorClass.SourceName = nodeNext.Name; //wtf?
-
-                                        if (nodeNext.HasChildNodes)
+                                    if (nodeNext.HasChildNodes)
+                                    {
+                                        var childNodeSource = nodeNext.ChildNodes;
+                                        foreach (XmlNode sourceNode in childNodeSource)
                                         {
-                                            XmlNodeList childNodeSource = nodeNext.ChildNodes;
-                                            foreach (XmlNode sourceNode in childNodeSource)
+                                            //inside <source>
+                                            var innerName = sourceNode.Name;
+                                            switch (innerName)
                                             {
-                                                //inside <source>
-                                                String innerName = sourceNode.Name;
-                                                switch (innerName)
-                                                {
-                                                    case "model":
-                                                        xmiConnetorClass.SourceModelEaLocalId = Int32.Parse(sourceNode.Attributes["ea_localid"].Value);
-                                                        xmiConnetorClass.SourceModelType = sourceNode.Attributes["type"].Value; //!!!
-                                                        try
-                                                        {
-                                                            xmiConnetorClass.SourceModelName = sourceNode.Attributes["name"].Value;
-                                                        }
-                                                        catch {}
-                                                        break;
-                                                    case "role":
-                                                        xmiConnetorClass.SourceRoleVisibility = sourceNode.Attributes["visibility"].Value;
-                                                        xmiConnetorClass.SourceRoleTargetScope = sourceNode.Attributes["targetScope"].Value;
-                                                        break;
-                                                    case "type":
-                                                        xmiConnetorClass.SourceTypeContainment = sourceNode.Attributes["containment"].Value;
-                                                        try
-                                                        {
-                                                            xmiConnetorClass.SourceMultiplicity = sourceNode.Attributes["multiplicity"].Value;
-                                                        }
-                                                        catch {}
-                                                        break;
-                                                    case "modifiers":
-                                                        xmiConnetorClass.SourceModifiersIsOrdered = bool.Parse(sourceNode.Attributes["isOrdered"].Value);
-                                                        xmiConnetorClass.SourceModifiersChangeable = sourceNode.Attributes["changeable"].Value;
-                                                        xmiConnetorClass.SourceModifiersisNavigablee = bool.Parse(sourceNode.Attributes["isNavigable"].Value);
-                                                        break;
-                                                    case "style":
-                                                        xmiConnetorClass.SourceStyleValue = sourceNode.Attributes["value"].Value;
-                                                        break;
-                                                }
+                                                case "model":
+                                                    xmiConnectorClass.SourceModelEaLocalId =
+                                                        int.Parse(sourceNode.Attributes["ea_localid"].Value);
+                                                    xmiConnectorClass.SourceModelType =
+                                                        sourceNode.Attributes["type"].Value; //!!!
+                                                    try
+                                                    {
+                                                        xmiConnectorClass.SourceModelName =
+                                                            sourceNode.Attributes["name"].Value;
+                                                    }
+                                                    catch
+                                                    {
+                                                        // ignored
+                                                    }
+
+                                                    break;
+                                                case "role":
+                                                    xmiConnectorClass.SourceRoleVisibility =
+                                                        sourceNode.Attributes["visibility"].Value;
+                                                    xmiConnectorClass.SourceRoleTargetScope =
+                                                        sourceNode.Attributes["targetScope"].Value;
+                                                    break;
+                                                case "type":
+                                                    xmiConnectorClass.SourceTypeContainment =
+                                                        sourceNode.Attributes["containment"].Value;
+                                                    try
+                                                    {
+                                                        xmiConnectorClass.SourceMultiplicity =
+                                                            sourceNode.Attributes["multiplicity"].Value;
+                                                    }
+                                                    catch
+                                                    {
+                                                        // ignored
+                                                    }
+
+                                                    break;
+                                                case "modifiers":
+                                                    xmiConnectorClass.SourceModifiersIsOrdered =
+                                                        bool.Parse(sourceNode.Attributes["isOrdered"].Value);
+                                                    xmiConnectorClass.SourceModifiersChangeable =
+                                                        sourceNode.Attributes["changeable"].Value;
+                                                    xmiConnectorClass.SourceModifiersisNavigablee =
+                                                        bool.Parse(sourceNode.Attributes["isNavigable"].Value);
+                                                    break;
+                                                case "style":
+                                                    xmiConnectorClass.SourceStyleValue =
+                                                        sourceNode.Attributes["value"].Value;
+                                                    break;
                                             }
-
                                         }
-                                        break;
-                                    case "target":
-                                        xmiConnetorClass.TargetXmiId = nodeNext.Attributes["xmi:idref"].Value;
-                                        xmiConnetorClass.TargetName = nodeNext.Name;
+                                    }
 
-                                        if (nodeNext.HasChildNodes)
+                                    break;
+                                case "target":
+                                    xmiConnectorClass.TargetXmiId = nodeNext.Attributes["xmi:idref"].Value;
+                                    xmiConnectorClass.TargetName = nodeNext.Name;
+
+                                    if (nodeNext.HasChildNodes)
+                                    {
+                                        var childNodeTarget = nodeNext.ChildNodes;
+                                        foreach (XmlNode targetNode in childNodeTarget)
                                         {
-                                            XmlNodeList childNodeTarget = nodeNext.ChildNodes;
-                                            foreach (XmlNode targetNode in childNodeTarget)
+                                            //inside <target>
+                                            string innerName = targetNode.Name;
+                                            switch (innerName)
                                             {
-                                                //inside <target>
-                                                String innerName = targetNode.Name;
-                                                switch (innerName)
-                                                {
-                                                    case "model":
-                                                        xmiConnetorClass.TargetModelEaLocalId = Int32.Parse(targetNode.Attributes["ea_localid"].Value);
-                                                        xmiConnetorClass.TargetModelType = targetNode.Attributes["type"].Value; //!!!
-                                                        try
-                                                        {
-                                                            xmiConnetorClass.TargetModelName = targetNode.Attributes["name"].Value;
-                                                        }
-                                                        catch
-                                                        {
+                                                case "model":
+                                                    xmiConnectorClass.TargetModelEaLocalId =
+                                                        Int32.Parse(targetNode.Attributes["ea_localid"].Value);
+                                                    xmiConnectorClass.TargetModelType =
+                                                        targetNode.Attributes["type"].Value; //!!!
+                                                    try
+                                                    {
+                                                        xmiConnectorClass.TargetModelName =
+                                                            targetNode.Attributes["name"].Value;
+                                                    }
+                                                    catch
+                                                    {
+                                                        // ignored
+                                                    }
 
-                                                        }
-                                                        break;
-                                                    case "role":
-                                                        xmiConnetorClass.TargetRoleVisibility = targetNode.Attributes["visibility"].Value;
-                                                        xmiConnetorClass.TargetRoleTargetScope = targetNode.Attributes["targetScope"].Value;
-                                                        break;
-                                                    case "type":
-                                                        xmiConnetorClass.TargetTypeAggregation = targetNode.Attributes["aggregation"].Value;
-                                                        xmiConnetorClass.TargetTypeContainment = targetNode.Attributes["containment"].Value;
-                                                        try
-                                                        {
-                                                            xmiConnetorClass.TargetMultiplicity = targetNode.Attributes["multiplicity"].Value;
-                                                        }
-                                                        catch {}
-                                                        break;
-                                                    case "modifiers":
-                                                        xmiConnetorClass.TargetModifiersIsOrdered = bool.Parse(targetNode.Attributes["isOrdered"].Value);
-                                                        xmiConnetorClass.TargetModifiersChangeable = targetNode.Attributes["changeable"].Value;
-                                                        xmiConnetorClass.TargetModifiersisNavigablee = bool.Parse(targetNode.Attributes["isNavigable"].Value);
-                                                        break;
-                                                    case "style":
-                                                        xmiConnetorClass.TargetStyleValue = targetNode.Attributes["value"].Value;
-                                                        break;
-                                                }
+                                                    break;
+                                                case "role":
+                                                    xmiConnectorClass.TargetRoleVisibility =
+                                                        targetNode.Attributes["visibility"].Value;
+                                                    xmiConnectorClass.TargetRoleTargetScope =
+                                                        targetNode.Attributes["targetScope"].Value;
+                                                    break;
+                                                case "type":
+                                                    xmiConnectorClass.TargetTypeAggregation =
+                                                        targetNode.Attributes["aggregation"].Value;
+                                                    xmiConnectorClass.TargetTypeContainment =
+                                                        targetNode.Attributes["containment"].Value;
+                                                    try
+                                                    {
+                                                        xmiConnectorClass.TargetMultiplicity =
+                                                            targetNode.Attributes["multiplicity"].Value;
+                                                    }
+                                                    catch
+                                                    {
+                                                        // ignored
+                                                    }
+
+                                                    break;
+                                                case "modifiers":
+                                                    xmiConnectorClass.TargetModifiersIsOrdered =
+                                                        bool.Parse(targetNode.Attributes["isOrdered"].Value);
+                                                    xmiConnectorClass.TargetModifiersChangeable =
+                                                        targetNode.Attributes["changeable"].Value;
+                                                    xmiConnectorClass.TargetModifiersisNavigablee =
+                                                        bool.Parse(targetNode.Attributes["isNavigable"].Value);
+                                                    break;
+                                                case "style":
+                                                    xmiConnectorClass.TargetStyleValue =
+                                                        targetNode.Attributes["value"].Value;
+                                                    break;
                                             }
+                                        }
+                                    }
 
-                                        }
-                                        break;
-                                    case "model":
-                                        xmiConnetorClass.ModelEaLocalId = int.Parse(nodeNext.Attributes["ea_localid"].Value);
-                                        break;
-                                    case "properties":
-                                        xmiConnetorClass.PropertiesEa_type = nodeNext.Attributes["ea_type"].Value;
-                                        xmiConnetorClass.ProperitesDirection = nodeNext.Attributes["direction"].Value;
-                                        break;
-                                    case "modifiers":
-                                        xmiConnetorClass.ModifiersIsRoot = bool.Parse(nodeNext.Attributes["isRoot"].Value);
-                                        xmiConnetorClass.ModifiersIsLeaf = bool.Parse(nodeNext.Attributes["isLeaf"].Value);
-                                        break;
-                                    case "appearance":
-                                        xmiConnetorClass.AppearanceLinemode = nodeNext.Attributes["linemode"].Value;
-                                        xmiConnetorClass.AppearanceLineColor = nodeNext.Attributes["linecolor"].Value;
-                                        xmiConnetorClass.AppearanceLinewidth = nodeNext.Attributes["linewidth"].Value;
-                                        xmiConnetorClass.AppearanceSeqno = nodeNext.Attributes["seqno"].Value;
-                                        xmiConnetorClass.AppearanceHeadStyle = nodeNext.Attributes["headStyle"].Value;
-                                        xmiConnetorClass.AppearanceLineStyle = nodeNext.Attributes["lineStyle"].Value;
-                                        break;
-                                    case "labels":
-                                        try
-                                        {
-                                            xmiConnetorClass.Label = nodeNext.Attributes["mt"].Value;
-                                        }
-                                        catch {}
-                                        break;
-                                    case "extendedProperties":
-                                        break;
-                                }
-                            }
-                        }
-                        if ((xmiConnetorClass.SourceModelType.Equals("Class") || xmiConnetorClass.SourceModelType.Equals("Interface")) &&
-                            (xmiConnetorClass.TargetModelType.Equals("Interface") || xmiConnetorClass.TargetModelType.Equals("Class")))
-                        {
-                            if (currDiagramElements.Contains(xmiConnetorClass.ConnectorXmiId))
-                            {
-                                connetorClassesList.Add(xmiConnetorClass);
+                                    break;
+                                case "model":
+                                    xmiConnectorClass.ModelEaLocalId =
+                                        int.Parse(nodeNext.Attributes["ea_localid"].Value);
+                                    break;
+                                case "properties":
+                                    xmiConnectorClass.PropertiesEa_type = nodeNext.Attributes["ea_type"].Value;
+                                    xmiConnectorClass.ProperitesDirection = nodeNext.Attributes["direction"].Value;
+                                    break;
+                                case "modifiers":
+                                    xmiConnectorClass.ModifiersIsRoot =
+                                        bool.Parse(nodeNext.Attributes["isRoot"].Value);
+                                    xmiConnectorClass.ModifiersIsLeaf =
+                                        bool.Parse(nodeNext.Attributes["isLeaf"].Value);
+                                    break;
+                                case "appearance":
+                                    xmiConnectorClass.AppearanceLinemode = nodeNext.Attributes["linemode"].Value;
+                                    xmiConnectorClass.AppearanceLineColor = nodeNext.Attributes["linecolor"].Value;
+                                    xmiConnectorClass.AppearanceLinewidth = nodeNext.Attributes["linewidth"].Value;
+                                    xmiConnectorClass.AppearanceSeqno = nodeNext.Attributes["seqno"].Value;
+                                    xmiConnectorClass.AppearanceHeadStyle = nodeNext.Attributes["headStyle"].Value;
+                                    xmiConnectorClass.AppearanceLineStyle = nodeNext.Attributes["lineStyle"].Value;
+                                    break;
+                                case "labels":
+                                    try
+                                    {
+                                        xmiConnectorClass.Label = nodeNext.Attributes["mt"].Value;
+                                    }
+                                    catch
+                                    {
+                                        // ignored
+                                    }
+
+                                    break;
+                                case "extendedProperties":
+                                    break;
                             }
                         }
                     }
+
+                    if ((!xmiConnectorClass.SourceModelType.Equals("Class") &&
+                         !xmiConnectorClass.SourceModelType.Equals("Interface")) ||
+                        (!xmiConnectorClass.TargetModelType.Equals("Interface") &&
+                         !xmiConnectorClass.TargetModelType.Equals("Class"))) continue;
+                    if (currDiagramElements.Contains(xmiConnectorClass.ConnectorXmiId))
+                    {
+                        connectorClassesList.Add(xmiConnectorClass);
+                    }
                 }
             }
-            return connetorClassesList;
+
+            return connectorClassesList;
         }
+
+        
+        
+        public static void ParseDiagramIntoXmi()
+        {
+            var doc = new XmlDocument( );
+
+            var xmlDeclaration = doc.CreateXmlDeclaration( "1.0", "UTF-8", null );
+            var root = doc.DocumentElement;
+            doc.InsertBefore( xmlDeclaration, root );
+
+            const string xmiUri = "http://schema.omg.org/spec/XMI/2.1";
+            const string umlUri = "http://schema.omg.org/spec/UML/2.1";
+            var xmIElem = doc.CreateElement( "xmi", "XMI", xmiUri);
+            xmIElem.SetAttribute("version", "2.1");
+            xmIElem.SetAttribute("xmlns:uml", umlUri);
+            xmIElem.SetAttribute("xmlns:xmi", xmiUri);
+            doc.AppendChild( xmIElem );
+            
+            var xmiDocumentation = doc.CreateElement("xmi", "Documentation", xmiUri);
+            xmIElem.AppendChild(xmiDocumentation);
+            var xmiModel = doc.CreateElement("xmi", "Model", xmiUri);
+            xmIElem.AppendChild(xmiModel);
+
+            var xmiExtension = doc.CreateElement("xmi", "Extension", xmiUri);
+            xmiExtension.SetAttribute("extender", "Enterprise Architect");
+            xmiExtension.SetAttribute("extenderID", "6.5");
+            xmIElem.AppendChild(xmiExtension);
+
+            var elements = doc.CreateElement( "elements");
+            xmiExtension.AppendChild(elements);
+            var packageElem = doc.CreateElement( "element");
+            // packageElem.SetAttribute("xmi:Type", "uml:Package");
+            packageElem.SetAttribute("Type", xmiUri, "uml:Package");
+            packageElem.SetAttribute("name", "SAVETEST");
+            packageElem.SetAttribute("scope", "public");
+            elements.AppendChild(packageElem);
+            foreach (var xmiClass in DiagramPool.Instance.ClassDiagram.Classes.Select(x => x.XMIParsedClass))
+            {
+                var element = doc.CreateElement( "element");
+                element.SetAttribute("type", xmiUri, xmiClass.Type);
+                element.SetAttribute("name", xmiClass.Name);
+                element.SetAttribute("idref", xmiUri, xmiClass.XmiId);
+                XmlElement attributes = null;
+                if (xmiClass.attributes.Any())
+                {
+                    attributes = doc.CreateElement("attributes");
+                    element.AppendChild(attributes);
+                }
+                foreach (var xmiClassAttribute in xmiClass.attributes)
+                {
+                    var attribute = doc.CreateElement("attribute");
+                    attribute.SetAttribute("idref", xmiUri, xmiClassAttribute.Id);
+                    attribute.SetAttribute("name", xmiClassAttribute.Name);
+                    var properties = doc.CreateElement("properties");
+                    properties.SetAttribute("type", xmiClassAttribute.Type);
+                    attribute.AppendChild(properties);
+                    attributes?.AppendChild(attribute);
+                }
+
+                elements.AppendChild(element);
+            }
+
+            // var umlModel = doc.CreateElement(string.Empty, "uml:Model", string.Empty);
+            // doc.AppendChild(umlModel);
+            
+
+            // var element2 = doc.CreateElement( string.Empty, "level1", string.Empty );
+            // // element1.AppendChild( element2 );
+            //
+            // var element3 = doc.CreateElement( string.Empty, "level2", string.Empty );
+            // var text1 = doc.CreateTextNode( "text" );
+            // element3.AppendChild( text1 );
+            // element2.AppendChild( element3 );
+            //
+            // var element4 = doc.CreateElement( string.Empty, "level2", string.Empty );
+            // var text2 = doc.CreateTextNode( "other text" );
+            // element4.AppendChild( text2 );
+            // element2.AppendChild( element4 );
+
+            doc.Save( "D:\\Programovanie\\Bakalárka\\DPAnimArch\\UnityProjectDP\\Assets\\Resources\\SAVETEST.xml" );
+        }
+        
     }
 }
