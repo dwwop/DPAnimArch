@@ -368,7 +368,7 @@ namespace AnimArch.Visualization.Diagrams
                 .FirstOrCustomDefault<RelationInDiagram, string>(relationInDiagram => relationInDiagram.XMIParsedRelation.FromClass, "");
         }
         //Fix used to minimalize relation displaying bug
-        private IEnumerator QuickFix(GameObject g)
+        private static IEnumerator QuickFix(GameObject g)
         {
             yield return new WaitForSeconds(0.05f);
             g.SetActive(false);
@@ -384,21 +384,7 @@ namespace AnimArch.Visualization.Diagrams
             return Relations.Select(relationInDiagram => relationInDiagram.XMIParsedRelation);
         }
 
-        public void CreateRelation(GameObject node1, GameObject node2, string type, bool noDirection = false)
-        {
-            var relation = new Relation
-            {
-                SourceModelName = node1.name,
-                TargetModelName = node2.name,
-                PropertiesEa_type = type,
-                ProperitesDirection = noDirection ? "none" : "Source -> Destination"
-            };
-
-            var relInDiag = CreateRelationEdge(relation);
-            relInDiag.VisualObject = graph.AddEdge(node1, node2, relation.PrefabType);
-        }
-
-        private RelationInDiagram CreateRelationEdge(Relation relation)
+        public RelationInDiagram CreateRelationEdge(Relation relation)
         {
             relation.FromClass = relation.SourceModelName.Replace(" ", "_");
             relation.ToClass = relation.TargetModelName.Replace(" ", "_");

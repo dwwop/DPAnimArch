@@ -105,5 +105,31 @@ namespace Networking
             };
             ClassEditor.AddMethod(targetClass, method, ClassEditor.Source.RPC);
         }
+
+        public void AddRelation(string sourceClass, string destinationClass, string relationType)
+        {
+            if (IsServer)
+            {
+                AddRelationClientRpc(sourceClass, destinationClass, relationType);
+            }
+            else
+            {
+                AddRelationServerRpc(sourceClass, destinationClass, relationType);
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void AddRelationServerRpc(string sourceClass, string destinationClass, string relationType)
+        {
+            ClassEditor.Instance.CreateRelation(sourceClass, destinationClass, relationType, true);
+        }
+
+        [ClientRpc]
+        public void AddRelationClientRpc(string sourceClass, string destinationClass, string relationType)
+        {
+            if (IsServer)
+                return;
+            ClassEditor.Instance.CreateRelation(sourceClass, destinationClass, relationType, true);
+        }
     }
 }

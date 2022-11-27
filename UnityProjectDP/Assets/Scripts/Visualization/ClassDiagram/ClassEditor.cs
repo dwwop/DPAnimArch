@@ -4,13 +4,14 @@ using TMPro;
 using AnimArch.Visualization.UI;
 using Networking;
 using OALProgramControl;
+using Unity.Netcode;
 
 namespace AnimArch.Visualization.Diagrams
 {
     public class ClassEditor : Singleton<ClassEditor>
     {
-        private Graph _graph;
         private int _id;
+        private Graph _graph;
         private bool _active;
         private GameObject _node;
         private string _relType;
@@ -18,26 +19,28 @@ namespace AnimArch.Visualization.Diagrams
         public AttributePopUp atrPopUp;
         public MethodPopUp mtdPopUp;
         public ClassPopUp classPopUp;
-
+        private void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+            _id = 0;
+        }
+        
         public enum Source
         {
             RPC,
             editor,
             loader
         }
-        
+
         public void InitializeCreation()
         {
             if (!_graph)
             {
                 if (DiagramPool.Instance.ClassDiagram.graph)
-                {
                     _graph = DiagramPool.Instance.ClassDiagram.graph;
-                }
                 else
-                {
                     _graph = DiagramPool.Instance.ClassDiagram.CreateGraph();
-                }
+
                 _id = 0;
             }
             _active = true;
@@ -52,8 +55,9 @@ namespace AnimArch.Visualization.Diagrams
         {
             var newClass = new Class
             {
-                Name = "NewClass_" + _id++
+                Name = "NewClass_" + _id
             };
+
             Spawner.Instance.SpawnClass(newClass.Name);
             GenerateNode(newClass);
         }
@@ -85,6 +89,7 @@ namespace AnimArch.Visualization.Diagrams
                 );
             var node = AddClassToGraph(name);
             SetPosition(node);
+            _id++;
             return tempCdClass;
         }
 
@@ -155,12 +160,11 @@ namespace AnimArch.Visualization.Diagrams
             if (_node == null || secondNode == null) return;
             var type = _relType.Split();
             if (type.Length > 1)
-                DiagramPool.Instance.ClassDiagram.CreateRelation(_node, secondNode, type[1], true);
+                CreateRelation(_node.name, secondNode.name, type[1], false, true);
             else
-                DiagramPool.Instance.ClassDiagram.CreateRelation(_node, secondNode, type[0]);
+                CreateRelation(_node.name, secondNode.name, type[0], false);
             EndSelection();
         }
-
         private void EndSelection()
         {
             _relType = null;
@@ -168,13 +172,33 @@ namespace AnimArch.Visualization.Diagrams
             _graph.UpdateGraph();
             MenuManager.Instance.isSelectingNode = false;
             Animating.Animation.Instance.UnhighlightAll();
-            GameObject.Find("Selection RightPanel").SetActive(false);
+            //GameObject.Find("Selection RightPanel").SetActive(false);
         }
 
         public void StartSelection(string type)
         {
             MenuManager.Instance.isSelectingNode = true;
             _relType = type;
+        }
+
+        public void CreateRelation(string sourceClass, string destinationClass, string relationType, bool fromRpc, bool noDirection = false)
+        {
+            if (!fromRpc)
+                Spawner.Instance.AddRelation(sourceClass, destinationClass, relationType);
+            var relation = new Relation
+            {
+                SourceModelName = sourceClass,
+                TargetModelName = destinationClass,
+                PropertiesEa_type = relationType,
+                ProperitesDirection = noDirection ? "none" : "Source -> Destination"
+            };
+
+            var relInDiag = DiagramPool.Instance.ClassDiagram.CreateRelationEdge(relation);
+            var sourceClassGo = DiagramPool.Instance.ClassDiagram.FindClassByName(sourceClass).VisualObject;
+            var destinationClassGo = DiagramPool.Instance.ClassDiagram.FindClassByName(destinationClass).VisualObject;
+            GameObject edge = _graph.AddEdge(sourceClassGo, destinationClassGo, relation.PrefabType);
+            relInDiag.VisualObject = edge;
+            Canvas.ForceUpdateCanvases();
         }
 
         public void SetClassName(string targetClass, string newName, bool fromRpc)
