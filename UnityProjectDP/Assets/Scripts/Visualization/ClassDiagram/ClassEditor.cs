@@ -172,7 +172,7 @@ namespace AnimArch.Visualization.Diagrams
             _graph.UpdateGraph();
             MenuManager.Instance.isSelectingNode = false;
             Animating.Animation.Instance.UnhighlightAll();
-            //GameObject.Find("Selection RightPanel").SetActive(false);
+            GameObject.Find("SelectionPanel").SetActive(false);
         }
 
         public void StartSelection(string type)
