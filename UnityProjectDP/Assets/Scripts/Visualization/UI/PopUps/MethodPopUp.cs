@@ -32,6 +32,7 @@ namespace AnimArch.Visualization.UI
             };
             ClassEditor.AddMethod(ClassTxt.text, method, ClassEditor.Source.editor);
 
+
             Deactivate();
         }
     }

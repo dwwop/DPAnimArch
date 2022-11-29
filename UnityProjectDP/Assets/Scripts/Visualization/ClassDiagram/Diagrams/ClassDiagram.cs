@@ -153,9 +153,10 @@ namespace AnimArch.Visualization.Diagrams
             CDRelationship TempCDRelationship;
 
             //Parse all Relations between classes
-            foreach (Relation Relation in XMIRelationList)
+            foreach (Relation relation in XMIRelationList)
             {
-                CreateRelationEdge(Relation);
+                CreateRelationEdge(relation);
+                ClassEditor.CreateRelation(relation);
             }
         }
 
@@ -169,15 +170,12 @@ namespace AnimArch.Visualization.Diagrams
         //Set layout as close as possible to EA layout
         public void ManualLayout()
         {
-            foreach (ClassInDiagram c in Classes)
+            foreach (ClassInDiagram classInDiagram in Classes)
             {
-                if (c.isObject)
-                {
-                    continue;
-                }
-
-                c.VisualObject.GetComponent<RectTransform>().position
-                    = new Vector3(c.XMIParsedClass.Left * 1.25f, c.XMIParsedClass.Top * 1.25f, c.VisualObject.GetComponent<RectTransform>().position.z);
+                var x = classInDiagram.XMIParsedClass.Left * 1.25f;
+                var y = classInDiagram.XMIParsedClass.Top * 1.25f;
+                var z = classInDiagram.VisualObject.GetComponent<RectTransform>().position.z;
+                ClassEditor.Instance.SetPosition(classInDiagram.XMIParsedClass.Name, new Vector3( x, y, z ), false);
             }
         }
         //Create GameObjects from the parsed data sotred in list of Classes and Relations
@@ -186,11 +184,6 @@ namespace AnimArch.Visualization.Diagrams
             //Render classes
             for (var i = 0; i < Classes.Count; i++)
             {
-                if (Classes[i].isObject)
-                {
-                    continue;
-                }
-
                 //Setting up
                 var node = FindClassByName(Classes[i].XMIParsedClass.Name).VisualObject;
 
@@ -348,7 +341,7 @@ namespace AnimArch.Visualization.Diagrams
             }
             return Result;
         }
-        
+
         public GameObject FindEdge(string RelationshipName)
         {
             return Relations
@@ -412,7 +405,7 @@ namespace AnimArch.Visualization.Diagrams
             var tempCdRelationship = OALProgram.Instance.RelationshipSpace.SpawnRelationship(relation.FromClass, relation.ToClass) 
                                      ?? throw new ArgumentNullException(nameof(relation));
             relation.OALName = tempCdRelationship.RelationshipName;
-            
+
             if ("Generalization".Equals(relation.PropertiesEa_type) || "Realisation".Equals(relation.PropertiesEa_type))
             {
                 var fromClass = OALProgram.Instance.ExecutionSpace.getClassByName(relation.FromClass);
@@ -444,30 +437,6 @@ namespace AnimArch.Visualization.Diagrams
                 VisualObject = null;
                 this.Attributes = Attributes;
             }
-        }
-        // Lukas
-        public void AddDiagramObject(DiagramObject DiagramObject)
-        {
-            DiagramObject.VisualObject = graph.AddNode();
-            DiagramObject.VisualObject.name = DiagramObject.name + ":" + DiagramObject.className;
-            DiagramObject.VisualObject.transform.Find("Background").Find("Header").GetComponent<TextMeshProUGUI>().text = DiagramObject.VisualObject.name;
-            DiagramObject.VisualObject.GetComponent<BackgroundHighlighter>().GetComponentInChildren<Image>().color = Color.cyan;
-
-            foreach ((string, string, string) attr in DiagramObject.Attributes)
-            {
-                DiagramObject.VisualObject.transform.Find("Background").Find("Attributes").GetComponent<TextMeshProUGUI>().text
-                    += attr.Item1 + " : " + string.Format("{0}", attr.Item3) + "\n";
-            }
-
-            Classes.Add
-            (
-                new ClassInDiagram()
-                {
-                    VisualObject = DiagramObject.VisualObject,
-                    XMIParsedClass = new Class() { Name = DiagramObject.VisualObject.name},
-                    isObject = true
-                }
-            );
         }
     }
 }

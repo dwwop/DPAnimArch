@@ -131,5 +131,31 @@ namespace Networking
                 return;
             ClassEditor.Instance.CreateRelation(sourceClass, destinationClass, relationType, true);
         }
+
+        public void SetPosition(string className, Vector3 position)
+        {
+            if (IsServer)
+            {
+                SetPositionClientRpc(className, position);
+            }
+            else
+            {
+                SetPositionServerRpc(className, position);
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetPositionServerRpc(string className, Vector3 position)
+        {
+            ClassEditor.Instance.SetPosition(className, position, true);
+        }
+
+        [ClientRpc]
+        public void SetPositionClientRpc(string className, Vector3 position)
+        {
+            if (IsServer)
+                return;
+            ClassEditor.Instance.SetPosition(className, position, true);
+        }
     }
 }

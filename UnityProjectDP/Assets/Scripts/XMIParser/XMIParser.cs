@@ -519,6 +519,9 @@ namespace AnimArch.XMIParsing
                 element.SetAttribute("type", xmiUri, xmiClass.Type);
                 element.SetAttribute("name", xmiClass.Name);
                 element.SetAttribute("idref", xmiUri, xmiClass.XmiId);
+                elements.AppendChild(element);
+                if (xmiClass.attributes == null)
+                    continue;
                 XmlElement attributes = null;
                 if (xmiClass.attributes.Any())
                 {
@@ -536,7 +539,6 @@ namespace AnimArch.XMIParsing
                     attributes?.AppendChild(attribute);
                 }
 
-                elements.AppendChild(element);
             }
 
             // var umlModel = doc.CreateElement(string.Empty, "uml:Model", string.Empty);
