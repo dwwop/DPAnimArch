@@ -96,35 +96,38 @@ namespace AnimArch.Visualization.Diagrams
             CDClass TempCDClass;
 
             //Parse all data to our List of "Class" objects
-            foreach (Class CurrentClass in XMIClassList)
+            foreach (Class currentClass in XMIClassList)
             {
-                CurrentClass.Name = CurrentClass.Name.Replace(" ", "_");
+                currentClass.Name = currentClass.Name.Replace(" ", "_");
 
-                TempCDClass = ClassEditor.Instance.CreateNode(CurrentClass);
+                TempCDClass = ClassEditor.Instance.CreateNode(currentClass);
                 if (TempCDClass == null)
                     continue;
 
-                if (CurrentClass.Attributes != null)
+                if (currentClass.Attributes != null)
                 {
-                    foreach (Attribute CurrentAttribute in CurrentClass.Attributes)
+                    foreach (Attribute attribute in currentClass.Attributes)
                     {
-                        CurrentAttribute.Name = CurrentAttribute.Name.Replace(" ", "_");
-                        String AttributeType = EXETypes.ConvertEATypeName(CurrentAttribute.Type);
+                        attribute.Name = attribute.Name.Replace(" ", "_");
+                        string AttributeType = EXETypes.ConvertEATypeName(attribute.Type);
                         if (AttributeType == null)
                         {
                             continue;
                         }
-                        TempCDClass.AddAttribute(new CDAttribute(CurrentAttribute.Name, EXETypes.ConvertEATypeName(AttributeType)));
-                        if (CurrentClass.attributes == null)
+
+                        TempCDClass.AddAttribute(new CDAttribute(attribute.Name, EXETypes.ConvertEATypeName(AttributeType)));
+                        if (currentClass.attributes == null)
                         {
-                            CurrentClass.attributes = new List<Attribute>();
+                            currentClass.attributes = new List<Attribute>();
                         }
+
+                        ClassEditor.AddAttribute(currentClass.Name, attribute, false);
                     }
                 }
 
-                if (CurrentClass.Methods != null)
+                if (currentClass.Methods != null)
                 {
-                    foreach (Method method in CurrentClass.Methods)
+                    foreach (Method method in currentClass.Methods)
                     {
                         method.Name = method.Name.Replace(" ", "_");
                         CDMethod Method = new CDMethod(TempCDClass, method.Name, EXETypes.ConvertEATypeName(method.ReturnValue));
@@ -138,10 +141,10 @@ namespace AnimArch.Visualization.Diagrams
 
                             Method.Parameters.Add(new CDParameter() { Name = name, Type = EXETypes.ConvertEATypeName(type) });
                         }
-                        ClassEditor.AddMethod(CurrentClass.Name, method, ClassEditor.Source.loader);
+                        ClassEditor.AddMethod(currentClass.Name, method, ClassEditor.Source.loader);
                     }
                 }
-                CurrentClass.Top *= -1;
+                currentClass.Top *= -1;
             }
 
             List<Relation> XMIRelationList = XMIParser.ParseRelations();
@@ -181,23 +184,6 @@ namespace AnimArch.Visualization.Diagrams
         //Create GameObjects from the parsed data sotred in list of Classes and Relations
         public void Generate()
         {
-            //Render classes
-            for (var i = 0; i < Classes.Count; i++)
-            {
-                //Setting up
-                var node = FindClassByName(Classes[i].XMIParsedClass.Name).VisualObject;
-
-                var background = node.transform.Find("Background");
-                var attributes = background.Find("Attributes");
-                
-                //Attributes
-                if (Classes[i].XMIParsedClass.Attributes != null)
-                    foreach (Attribute attr in Classes[i].XMIParsedClass.Attributes)
-                    {
-                        attributes.GetComponent<TextMeshProUGUI>().text += attr.Name + ": " + attr.Type + "\n";
-                    }
-
-            }
 
             //Render Relations between classes
             foreach (RelationInDiagram rel in Relations)

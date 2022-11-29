@@ -70,16 +70,44 @@ namespace Networking
             ClassEditor.Instance.SetClassName(targetClass, newName, true);
         }
 
+        public void AddAttribute(string targetClass, string name, string type)
+        {
+            if (IsServer)
+                AddAttributeClientRpc(targetClass, name, type);
+            else
+                AddAttributeServerRpc(targetClass, name, type);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void AddAttributeServerRpc(string targetClass, string name, string type)
+        {
+            var attribute = new AnimArch.Visualization.Diagrams.Attribute()
+            {
+                Name = name,
+                Type = type
+            };
+            ClassEditor.AddAttribute(targetClass, attribute, true);
+        }
+
+        [ClientRpc]
+        public void AddAttributeClientRpc(string targetClass, string name, string type)
+        {
+            if (IsServer)
+                return;
+            var attribute = new AnimArch.Visualization.Diagrams.Attribute()
+            {
+                Name = name,
+                Type = type
+            };
+            ClassEditor.AddAttribute(targetClass, attribute, true);
+        }
+
         public void AddMethod(string targetClass, string name, string returnValue)
         {
             if (IsServer)
-            {
                 AddMethodClientRpc(targetClass, name, returnValue);
-            }
             else
-            {
                 AddMethodServerRpc(targetClass, name, returnValue);
-            }
         }
 
         [ServerRpc(RequireOwnership = false)]

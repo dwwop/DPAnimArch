@@ -8,13 +8,12 @@ namespace AnimArch.Visualization.UI
     {
         public GameObject panel;
         public TMP_InputField inp;
-        protected TMP_Text ClassTxt;
-        
-        
+        protected TMP_Text className;
+
         public void ActivateCreation(TMP_Text classTxt)
         {
             panel.SetActive(true);
-            ClassTxt = classTxt;
+            className = classTxt;
         }
 
         public abstract void Confirmation();

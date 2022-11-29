@@ -266,7 +266,7 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-        public static void AddMethod(string targetClass, Method methodToAdd)
+        private static void AddMethod(string targetClass, Method methodToAdd)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
             if (classInDiagram == null)
@@ -293,6 +293,15 @@ namespace AnimArch.Visualization.Diagrams
             //TODO: method args
 
             AddTmProMethod(classInDiagram.VisualObject, StringMethod(methodToAdd));
+        }
+
+        public static void AddAttribute(string targetClass, Attribute attribute, bool fromRpc)
+        {
+            if (!fromRpc)
+                Spawner.Instance.AddAttribute(targetClass, attribute.Name, attribute.Type);
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
+            var attributeText = attribute.Name + ": " + attribute.Type + "\n";
+            AddTmProAttribute(classInDiagram.VisualObject, attributeText);
         }
 
         // called at manual layout
@@ -326,6 +335,15 @@ namespace AnimArch.Visualization.Diagrams
                 .Find("Methods")
                 .GetComponent<TextMeshProUGUI>()
                 .text += method;
+        }
+
+        public static void AddTmProAttribute(GameObject classGo, string attribute)
+        {
+            classGo.transform
+                .Find("Background")
+                .Find("Attributes")
+                .GetComponent<TextMeshProUGUI>()
+                .text += attribute;
         }
         public void SaveDiagram()
         {

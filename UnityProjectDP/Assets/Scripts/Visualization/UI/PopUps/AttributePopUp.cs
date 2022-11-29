@@ -8,13 +8,11 @@ namespace AnimArch.Visualization.UI
     public class AttributePopUp : AbstractPopUp
     {
         public TMP_Dropdown dropdown;
-        private TMP_Text _atrTxt;
         public Toggle isArray;
 
         public void ActivateCreation(TMP_Text classTxt, TMP_Text atrTxt)
         {   
             ActivateCreation(classTxt);
-            _atrTxt = atrTxt;
         }
 
         public override void Confirmation()
@@ -24,15 +22,14 @@ namespace AnimArch.Visualization.UI
                 Deactivate();
                 return;
             }
-            var atr = new Attribute
+
+            var attribute = new Attribute
             {
                 Name = inp.text,
                 Type = (isArray.isOn ? "[]: " : ": ") + dropdown.options[dropdown.value].text
             };
-            if (DiagramPool.Instance.ClassDiagram.AddAtr(ClassTxt.text, atr))
-            {
-                _atrTxt.text += atr.Name + atr.Type + "\n";
-            }
+
+            ClassEditor.AddAttribute(className.text, attribute, false);
 
             Deactivate();
         }
