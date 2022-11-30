@@ -7,12 +7,13 @@ using System.Text.RegularExpressions;
 using AnimArch.Visualization.Animating;
 using AnimArch.Visualization.UI;
 using AnimArch.Visualization.Diagrams;
+using AnimArch.XMIParsing;
 
 public class FileLoader : MonoBehaviour
 {
     void Start()
     {
-        FileBrowser.Filter[] filters=new FileBrowser.Filter[2];
+        FileBrowser.Filter[] filters = new FileBrowser.Filter[2];
         filters[0] = new FileBrowser.Filter("JSON files", ".json");
         filters[1] = new FileBrowser.Filter("XML files", ".xml");
         FileBrowser.SetFilters(true, filters);
@@ -20,15 +21,23 @@ public class FileLoader : MonoBehaviour
         FileBrowser.SetExcludedExtensions(".lnk", ".tmp", ".zip", ".rar", ".exe");
         FileBrowser.AddQuickLink("Resources", @"Assets\Resources\", null);
     }
+
     public void OpenBrowser()
     {
-        StartCoroutine(ShowLoadDialogCoroutine(@"Assets\Resources\Animations\","Load Animation","Animation"));
+        StartCoroutine(ShowLoadDialogCoroutine(@"Assets\Resources\Animations\", "Load Animation", "Animation"));
     }
+
     public void SaveAnimation(Anim newAnim)
     {
         StartCoroutine(SaveAnimationCoroutine(newAnim));
     }
-    IEnumerator ShowLoadDialogCoroutine(string path, string tooltip,string type)
+
+    public void SaveDiagram()
+    {
+        StartCoroutine(SaveDiagramCoroutine());
+    }
+
+    IEnumerator ShowLoadDialogCoroutine(string path, string tooltip, string type)
     {
         // Show a load file dialog and wait for a response from user
         // Load file/folder: file, Initial path: default (Documents), Title: "Load File", submit button text: "Load"
@@ -40,7 +49,8 @@ public class FileLoader : MonoBehaviour
         {
             FileBrowser.SetDefaultFilter(".json");
         }
-        yield return FileBrowser.WaitForLoadDialog(false, path,tooltip,"Load");
+
+        yield return FileBrowser.WaitForLoadDialog(false, path, tooltip, "Load");
 
         // Dialog is closed
         // Print whether a file is chosen (FileBrowser.Success)
@@ -73,11 +83,11 @@ public class FileLoader : MonoBehaviour
             }
         }
     }
-        
+
     IEnumerator SaveAnimationCoroutine(Anim newAnim)
     {
         FileBrowser.SetDefaultFilter(".json");
-        yield return FileBrowser.WaitForSaveDialog(false, @"Assets\Resources\Animations\", "Save Animation", "Save");
+        yield return FileBrowser.WaitForSaveDialog(false, @"Assets\Resources\Animations\", "Save Animation");
         if (FileBrowser.Success)
         {
             string path = FileBrowser.Result;
@@ -91,11 +101,19 @@ public class FileLoader : MonoBehaviour
             MenuManager.Instance.UpdateAnimations();
             MenuManager.Instance.SetSelectedAnimation(newAnim.AnimationName);
         }
-
     }
+
+    IEnumerator SaveDiagramCoroutine()
+    {
+        FileBrowser.SetDefaultFilter(".xml");
+        yield return FileBrowser.WaitForSaveDialog(false, @"Assets\Resources\", "Save Diagram");
+        if (!FileBrowser.Success) yield break;
+        var doc = XMIParser.ParseDiagramIntoXmi();
+        doc.Save(FileBrowser.Result);
+    }
+
     public void OpenDiagram()
     {
         StartCoroutine(ShowLoadDialogCoroutine(@"Assets\Resources\", "Load Diagram", "Diagram"));
     }
-
 }

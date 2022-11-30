@@ -12,7 +12,7 @@ namespace AnimArch.Visualization.UI
         public Toggle isArray;
 
         public void ActivateCreation(TMP_Text classTxt, TMP_Text atrTxt)
-        {   
+        {
             ActivateCreation(classTxt);
             _atrTxt = atrTxt;
         }
@@ -24,21 +24,22 @@ namespace AnimArch.Visualization.UI
                 Deactivate();
                 return;
             }
+
             var atr = new Attribute
             {
                 Name = inp.text,
-                Type = (isArray.isOn ? "[]: " : ": ") + dropdown.options[dropdown.value].text
+                Type = (isArray.isOn ? "[]" : "") + dropdown.options[dropdown.value].text
             };
-            if (DiagramPool.Instance.ClassDiagram.AddAtr(ClassTxt.text, atr))
+            if (ClassEditor.AddAttribute(ClassTxt.text, atr))
             {
-                _atrTxt.text += atr.Name + atr.Type + "\n";
+                _atrTxt.text += atr.Name + ": " + atr.Type + "\n";
             }
 
             Deactivate();
         }
 
         public override void Deactivate()
-        {   
+        {
             base.Deactivate();
             isArray.isOn = false;
         }

@@ -291,8 +291,8 @@ namespace AnimArch.XMIParsing
                             switch (name)
                             {
                                 case "source":
-                                    xmiConnectorClass.SourceXmiId = nodeNext.Attributes["xmi:idref"].Value;
-                                    xmiConnectorClass.SourceName = nodeNext.Name; //wtf?
+                                    // xmiConnectorClass.SourceXmiId = nodeNext.Attributes["xmi:idref"].Value;
+                                    // xmiConnectorClass.SourceName = nodeNext.Name; //wtf?
 
                                     if (nodeNext.HasChildNodes)
                                     {
@@ -304,8 +304,8 @@ namespace AnimArch.XMIParsing
                                             switch (innerName)
                                             {
                                                 case "model":
-                                                    xmiConnectorClass.SourceModelEaLocalId =
-                                                        int.Parse(sourceNode.Attributes["ea_localid"].Value);
+                                                    // xmiConnectorClass.SourceModelEaLocalId =
+                                                    //     int.Parse(sourceNode.Attributes["ea_localid"].Value);
                                                     xmiConnectorClass.SourceModelType =
                                                         sourceNode.Attributes["type"].Value; //!!!
                                                     try
@@ -319,46 +319,46 @@ namespace AnimArch.XMIParsing
                                                     }
 
                                                     break;
-                                                case "role":
-                                                    xmiConnectorClass.SourceRoleVisibility =
-                                                        sourceNode.Attributes["visibility"].Value;
-                                                    xmiConnectorClass.SourceRoleTargetScope =
-                                                        sourceNode.Attributes["targetScope"].Value;
-                                                    break;
-                                                case "type":
-                                                    xmiConnectorClass.SourceTypeContainment =
-                                                        sourceNode.Attributes["containment"].Value;
-                                                    try
-                                                    {
-                                                        xmiConnectorClass.SourceMultiplicity =
-                                                            sourceNode.Attributes["multiplicity"].Value;
-                                                    }
-                                                    catch
-                                                    {
-                                                        // ignored
-                                                    }
-
-                                                    break;
-                                                case "modifiers":
-                                                    xmiConnectorClass.SourceModifiersIsOrdered =
-                                                        bool.Parse(sourceNode.Attributes["isOrdered"].Value);
-                                                    xmiConnectorClass.SourceModifiersChangeable =
-                                                        sourceNode.Attributes["changeable"].Value;
-                                                    xmiConnectorClass.SourceModifiersisNavigablee =
-                                                        bool.Parse(sourceNode.Attributes["isNavigable"].Value);
-                                                    break;
-                                                case "style":
-                                                    xmiConnectorClass.SourceStyleValue =
-                                                        sourceNode.Attributes["value"].Value;
-                                                    break;
+                                                // case "role":
+                                                //     xmiConnectorClass.SourceRoleVisibility =
+                                                //         sourceNode.Attributes["visibility"].Value;
+                                                //     xmiConnectorClass.SourceRoleTargetScope =
+                                                //         sourceNode.Attributes["targetScope"].Value;
+                                                //     break;
+                                                // case "type":
+                                                //     xmiConnectorClass.SourceTypeContainment =
+                                                //         sourceNode.Attributes["containment"].Value;
+                                                //     try
+                                                //     {
+                                                //         xmiConnectorClass.SourceMultiplicity =
+                                                //             sourceNode.Attributes["multiplicity"].Value;
+                                                //     }
+                                                //     catch
+                                                //     {
+                                                //         // ignored
+                                                //     }
+                                                //
+                                                //     break;
+                                                // case "modifiers":
+                                                //     xmiConnectorClass.SourceModifiersIsOrdered =
+                                                //         bool.Parse(sourceNode.Attributes["isOrdered"].Value);
+                                                //     xmiConnectorClass.SourceModifiersChangeable =
+                                                //         sourceNode.Attributes["changeable"].Value;
+                                                //     xmiConnectorClass.SourceModifiersisNavigablee =
+                                                //         bool.Parse(sourceNode.Attributes["isNavigable"].Value);
+                                                //     break;
+                                                // case "style":
+                                                //     xmiConnectorClass.SourceStyleValue =
+                                                //         sourceNode.Attributes["value"].Value;
+                                                //     break;
                                             }
                                         }
                                     }
 
                                     break;
                                 case "target":
-                                    xmiConnectorClass.TargetXmiId = nodeNext.Attributes["xmi:idref"].Value;
-                                    xmiConnectorClass.TargetName = nodeNext.Name;
+                                    // xmiConnectorClass.TargetXmiId = nodeNext.Attributes["xmi:idref"].Value;
+                                    // xmiConnectorClass.TargetName = nodeNext.Name;
 
                                     if (nodeNext.HasChildNodes)
                                     {
@@ -370,8 +370,8 @@ namespace AnimArch.XMIParsing
                                             switch (innerName)
                                             {
                                                 case "model":
-                                                    xmiConnectorClass.TargetModelEaLocalId =
-                                                        Int32.Parse(targetNode.Attributes["ea_localid"].Value);
+                                                    // xmiConnectorClass.TargetModelEaLocalId =
+                                                    //     Int32.Parse(targetNode.Attributes["ea_localid"].Value);
                                                     xmiConnectorClass.TargetModelType =
                                                         targetNode.Attributes["type"].Value; //!!!
                                                     try
@@ -385,80 +385,80 @@ namespace AnimArch.XMIParsing
                                                     }
 
                                                     break;
-                                                case "role":
-                                                    xmiConnectorClass.TargetRoleVisibility =
-                                                        targetNode.Attributes["visibility"].Value;
-                                                    xmiConnectorClass.TargetRoleTargetScope =
-                                                        targetNode.Attributes["targetScope"].Value;
-                                                    break;
-                                                case "type":
-                                                    xmiConnectorClass.TargetTypeAggregation =
-                                                        targetNode.Attributes["aggregation"].Value;
-                                                    xmiConnectorClass.TargetTypeContainment =
-                                                        targetNode.Attributes["containment"].Value;
-                                                    try
-                                                    {
-                                                        xmiConnectorClass.TargetMultiplicity =
-                                                            targetNode.Attributes["multiplicity"].Value;
-                                                    }
-                                                    catch
-                                                    {
-                                                        // ignored
-                                                    }
-
-                                                    break;
-                                                case "modifiers":
-                                                    xmiConnectorClass.TargetModifiersIsOrdered =
-                                                        bool.Parse(targetNode.Attributes["isOrdered"].Value);
-                                                    xmiConnectorClass.TargetModifiersChangeable =
-                                                        targetNode.Attributes["changeable"].Value;
-                                                    xmiConnectorClass.TargetModifiersisNavigablee =
-                                                        bool.Parse(targetNode.Attributes["isNavigable"].Value);
-                                                    break;
-                                                case "style":
-                                                    xmiConnectorClass.TargetStyleValue =
-                                                        targetNode.Attributes["value"].Value;
-                                                    break;
+                                                // case "role":
+                                                //     xmiConnectorClass.TargetRoleVisibility =
+                                                //         targetNode.Attributes["visibility"].Value;
+                                                //     xmiConnectorClass.TargetRoleTargetScope =
+                                                //         targetNode.Attributes["targetScope"].Value;
+                                                //     break;
+                                                // case "type":
+                                                //     xmiConnectorClass.TargetTypeAggregation =
+                                                //         targetNode.Attributes["aggregation"].Value;
+                                                //     xmiConnectorClass.TargetTypeContainment =
+                                                //         targetNode.Attributes["containment"].Value;
+                                                //     try
+                                                //     {
+                                                //         xmiConnectorClass.TargetMultiplicity =
+                                                //             targetNode.Attributes["multiplicity"].Value;
+                                                //     }
+                                                //     catch
+                                                //     {
+                                                //         // ignored
+                                                //     }
+                                                //
+                                                //     break;
+                                                // case "modifiers":
+                                                //     xmiConnectorClass.TargetModifiersIsOrdered =
+                                                //         bool.Parse(targetNode.Attributes["isOrdered"].Value);
+                                                //     xmiConnectorClass.TargetModifiersChangeable =
+                                                //         targetNode.Attributes["changeable"].Value;
+                                                //     xmiConnectorClass.TargetModifiersisNavigablee =
+                                                //         bool.Parse(targetNode.Attributes["isNavigable"].Value);
+                                                //     break;
+                                                // case "style":
+                                                //     xmiConnectorClass.TargetStyleValue =
+                                                //         targetNode.Attributes["value"].Value;
+                                                //     break;
                                             }
                                         }
                                     }
 
                                     break;
-                                case "model":
-                                    xmiConnectorClass.ModelEaLocalId =
-                                        int.Parse(nodeNext.Attributes["ea_localid"].Value);
-                                    break;
+                                // case "model":
+                                //     xmiConnectorClass.ModelEaLocalId =
+                                //         int.Parse(nodeNext.Attributes["ea_localid"].Value);
+                                //     break;
                                 case "properties":
-                                    xmiConnectorClass.PropertiesEa_type = nodeNext.Attributes["ea_type"].Value;
-                                    xmiConnectorClass.ProperitesDirection = nodeNext.Attributes["direction"].Value;
+                                    xmiConnectorClass.PropertiesEaType = nodeNext.Attributes["ea_type"].Value;
+                                    xmiConnectorClass.PropertiesDirection = nodeNext.Attributes["direction"].Value;
                                     break;
-                                case "modifiers":
-                                    xmiConnectorClass.ModifiersIsRoot =
-                                        bool.Parse(nodeNext.Attributes["isRoot"].Value);
-                                    xmiConnectorClass.ModifiersIsLeaf =
-                                        bool.Parse(nodeNext.Attributes["isLeaf"].Value);
-                                    break;
-                                case "appearance":
-                                    xmiConnectorClass.AppearanceLinemode = nodeNext.Attributes["linemode"].Value;
-                                    xmiConnectorClass.AppearanceLineColor = nodeNext.Attributes["linecolor"].Value;
-                                    xmiConnectorClass.AppearanceLinewidth = nodeNext.Attributes["linewidth"].Value;
-                                    xmiConnectorClass.AppearanceSeqno = nodeNext.Attributes["seqno"].Value;
-                                    xmiConnectorClass.AppearanceHeadStyle = nodeNext.Attributes["headStyle"].Value;
-                                    xmiConnectorClass.AppearanceLineStyle = nodeNext.Attributes["lineStyle"].Value;
-                                    break;
-                                case "labels":
-                                    try
-                                    {
-                                        xmiConnectorClass.Label = nodeNext.Attributes["mt"].Value;
-                                    }
-                                    catch
-                                    {
-                                        // ignored
-                                    }
-
-                                    break;
-                                case "extendedProperties":
-                                    break;
+                                // case "modifiers":
+                                //     xmiConnectorClass.ModifiersIsRoot =
+                                //         bool.Parse(nodeNext.Attributes["isRoot"].Value);
+                                //     xmiConnectorClass.ModifiersIsLeaf =
+                                //         bool.Parse(nodeNext.Attributes["isLeaf"].Value);
+                                //     break;
+                                // case "appearance":
+                                //     xmiConnectorClass.AppearanceLinemode = nodeNext.Attributes["linemode"].Value;
+                                //     xmiConnectorClass.AppearanceLineColor = nodeNext.Attributes["linecolor"].Value;
+                                //     xmiConnectorClass.AppearanceLinewidth = nodeNext.Attributes["linewidth"].Value;
+                                //     xmiConnectorClass.AppearanceSeqno = nodeNext.Attributes["seqno"].Value;
+                                //     xmiConnectorClass.AppearanceHeadStyle = nodeNext.Attributes["headStyle"].Value;
+                                //     xmiConnectorClass.AppearanceLineStyle = nodeNext.Attributes["lineStyle"].Value;
+                                //     break;
+                                // case "labels":
+                                //     try
+                                //     {
+                                //         xmiConnectorClass.Label = nodeNext.Attributes["mt"].Value;
+                                //     }
+                                //     catch
+                                //     {
+                                //         // ignored
+                                //     }
+                                //
+                                //     break;
+                                // case "extendedProperties":
+                                //     break;
                             }
                         }
                     }
@@ -467,34 +467,33 @@ namespace AnimArch.XMIParsing
                          !xmiConnectorClass.SourceModelType.Equals("Interface")) ||
                         (!xmiConnectorClass.TargetModelType.Equals("Interface") &&
                          !xmiConnectorClass.TargetModelType.Equals("Class"))) continue;
-                    if (currDiagramElements.Contains(xmiConnectorClass.ConnectorXmiId))
-                    {
+                    // if (currDiagramElements.Contains(xmiConnectorClass.ConnectorXmiId))
+                    // {
                         connectorClassesList.Add(xmiConnectorClass);
-                    }
+                    // }
                 }
             }
 
             return connectorClassesList;
         }
 
-        
-        
-        public static void ParseDiagramIntoXmi()
-        {
-            var doc = new XmlDocument( );
 
-            var xmlDeclaration = doc.CreateXmlDeclaration( "1.0", "UTF-8", null );
+        public static XmlDocument ParseDiagramIntoXmi()
+        {
+            var doc = new XmlDocument();
+
+            var xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
             var root = doc.DocumentElement;
-            doc.InsertBefore( xmlDeclaration, root );
+            doc.InsertBefore(xmlDeclaration, root);
 
             const string xmiUri = "http://schema.omg.org/spec/XMI/2.1";
             const string umlUri = "http://schema.omg.org/spec/UML/2.1";
-            var xmIElem = doc.CreateElement( "xmi", "XMI", xmiUri);
+            var xmIElem = doc.CreateElement("xmi", "XMI", xmiUri);
             xmIElem.SetAttribute("version", "2.1");
             xmIElem.SetAttribute("xmlns:uml", umlUri);
             xmIElem.SetAttribute("xmlns:xmi", xmiUri);
-            doc.AppendChild( xmIElem );
-            
+            doc.AppendChild(xmIElem);
+
             var xmiDocumentation = doc.CreateElement("xmi", "Documentation", xmiUri);
             xmIElem.AppendChild(xmiDocumentation);
             var xmiModel = doc.CreateElement("xmi", "Model", xmiUri);
@@ -505,59 +504,144 @@ namespace AnimArch.XMIParsing
             xmiExtension.SetAttribute("extenderID", "6.5");
             xmIElem.AppendChild(xmiExtension);
 
-            var elements = doc.CreateElement( "elements");
+            var elements = doc.CreateElement("elements");
             xmiExtension.AppendChild(elements);
-            var packageElem = doc.CreateElement( "element");
-            // packageElem.SetAttribute("xmi:Type", "uml:Package");
+            var connectors = doc.CreateElement("connectors");
+            xmiExtension.AppendChild(connectors);
+            var primitiveTypes = doc.CreateElement("primitivetypes");
+            xmiExtension.AppendChild(primitiveTypes);
+            var diagrams = doc.CreateElement("diagrams");
+            xmiExtension.AppendChild(diagrams);
+            var diagram = doc.CreateElement("diagram");
+            diagrams.AppendChild(diagram);
+            var model = doc.CreateElement("model");
+            model.SetAttribute("localID", "1");
+            diagram.AppendChild(model);
+
+            var diagramElements = doc.CreateElement("elements");
+            diagram.AppendChild(diagramElements);
+
+            var packageElem = doc.CreateElement("element");
             packageElem.SetAttribute("Type", xmiUri, "uml:Package");
             packageElem.SetAttribute("name", "SAVETEST");
             packageElem.SetAttribute("scope", "public");
             elements.AppendChild(packageElem);
             foreach (var xmiClass in DiagramPool.Instance.ClassDiagram.Classes.Select(x => x.XMIParsedClass))
             {
-                var element = doc.CreateElement( "element");
+                var element = doc.CreateElement("element");
                 element.SetAttribute("type", xmiUri, xmiClass.Type);
                 element.SetAttribute("name", xmiClass.Name);
+                // element.SetAttribute("idref", xmiUri, xmiClass.Name + xmiClass.XmiId);
                 element.SetAttribute("idref", xmiUri, xmiClass.XmiId);
-                XmlElement attributes = null;
-                if (xmiClass.attributes.Any())
+                elements.AppendChild(element);
+
+                var geometryElement = doc.CreateElement("element");
+                geometryElement.SetAttribute("subject", xmiClass.XmiId);
+                geometryElement.SetAttribute("geometry", "Left=" + Math.Floor(xmiClass.Left) +
+                                                         ";Top=" + Math.Floor(xmiClass.Top) +
+                                                         ";Right=" + Math.Floor(xmiClass.Right) +
+                                                         ";Bottom=" + Math.Floor(xmiClass.Bottom) + ";");
+                diagramElements.AppendChild(geometryElement);
+
+                if (xmiClass.Attributes != null)
                 {
-                    attributes = doc.CreateElement("attributes");
-                    element.AppendChild(attributes);
-                }
-                foreach (var xmiClassAttribute in xmiClass.attributes)
-                {
-                    var attribute = doc.CreateElement("attribute");
-                    attribute.SetAttribute("idref", xmiUri, xmiClassAttribute.Id);
-                    attribute.SetAttribute("name", xmiClassAttribute.Name);
-                    var properties = doc.CreateElement("properties");
-                    properties.SetAttribute("type", xmiClassAttribute.Type);
-                    attribute.AppendChild(properties);
-                    attributes?.AppendChild(attribute);
+                    XmlElement attributes = null;
+                    if (xmiClass.Attributes.Any())
+                    {
+                        attributes = doc.CreateElement("attributes");
+                        element.AppendChild(attributes);
+                    }
+
+                    foreach (var xmiClassAttribute in xmiClass.Attributes)
+                    {
+                        var attribute = doc.CreateElement("attribute");
+                        attribute.SetAttribute("idref", xmiUri, xmiClassAttribute.Id);
+                        attribute.SetAttribute("name", xmiClassAttribute.Name);
+                        var properties = doc.CreateElement("properties");
+                        properties.SetAttribute("type", xmiClassAttribute.Type);
+                        attribute.AppendChild(properties);
+                        attributes?.AppendChild(attribute);
+                    }
                 }
 
-                elements.AppendChild(element);
+                if (xmiClass.Methods == null) continue;
+
+                XmlElement methods = null;
+                if (xmiClass.Methods.Any())
+                {
+                    methods = doc.CreateElement("operations");
+                    element.AppendChild(methods);
+                }
+
+                foreach (var xmiClassMethod in xmiClass.Methods)
+                {
+                    var method = doc.CreateElement("operation");
+                    method.SetAttribute("idref", xmiUri, xmiClassMethod.Id);
+                    method.SetAttribute("name", xmiClassMethod.Name);
+                    XmlElement parameters = null;
+                    if (xmiClassMethod.arguments.Any())
+                    {
+                        parameters = doc.CreateElement("parameters");
+                        method.AppendChild(parameters);
+                        var voidPar = doc.CreateElement("parameter");
+                        parameters.AppendChild(voidPar);
+                    }
+
+                    foreach (var argument in xmiClassMethod.arguments)
+                    {
+                        var parameter = doc.CreateElement("parameter");
+                        var nameAndType = argument.Split(" ");
+                        var argumentId = xmiClass.XmiId + xmiClassMethod.Id + argument;
+                        parameter.SetAttribute("idref", xmiUri, argumentId);
+
+                        var ownedParameter = doc.CreateElement("ownedParameter");
+                        ownedParameter.SetAttribute("name", nameAndType[0]);
+                        ownedParameter.SetAttribute("type", nameAndType[1]);
+                        ownedParameter.SetAttribute("id", xmiUri, argumentId);
+                        xmiModel.AppendChild(ownedParameter);
+
+                        parameter.SetAttribute("name", nameAndType[0]);
+                        var type = doc.CreateElement("type");
+                        type.SetAttribute("type", nameAndType[1]);
+                        method.AppendChild(type);
+
+                        var properties = doc.CreateElement("properties");
+                        properties.SetAttribute("type", nameAndType[1]);
+                        parameter.AppendChild(properties);
+
+                        parameters?.AppendChild(parameter);
+                    }
+
+                    methods?.AppendChild(method);
+                }
             }
 
-            // var umlModel = doc.CreateElement(string.Empty, "uml:Model", string.Empty);
-            // doc.AppendChild(umlModel);
+            foreach (var relation in DiagramPool.Instance.ClassDiagram.Relations.Select(x => x.XMIParsedRelation))
+            {
+                var connector = doc.CreateElement("connector");
+                connector.SetAttribute("idref", xmiUri, relation.FromClass + relation.ToClass + relation.PropertiesEaType);
+                var source = doc.CreateElement("source");
+                var sourceModel = doc.CreateElement("model");
+                sourceModel.SetAttribute("type", "Class");
+                sourceModel.SetAttribute("name", relation.FromClass);
+                source.AppendChild(sourceModel);
+                connector.AppendChild(source);
             
+                var target = doc.CreateElement("target");
+                var targetModel = doc.CreateElement("model");
+                targetModel.SetAttribute("type", "Class");
+                targetModel.SetAttribute("name", relation.ToClass);
+                target.AppendChild(targetModel);
+                connector.AppendChild(target);
+            
+                var properties = doc.CreateElement("properties");
+                properties.SetAttribute("ea_type", relation.PropertiesEaType);
+                properties.SetAttribute("direction", relation.PropertiesDirection);
+                connector.AppendChild(properties);
+                connectors.AppendChild(connector);
+            }
 
-            // var element2 = doc.CreateElement( string.Empty, "level1", string.Empty );
-            // // element1.AppendChild( element2 );
-            //
-            // var element3 = doc.CreateElement( string.Empty, "level2", string.Empty );
-            // var text1 = doc.CreateTextNode( "text" );
-            // element3.AppendChild( text1 );
-            // element2.AppendChild( element3 );
-            //
-            // var element4 = doc.CreateElement( string.Empty, "level2", string.Empty );
-            // var text2 = doc.CreateTextNode( "other text" );
-            // element4.AppendChild( text2 );
-            // element2.AppendChild( element4 );
-
-            doc.Save( "D:\\Programovanie\\Bakalárka\\DPAnimArch\\UnityProjectDP\\Assets\\Resources\\SAVETEST.xml" );
+            return doc;
         }
-        
     }
 }

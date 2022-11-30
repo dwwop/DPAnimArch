@@ -59,7 +59,7 @@ namespace Networking
         [ServerRpc(RequireOwnership = false)]
         public void SetClassNameServerRpc(string targetClass, string newName)
         {
-            ClassEditor.Instance.SetClassName(targetClass, newName, true);
+            ClassEditor.SetClassName(targetClass, newName, true);
         }
 
         [ClientRpc]
@@ -67,7 +67,7 @@ namespace Networking
         {
             if (IsServer)
                 return;
-            ClassEditor.Instance.SetClassName(targetClass, newName, true);
+            ClassEditor.SetClassName(targetClass, newName, true);
         }
 
         public void AddMethod(string targetClass, string name, string returnValue)
