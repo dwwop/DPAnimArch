@@ -10,6 +10,5 @@ namespace AnimArch.Visualization.Diagrams
         public Class XMIParsedClass;
         public CDClass ClassInfo;
         public GameObject VisualObject;
-        public bool isObject = false;
     }
 }
