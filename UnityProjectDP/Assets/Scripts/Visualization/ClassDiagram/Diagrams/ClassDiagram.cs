@@ -9,7 +9,6 @@ using UnityEngine.UI;
 using AnimArch.Extensions;
 using AnimArch.Visualization.Animating;
 using AnimArch.XMIParsing;
-using JetBrains.Annotations;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -59,6 +58,7 @@ namespace AnimArch.Visualization.Diagrams
             }
 
             OALProgram.Instance.Reset();
+            ClassEditor.Instance.ResetGraph();
 
             AnimationData.Instance.ClearData();
         }
@@ -79,7 +79,7 @@ namespace AnimArch.Visualization.Diagrams
         public Graph CreateGraph()
         {
             ResetDiagram();
-            var go = GameObject.Instantiate(DiagramPool.Instance.graphPrefab);
+            var go = Instantiate(DiagramPool.Instance.graphPrefab);
             graph = go.GetComponent<Graph>();
             return graph;
         }
@@ -116,9 +116,9 @@ namespace AnimArch.Visualization.Diagrams
                         }
 
                         TempCDClass.AddAttribute(new CDAttribute(attribute.Name, EXETypes.ConvertEATypeName(AttributeType)));
-                        if (currentClass.attributes == null)
+                        if (currentClass.Attributes == null)
                         {
-                            currentClass.attributes = new List<Attribute>();
+                            currentClass.Attributes = new List<Attribute>();
                         }
 
                         ClassEditor.AddAttribute(currentClass.Name, attribute, false);
@@ -127,20 +127,13 @@ namespace AnimArch.Visualization.Diagrams
 
                 if (currentClass.Methods != null)
                 {
-                    foreach (Method method in currentClass.Methods)
+                    foreach (var method in currentClass.Methods)
                     {
                         method.Name = method.Name.Replace(" ", "_");
-                        CDMethod Method = new CDMethod(TempCDClass, method.Name, EXETypes.ConvertEATypeName(method.ReturnValue));
-                        TempCDClass.AddMethod(Method);
+                        var cdMethod = new CDMethod(TempCDClass, method.Name, EXETypes.ConvertEATypeName(method.ReturnValue));
+                        TempCDClass.AddMethod(cdMethod);
 
-                        foreach (string arg in method.arguments)
-                        {
-                            string[] tokens = arg.Split(' ');
-                            string type = tokens[0];
-                            string name = tokens[1];
-
-                            Method.Parameters.Add(new CDParameter() { Name = name, Type = EXETypes.ConvertEATypeName(type) });
-                        }
+                        ClassEditor.AddParameters(method, cdMethod);
                         ClassEditor.AddMethod(currentClass.Name, method, ClassEditor.Source.loader);
                     }
                 }
@@ -158,7 +151,7 @@ namespace AnimArch.Visualization.Diagrams
             //Parse all Relations between classes
             foreach (Relation relation in XMIRelationList)
             {
-                CreateRelationEdge(relation);
+                ClassEditor.CreateRelationEdge(relation);
                 ClassEditor.CreateRelation(relation);
             }
         }
@@ -166,7 +159,6 @@ namespace AnimArch.Visualization.Diagrams
         //Auto arrange objects in space
         public void AutoLayout()
         {
-            //TODO better automatic Layout
             graph.Layout();
         }
 
@@ -198,15 +190,15 @@ namespace AnimArch.Visualization.Diagrams
                 GameObject finishingClass = FindClassByName(rel.XMIParsedRelation.ToClass)?.VisualObject;
                 if (startingClass != null && finishingClass != null)
                 {
-                    GameObject edge = graph.AddEdge(startingClass, finishingClass, prefab);
+                     GameObject edge = graph.AddEdge(startingClass, finishingClass, prefab);
 
-                    rel.VisualObject = edge;
-                    //Quickfix
+                     rel.VisualObject = edge;
+                    // Quickfix
 
-                    if (edge.gameObject.transform.childCount > 0)
-                    {
-                        StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
-                    }
+                     if (edge.gameObject.transform.childCount > 0)
+                     {
+                         StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
+                     }
                 }
                 else
                 {
@@ -235,6 +227,7 @@ namespace AnimArch.Visualization.Diagrams
                     )
                     .FirstOrDefault();
         }
+        
         public Method FindMethodByName(String className, String methodName)
         {
             ClassInDiagram _class = FindClassByName(className);
@@ -245,7 +238,7 @@ namespace AnimArch.Visualization.Diagrams
 
             return _class
                     .XMIParsedClass
-                    .methods
+                    .Methods
                     .Where(methodInClassDiagram => string.Equals(methodName, _class.XMIParsedClass.Name))
                     .IfMoreThan
                     (
@@ -272,7 +265,7 @@ namespace AnimArch.Visualization.Diagrams
 
             return _class
                     .XMIParsedClass
-                    .attributes
+                    .Attributes
                     .Where(attributeInClassDiagram => string.Equals(attributeName, _class.XMIParsedClass.Name))
                     .IfMoreThan
                     (
@@ -288,28 +281,7 @@ namespace AnimArch.Visualization.Diagrams
                     )
                     .FirstOrDefault();
         }
-        public bool AddAtr(string targetClass, Attribute attributeToAdd)
-        {
-            var c = FindClassByName(targetClass);
-            if (c == null)
-            {
-                return false;
-            }
-
-            if (c.XMIParsedClass.Attributes == null)
-                c.XMIParsedClass.Attributes = new List<Attribute>();
-
-            if (c.XMIParsedClass.attributes == null)
-                c.XMIParsedClass.attributes = new List<Attribute>();
-
-
-            attributeToAdd.Id = (c.XMIParsedClass.attributes.Count + 1).ToString();
-            if (FindAttributeByName(targetClass, attributeToAdd.Name) != null) return false;
-            c.XMIParsedClass.Attributes.Add(attributeToAdd);
-            c.XMIParsedClass.attributes.Add(attributeToAdd);
-            return true;
-        }
-
+        
         public GameObject FindNode(String name)
         {
             GameObject g;
@@ -331,16 +303,14 @@ namespace AnimArch.Visualization.Diagrams
         public GameObject FindEdge(string RelationshipName)
         {
             return Relations
-                .Where(relation => string.Equals(RelationshipName, relation.RelationInfo.RelationshipName))
-                .FirstOrDefault()?
+                .FirstOrDefault(relation => string.Equals(RelationshipName, relation.RelationInfo.RelationshipName))?
                 .VisualObject;
         }
         
         public RelationInDiagram FindEdgeInfo(string RelationshipName)
         {
             return Relations
-                .Where(relation => string.Equals(RelationshipName, relation.RelationInfo.RelationshipName))
-                .FirstOrDefault();
+                .FirstOrDefault(relation => string.Equals(RelationshipName, relation.RelationInfo.RelationshipName));
         }
         
         public String FindOwnerOfRelation(String RelationName)
@@ -364,65 +334,6 @@ namespace AnimArch.Visualization.Diagrams
         public IEnumerable<Relation> GetRelationList()
         {
             return Relations.Select(relationInDiagram => relationInDiagram.XMIParsedRelation);
-        }
-
-        public RelationInDiagram CreateRelationEdge(Relation relation)
-        {
-            relation.FromClass = relation.SourceModelName.Replace(" ", "_");
-            relation.ToClass = relation.TargetModelName.Replace(" ", "_");
-            
-            switch (relation.PropertiesEa_type)
-            {
-                case "Association":
-                    switch (relation.ProperitesDirection)
-                    {
-                        case "Source -> Destination": relation.PrefabType = DiagramPool.Instance.associationSDPrefab; break;
-                        case "Destination -> Source": relation.PrefabType = DiagramPool.Instance.associationDSPrefab; break;
-                        case "Bi-Directional": relation.PrefabType = DiagramPool.Instance.associationFullPrefab; break;
-                        default: relation.PrefabType = DiagramPool.Instance.associationNonePrefab; break;
-                    }
-                    break;
-                case "Generalization": relation.PrefabType = DiagramPool.Instance.generalizationPrefab; break;
-                case "Dependency": relation.PrefabType = DiagramPool.Instance.dependsPrefab; break;
-                case "Realisation": relation.PrefabType = DiagramPool.Instance.realisationPrefab; break;
-                default: relation.PrefabType = DiagramPool.Instance.associationNonePrefab; break;
-            }
-
-            var tempCdRelationship = OALProgram.Instance.RelationshipSpace.SpawnRelationship(relation.FromClass, relation.ToClass) 
-                                     ?? throw new ArgumentNullException(nameof(relation));
-            relation.OALName = tempCdRelationship.RelationshipName;
-
-            if ("Generalization".Equals(relation.PropertiesEa_type) || "Realisation".Equals(relation.PropertiesEa_type))
-            {
-                var fromClass = OALProgram.Instance.ExecutionSpace.getClassByName(relation.FromClass);
-                var toClass = OALProgram.Instance.ExecutionSpace.getClassByName(relation.ToClass);
-                
-                if (fromClass != null && toClass != null)
-                {
-                    fromClass.SuperClass = toClass;
-                }
-            }
-            var relInDiag = new RelationInDiagram { XMIParsedRelation = relation, RelationInfo = tempCdRelationship };
-            Relations.Add(relInDiag);
-            return relInDiag;
-        }
-        
-        // Lukas
-        public class DiagramObject
-        {
-            public string name;
-            public string className;
-            public GameObject VisualObject;
-            // Name, Type, Value
-            public List<(string, string, string)> Attributes;
-
-            public DiagramObject(string name, string className, List<(string, string, string)> Attributes)
-            {
-                this.name = name;
-                this.className = className;
-                VisualObject = null;
-                this.Attributes = Attributes;
-            }
         }
     }
 }
