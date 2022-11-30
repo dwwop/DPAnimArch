@@ -9,7 +9,6 @@ using UnityEngine.UI;
 using AnimArch.Extensions;
 using AnimArch.Visualization.Animating;
 using AnimArch.XMIParsing;
-using JetBrains.Annotations;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -326,16 +325,14 @@ namespace AnimArch.Visualization.Diagrams
         public GameObject FindEdge(string RelationshipName)
         {
             return Relations
-                .Where(relation => string.Equals(RelationshipName, relation.RelationInfo.RelationshipName))
-                .FirstOrDefault()?
+                .FirstOrDefault(relation => string.Equals(RelationshipName, relation.RelationInfo.RelationshipName))?
                 .VisualObject;
         }
         
         public RelationInDiagram FindEdgeInfo(string RelationshipName)
         {
             return Relations
-                .Where(relation => string.Equals(RelationshipName, relation.RelationInfo.RelationshipName))
-                .FirstOrDefault();
+                .FirstOrDefault(relation => string.Equals(RelationshipName, relation.RelationInfo.RelationshipName));
         }
         
         public String FindOwnerOfRelation(String RelationName)

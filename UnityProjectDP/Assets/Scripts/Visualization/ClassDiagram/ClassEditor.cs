@@ -220,28 +220,25 @@ namespace AnimArch.Visualization.Diagrams
             Canvas.ForceUpdateCanvases();
         }
 
-
         public static RelationInDiagram CreateRelationEdge(Relation relation)
         {
             relation.FromClass = relation.SourceModelName.Replace(" ", "_");
             relation.ToClass = relation.TargetModelName.Replace(" ", "_");
-            
-            switch (relation.PropertiesEaType)
+
+            relation.PrefabType = relation.PropertiesEaType switch
             {
-                case "Association":
-                    switch (relation.PropertiesDirection)
-                    {
-                        case "Source -> Destination": relation.PrefabType = DiagramPool.Instance.associationSDPrefab; break;
-                        case "Destination -> Source": relation.PrefabType = DiagramPool.Instance.associationDSPrefab; break;
-                        case "Bi-Directional": relation.PrefabType = DiagramPool.Instance.associationFullPrefab; break;
-                        default: relation.PrefabType = DiagramPool.Instance.associationNonePrefab; break;
-                    }
-                    break;
-                case "Generalization": relation.PrefabType = DiagramPool.Instance.generalizationPrefab; break;
-                case "Dependency": relation.PrefabType = DiagramPool.Instance.dependsPrefab; break;
-                case "Realisation": relation.PrefabType = DiagramPool.Instance.realisationPrefab; break;
-                default: relation.PrefabType = DiagramPool.Instance.associationNonePrefab; break;
-            }
+                "Association" => relation.PropertiesDirection switch
+                {
+                    "Source -> Destination" => DiagramPool.Instance.associationSDPrefab,
+                    "Destination -> Source" => DiagramPool.Instance.associationDSPrefab,
+                    "Bi-Directional" => DiagramPool.Instance.associationFullPrefab,
+                    _ => DiagramPool.Instance.associationNonePrefab
+                },
+                "Generalization" => DiagramPool.Instance.generalizationPrefab,
+                "Dependency" => DiagramPool.Instance.dependsPrefab,
+                "Realisation" => DiagramPool.Instance.realisationPrefab,
+                _ => DiagramPool.Instance.associationNonePrefab
+            };
 
             var tempCdRelationship = OALProgram.Instance.RelationshipSpace.SpawnRelationship(relation.FromClass, relation.ToClass) 
                                      ?? throw new ArgumentNullException(nameof(relation));
@@ -351,7 +348,7 @@ namespace AnimArch.Visualization.Diagrams
                 var type = tokens[0];
                 var name = tokens[1];
 
-                cdMethod.Parameters.Add(new CDParameter { Name = name, Type = EXETypes.ConvertEATypeName(type) });
+                cdMethod.Parameters.Add(new CDParameter { Name = name, Type = EXETypes.ConvertEATypeName(type)});
             }
         }
 
@@ -371,7 +368,6 @@ namespace AnimArch.Visualization.Diagrams
             c.XMIParsedClass.Attributes.Add(attributeToAdd);
             return true;
         }
-
 
         private static void SetClassTmProName(GameObject classGo, string name)
         {
