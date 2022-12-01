@@ -50,7 +50,7 @@ public class Graph : MonoBehaviour
 
     public GameObject AddNode()
     {
-        var go = GameObject.Instantiate(nodePrefab, units);
+        var go = Instantiate(nodePrefab, units);
 
         //Following step required otherwise Size will return wrong rect
         Canvas.ForceUpdateCanvases();

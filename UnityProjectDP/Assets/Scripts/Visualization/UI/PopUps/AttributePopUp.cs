@@ -11,7 +11,7 @@ namespace AnimArch.Visualization.UI
         public Toggle isArray;
 
         public void ActivateCreation(TMP_Text classTxt, TMP_Text atrTxt)
-        {   
+        {
             ActivateCreation(classTxt);
         }
 
@@ -26,7 +26,7 @@ namespace AnimArch.Visualization.UI
             var attribute = new Attribute
             {
                 Name = inp.text,
-                Type = (isArray.isOn ? "[]: " : ": ") + dropdown.options[dropdown.value].text
+                Type = (isArray.isOn ? "[]" : "") + dropdown.options[dropdown.value].text
             };
 
             ClassEditor.AddAttribute(className.text, attribute, false);
@@ -35,7 +35,7 @@ namespace AnimArch.Visualization.UI
         }
 
         public override void Deactivate()
-        {   
+        {
             base.Deactivate();
             isArray.isOn = false;
         }

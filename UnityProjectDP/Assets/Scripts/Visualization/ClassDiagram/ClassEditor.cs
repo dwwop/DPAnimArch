@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using AnimArch.Visualization.UI;
 using Networking;
-using AnimArch.XMIParsing;
 using OALProgramControl;
-using Unity.Netcode;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -20,6 +19,7 @@ namespace AnimArch.Visualization.Diagrams
         public AttributePopUp atrPopUp;
         public MethodPopUp mtdPopUp;
         public ClassPopUp classPopUp;
+
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -45,6 +45,7 @@ namespace AnimArch.Visualization.Diagrams
 
                 _id = 0;
             }
+
             _active = true;
         }
 
@@ -53,6 +54,7 @@ namespace AnimArch.Visualization.Diagrams
             _active = false;
             MenuManager.Instance.isSelectingNode = false;
         }
+
         public void CreateNode()
         {
             var newClass = new Class
@@ -60,8 +62,8 @@ namespace AnimArch.Visualization.Diagrams
                 Name = "NewClass_" + _id,
                 XmiId = _id.ToString(),
                 Type = "uml:Class",
-                attributes = new List<Attribute>(),
-                Attributes = new List<Attribute>()
+                Attributes = new List<Attribute>(),
+                Methods = new List<Method>()
             };
 
             Spawner.Instance.SpawnClass(newClass.Name);
@@ -75,8 +77,8 @@ namespace AnimArch.Visualization.Diagrams
                 Name = name,
                 XmiId = _id.ToString(),
                 Type = "uml:Class",
-                attributes = new List<Attribute>(),
-                Attributes = new List<Attribute>()
+                Attributes = new List<Attribute>(),
+                Methods = new List<Method>()
             };
             GenerateNode(newClass);
         }
@@ -87,7 +89,7 @@ namespace AnimArch.Visualization.Diagrams
             return GenerateNode(newClass);
         }
 
-        public CDClass GenerateNode(Class newClass)
+        private CDClass GenerateNode(Class newClass)
         {
             if (!_graph)
                 InitializeCreation();
@@ -96,16 +98,22 @@ namespace AnimArch.Visualization.Diagrams
             if (tempCdClass == null)
                 return null;
 
-            DiagramPool.Instance.ClassDiagram.Classes.Add(
-                new ClassInDiagram { XMIParsedClass = newClass, ClassInfo = tempCdClass}
-                );
+            var classInDiagram = new ClassInDiagram { XMIParsedClass = newClass, ClassInfo = tempCdClass };
+            DiagramPool.Instance.ClassDiagram.Classes.Add(classInDiagram);
             var node = AddClassToGraph(name);
             SetPosition(node);
+            if (classInDiagram.XMIParsedClass.Left == 0)
+            {
+                var position = classInDiagram.VisualObject.transform.localPosition;
+                classInDiagram.XMIParsedClass.Left = position.x / 2.5f;
+                classInDiagram.XMIParsedClass.Top = -position.y / 2.5f;
+            }
+
             _id++;
             return tempCdClass;
         }
 
-        public static string CurrentClassName(string name, ref CDClass TempCdClass)
+        private static string CurrentClassName(string name, ref CDClass TempCdClass)
         {
             TempCdClass = null;
             var i = 0;
@@ -121,16 +129,17 @@ namespace AnimArch.Visualization.Diagrams
                     break;
                 }
             }
+
             return currentName;
         }
 
-        private void SetPosition(GameObject node)
+        private static void SetPosition(GameObject node)
         {
             var rect = node.GetComponent<RectTransform>();
             rect.position = new Vector3(100f, 200f, 1);
         }
 
-        public GameObject AddClassToGraph(string name)
+        private GameObject AddClassToGraph(string name)
         {
             var currentClass = DiagramPool.Instance.ClassDiagram.Classes.Find(item => item.XMIParsedClass.Name == name)
                 .XMIParsedClass;
@@ -139,10 +148,9 @@ namespace AnimArch.Visualization.Diagrams
 
             SetClassTmProName(node, name);
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(name);
-            if (classInDiagram != null)
-            {
-                classInDiagram.VisualObject = node;
-            }
+            if (classInDiagram == null) return node;
+
+            classInDiagram.VisualObject = node;
             return node;
         }
 
@@ -175,6 +183,7 @@ namespace AnimArch.Visualization.Diagrams
                 CreateRelation(_node.name, secondNode.name, type[0], false);
             EndSelection();
         }
+
         private void EndSelection()
         {
             Animating.Animation.Instance.HighlightClass(_node.name, false);
@@ -193,7 +202,7 @@ namespace AnimArch.Visualization.Diagrams
 
         public static void CreateRelation(Relation relation)
         {
-            Spawner.Instance.AddRelation(relation.FromClass, relation.ToClass, relation.PropertiesEa_type);
+            Spawner.Instance.AddRelation(relation.FromClass, relation.ToClass, relation.PropertiesEaType);
         }
 
         public void CreateRelation(string sourceClass, string destinationClass, string relationType, bool fromRpc, bool noDirection = false)
@@ -204,18 +213,57 @@ namespace AnimArch.Visualization.Diagrams
             {
                 SourceModelName = sourceClass,
                 TargetModelName = destinationClass,
-                PropertiesEa_type = relationType,
-                ProperitesDirection = noDirection ? "none" : "Source -> Destination"
+                PropertiesEaType = relationType,
+                PropertiesDirection = noDirection ? "none" : "Source -> Destination"
             };
 
-            var relInDiag = DiagramPool.Instance.ClassDiagram.CreateRelationEdge(relation);
+            var relInDiag = CreateRelationEdge(relation);
             var sourceClassGo = DiagramPool.Instance.ClassDiagram.FindClassByName(sourceClass).VisualObject;
             var destinationClassGo = DiagramPool.Instance.ClassDiagram.FindClassByName(destinationClass).VisualObject;
-            GameObject edge = _graph.AddEdge(sourceClassGo, destinationClassGo, relation.PrefabType);
+            var edge = _graph.AddEdge(sourceClassGo, destinationClassGo, relation.PrefabType);
             relInDiag.VisualObject = edge;
         }
 
-        public void SetClassName(string targetClass, string newName, bool fromRpc)
+        public static RelationInDiagram CreateRelationEdge(Relation relation)
+        {
+            relation.FromClass = relation.SourceModelName.Replace(" ", "_");
+            relation.ToClass = relation.TargetModelName.Replace(" ", "_");
+
+            relation.PrefabType = relation.PropertiesEaType switch
+            {
+                "Association" => relation.PropertiesDirection switch
+                {
+                    "Source -> Destination" => DiagramPool.Instance.associationSDPrefab,
+                    "Destination -> Source" => DiagramPool.Instance.associationDSPrefab,
+                    "Bi-Directional" => DiagramPool.Instance.associationFullPrefab,
+                    _ => DiagramPool.Instance.associationNonePrefab
+                },
+                "Generalization" => DiagramPool.Instance.generalizationPrefab,
+                "Dependency" => DiagramPool.Instance.dependsPrefab,
+                "Realisation" => DiagramPool.Instance.realisationPrefab,
+                _ => DiagramPool.Instance.associationNonePrefab
+            };
+
+            var tempCdRelationship = OALProgram.Instance.RelationshipSpace.SpawnRelationship(relation.FromClass, relation.ToClass) 
+                                     ?? throw new ArgumentNullException(nameof(relation));
+            relation.OALName = tempCdRelationship.RelationshipName;
+            
+            if ("Generalization".Equals(relation.PropertiesEaType) || "Realisation".Equals(relation.PropertiesEaType))
+            {
+                var fromClass = OALProgram.Instance.ExecutionSpace.getClassByName(relation.FromClass);
+                var toClass = OALProgram.Instance.ExecutionSpace.getClassByName(relation.ToClass);
+                
+                if (fromClass != null && toClass != null)
+                {
+                    fromClass.SuperClass = toClass;
+                }
+            }
+            var relInDiag = new RelationInDiagram { XMIParsedRelation = relation, RelationInfo = tempCdRelationship };
+            DiagramPool.Instance.ClassDiagram.Relations.Add(relInDiag);
+            return relInDiag;
+        }
+
+        public static void SetClassName(string targetClass, string newName, bool fromRpc)
         {
             if (!fromRpc)
                 Spawner.Instance.SetClassName(targetClass, newName);
@@ -232,7 +280,7 @@ namespace AnimArch.Visualization.Diagrams
 
         private static string StringMethod(Method method)
         {
-            string arguments = "(";
+            var arguments = "(";
             if (method.arguments != null)
             {
                 for (var index = 0; index < method.arguments.Count; index++)
@@ -242,6 +290,7 @@ namespace AnimArch.Visualization.Diagrams
                     else arguments += (method.arguments[index]);
                 }
             }
+
             arguments += ") :";
 
             return method.Name + arguments + method.ReturnValue + "\n";
@@ -272,27 +321,56 @@ namespace AnimArch.Visualization.Diagrams
             if (classInDiagram == null)
                 return;
 
-            if (classInDiagram.XMIParsedClass.Methods == null)
-                classInDiagram.XMIParsedClass.Methods = new List<Method>();
+            classInDiagram.XMIParsedClass.Methods ??= new List<Method>();
 
-            if (classInDiagram.XMIParsedClass.methods == null)
-                classInDiagram.XMIParsedClass.methods = new List<Method>();
+            methodToAdd.Id = (classInDiagram.XMIParsedClass.Methods.Count + 1).ToString();
 
             if (DiagramPool.Instance.ClassDiagram.FindMethodByName(targetClass, methodToAdd.Name) != null)
                 return;
 
             classInDiagram.XMIParsedClass.Methods.Add(methodToAdd);
-            classInDiagram.XMIParsedClass.methods.Add(methodToAdd);
 
             if (!OALProgram.Instance.ExecutionSpace.ClassExists(targetClass))
                 return;
 
             var cdClass = OALProgram.Instance.ExecutionSpace.getClassByName(targetClass);
-            cdClass.AddMethod(new CDMethod(cdClass, methodToAdd.Name, EXETypes.ConvertEATypeName(methodToAdd.ReturnValue)));
+            var cdMethod = new CDMethod(cdClass, methodToAdd.Name, EXETypes.ConvertEATypeName(methodToAdd.ReturnValue));
 
-            //TODO: method args
+            if (methodToAdd.arguments != null)
+                AddParameters(methodToAdd, cdMethod);
+
+            cdClass.AddMethod(cdMethod);
 
             AddTmProMethod(classInDiagram.VisualObject, StringMethod(methodToAdd));
+        }
+
+        public static void AddParameters(Method method, CDMethod cdMethod)
+        {
+            foreach (var arg in method.arguments)
+            {
+                var tokens = arg.Split(' ');
+                var type = tokens[0];
+                var name = tokens[1];
+
+                cdMethod.Parameters.Add(new CDParameter { Name = name, Type = EXETypes.ConvertEATypeName(type)});
+            }
+        }
+
+        public static bool AddAttribute(string targetClass, Attribute attributeToAdd)
+        {
+            var c = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
+            if (c == null)
+            {
+                return false;
+            }
+
+            c.XMIParsedClass.Attributes ??= new List<Attribute>();
+
+            attributeToAdd.Id = (c.XMIParsedClass.Attributes.Count + 1).ToString();
+            if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(targetClass, attributeToAdd.Name) != null)
+                return false;
+            c.XMIParsedClass.Attributes.Add(attributeToAdd);
+            return true;
         }
 
         public static void AddAttribute(string targetClass, Attribute attribute, bool fromRpc)
@@ -328,7 +406,7 @@ namespace AnimArch.Visualization.Diagrams
                 .text = name;
         }
 
-        public static void AddTmProMethod(GameObject classGo, string method)
+        private static void AddTmProMethod(GameObject classGo, string method)
         {
             classGo.transform
                 .Find("Background")
@@ -336,6 +414,7 @@ namespace AnimArch.Visualization.Diagrams
                 .GetComponent<TextMeshProUGUI>()
                 .text += method;
         }
+
 
         public static void AddTmProAttribute(GameObject classGo, string attribute)
         {
@@ -345,9 +424,9 @@ namespace AnimArch.Visualization.Diagrams
                 .GetComponent<TextMeshProUGUI>()
                 .text += attribute;
         }
-        public void SaveDiagram()
+        public void ResetGraph()
         {
-            XMIParser.ParseDiagramIntoXmi();
+            _graph = null;
         }
     }
 }
