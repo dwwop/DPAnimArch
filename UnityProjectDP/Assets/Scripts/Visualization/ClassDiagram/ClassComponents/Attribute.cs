@@ -1,19 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
 namespace AnimArch.Visualization.Diagrams
 {
+    [Serializable]
     public class Attribute
     {
-        public string Type { get; set; }
-        public string Name { get; set; }
-        public string Id { get; set; }
+        public string Type;
+        public string Name;
+        public string Id;
         public Attribute(string id, string name, string type)
         {
-            this.Id = id;
-            this.Type = type;
-            this.Name = name;
+            Id = id;
+            Type = type;
+            Name = name;
         }
         public Attribute() { }
 

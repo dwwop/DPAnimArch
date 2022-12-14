@@ -5,8 +5,8 @@ namespace OALProgramControl
 {
     public class CDRelationship
     {
-        public String FromClass { get; }
-        public String ToClass { get; }
+        public String FromClass { set; get; }
+        public String ToClass { set; get; }
         public String RelationshipName { get; }
 
         private List<(long, long)> InstanceRelationships { get; }

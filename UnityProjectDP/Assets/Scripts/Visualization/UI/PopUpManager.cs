@@ -4,21 +4,23 @@ using AnimArch.Visualization.Diagrams;
 
 namespace AnimArch.Visualization.UI
 {
-    public class EditorMenuOpen : MonoBehaviour
+    public class PopUpManager : MonoBehaviour
     {
         public TMP_Text attributeTxt;
         public TMP_Text mtdTxt;
         public TMP_Text classTxt;
-        public void OpenAttributeMenu()
+
+        public void OpenAttributePopUp()
         {
             ClassEditor.Instance.atrPopUp.ActivateCreation(classTxt, attributeTxt);
         }
-        public void OpenMethodMenu()
+
+        public void OpenMethodPopUp()
         {
             ClassEditor.Instance.mtdPopUp.ActivateCreation(classTxt, mtdTxt);
         }
 
-        public void OpenClassMenu()
+        public void OpenClassPopUp()
         {
             ClassEditor.Instance.classPopUp.ActivateCreation(classTxt);
         }

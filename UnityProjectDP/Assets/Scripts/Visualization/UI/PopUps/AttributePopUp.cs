@@ -28,8 +28,8 @@ namespace AnimArch.Visualization.UI
                 Name = inp.text,
                 Type = (isArray.isOn ? "[]" : "") + dropdown.options[dropdown.value].text
             };
-
-            ClassEditor.AddAttribute(className.text, attribute, false);
+            if (ClassEditor.AddAttribute(className.text, attribute)){}
+                ClassEditor.AddAttribute(className.text, attribute, false);
 
             Deactivate();
         }

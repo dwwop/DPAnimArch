@@ -1,14 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System;
 using System.Linq;
 using UnityEngine;
-using TMPro;
 using OALProgramControl;
-using UnityEngine.UI;
 using AnimArch.Extensions;
 using AnimArch.Visualization.Animating;
-using AnimArch.XMIParsing;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -25,30 +21,33 @@ namespace AnimArch.Visualization.Diagrams
             DiagramPool.Instance.ClassDiagram = this;
             ResetDiagram();
         }
-        public void ResetDiagram()
+
+        private void ResetDiagram()
         {
             // Get rid of already rendered classes in diagram.
             if (Classes != null)
             {
-                foreach (ClassInDiagram Class in Classes)
+                foreach (var Class in Classes)
                 {
                     Destroy(Class.VisualObject);
                 }
 
                 Classes.Clear();
             }
+
             Classes = new List<ClassInDiagram>();
 
             // Get rid of already rendered relations in diagram.
             if (Relations != null)
             {
-                foreach (RelationInDiagram Relation in Relations)
+                foreach (var relation in Relations)
                 {
-                    Destroy(Relation.VisualObject);
+                    Destroy(relation.VisualObject);
                 }
 
                 Relations.Clear();
             }
+
             Relations = new List<RelationInDiagram>();
 
             if (graph != null)
@@ -62,20 +61,23 @@ namespace AnimArch.Visualization.Diagrams
 
             AnimationData.Instance.ClearData();
         }
+
         public void LoadDiagram()
         {
             CreateGraph();
-            int k = 0;
+            var k = 0;
             // A trick used to skip empty diagrams in XMI file from EA
             while (Classes.Count < 1 && k < 10)
             {
-                ParseData();
+                ClassEditor.ParseData();
                 k++;
                 AnimationData.Instance.diagramId++;
             }
-            Generate();
-            ManualLayout();
+
+            RenderRelations();
+            RenderClassesManual();
         }
+
         public Graph CreateGraph()
         {
             ResetDiagram();
@@ -84,241 +86,147 @@ namespace AnimArch.Visualization.Diagrams
             return graph;
         }
 
-        // Parser used to parse data from XML to C# data structures
-        void ParseData()
-        {
-            List<Class> XMIClassList = XMIParser.ParseClasses();
-            if (XMIClassList == null)
-            {
-                XMIClassList = new List<Class>();
-            }
-
-            CDClass TempCDClass;
-
-            //Parse all data to our List of "Class" objects
-            foreach (Class currentClass in XMIClassList)
-            {
-                currentClass.Name = currentClass.Name.Replace(" ", "_");
-
-                TempCDClass = ClassEditor.Instance.CreateNode(currentClass);
-                if (TempCDClass == null)
-                    continue;
-
-                if (currentClass.Attributes != null)
-                {
-                    foreach (Attribute attribute in currentClass.Attributes)
-                    {
-                        attribute.Name = attribute.Name.Replace(" ", "_");
-                        string AttributeType = EXETypes.ConvertEATypeName(attribute.Type);
-                        if (AttributeType == null)
-                        {
-                            continue;
-                        }
-
-                        TempCDClass.AddAttribute(new CDAttribute(attribute.Name, EXETypes.ConvertEATypeName(AttributeType)));
-                        if (currentClass.Attributes == null)
-                        {
-                            currentClass.Attributes = new List<Attribute>();
-                        }
-
-                        ClassEditor.AddAttribute(currentClass.Name, attribute, false);
-                    }
-                }
-
-                if (currentClass.Methods != null)
-                {
-                    foreach (var method in currentClass.Methods)
-                    {
-                        method.Name = method.Name.Replace(" ", "_");
-                        var cdMethod = new CDMethod(TempCDClass, method.Name, EXETypes.ConvertEATypeName(method.ReturnValue));
-                        TempCDClass.AddMethod(cdMethod);
-
-                        ClassEditor.AddParameters(method, cdMethod);
-                        ClassEditor.AddMethod(currentClass.Name, method, ClassEditor.Source.loader);
-                    }
-                }
-                currentClass.Top *= -1;
-            }
-
-            List<Relation> XMIRelationList = XMIParser.ParseRelations();
-            if (XMIRelationList == null)
-            {
-                XMIRelationList = new List<Relation>();
-            }
-
-            CDRelationship TempCDRelationship;
-
-            //Parse all Relations between classes
-            foreach (Relation relation in XMIRelationList)
-            {
-                ClassEditor.CreateRelationEdge(relation);
-                ClassEditor.CreateRelation(relation);
-            }
-        }
-
         //Auto arrange objects in space
-        public void AutoLayout()
+        public void RenderClassesAuto()
         {
             graph.Layout();
         }
 
         //Set layout as close as possible to EA layout
-        public void ManualLayout()
+        private void RenderClassesManual()
         {
-            foreach (ClassInDiagram classInDiagram in Classes)
+            foreach (var classInDiagram in Classes)
             {
-                var x = classInDiagram.XMIParsedClass.Left * 1.25f;
-                var y = classInDiagram.XMIParsedClass.Top * 1.25f;
+                var x = classInDiagram.ParsedClass.Left * 1.25f;
+                var y = classInDiagram.ParsedClass.Top * 1.25f;
                 var z = classInDiagram.VisualObject.GetComponent<RectTransform>().position.z;
-                ClassEditor.Instance.SetPosition(classInDiagram.XMIParsedClass.Name, new Vector3( x, y, z ), false);
+                ClassEditor.Instance.SetPosition(classInDiagram.ParsedClass.Name, new Vector3(x, y, z), false);
             }
         }
-        //Create GameObjects from the parsed data sotred in list of Classes and Relations
-        public void Generate()
-        {
 
+        //Create GameObjects from the parsed data stored in list of Classes and Relations
+        private void RenderRelations()
+        {
             //Render Relations between classes
-            foreach (RelationInDiagram rel in Relations)
+            foreach (var rel in Relations)
             {
-                GameObject prefab = rel.XMIParsedRelation.PrefabType;
+                var prefab = rel.ParsedRelation.PrefabType;
                 if (prefab == null)
                 {
                     prefab = DiagramPool.Instance.associationNonePrefab;
                 }
 
-                GameObject startingClass = FindClassByName(rel.XMIParsedRelation.FromClass)?.VisualObject;
-                GameObject finishingClass = FindClassByName(rel.XMIParsedRelation.ToClass)?.VisualObject;
+                var startingClass = FindClassByName(rel.ParsedRelation.FromClass)?.VisualObject;
+                var finishingClass = FindClassByName(rel.ParsedRelation.ToClass)?.VisualObject;
                 if (startingClass != null && finishingClass != null)
                 {
-                     GameObject edge = graph.AddEdge(startingClass, finishingClass, prefab);
+                    var edge = graph.AddEdge(startingClass, finishingClass, prefab);
 
-                     rel.VisualObject = edge;
+                    rel.VisualObject = edge;
                     // Quickfix
 
-                     if (edge.gameObject.transform.childCount > 0)
-                     {
-                         StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
-                     }
+                    if (edge.gameObject.transform.childCount > 0)
+                    {
+                        StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
+                    }
                 }
                 else
                 {
                     Debug.LogError
                     (
-                        string.Format("Can't find specified Edge \"{0}\"->\"{1}\"", rel.XMIParsedRelation.FromClass, rel.XMIParsedRelation.ToClass)
+                        $"Can't find specified Edge \"{rel.ParsedRelation.FromClass}\"->\"{rel.ParsedRelation.ToClass}\""
                     );
                 }
             }
         }
 
-        public ClassInDiagram FindClassByName(String className)
+        public ClassInDiagram FindClassByName(string className)
         {
             return Classes
-                    .Where(classInDiagram => string.Equals(className, classInDiagram.XMIParsedClass.Name))
-                    .IfMoreThan
+                .Where(classInDiagram => string.Equals(className, classInDiagram.ParsedClass.Name))
+                .IfMoreThan
+                (
+                    _ => Debug.LogError
                     (
-                        count => Debug.LogError
-                        (
-                            string.Format
-                            (
-                                "More than 1 class named \"{0}\" found in ClassDiagram::Classes",
-                                className
-                            )
-                        )
+                        $"More than 1 class named \"{className}\" found in ClassDiagram::Classes"
                     )
-                    .FirstOrDefault();
+                )
+                .FirstOrDefault();
         }
-        
-        public Method FindMethodByName(String className, String methodName)
+
+        public Method FindMethodByName(string className, string methodName)
         {
-            ClassInDiagram _class = FindClassByName(className);
-            if (_class == null)
-            {
-                return null;
-            }
+            var _class = FindClassByName(className);
 
-            return _class
-                    .XMIParsedClass
-                    .Methods
-                    .Where(methodInClassDiagram => string.Equals(methodName, _class.XMIParsedClass.Name))
-                    .IfMoreThan
+            return _class?.ParsedClass.Methods
+                .Where(_ => string.Equals(methodName, _class.ParsedClass.Name))
+                .IfMoreThan
+                (
+                    _ => Debug.LogError
                     (
-                        count => Debug.LogError
-                        (
-                            string.Format
-                            (
-                                "More than 1 method named \"{0}::{1}\" found in ClassDiagram::Classes",
-                                className,
-                                methodName
-                            )
-                        )
+                        $"More than 1 method named \"{className}::{methodName}\" found in ClassDiagram::Classes"
                     )
-                    .FirstOrDefault();
+                )
+                .FirstOrDefault();
         }
 
-        public Attribute FindAttributeByName(String className, String attributeName)
+        public Attribute FindAttributeByName(string className, string attributeName)
         {
-            ClassInDiagram _class = FindClassByName(className);
-            if (_class == null)
-            {
-                return null;
-            }
+            var _class = FindClassByName(className);
 
-            return _class
-                    .XMIParsedClass
-                    .Attributes
-                    .Where(attributeInClassDiagram => string.Equals(attributeName, _class.XMIParsedClass.Name))
-                    .IfMoreThan
+            return _class?.ParsedClass.Attributes
+                .Where(_ => string.Equals(attributeName, _class.ParsedClass.Name))
+                .IfMoreThan
+                (
+                    _ => Debug.LogError
                     (
-                        count => Debug.LogError
-                        (
-                            string.Format
-                            (
-                                "More than 1 attribute named \"{0}::{1}\" found in ClassDiagram::Classes",
-                                className,
-                                attributeName
-                            )
-                        )
+                        $"More than 1 attribute named \"{className}::{attributeName}\" found in ClassDiagram::Classes"
                     )
-                    .FirstOrDefault();
+                )
+                .FirstOrDefault();
         }
-        
-        public GameObject FindNode(String name)
+
+        public GameObject FindNode(string name)
         {
             GameObject g;
             g = FindClassByName(name).VisualObject;
             return g;
         }
+
         public GameObject FindEdge(string classA, string classB)
         {
-            GameObject Result = null;
+            GameObject result = null;
 
-            CDRelationship Rel = OALProgram.Instance.RelationshipSpace.GetRelationshipByClasses(classA, classB);
-            if (Rel != null)
+            var rel = OALProgram.Instance.RelationshipSpace.GetRelationshipByClasses(classA, classB);
+            if (rel != null)
             {
-                Result = FindEdge(Rel.RelationshipName);
+                result = FindEdge(rel.RelationshipName);
             }
-            return Result;
+
+            return result;
         }
 
-        public GameObject FindEdge(string RelationshipName)
+        public GameObject FindEdge(string relationshipName)
         {
             return Relations
-                .FirstOrDefault(relation => string.Equals(RelationshipName, relation.RelationInfo.RelationshipName))?
+                .FirstOrDefault(relation => string.Equals(relationshipName, relation.RelationInfo.RelationshipName))?
                 .VisualObject;
         }
-        
-        public RelationInDiagram FindEdgeInfo(string RelationshipName)
+
+        public RelationInDiagram FindEdgeInfo(string relationshipName)
         {
             return Relations
-                .FirstOrDefault(relation => string.Equals(RelationshipName, relation.RelationInfo.RelationshipName));
+                .FirstOrDefault(relation => string.Equals(relationshipName, relation.RelationInfo.RelationshipName));
         }
-        
-        public String FindOwnerOfRelation(String RelationName)
+
+        public string FindOwnerOfRelation(string relationName)
         {
             return Relations
-                .Where(relation => string.Equals(RelationName, relation.XMIParsedRelation.OALName))
-                .FirstOrCustomDefault<RelationInDiagram, string>(relationInDiagram => relationInDiagram.XMIParsedRelation.FromClass, "");
+                .Where(relation => string.Equals(relationName, relation.ParsedRelation.OALName))
+                .FirstOrCustomDefault(
+                    relationInDiagram => relationInDiagram.ParsedRelation.FromClass, "");
         }
+
         //Fix used to minimalize relation displaying bug
         private static IEnumerator QuickFix(GameObject g)
         {
@@ -327,13 +235,15 @@ namespace AnimArch.Visualization.Diagrams
             yield return new WaitForSeconds(0.05f);
             g.SetActive(true);
         }
+
         public IEnumerable<Class> GetClassList()
         {
-            return Classes.Select(classInDiagram => classInDiagram.XMIParsedClass);
+            return Classes.Select(classInDiagram => classInDiagram.ParsedClass);
         }
+
         public IEnumerable<Relation> GetRelationList()
         {
-            return Relations.Select(relationInDiagram => relationInDiagram.XMIParsedRelation);
+            return Relations.Select(relationInDiagram => relationInDiagram.ParsedRelation);
         }
     }
 }

@@ -5,23 +5,25 @@ using System.Xml;
 using System.Text;
 using AnimArch.Visualization.Diagrams;
 using AnimArch.Visualization.Animating;
+using UnityEngine;
 using Attribute = AnimArch.Visualization.Diagrams.Attribute;
 
-namespace AnimArch.XMIParsing
+namespace AnimArch.Parsing
 {
-    public static class XMIParser
+    public class XMIParser
     {
-        private static List<string> ParseCurrentDiagramElementsIDs()
+        public static XmlDocument OpenDiagram()
         {
-            //Document
-            var xmlDoc = new XmlDocument(); // Create an XML document object
+            var xmlDoc = new XmlDocument();
             var encoding = Encoding.GetEncoding("UTF-8");
-            //System.IO.StreamReader reader = new System.IO.StreamReader(path, System.Text.Encoding.GetEncoding("Windows-1252"), true);
             var xmlText = System.IO.File.ReadAllText(AnimationData.Instance.GetDiagramPath(), encoding);
-            xmlDoc.LoadXml(xmlText); // Load the XML document from the specified file
+            xmlDoc.LoadXml(xmlText);
+            return xmlDoc;
+        }
 
+        private static List<string> ParseCurrentDiagramElementsIDs(XmlDocument xmlDoc)
+        {
             var currDiagramID = AnimationData.Instance.diagramId.ToString();
-            //pridaj vsetky elementy patriace current otvorenemu diagramu
             var currDiagramElements = new List<string>();
             var diagrams = xmlDoc.GetElementsByTagName("diagrams");
             var d = diagrams[0].ChildNodes;
@@ -47,17 +49,13 @@ namespace AnimArch.XMIParsing
             return currDiagramElements;
         }
 
-        public static List<Class> ParseClasses()
+        public static List<Class> ParseClasses(XmlDocument xmlDoc)
         {
             var XMIClassList = new List<Class>();
-            var xmlDoc = new XmlDocument(); // Create an XML document object
-            // Load the XML document from the specified file
-            var encoding = Encoding.GetEncoding("UTF-8");
-            var xml = System.IO.File.ReadAllText(AnimationData.Instance.GetDiagramPath(), encoding);
-            xmlDoc.LoadXml(xml);
+
             var currDiagramID = AnimationData.Instance.diagramId.ToString();
             //string currDiagramID = System.IO.File.ReadAllText(currDiagramIDPath);
-            var currDiagramElements = ParseCurrentDiagramElementsIDs();
+            var currDiagramElements = ParseCurrentDiagramElementsIDs(xmlDoc);
 
             // Get elements
             // var classNodeList = xmlDoc.GetElementsByTagName("UML:Class");
@@ -254,16 +252,11 @@ namespace AnimArch.XMIParsing
             return XMIClassList;
         }
 
-        public static List<Relation> ParseRelations()
+        public static List<Relation> ParseRelations(XmlDocument xmlDoc)
         {
             var connectorClassesList = new List<Relation>();
 
-            var xmlDoc = new XmlDocument(); // Create an XML document object
-            var encoding = Encoding.GetEncoding("UTF-8");
-            var xmlText = System.IO.File.ReadAllText(AnimationData.Instance.GetDiagramPath(), encoding);
-            // XmlTextReader xmlReader = new XmlTextReader(reader);
-            xmlDoc.LoadXml(xmlText); // Load the XML document from the specified file
-            var currDiagramElements = ParseCurrentDiagramElementsIDs();
+            // var currDiagramElements = ParseCurrentDiagramElementsIDs(xmlDoc);
 
             var connectorClass = xmlDoc.GetElementsByTagName("connectors");
 
@@ -469,7 +462,7 @@ namespace AnimArch.XMIParsing
                          !xmiConnectorClass.TargetModelType.Equals("Class"))) continue;
                     // if (currDiagramElements.Contains(xmiConnectorClass.ConnectorXmiId))
                     // {
-                        connectorClassesList.Add(xmiConnectorClass);
+                    connectorClassesList.Add(xmiConnectorClass);
                     // }
                 }
             }
@@ -526,7 +519,7 @@ namespace AnimArch.XMIParsing
             packageElem.SetAttribute("name", "SAVETEST");
             packageElem.SetAttribute("scope", "public");
             elements.AppendChild(packageElem);
-            foreach (var xmiClass in DiagramPool.Instance.ClassDiagram.Classes.Select(x => x.XMIParsedClass))
+            foreach (var xmiClass in DiagramPool.Instance.ClassDiagram.GetClassList())
             {
                 var element = doc.CreateElement("element");
                 element.SetAttribute("type", xmiUri, xmiClass.Type);
@@ -538,7 +531,7 @@ namespace AnimArch.XMIParsing
                 var geometryElement = doc.CreateElement("element");
                 geometryElement.SetAttribute("subject", xmiClass.XmiId);
                 geometryElement.SetAttribute("geometry", "Left=" + Math.Floor(xmiClass.Left) +
-                                                         ";Top=" + Math.Floor(xmiClass.Top) +
+                                                         ";Top=" + Math.Floor(-xmiClass.Top) +
                                                          ";Right=" + Math.Floor(xmiClass.Right) +
                                                          ";Bottom=" + Math.Floor(xmiClass.Bottom) + ";");
                 diagramElements.AppendChild(geometryElement);
@@ -616,24 +609,25 @@ namespace AnimArch.XMIParsing
                 }
             }
 
-            foreach (var relation in DiagramPool.Instance.ClassDiagram.Relations.Select(x => x.XMIParsedRelation))
+            foreach (var relation in DiagramPool.Instance.ClassDiagram.GetRelationList())
             {
                 var connector = doc.CreateElement("connector");
-                connector.SetAttribute("idref", xmiUri, relation.FromClass + relation.ToClass + relation.PropertiesEaType);
+                connector.SetAttribute("idref", xmiUri,
+                    relation.FromClass + relation.ToClass + relation.PropertiesEaType);
                 var source = doc.CreateElement("source");
                 var sourceModel = doc.CreateElement("model");
                 sourceModel.SetAttribute("type", "Class");
                 sourceModel.SetAttribute("name", relation.FromClass);
                 source.AppendChild(sourceModel);
                 connector.AppendChild(source);
-            
+
                 var target = doc.CreateElement("target");
                 var targetModel = doc.CreateElement("model");
                 targetModel.SetAttribute("type", "Class");
                 targetModel.SetAttribute("name", relation.ToClass);
                 target.AppendChild(targetModel);
                 connector.AppendChild(target);
-            
+
                 var properties = doc.CreateElement("properties");
                 properties.SetAttribute("ea_type", relation.PropertiesEaType);
                 properties.SetAttribute("direction", relation.PropertiesDirection);
