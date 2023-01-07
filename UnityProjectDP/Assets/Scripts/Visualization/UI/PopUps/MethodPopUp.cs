@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using TMPro;
 using AnimArch.Visualization.Diagrams;
+using Microsoft.Msagl.Core.DataStructures;
 
 namespace AnimArch.Visualization.UI
 {
@@ -11,10 +13,23 @@ namespace AnimArch.Visualization.UI
         private TMP_Text _methodText;
         [SerializeField] Transform parameterContent;
         private List<string> _parameters = new();
+        private readonly HashSet<TMP_Dropdown.OptionData> _variableData = new();
+        
+        private void UpdateDropdown()
+        {
+            var classNames = DiagramPool.Instance.ClassDiagram.GetClassList().Select(x => x.Name);
+            
+            dropdown.options.RemoveAll(x => _variableData.Contains(x));
+            _variableData.Clear();
+            _variableData.UnionWith(classNames.Select(x => new TMP_Dropdown.OptionData(x)));
+            dropdown.options.AddRange(_variableData);
+        }
+
 
         public void ActivateCreation(TMP_Text classTxt, TMP_Text mtdTxt)
         {
             ActivateCreation(classTxt);
+            UpdateDropdown();
         }
 
         public override void Confirmation()

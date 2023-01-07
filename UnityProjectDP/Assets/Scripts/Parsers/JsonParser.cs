@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Xml;
 using AnimArch.Visualization.Animating;
 using AnimArch.Visualization.Diagrams;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace AnimArch.Parsing
 {
@@ -26,9 +22,8 @@ namespace AnimArch.Parsing
             var serializedClasses =
                 JsonConvert.SerializeObject(DiagramPool.Instance.ClassDiagram.GetClassList());
             ClassEditor.ReverseClassesGeometry();
-            
-            var serializedRelations = JsonConvert.SerializeObject(
-                DiagramPool.Instance.ClassDiagram.GetRelationList());
+
+            var serializedRelations = JsonConvert.SerializeObject(DiagramPool.Instance.ClassDiagram.GetRelationList());
             var serializedDiagram = "{\"classes\":" + serializedClasses + ",\"relations\":" + serializedRelations + "}";
             return serializedDiagram;
         }

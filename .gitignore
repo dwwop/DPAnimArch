@@ -60,3 +60,8 @@ crashlytics-build.properties
 
 UnityProjectDP/.DS_Store
 .DS_Store
+UnityProjectDP/Assets/Resources/SAVETEST.json
+UnityProjectDP/Assets/Resources/SAVETEST.json.meta
+UnityProjectDP/Assets/Resources/SAVETEST.xml
+UnityProjectDP/Assets/Resources/SAVETEST.xml.meta
+*.meta

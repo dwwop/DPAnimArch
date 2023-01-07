@@ -5,7 +5,6 @@ using System.Xml;
 using System.Text;
 using AnimArch.Visualization.Diagrams;
 using AnimArch.Visualization.Animating;
-using UnityEngine;
 using Attribute = AnimArch.Visualization.Diagrams.Attribute;
 
 namespace AnimArch.Parsing
