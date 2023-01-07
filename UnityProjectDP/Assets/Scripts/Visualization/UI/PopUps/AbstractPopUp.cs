@@ -10,7 +10,7 @@ namespace AnimArch.Visualization.UI
         public TMP_InputField inp;
         protected TMP_Text className;
 
-        public void ActivateCreation(TMP_Text classTxt)
+        public virtual void ActivateCreation(TMP_Text classTxt)
         {
             panel.SetActive(true);
             className = classTxt;

@@ -10,10 +10,11 @@ namespace AnimArch.Visualization.UI
     public class MethodPopUp : AbstractPopUp
     {
         public TMP_Dropdown dropdown;
-        private TMP_Text _methodText;
+        public TMP_Text confirm;
         [SerializeField] Transform parameterContent;
         private List<string> _parameters = new();
         private readonly HashSet<TMP_Dropdown.OptionData> _variableData = new();
+        private string _formerName;
         
         private void UpdateDropdown()
         {
@@ -26,11 +27,28 @@ namespace AnimArch.Visualization.UI
         }
 
 
-        public void ActivateCreation(TMP_Text classTxt, TMP_Text mtdTxt)
+        public override void ActivateCreation(TMP_Text classTxt)
+        {
+            base.ActivateCreation(classTxt);
+            UpdateDropdown();
+            confirm.text = "Add";
+        }
+        
+        
+        public void ActivateCreation(TMP_Text classTxt, TMP_Text methodTxt)
         {
             ActivateCreation(classTxt);
-            UpdateDropdown();
+
+            var formerMethod = ClassEditor.GetMethodFromString(methodTxt.text);
+            inp.text = formerMethod.Name;
+            
+            dropdown.value = dropdown.options.FindIndex(x => x.text == formerMethod.ReturnValue);
+            _parameters = formerMethod.arguments;
+            parameterContent.GetComponentInChildren<TMP_Text>().text = _parameters.Aggregate((a, b) => a + ",\n" + b);
+            _formerName = formerMethod.Name;
+            confirm.text = "Edit";
         }
+
 
         public override void Confirmation()
         {
@@ -40,14 +58,20 @@ namespace AnimArch.Visualization.UI
                 return;
             }
 
-            var method = new Method
+            var newMethod = new Method
             {
                 Name = inp.text,
                 ReturnValue = dropdown.options[dropdown.value].text,
                 arguments = _parameters
             };
-            ClassEditor.AddMethod(className.text, method, ClassEditor.Source.editor);
-
+            if (_formerName == null)
+                ClassEditor.AddMethod(className.text, newMethod, ClassEditor.Source.editor);
+            else
+            {
+                ClassEditor.UpdateMethod(className.text, _formerName, newMethod);
+                _formerName = null;
+            }
+            
             Deactivate();
         }
 
@@ -56,6 +80,7 @@ namespace AnimArch.Visualization.UI
             base.Deactivate();
             _parameters = new List<string>();
             parameterContent.GetComponentInChildren<TMP_Text>().text = "";
+            dropdown.value = 0;
         }
 
         public void AddArg(string parameter)

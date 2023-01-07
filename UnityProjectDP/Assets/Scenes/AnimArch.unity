@@ -4545,6 +4545,10 @@ MonoBehaviour:
     type: 3}
   classPrefab: {fileID: 1226358218867430, guid: a6ff44ea34772e341bd52a30b491e1f7,
     type: 3}
+  classAttributePrefab: {fileID: 3261782976684401946, guid: a71e905c2fd88e14fafcf1cf1c3d1655,
+    type: 3}
+  classMethodPrefab: {fileID: 3261782976684401946, guid: b3cccdbc4704aed4789d6dd9d1944ae7,
+    type: 3}
   associationNonePrefab: {fileID: 844717564252624985, guid: 1c28fa26d2cf6df44b25e925c7e7b7bb,
     type: 3}
   associationFullPrefab: {fileID: 5632121676657761073, guid: f5e847a3c4d5cc446b64958e7c2174d3,
@@ -6020,9 +6024,9 @@ MonoBehaviour:
   m_fontSize: 14
   m_fontSizeBase: 14
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 5
+  m_fontSizeMax: 14
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -15378,9 +15382,9 @@ MonoBehaviour:
   m_fontSize: 14
   m_fontSizeBase: 14
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 5
+  m_fontSizeMax: 14
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -20864,9 +20868,9 @@ MonoBehaviour:
   m_fontSize: 14
   m_fontSizeBase: 14
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 5
+  m_fontSizeMax: 14
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -21131,6 +21135,7 @@ MonoBehaviour:
   panel: {fileID: 1093984232}
   inp: {fileID: 551347425}
   dropdown: {fileID: 1154320102}
+  confirm: {fileID: 1407883468}
   parameterContent: {fileID: 1162187659}
 --- !u!114 &1093984235
 MonoBehaviour:
@@ -27035,7 +27040,7 @@ GameObject:
   - component: {fileID: 1407883469}
   - component: {fileID: 1407883468}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: MethodPConfirmText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31863,7 +31868,7 @@ GameObject:
   - component: {fileID: 1675821818}
   - component: {fileID: 1675821817}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: ArtPConfirmText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37483,6 +37488,7 @@ MonoBehaviour:
   inp: {fileID: 460123917}
   dropdown: {fileID: 1317800477}
   isArray: {fileID: 195590416}
+  confirm: {fileID: 1675821817}
 --- !u!1 &1971575039
 GameObject:
   m_ObjectHideFlags: 0

@@ -175,7 +175,7 @@ namespace Networking
         [ServerRpc(RequireOwnership = false)]
         public void SetPositionServerRpc(string className, Vector3 position)
         {
-            ClassEditor.Instance.SetPosition(className, position, true);
+            ClassEditor.SetPosition(className, position, true);
         }
 
         [ClientRpc]
@@ -183,7 +183,7 @@ namespace Networking
         {
             if (IsServer)
                 return;
-            ClassEditor.Instance.SetPosition(className, position, true);
+            ClassEditor.SetPosition(className, position, true);
         }
     }
 }

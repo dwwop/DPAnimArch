@@ -114,7 +114,7 @@ namespace AnimArch.Visualization.Diagrams
             _id++;
             return tempCdClass;
         }
-        
+
         public static void ReverseClassesGeometry()
         {
             foreach (var parsedClass in DiagramPool.Instance.ClassDiagram.GetClassList())
@@ -122,6 +122,7 @@ namespace AnimArch.Visualization.Diagrams
                 parsedClass.Top *= -1;
             }
         }
+
         private static string CurrentClassName(string name, ref CDClass TempCdClass)
         {
             TempCdClass = null;
@@ -231,7 +232,7 @@ namespace AnimArch.Visualization.Diagrams
                         AddMethod(currentClass.Name, method, Source.loader);
                     }
                 }
-                
+
                 currentClass.Top *= -1;
             }
 
@@ -354,7 +355,7 @@ namespace AnimArch.Visualization.Diagrams
             DiagramPool.Instance.ClassDiagram.Relations.Add(relInDiag);
             return relInDiag;
         }
-        
+
         public static void SetClassName(string targetClass, string newName, bool fromRpc)
         {
             if (!fromRpc)
@@ -398,9 +399,28 @@ namespace AnimArch.Visualization.Diagrams
                 }
             }
 
-            arguments += ") :";
+            arguments += "): ";
 
             return method.Name + arguments + method.ReturnValue + "\n";
+        }
+        
+        public static Method GetMethodFromString(string str)
+        {
+            
+            var method = new Method();
+
+            
+            var parts = str.Split(new[] { ": ", "\n" }, StringSplitOptions.None);
+
+            
+            var nameAndArguments = parts[0].Split(new[] { "(", ")" }, StringSplitOptions.None);
+            method.Name = nameAndArguments[0];
+            method.ReturnValue = parts[1];
+
+            
+            method.arguments = new List<string>(nameAndArguments[1].Split(','));
+
+            return method;
         }
 
         public static void AddMethod(string targetClass, Method methodToAdd, Source source)
@@ -490,8 +510,53 @@ namespace AnimArch.Visualization.Diagrams
             AddTmProAttribute(classInDiagram.VisualObject, attributeText);
         }
 
+        public static bool UpdateAttribute(string targetClass, string oldAttribute, Attribute newAttribute)
+        {
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
+            if (classInDiagram == null)
+            {
+                return false;
+            }
+
+            if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(targetClass, newAttribute.Name) != null)
+                return false;
+
+            var index = classInDiagram.ParsedClass.Attributes.FindIndex(x => x.Name == oldAttribute);
+            var formerName = classInDiagram.ParsedClass.Attributes[index].Name;
+            var formerType = classInDiagram.ParsedClass.Attributes[index].Type;
+            newAttribute.Id = classInDiagram.ParsedClass.Attributes[index].Id;
+            classInDiagram.ParsedClass.Attributes[index] = newAttribute;
+
+            var oldAttributeText = formerName + ": " + formerType + "\n";
+            var newAttributeText = newAttribute.Name + ": " + newAttribute.Type + "\n";
+            UpdateTmProAttribute(classInDiagram.VisualObject, oldAttributeText, newAttributeText);
+            return true;
+        }
+
+        public static bool UpdateMethod(string targetClass, string oldMethod, Method newMethod)
+        {
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
+            if (classInDiagram == null)
+            {
+                return false;
+            }
+
+            if (DiagramPool.Instance.ClassDiagram.FindMethodByName(targetClass, newMethod.Name) != null)
+                return false;
+            
+            
+            var index = classInDiagram.ParsedClass.Methods.FindIndex(x => x.Name == oldMethod);
+            var formerMethodTxt = StringMethod(classInDiagram.ParsedClass.Methods[index]);
+            newMethod.Id = classInDiagram.ParsedClass.Methods[index].Id;
+            classInDiagram.ParsedClass.Methods[index] = newMethod;
+
+            var newMethodTxt = StringMethod(newMethod);
+            UpdateTmProMethod(classInDiagram.VisualObject, formerMethodTxt, newMethodTxt);
+            return true;
+        }
+
         // called at manual layout
-        public void SetPosition(string className, Vector3 position, bool fromRpc)
+        public static void SetPosition(string className, Vector3 position, bool fromRpc)
         {
             if (!fromRpc)
                 Spawner.Instance.SetPosition(className, position);
@@ -516,23 +581,60 @@ namespace AnimArch.Visualization.Diagrams
 
         private static void AddTmProMethod(GameObject classGo, string method)
         {
-            classGo.transform
+            var attributesTransform = classGo.transform
                 .Find("Background")
                 .Find("Methods")
-                .GetComponent<TextMeshProUGUI>()
-                .text += method;
+                .Find("LayoutGroup");
+
+            var instance = Instantiate(DiagramPool.Instance.classMethodPrefab, attributesTransform, false);
+            instance.name = method;
+            instance.transform.Find("MethodText").GetComponent<TextMeshProUGUI>().text += method;
+            
+            instance.GetComponent<MethodPopUpManager>().classTxt =
+                classGo.transform.Find("Background").Find("Header").GetComponent<TextMeshProUGUI>();
+        }
+
+        private static void UpdateTmProMethod(GameObject classGo, string oldMethodText, string newMethodText)
+        {
+            var oldMethod = classGo.transform
+                .Find("Background")
+                .Find("Methods")
+                .Find("LayoutGroup")
+                .Find(oldMethodText);
+
+            oldMethod.name = newMethodText;
+            oldMethod.Find("MethodText").GetComponent<TextMeshProUGUI>().text = newMethodText;
         }
 
 
         private static void AddTmProAttribute(GameObject classGo, string attribute)
         {
-            classGo.transform
+            var attributesTransform = classGo.transform
                 .Find("Background")
                 .Find("Attributes")
-                .GetComponent<TextMeshProUGUI>()
-                .text += attribute;
+                .Find("LayoutGroup");
+
+            var instance = Instantiate(DiagramPool.Instance.classAttributePrefab, attributesTransform, false);
+            instance.name = attribute;
+            instance.transform.Find("AttributeText").GetComponent<TextMeshProUGUI>().text += attribute;
+
+            instance.GetComponent<AttributePopUpManager>().classTxt =
+                classGo.transform.Find("Background").Find("Header").GetComponent<TextMeshProUGUI>();
         }
 
+        private static void UpdateTmProAttribute(GameObject classGo, string oldAttributeText, string newAttributeText)
+        {
+            var oldAttribute = classGo.transform
+                .Find("Background")
+                .Find("Attributes")
+                .Find("LayoutGroup")
+                .Find(oldAttributeText);
+
+            oldAttribute.name = newAttributeText;
+            oldAttribute.Find("AttributeText").GetComponent<TextMeshProUGUI>().text = newAttributeText;
+        }
+        
+        
         public void ResetGraph()
         {
             _graph = null;

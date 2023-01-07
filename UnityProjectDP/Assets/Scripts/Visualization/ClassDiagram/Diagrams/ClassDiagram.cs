@@ -100,7 +100,7 @@ namespace AnimArch.Visualization.Diagrams
                 var x = classInDiagram.ParsedClass.Left * 1.25f;
                 var y = classInDiagram.ParsedClass.Top * 1.25f;
                 var z = classInDiagram.VisualObject.GetComponent<RectTransform>().position.z;
-                ClassEditor.Instance.SetPosition(classInDiagram.ParsedClass.Name, new Vector3(x, y, z), false);
+                ClassEditor.SetPosition(classInDiagram.ParsedClass.Name, new Vector3(x, y, z), false);
             }
         }
 
