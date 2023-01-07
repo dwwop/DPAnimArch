@@ -384,9 +384,27 @@ namespace AnimArch.Visualization.Diagrams
                 relationInDiagram.ParsedRelation.TargetModelName = newName;
                 relationInDiagram.RelationInfo.ToClass = newName;
             }
+            
+            foreach (var attribute in classInDiagram.VisualObject.transform
+                         .Find("Background")
+                         .Find("Attributes")
+                         .Find("LayoutGroup").GetComponents<AttributePopUpManager>())
+            {
+                attribute.classTxt =
+                    classInDiagram.VisualObject.transform.Find("Background").Find("Header").GetComponent<TextMeshProUGUI>();
+            }
+            
+            foreach (var method in classInDiagram.VisualObject.transform
+                         .Find("Background")
+                         .Find("Methods")
+                         .Find("LayoutGroup").GetComponents<MethodPopUpManager>())
+            {
+                method.classTxt =
+                    classInDiagram.VisualObject.transform.Find("Background").Find("Header").GetComponent<TextMeshProUGUI>();
+            }
         }
 
-        private static string StringMethod(Method method)
+        private static string getStringFromMethod(Method method)
         {
             var arguments = "(";
             if (method.arguments != null)
@@ -437,7 +455,7 @@ namespace AnimArch.Visualization.Diagrams
                 case Source.loader:
                     Spawner.Instance.AddMethod(targetClass, methodToAdd.Name, methodToAdd.ReturnValue);
                     var node = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass).VisualObject;
-                    AddTmProMethod(node, StringMethod(methodToAdd));
+                    AddTmProMethod(node, getStringFromMethod(methodToAdd));
                     break;
             }
         }
@@ -480,7 +498,7 @@ namespace AnimArch.Visualization.Diagrams
 
             cdClass.AddMethod(cdMethod);
 
-            AddTmProMethod(classInDiagram.VisualObject, StringMethod(methodToAdd));
+            AddTmProMethod(classInDiagram.VisualObject, getStringFromMethod(methodToAdd));
         }
 
 
@@ -546,11 +564,11 @@ namespace AnimArch.Visualization.Diagrams
             
             
             var index = classInDiagram.ParsedClass.Methods.FindIndex(x => x.Name == oldMethod);
-            var formerMethodTxt = StringMethod(classInDiagram.ParsedClass.Methods[index]);
+            var formerMethodTxt = getStringFromMethod(classInDiagram.ParsedClass.Methods[index]);
             newMethod.Id = classInDiagram.ParsedClass.Methods[index].Id;
             classInDiagram.ParsedClass.Methods[index] = newMethod;
 
-            var newMethodTxt = StringMethod(newMethod);
+            var newMethodTxt = getStringFromMethod(newMethod);
             UpdateTmProMethod(classInDiagram.VisualObject, formerMethodTxt, newMethodTxt);
             return true;
         }
