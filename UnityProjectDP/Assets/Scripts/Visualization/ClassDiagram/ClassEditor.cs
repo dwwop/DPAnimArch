@@ -106,13 +106,18 @@ namespace AnimArch.Visualization.Diagrams
             SetPosition(node);
             if (classInDiagram.ParsedClass.Left == 0)
             {
-                var position = classInDiagram.VisualObject.transform.localPosition;
-                classInDiagram.ParsedClass.Left = position.x / 2.5f;
-                classInDiagram.ParsedClass.Top = position.y / 2.5f;
+                SetClassGeometry(classInDiagram);
             }
 
             _id++;
             return tempCdClass;
+        }
+
+        public static void SetClassGeometry(ClassInDiagram classInDiagram)
+        {
+            var position = classInDiagram.VisualObject.transform.localPosition;
+            classInDiagram.ParsedClass.Left = position.x / 2.5f;
+            classInDiagram.ParsedClass.Top = position.y / 2.5f;
         }
 
         public static void ReverseClassesGeometry()
@@ -384,23 +389,25 @@ namespace AnimArch.Visualization.Diagrams
                 relationInDiagram.ParsedRelation.TargetModelName = newName;
                 relationInDiagram.RelationInfo.ToClass = newName;
             }
-            
+
             foreach (var attribute in classInDiagram.VisualObject.transform
                          .Find("Background")
                          .Find("Attributes")
                          .Find("LayoutGroup").GetComponents<AttributePopUpManager>())
             {
                 attribute.classTxt =
-                    classInDiagram.VisualObject.transform.Find("Background").Find("Header").GetComponent<TextMeshProUGUI>();
+                    classInDiagram.VisualObject.transform.Find("Background").Find("Header")
+                        .GetComponent<TextMeshProUGUI>();
             }
-            
+
             foreach (var method in classInDiagram.VisualObject.transform
                          .Find("Background")
                          .Find("Methods")
                          .Find("LayoutGroup").GetComponents<MethodPopUpManager>())
             {
                 method.classTxt =
-                    classInDiagram.VisualObject.transform.Find("Background").Find("Header").GetComponent<TextMeshProUGUI>();
+                    classInDiagram.VisualObject.transform.Find("Background").Find("Header")
+                        .GetComponent<TextMeshProUGUI>();
             }
         }
 
@@ -421,21 +428,20 @@ namespace AnimArch.Visualization.Diagrams
 
             return method.Name + arguments + method.ReturnValue + "\n";
         }
-        
+
         public static Method GetMethodFromString(string str)
         {
-            
             var method = new Method();
 
-            
+
             var parts = str.Split(new[] { ": ", "\n" }, StringSplitOptions.None);
 
-            
+
             var nameAndArguments = parts[0].Split(new[] { "(", ")" }, StringSplitOptions.None);
             method.Name = nameAndArguments[0];
             method.ReturnValue = parts[1];
 
-            
+
             method.arguments = new List<string>(nameAndArguments[1].Split(','));
 
             return method;
@@ -561,8 +567,8 @@ namespace AnimArch.Visualization.Diagrams
 
             if (DiagramPool.Instance.ClassDiagram.FindMethodByName(targetClass, newMethod.Name) != null)
                 return false;
-            
-            
+
+
             var index = classInDiagram.ParsedClass.Methods.FindIndex(x => x.Name == oldMethod);
             var formerMethodTxt = getStringFromMethod(classInDiagram.ParsedClass.Methods[index]);
             newMethod.Id = classInDiagram.ParsedClass.Methods[index].Id;
@@ -607,7 +613,7 @@ namespace AnimArch.Visualization.Diagrams
             var instance = Instantiate(DiagramPool.Instance.classMethodPrefab, attributesTransform, false);
             instance.name = method;
             instance.transform.Find("MethodText").GetComponent<TextMeshProUGUI>().text += method;
-            
+
             instance.GetComponent<MethodPopUpManager>().classTxt =
                 classGo.transform.Find("Background").Find("Header").GetComponent<TextMeshProUGUI>();
         }
@@ -651,8 +657,8 @@ namespace AnimArch.Visualization.Diagrams
             oldAttribute.name = newAttributeText;
             oldAttribute.Find("AttributeText").GetComponent<TextMeshProUGUI>().text = newAttributeText;
         }
-        
-        
+
+
         public void ResetGraph()
         {
             _graph = null;
