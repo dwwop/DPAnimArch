@@ -396,7 +396,7 @@ namespace AnimArch.Visualization.Diagrams
                          .Find("LayoutGroup").GetComponents<AttributePopUpManager>())
             {
                 attribute.classTxt =
-                    classInDiagram.VisualObject.transform.Find("Background").Find("Header")
+                    classInDiagram.VisualObject.transform.Find("Background").Find("HeaderLayout").Find("Header")
                         .GetComponent<TextMeshProUGUI>();
             }
 
@@ -406,7 +406,7 @@ namespace AnimArch.Visualization.Diagrams
                          .Find("LayoutGroup").GetComponents<MethodPopUpManager>())
             {
                 method.classTxt =
-                    classInDiagram.VisualObject.transform.Find("Background").Find("Header")
+                    classInDiagram.VisualObject.transform.Find("Background").Find("HeaderLayout").Find("Header")
                         .GetComponent<TextMeshProUGUI>();
             }
         }
@@ -598,6 +598,7 @@ namespace AnimArch.Visualization.Diagrams
         {
             classGo.transform
                 .Find("Background")
+                .Find("HeaderLayout")
                 .Find("Header")
                 .GetComponent<TextMeshProUGUI>()
                 .text = name;
@@ -615,7 +616,7 @@ namespace AnimArch.Visualization.Diagrams
             instance.transform.Find("MethodText").GetComponent<TextMeshProUGUI>().text += method;
 
             instance.GetComponent<MethodPopUpManager>().classTxt =
-                classGo.transform.Find("Background").Find("Header").GetComponent<TextMeshProUGUI>();
+                classGo.transform.Find("Background").Find("HeaderLayout").Find("Header").GetComponent<TextMeshProUGUI>();
         }
 
         private static void UpdateTmProMethod(GameObject classGo, string oldMethodText, string newMethodText)
@@ -643,7 +644,7 @@ namespace AnimArch.Visualization.Diagrams
             instance.transform.Find("AttributeText").GetComponent<TextMeshProUGUI>().text += attribute;
 
             instance.GetComponent<AttributePopUpManager>().classTxt =
-                classGo.transform.Find("Background").Find("Header").GetComponent<TextMeshProUGUI>();
+                classGo.transform.Find("Background").Find("HeaderLayout").Find("Header").GetComponent<TextMeshProUGUI>();
         }
 
         private static void UpdateTmProAttribute(GameObject classGo, string oldAttributeText, string newAttributeText)

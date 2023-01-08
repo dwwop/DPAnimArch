@@ -128,7 +128,7 @@ namespace AnimArch.Visualization.Diagrams
             node.SetActive(false);
             node.name = Object.VariableName + " : " + Object.Class.ParsedClass.Name;
             var background = node.transform.Find("Background");
-            var header = background.Find("Header");
+            var header = background.Find("HeaderLayout").Find("Header");
             var attributes = background.Find("Attributes");
             var methods = background.Find("Methods");
 
