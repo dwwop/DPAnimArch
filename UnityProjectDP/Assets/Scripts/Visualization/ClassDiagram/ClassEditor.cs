@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using AnimArch.Extensions;
 using AnimArch.Parsing;
 using AnimArch.Visualization.Animating;
 using AnimArch.Visualization.UI;
@@ -8,6 +9,8 @@ using Networking;
 using OALProgramControl;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -15,7 +18,7 @@ namespace AnimArch.Visualization.Diagrams
     {
         private int _id;
         private Graph _graph;
-        private bool _active;
+        public bool active;
         private GameObject _node;
         private string _relType;
 
@@ -39,22 +42,33 @@ namespace AnimArch.Visualization.Diagrams
 
         public void InitializeCreation()
         {
-            if (!_graph)
-            {
-                _graph = DiagramPool.Instance.ClassDiagram.graph
-                    ? DiagramPool.Instance.ClassDiagram.graph
-                    : DiagramPool.Instance.ClassDiagram.CreateGraph();
+            if (_graph) return;
 
-                _id = 0;
-            }
+            _graph = DiagramPool.Instance.ClassDiagram.graph
+                ? DiagramPool.Instance.ClassDiagram.graph
+                : DiagramPool.Instance.ClassDiagram.CreateGraph();
 
-            _active = true;
+            _id = 0;
+        }
+
+        public void StartEditing()
+        {
+            if (_graph != null)
+                DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<Button>(includeInactive: true)
+                    .ForEach(x => x.gameObject.SetActive(true));
+
+            InitializeCreation();
+
+            active = true;
         }
 
         public void Uninitialize()
         {
-            _active = false;
+            active = false;
             MenuManager.Instance.isSelectingNode = false;
+
+            DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<Button>()
+                .ForEach(x => x.gameObject.SetActive(false));
         }
 
         public void CreateNode()
@@ -251,7 +265,7 @@ namespace AnimArch.Visualization.Diagrams
 
         public void SelectNode(GameObject selected)
         {
-            if (!_active || !MenuManager.Instance.isSelectingNode) return;
+            if (!active || !MenuManager.Instance.isSelectingNode) return;
             if (selected == _node)
             {
                 Animating.Animation.Instance.HighlightClass(_node.name, false);
@@ -411,7 +425,7 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-        private static string getStringFromMethod(Method method)
+        private static string GetStringFromMethod(Method method)
         {
             var arguments = "(";
             if (method.arguments != null)
@@ -461,7 +475,7 @@ namespace AnimArch.Visualization.Diagrams
                 case Source.loader:
                     Spawner.Instance.AddMethod(targetClass, methodToAdd.Name, methodToAdd.ReturnValue);
                     var node = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass).VisualObject;
-                    AddTmProMethod(node, getStringFromMethod(methodToAdd));
+                    AddTmProMethod(node, GetStringFromMethod(methodToAdd));
                     break;
             }
         }
@@ -504,7 +518,7 @@ namespace AnimArch.Visualization.Diagrams
 
             cdClass.AddMethod(cdMethod);
 
-            AddTmProMethod(classInDiagram.VisualObject, getStringFromMethod(methodToAdd));
+            AddTmProMethod(classInDiagram.VisualObject, GetStringFromMethod(methodToAdd));
         }
 
 
@@ -570,11 +584,11 @@ namespace AnimArch.Visualization.Diagrams
 
 
             var index = classInDiagram.ParsedClass.Methods.FindIndex(x => x.Name == oldMethod);
-            var formerMethodTxt = getStringFromMethod(classInDiagram.ParsedClass.Methods[index]);
+            var formerMethodTxt = GetStringFromMethod(classInDiagram.ParsedClass.Methods[index]);
             newMethod.Id = classInDiagram.ParsedClass.Methods[index].Id;
             classInDiagram.ParsedClass.Methods[index] = newMethod;
 
-            var newMethodTxt = getStringFromMethod(newMethod);
+            var newMethodTxt = GetStringFromMethod(newMethod);
             UpdateTmProMethod(classInDiagram.VisualObject, formerMethodTxt, newMethodTxt);
             return true;
         }
@@ -616,7 +630,12 @@ namespace AnimArch.Visualization.Diagrams
             instance.transform.Find("MethodText").GetComponent<TextMeshProUGUI>().text += method;
 
             instance.GetComponent<MethodPopUpManager>().classTxt =
-                classGo.transform.Find("Background").Find("HeaderLayout").Find("Header").GetComponent<TextMeshProUGUI>();
+                classGo.transform.Find("Background").Find("HeaderLayout").Find("Header")
+                    .GetComponent<TextMeshProUGUI>();
+            
+            if (Instance.active)
+                instance.GetComponentsInChildren<Button>(includeInactive: true)
+                    .ForEach(x => x.gameObject.SetActive(true));
         }
 
         private static void UpdateTmProMethod(GameObject classGo, string oldMethodText, string newMethodText)
@@ -631,7 +650,6 @@ namespace AnimArch.Visualization.Diagrams
             oldMethod.Find("MethodText").GetComponent<TextMeshProUGUI>().text = newMethodText;
         }
 
-
         private static void AddTmProAttribute(GameObject classGo, string attribute)
         {
             var attributesTransform = classGo.transform
@@ -644,7 +662,12 @@ namespace AnimArch.Visualization.Diagrams
             instance.transform.Find("AttributeText").GetComponent<TextMeshProUGUI>().text += attribute;
 
             instance.GetComponent<AttributePopUpManager>().classTxt =
-                classGo.transform.Find("Background").Find("HeaderLayout").Find("Header").GetComponent<TextMeshProUGUI>();
+                classGo.transform.Find("Background").Find("HeaderLayout").Find("Header")
+                    .GetComponent<TextMeshProUGUI>();
+            
+            if (Instance.active)
+                instance.GetComponentsInChildren<Button>(includeInactive: true)
+                    .ForEach(x => x.gameObject.SetActive(true));
         }
 
         private static void UpdateTmProAttribute(GameObject classGo, string oldAttributeText, string newAttributeText)
