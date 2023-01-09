@@ -10363,7 +10363,7 @@ RectTransform:
   - {fileID: 681114529}
   - {fileID: 1202379813}
   m_Father: {fileID: 1717392268}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -20662,6 +20662,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _persistent: 1
+  active: 0
   atrPopUp: {fileID: 1969025750}
   mtdPopUp: {fileID: 1093984234}
   classPopUp: {fileID: 1480568710}
@@ -31298,19 +31299,19 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1656337404}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 713113989}
   - {fileID: 714704756}
-  m_Father: {fileID: 1717392268}
-  m_RootOrder: 7
+  m_Father: {fileID: 1739363761}
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 432.8, y: -286.1}
+  m_AnchoredPosition: {x: 2.5029907, y: -247.09996}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1656337406
@@ -32640,7 +32641,6 @@ RectTransform:
   - {fileID: 311521135}
   - {fileID: 465418582}
   - {fileID: 858352408}
-  - {fileID: 1656337405}
   - {fileID: 1936282283}
   - {fileID: 519741284}
   m_Father: {fileID: 2006193397}
@@ -33158,6 +33158,7 @@ RectTransform:
   - {fileID: 289379907}
   - {fileID: 1055449768}
   - {fileID: 1756900827}
+  - {fileID: 1656337405}
   m_Father: {fileID: 1717392268}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -36603,7 +36604,7 @@ RectTransform:
   - {fileID: 282801507}
   - {fileID: 1172921178}
   m_Father: {fileID: 1717392268}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -40325,6 +40326,30 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1065522497}
+        m_TargetAssemblyTypeName: AnimArch.Visualization.Diagrams.ClassEditor, XDE
+        m_MethodName: StartEditing
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 130593516}
+        m_TargetAssemblyTypeName: AnimArch.Visualization.UI.MenuManager, XDE
+        m_MethodName: UnshowAnimation
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
