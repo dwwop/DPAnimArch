@@ -13,6 +13,7 @@ namespace AnimArch.Visualization.Diagrams
         public GameObject classPrefab;
         public GameObject classAttributePrefab;
         public GameObject classMethodPrefab;
+        public GameObject parameterMethodPrefab;
         public GameObject associationNonePrefab;
         public GameObject associationFullPrefab;
         public GameObject associationSDPrefab;

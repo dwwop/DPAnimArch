@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AnimArch.Extensions;
 using UnityEngine;
 using TMPro;
 using AnimArch.Visualization.Diagrams;
@@ -43,8 +44,7 @@ namespace AnimArch.Visualization.UI
             inp.text = formerMethod.Name;
             
             dropdown.value = dropdown.options.FindIndex(x => x.text == formerMethod.ReturnValue);
-            _parameters = formerMethod.arguments;
-            parameterContent.GetComponentInChildren<TMP_Text>().text = _parameters.Aggregate((a, b) => a + ",\n" + b);
+            formerMethod.arguments.ForEach(AddArg);
             _formerName = formerMethod.Name;
             confirm.text = "Edit";
         }
@@ -79,17 +79,25 @@ namespace AnimArch.Visualization.UI
         {
             base.Deactivate();
             _parameters = new List<string>();
-            parameterContent.GetComponentInChildren<TMP_Text>().text = "";
-            dropdown.value = 0;
+            parameterContent.DetachChildren();
         }
 
         public void AddArg(string parameter)
         {
             _parameters.Add(parameter);
-            parameterContent.GetComponentInChildren<TMP_Text>().text =
-                parameterContent.GetComponentInChildren<TMP_Text>().text == ""
-                    ? parameter
-                    : parameterContent.GetComponentInChildren<TMP_Text>().text + ",\n" + parameter;
+            var instance = Instantiate(DiagramPool.Instance.parameterMethodPrefab, parameterContent, false);
+            instance.name = parameter;
+            instance.transform.Find("ParameterText").GetComponent<TextMeshProUGUI>().text += parameter;
+        }
+
+        public void EditArg(string formerParam, string newParam)
+        {
+            var index = _parameters.FindIndex(x => x == formerParam);
+            _parameters[index] = newParam;
+            parameterContent.GetComponentsInChildren<ParameterPopUpManager>()
+                .First(x => x.parameterTxt.text == formerParam)
+                .parameterTxt.text = newParam;
+
         }
     }
 }

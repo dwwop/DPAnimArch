@@ -25,6 +25,7 @@ namespace AnimArch.Visualization.Diagrams
         public AttributePopUp atrPopUp;
         public MethodPopUp mtdPopUp;
         public ClassPopUp classPopUp;
+        public ParameterPopUp parameterPopUp;
 
         private void Awake()
         {
@@ -456,7 +457,7 @@ namespace AnimArch.Visualization.Diagrams
             method.ReturnValue = parts[1];
 
 
-            method.arguments = new List<string>(nameAndArguments[1].Split(','));
+            method.arguments = new List<string>(nameAndArguments[1].Split(", "));
 
             return method;
         }
