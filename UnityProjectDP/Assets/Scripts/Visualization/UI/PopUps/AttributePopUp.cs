@@ -28,7 +28,6 @@ namespace AnimArch.Visualization.UI
             dropdown.options.AddRange(_variableData);
         }
 
-
         public override void ActivateCreation(TMP_Text classTxt)
         {
             base.ActivateCreation(classTxt);

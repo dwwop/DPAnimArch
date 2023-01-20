@@ -11,6 +11,7 @@ namespace AnimArch.Visualization.Diagrams
     {
         public GameObject graphPrefab;
         public GameObject classPrefab;
+        public GameObject objectPrefab;
         public GameObject classAttributePrefab;
         public GameObject classMethodPrefab;
         public GameObject parameterMethodPrefab;

@@ -41,7 +41,7 @@ namespace Networking
         {
             if (IsServer)
                 return;
-           ClassEditor.Instance.CreateNodeFromRpc(name);
+            ClassEditor.Instance.CreateNodeFromRpc(name);
         }
 
         public void SetClassName(string targetClass, string newName)

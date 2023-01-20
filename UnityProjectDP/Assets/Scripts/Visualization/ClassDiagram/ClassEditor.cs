@@ -624,7 +624,7 @@ namespace AnimArch.Visualization.Diagrams
             var attributesTransform = classGo.transform
                 .Find("Background")
                 .Find("Methods")
-                .Find("LayoutGroup");
+                .Find("MethodLayoutGroup");
 
             var instance = Instantiate(DiagramPool.Instance.classMethodPrefab, attributesTransform, false);
             instance.name = method;
@@ -644,7 +644,7 @@ namespace AnimArch.Visualization.Diagrams
             var oldMethod = classGo.transform
                 .Find("Background")
                 .Find("Methods")
-                .Find("LayoutGroup")
+                .Find("MethodLayoutGroup")
                 .Find(oldMethodText);
 
             oldMethod.name = newMethodText;
@@ -656,7 +656,7 @@ namespace AnimArch.Visualization.Diagrams
             var attributesTransform = classGo.transform
                 .Find("Background")
                 .Find("Attributes")
-                .Find("LayoutGroup");
+                .Find("AttributeLayoutGroup");
 
             var instance = Instantiate(DiagramPool.Instance.classAttributePrefab, attributesTransform, false);
             instance.name = attribute;
@@ -676,7 +676,7 @@ namespace AnimArch.Visualization.Diagrams
             var oldAttribute = classGo.transform
                 .Find("Background")
                 .Find("Attributes")
-                .Find("LayoutGroup")
+                .Find("AttributeLayoutGroup")
                 .Find(oldAttributeText);
 
             oldAttribute.name = newAttributeText;

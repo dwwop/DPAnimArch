@@ -83,6 +83,7 @@ namespace AnimArch.Visualization.Diagrams
             ResetDiagram();
             var go = Instantiate(DiagramPool.Instance.graphPrefab);
             graph = go.GetComponent<Graph>();
+            graph.nodePrefab = DiagramPool.Instance.classPrefab;
             return graph;
         }
 

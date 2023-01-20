@@ -91,8 +91,8 @@ GameObject:
   - component: {fileID: 114654169875532780}
   - component: {fileID: 114752474515285174}
   - component: {fileID: 54018352948757740}
-  - component: {fileID: 7765813031263570784}
   - component: {fileID: 2398271712557318398}
+  - component: {fileID: 4761082860158751167}
   m_Layer: 5
   m_Name: Class
   m_TagString: Untagged
@@ -243,19 +243,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7765813031263570784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226358218867430}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac93d52231e183d499b43ed4646222df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  methodsText: {fileID: 0}
 --- !u!114 &2398271712557318398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,6 +256,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   classTxt: {fileID: 1241997347917799074}
+--- !u!114 &4761082860158751167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226358218867430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34c8835ab48847c09924ad5c96945db7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  methodLayoutGroup: {fileID: 6981091386270745030}
 --- !u!1 &1634513748961536
 GameObject:
   m_ObjectHideFlags: 0
@@ -552,7 +552,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0, y: 0, z: 5}
+  m_Size: {x: 225, y: 35, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114240480170074018
 MonoBehaviour:
@@ -674,7 +674,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0, y: 43.243, z: 5}
+  m_Size: {x: 200, y: 43.243, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114466928306324720
 MonoBehaviour:
@@ -875,7 +875,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0, y: 0, z: 5}
+  m_Size: {x: 225, y: 40, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114514521486588498
 MonoBehaviour:
@@ -929,7 +929,7 @@ GameObject:
   - component: {fileID: 1033806314809777381}
   - component: {fileID: 6829840285225477795}
   m_Layer: 5
-  m_Name: LayoutGroup
+  m_Name: MethodLayoutGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -950,8 +950,8 @@ RectTransform:
   m_Father: {fileID: 224697516044451008}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 210, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
@@ -1055,7 +1055,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 231.6485, y: -17.5}
+  m_AnchoredPosition: {x: 236.6485, y: -17.5}
   m_SizeDelta: {x: 33.296997, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7959682153357749546
@@ -1223,7 +1223,7 @@ GameObject:
   - component: {fileID: 8335523479530782241}
   - component: {fileID: 7328530663739269548}
   m_Layer: 5
-  m_Name: LayoutGroup
+  m_Name: AttributeLayoutGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1244,8 +1244,8 @@ RectTransform:
   m_Father: {fileID: 224156231050812816}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 210, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}

@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 using Assets.Scripts.AnimationControl.OAL;
 using AnimArch.Visualization.Diagrams;
+using UMSAGL.Scripts;
 using Object = System.Object;
 
 namespace AnimArch.Visualization.Animating
@@ -492,10 +493,10 @@ namespace AnimArch.Visualization.Animating
         public void HighlightMethod(string className, string methodName, bool isToBeHighlighted, long instanceId = -1)
         {
             GameObject node = classDiagram.FindNode(className);
-            TextHighlighter th = null;
+            ClassTextHighligter th = null;
             if (node != null)
             {
-                th = node.GetComponent<TextHighlighter>();
+                th = node.GetComponent<ClassTextHighligter>();
             }
             else
             {
@@ -506,12 +507,12 @@ namespace AnimArch.Visualization.Animating
             {
                 if (isToBeHighlighted)
                 {
-                    th.HighlightLine(methodName);
+                    th.HighlightClassLine(methodName);
                     //Debug.Log("Filip, metoda: " + methodName); //Filip
                 }
                 else
                 {
-                    th.UnHighlightLine(methodName);
+                    th.UnhighlightClassLine(methodName);
                 }
             }
             else
@@ -532,16 +533,16 @@ namespace AnimArch.Visualization.Animating
         private void HighlightObjectMethod(string methodName, long cdClassInstanceId, bool isToBeHighlighted)
         {
             var textHighlighter = objectDiagram.FindByID(cdClassInstanceId).VisualObject
-                .GetComponent<TextHighlighter>();
+                .GetComponent<ObjectTextHighlighter>();
             if (textHighlighter != null)
             {
                 if (isToBeHighlighted)
                 {
-                    textHighlighter.HighlightLine(methodName);
+                    textHighlighter.HighlightObjectLine(methodName);
                 }
                 else
                 {
-                    textHighlighter.UnHighlightLine(methodName);
+                    textHighlighter.UnHighlightObjectLine(methodName);
                 }
             }
         }
