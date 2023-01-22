@@ -408,7 +408,7 @@ namespace AnimArch.Visualization.Diagrams
             foreach (var attribute in classInDiagram.VisualObject.transform
                          .Find("Background")
                          .Find("Attributes")
-                         .Find("LayoutGroup").GetComponents<AttributePopUpManager>())
+                         .Find("AttributeLayoutGroup").GetComponents<AttributePopUpManager>())
             {
                 attribute.classTxt =
                     classInDiagram.VisualObject.transform.Find("Background").Find("HeaderLayout").Find("Header")
@@ -418,7 +418,7 @@ namespace AnimArch.Visualization.Diagrams
             foreach (var method in classInDiagram.VisualObject.transform
                          .Find("Background")
                          .Find("Methods")
-                         .Find("LayoutGroup").GetComponents<MethodPopUpManager>())
+                         .Find("MethodLayoutGroup").GetComponents<MethodPopUpManager>())
             {
                 method.classTxt =
                     classInDiagram.VisualObject.transform.Find("Background").Find("HeaderLayout").Find("Header")
