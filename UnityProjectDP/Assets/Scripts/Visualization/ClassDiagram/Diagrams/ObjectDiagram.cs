@@ -91,6 +91,7 @@ namespace AnimArch.Visualization.Diagrams
             ResetDiagram();
             var go = GameObject.Instantiate(DiagramPool.Instance.graphPrefab);
             graph = go.GetComponent<Graph>();
+            graph.nodePrefab = DiagramPool.Instance.objectPrefab;
             return graph;
         }
 
@@ -126,7 +127,7 @@ namespace AnimArch.Visualization.Diagrams
             //Setting up
             var node = graph.AddNode();
             node.SetActive(false);
-            node.name = Object.VariableName + " : " + Object.Class.XMIParsedClass.Name;
+            node.name = Object.VariableName + " : " + Object.Class.ParsedClass.Name;
             var background = node.transform.Find("Background");
             var header = background.Find("Header");
             var attributes = background.Find("Attributes");
@@ -142,7 +143,7 @@ namespace AnimArch.Visualization.Diagrams
                     AttributeName + " = " + Object.Instance.State[AttributeName] + "\n";
             }
 
-            foreach (Method method in Object.Class.XMIParsedClass.Methods)
+            foreach (Method method in Object.Class.ParsedClass.Methods)
             {
                 string arguments = "(";
                 if (method.arguments != null)

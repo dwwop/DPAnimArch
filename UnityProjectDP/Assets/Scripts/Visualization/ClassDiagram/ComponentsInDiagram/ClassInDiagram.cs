@@ -5,7 +5,7 @@ namespace AnimArch.Visualization.Diagrams
 {
     public class ClassInDiagram
     {
-        public Class XMIParsedClass;
+        public Class ParsedClass;
         public CDClass ClassInfo;
         public GameObject VisualObject;
     }

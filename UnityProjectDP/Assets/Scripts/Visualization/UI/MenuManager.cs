@@ -139,7 +139,7 @@ namespace AnimArch.Visualization.UI
                 button.SetActive(false);
             }
 
-            Class selectedClass = DiagramPool.Instance.ClassDiagram.FindClassByName(name).XMIParsedClass;
+            Class selectedClass = DiagramPool.Instance.ClassDiagram.FindClassByName(name).ParsedClass;
             PanelInteractiveIntro.SetActive(false);
             ClassNameTxt.text = name;
             PanelMethod.SetActive(true);
@@ -423,7 +423,7 @@ namespace AnimArch.Visualization.UI
                 button.gameObject.SetActive(false);
             }
 
-            Class selectedClass = DiagramPool.Instance.ClassDiagram.FindClassByName(name).XMIParsedClass;
+            Class selectedClass = DiagramPool.Instance.ClassDiagram.FindClassByName(name).ParsedClass;
             animMethods = AnimationData.Instance.selectedAnim.GetMethodsByClassName(name);
             int i = 0;
             if (animMethods != null)
