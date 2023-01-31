@@ -15,7 +15,6 @@ public class ObjectTextHighlighter : MonoBehaviour
     public void HighlightObjectLine(string line)
     {
         startColorTag = "<color=#" + AnimArch.Visualization.Animating.Animation.Instance.GetColorCode("method") + ">";
-        //TODO REWORK
         text = methodsText.text;
         Debug.Log(text);
         string startline = line.Replace(")", "");
@@ -43,7 +42,6 @@ public class ObjectTextHighlighter : MonoBehaviour
 
     public void UnHighlightObjectLine(string line)
     {
-        //TODO REWROK
         text = methodsText.text;
         text = text.Replace(startColorTag, "");
         text = text.Replace(endColorTag, "");

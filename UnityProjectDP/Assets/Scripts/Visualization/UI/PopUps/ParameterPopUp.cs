@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using AnimArch.Visualization.Diagrams;
 using OALProgramControl;
@@ -50,12 +50,14 @@ namespace AnimArch.Visualization.UI
                 return;
             }
 
-            var param = dropdown.options[dropdown.value].text + " " + inp.text.Replace(" ", "_");
+            var parameter = dropdown.options[dropdown.value].text + " " + inp.text.Replace(" ", "_");
             if (_formerParam == null)
-                ClassEditor.Instance.mtdPopUp.AddArg(param);
+            {
+                ClassEditor.Instance.methodPopUp.AddArg(parameter);
+            }
             else
             {
-                ClassEditor.Instance.mtdPopUp.EditArg(_formerParam, param);
+                ClassEditor.Instance.methodPopUp.EditArg(_formerParam, parameter);
                 _formerParam = null;
             }
             Deactivate();

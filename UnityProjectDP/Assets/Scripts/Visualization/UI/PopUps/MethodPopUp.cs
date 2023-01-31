@@ -65,7 +65,9 @@ namespace AnimArch.Visualization.UI
                 arguments = _parameters
             };
             if (_formerName == null)
+            {
                 ClassEditor.AddMethod(className.text, newMethod, ClassEditor.Source.editor);
+            }
             else
             {
                 ClassEditor.UpdateMethod(className.text, _formerName, newMethod);

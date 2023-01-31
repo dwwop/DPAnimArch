@@ -490,34 +490,31 @@ namespace AnimArch.Visualization.Animating
         }
 
         //Method used to Highlight/Unhighlight single method by name, depending on bool value of argument 
-        public void HighlightMethod(string className, string methodName, bool isToBeHighlighted, long instanceId = -1)
+    public void HighlightMethod(string className, string methodName, bool isToBeHighlighted, long instanceId = -1)
         {
-            GameObject node = classDiagram.FindNode(className);
-            ClassTextHighligter th = null;
-            if (node != null)
+            var node = classDiagram.FindNode(className);
+            if (node)
             {
-                th = node.GetComponent<ClassTextHighligter>();
+                ClassTextHighligter classTextHighligter = node.GetComponent<ClassTextHighligter>();
+                if (classTextHighligter)
+                {
+                    if (isToBeHighlighted)
+                    {
+                        classTextHighligter.HighlightClassLine(methodName);
+                    }
+                    else
+                    {
+                        classTextHighligter.UnhighlightClassLine(methodName);
+                    }
+                }
+                else
+                {
+                    Debug.Log("TextHighlighter component not found");
+                }
             }
             else
             {
                 Debug.Log("Node " + className + " not found");
-            }
-
-            if (th != null)
-            {
-                if (isToBeHighlighted)
-                {
-                    th.HighlightClassLine(methodName);
-                    //Debug.Log("Filip, metoda: " + methodName); //Filip
-                }
-                else
-                {
-                    th.UnhighlightClassLine(methodName);
-                }
-            }
-            else
-            {
-                Debug.Log("TextHighlighter component not found");
             }
         }
 

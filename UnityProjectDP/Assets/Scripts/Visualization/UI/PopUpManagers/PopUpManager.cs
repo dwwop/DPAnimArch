@@ -10,12 +10,12 @@ namespace AnimArch.Visualization.UI
 
         public void OpenAttributePopUp()
         {
-            ClassEditor.Instance.atrPopUp.ActivateCreation(classTxt);
+            ClassEditor.Instance.attributePopUp.ActivateCreation(classTxt);
         }
 
         public void OpenMethodPopUp()
         {
-            ClassEditor.Instance.mtdPopUp.ActivateCreation(classTxt);
+            ClassEditor.Instance.methodPopUp.ActivateCreation(classTxt);
         }
 
         public void OpenClassPopUp()

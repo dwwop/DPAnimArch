@@ -117,11 +117,11 @@ namespace AnimArch.Visualization.Diagrams
                     prefab = DiagramPool.Instance.associationNonePrefab;
                 }
 
-                var startingClass = FindClassByName(rel.ParsedRelation.FromClass)?.VisualObject;
-                var finishingClass = FindClassByName(rel.ParsedRelation.ToClass)?.VisualObject;
-                if (startingClass != null && finishingClass != null)
+                var fromClass = FindClassByName(rel.ParsedRelation.FromClass)?.VisualObject;
+                var toClass = FindClassByName(rel.ParsedRelation.ToClass)?.VisualObject;
+                if (fromClass != null && toClass != null)
                 {
-                    var edge = graph.AddEdge(startingClass, finishingClass, prefab);
+                    var edge = graph.AddEdge(fromClass, toClass, prefab);
 
                     rel.VisualObject = edge;
                     // Quickfix
@@ -194,11 +194,11 @@ namespace AnimArch.Visualization.Diagrams
             return g;
         }
 
-        public GameObject FindEdge(string classA, string classB)
+        public GameObject FindEdge(string fromClass, string toClass)
         {
             GameObject result = null;
 
-            var rel = OALProgram.Instance.RelationshipSpace.GetRelationshipByClasses(classA, classB);
+            var rel = OALProgram.Instance.RelationshipSpace.GetRelationshipByClasses(fromClass, toClass);
             if (rel != null)
             {
                 result = FindEdge(rel.RelationshipName);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using AnimArch.Extensions;
 using AnimArch.Parsing;
 using AnimArch.Visualization.Animating;
@@ -9,6 +10,7 @@ using Networking;
 using OALProgramControl;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
 
@@ -22,8 +24,8 @@ namespace AnimArch.Visualization.Diagrams
         private GameObject _node;
         private string _relType;
 
-        public AttributePopUp atrPopUp;
-        public MethodPopUp mtdPopUp;
+        [FormerlySerializedAs("atrPopUp")] public AttributePopUp attributePopUp;
+        [FormerlySerializedAs("mtdPopUp")] public MethodPopUp methodPopUp;
         public ClassPopUp classPopUp;
         public ParameterPopUp parameterPopUp;
 
@@ -266,7 +268,8 @@ namespace AnimArch.Visualization.Diagrams
 
         public void SelectNode(GameObject selected)
         {
-            if (!active || !MenuManager.Instance.isSelectingNode) return;
+            if (!active || !MenuManager.Instance.isSelectingNode)
+                return;
             if (selected == _node)
             {
                 Animating.Animation.Instance.HighlightClass(_node.name, false);
@@ -376,6 +379,42 @@ namespace AnimArch.Visualization.Diagrams
             return relInDiag;
         }
 
+        private static Transform GetAttributeLayoutGroup(ClassInDiagram classInDiagram)
+        {
+            return GetAttributeLayoutGroup(classInDiagram.VisualObject);
+        }
+
+        private static Transform GetAttributeLayoutGroup(GameObject classGo)
+        {
+            return classGo.transform
+                .Find("Background")
+                .Find("Attributes")
+                .Find("AttributeLayoutGroup");
+        }
+        
+        private static Transform GetMethodLayoutGroup(ClassInDiagram classInDiagram)
+        {
+            return GetMethodLayoutGroup(classInDiagram.VisualObject);
+        }
+
+        private static Transform GetMethodLayoutGroup(GameObject classGo)
+        {
+            return classGo.transform
+                .Find("Background")
+                .Find("Methods")
+                .Find("MethodLayoutGroup");
+        }
+
+        private static Transform GetClassHeader(ClassInDiagram classInDiagram)
+        {
+            return GetClassHeader(classInDiagram.VisualObject);
+        }
+
+        private static Transform GetClassHeader(GameObject classGo)
+        {
+            return classGo.transform.Find("Background").Find("HeaderLayout").Find("Header");
+        }
+
         public static void SetClassName(string targetClass, string newName, bool fromRpc)
         {
             if (!fromRpc)
@@ -399,30 +438,22 @@ namespace AnimArch.Visualization.Diagrams
                     relationInDiagram.RelationInfo.FromClass = newName;
                 }
 
-                if (relationInDiagram.ParsedRelation.ToClass != targetClass) continue;
-                relationInDiagram.ParsedRelation.ToClass = newName;
-                relationInDiagram.ParsedRelation.TargetModelName = newName;
-                relationInDiagram.RelationInfo.ToClass = newName;
+                if (relationInDiagram.ParsedRelation.ToClass == targetClass)
+                {
+                    relationInDiagram.ParsedRelation.ToClass = newName;
+                    relationInDiagram.ParsedRelation.TargetModelName = newName;
+                    relationInDiagram.RelationInfo.ToClass = newName;
+                }
             }
 
-            foreach (var attribute in classInDiagram.VisualObject.transform
-                         .Find("Background")
-                         .Find("Attributes")
-                         .Find("AttributeLayoutGroup").GetComponents<AttributePopUpManager>())
+            foreach (var attribute in GetAttributeLayoutGroup(classInDiagram).GetComponents<AttributePopUpManager>())
             {
-                attribute.classTxt =
-                    classInDiagram.VisualObject.transform.Find("Background").Find("HeaderLayout").Find("Header")
-                        .GetComponent<TextMeshProUGUI>();
+                attribute.classTxt = GetClassHeader(classInDiagram).GetComponent<TextMeshProUGUI>();
             }
 
-            foreach (var method in classInDiagram.VisualObject.transform
-                         .Find("Background")
-                         .Find("Methods")
-                         .Find("MethodLayoutGroup").GetComponents<MethodPopUpManager>())
+            foreach (var method in GetMethodLayoutGroup(classInDiagram).GetComponents<MethodPopUpManager>())
             {
-                method.classTxt =
-                    classInDiagram.VisualObject.transform.Find("Background").Find("HeaderLayout").Find("Header")
-                        .GetComponent<TextMeshProUGUI>();
+                method.classTxt = GetClassHeader(classInDiagram).GetComponent<TextMeshProUGUI>();
             }
         }
 
@@ -447,17 +478,15 @@ namespace AnimArch.Visualization.Diagrams
         public static Method GetMethodFromString(string str)
         {
             var method = new Method();
-
-
+            
             var parts = str.Split(new[] { ": ", "\n" }, StringSplitOptions.None);
-
-
+            
             var nameAndArguments = parts[0].Split(new[] { "(", ")" }, StringSplitOptions.None);
             method.Name = nameAndArguments[0];
             method.ReturnValue = parts[1];
 
 
-            method.arguments = new List<string>(nameAndArguments[1].Split(", "));
+            method.arguments = nameAndArguments[1].Split(", ").Where(x => x != "").ToList();
 
             return method;
         }
@@ -483,9 +512,9 @@ namespace AnimArch.Visualization.Diagrams
 
         private static void AddParameters(Method method, CDMethod cdMethod)
         {
-            foreach (var arg in method.arguments)
+            foreach (var argument in method.arguments)
             {
-                var tokens = arg.Split(' ');
+                var tokens = argument.Split(' ');
                 var type = tokens[0];
                 var name = tokens[1];
 
@@ -553,9 +582,7 @@ namespace AnimArch.Visualization.Diagrams
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
             if (classInDiagram == null)
-            {
                 return false;
-            }
 
             if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(targetClass, newAttribute.Name) != null)
                 return false;
@@ -576,9 +603,7 @@ namespace AnimArch.Visualization.Diagrams
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
             if (classInDiagram == null)
-            {
                 return false;
-            }
 
             if (DiagramPool.Instance.ClassDiagram.FindMethodByName(targetClass, newMethod.Name) != null)
                 return false;
@@ -611,29 +636,20 @@ namespace AnimArch.Visualization.Diagrams
 
         private static void SetClassTmProName(GameObject classGo, string name)
         {
-            classGo.transform
-                .Find("Background")
-                .Find("HeaderLayout")
-                .Find("Header")
-                .GetComponent<TextMeshProUGUI>()
-                .text = name;
+            GetClassHeader(classGo).GetComponent<TextMeshProUGUI>() .text = name;
         }
 
         private static void AddTmProMethod(GameObject classGo, string method)
         {
-            var attributesTransform = classGo.transform
-                .Find("Background")
-                .Find("Methods")
-                .Find("MethodLayoutGroup");
+            var attributesTransform = GetMethodLayoutGroup(classGo);
 
             var instance = Instantiate(DiagramPool.Instance.classMethodPrefab, attributesTransform, false);
             instance.name = method;
             instance.transform.Find("MethodText").GetComponent<TextMeshProUGUI>().text += method;
 
             instance.GetComponent<MethodPopUpManager>().classTxt =
-                classGo.transform.Find("Background").Find("HeaderLayout").Find("Header")
-                    .GetComponent<TextMeshProUGUI>();
-            
+                GetClassHeader(classGo).GetComponent<TextMeshProUGUI>();
+
             if (Instance.active)
                 instance.GetComponentsInChildren<Button>(includeInactive: true)
                     .ForEach(x => x.gameObject.SetActive(true));
@@ -641,11 +657,7 @@ namespace AnimArch.Visualization.Diagrams
 
         private static void UpdateTmProMethod(GameObject classGo, string oldMethodText, string newMethodText)
         {
-            var oldMethod = classGo.transform
-                .Find("Background")
-                .Find("Methods")
-                .Find("MethodLayoutGroup")
-                .Find(oldMethodText);
+            var oldMethod = GetMethodLayoutGroup(classGo).Find(oldMethodText);
 
             oldMethod.name = newMethodText;
             oldMethod.Find("MethodText").GetComponent<TextMeshProUGUI>().text = newMethodText;
@@ -653,19 +665,15 @@ namespace AnimArch.Visualization.Diagrams
 
         private static void AddTmProAttribute(GameObject classGo, string attribute)
         {
-            var attributesTransform = classGo.transform
-                .Find("Background")
-                .Find("Attributes")
-                .Find("AttributeLayoutGroup");
+            var attributesTransform = GetAttributeLayoutGroup(classGo);
 
             var instance = Instantiate(DiagramPool.Instance.classAttributePrefab, attributesTransform, false);
             instance.name = attribute;
             instance.transform.Find("AttributeText").GetComponent<TextMeshProUGUI>().text += attribute;
 
             instance.GetComponent<AttributePopUpManager>().classTxt =
-                classGo.transform.Find("Background").Find("HeaderLayout").Find("Header")
-                    .GetComponent<TextMeshProUGUI>();
-            
+                GetClassHeader(classGo).GetComponent<TextMeshProUGUI>();
+
             if (Instance.active)
                 instance.GetComponentsInChildren<Button>(includeInactive: true)
                     .ForEach(x => x.gameObject.SetActive(true));
@@ -673,11 +681,7 @@ namespace AnimArch.Visualization.Diagrams
 
         private static void UpdateTmProAttribute(GameObject classGo, string oldAttributeText, string newAttributeText)
         {
-            var oldAttribute = classGo.transform
-                .Find("Background")
-                .Find("Attributes")
-                .Find("AttributeLayoutGroup")
-                .Find(oldAttributeText);
+            var oldAttribute = GetAttributeLayoutGroup(classGo).Find(oldAttributeText);
 
             oldAttribute.name = newAttributeText;
             oldAttribute.Find("AttributeText").GetComponent<TextMeshProUGUI>().text = newAttributeText;

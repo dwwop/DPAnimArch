@@ -10,7 +10,7 @@ namespace AnimArch.Visualization.UI
 
         public void OpenParameterEditPopUp()
         {
-            ClassEditor.Instance.mtdPopUp.panel.SetActive(false);
+            ClassEditor.Instance.methodPopUp.panel.SetActive(false);
             ClassEditor.Instance.parameterPopUp.ActivateCreation(parameterTxt);
         }
     }

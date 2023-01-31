@@ -11,21 +11,22 @@ namespace UMSAGL.Scripts
     {
         public LayoutGroup methodLayoutGroup;
 
+        private TextMeshProUGUI GetLineText(string line)
+        {
+            return methodLayoutGroup.transform
+                .GetComponentsInChildren<TextMeshProUGUI>()
+                .First(x => x.text.Contains(line));
+        }
+
         public void HighlightClassLine(string line)
         {
-            methodLayoutGroup.transform
-                    .GetComponentsInChildren<TextMeshProUGUI>()
-                    .First(x => x.text.Contains(line))
-                    .color =
+            GetLineText(line).color =
                 AnimArch.Visualization.Animating.Animation.Instance.methodColor;
         }
 
         public void UnhighlightClassLine(string line)
         {
-            methodLayoutGroup.transform
-                .GetComponentsInChildren<TextMeshProUGUI>()
-                .First(x => x.text.Contains(line))
-                .color = Color.black;
+            GetLineText(line).color = Color.black;
         }
     }
 }
