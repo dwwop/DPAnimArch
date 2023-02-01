@@ -61,23 +61,26 @@ namespace AnimArch.Visualization.Diagrams
 
         public CDClass GenerateNode(Class newClass)
         {
-            if (!DiagramPool.Instance.ClassDiagram.graph)
-                InitializeCreation();
-            CDClass tempCdClass = null;
-            var name = CurrentClassName(newClass.Name, ref tempCdClass);
-            if (tempCdClass == null)
-                return null;
-
-            var classInDiagram = new ClassInDiagram { ParsedClass = newClass, ClassInfo = tempCdClass };
-            DiagramPool.Instance.ClassDiagram.Classes.Add(classInDiagram);
-            var node = AddClassToGraph(name);
-            SetPosition(node);
-            if (classInDiagram.ParsedClass.Left == 0)
-            {
-                SetClassGeometry(classInDiagram);
-            }
-
-            return tempCdClass;
+            MainEditor.AddNode(newClass);
+            return DiagramPool.Instance.ClassDiagram.FindClassByName(newClass.Name).ClassInfo;
+            // if (!DiagramPool.Instance.ClassDiagram.graph)
+            //     InitializeCreation();
+            //
+            // CDClass tempCdClass = null;
+            // var name = CurrentClassName(newClass.Name, ref tempCdClass);
+            // if (tempCdClass == null)
+            //     return null;
+            //
+            // var classInDiagram = new ClassInDiagram { ParsedClass = newClass, ClassInfo = tempCdClass };
+            // DiagramPool.Instance.ClassDiagram.Classes.Add(classInDiagram);
+            // var node = AddClassToGraph(name);
+            // SetPosition(node);
+            // if (classInDiagram.ParsedClass.Left == 0)
+            // {
+            //     SetClassGeometry(classInDiagram);
+            // }
+            //
+            // return tempCdClass;
         }
 
         public static void SetClassGeometry(ClassInDiagram classInDiagram)
@@ -462,7 +465,7 @@ namespace AnimArch.Visualization.Diagrams
 
         private static void SetClassTmProName(GameObject classGo, string name)
         {
-            GetClassHeader(classGo).GetComponent<TextMeshProUGUI>() .text = name;
+            GetClassHeader(classGo).GetComponent<TextMeshProUGUI>().text = name;
         }
 
         private static void AddTmProMethod(GameObject classGo, string method)
