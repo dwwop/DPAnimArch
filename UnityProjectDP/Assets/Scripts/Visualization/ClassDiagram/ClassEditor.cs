@@ -112,11 +112,6 @@ namespace AnimArch.Visualization.Diagrams
             return relInDiag;
         }
 
-        private static Transform GetAttributeLayoutGroup(ClassInDiagram classInDiagram)
-        {
-            return GetAttributeLayoutGroup(classInDiagram.VisualObject);
-        }
-
         private static Transform GetAttributeLayoutGroup(GameObject classGo)
         {
             return classGo.transform
@@ -125,10 +120,6 @@ namespace AnimArch.Visualization.Diagrams
                 .Find("AttributeLayoutGroup");
         }
         
-        private static Transform GetMethodLayoutGroup(ClassInDiagram classInDiagram)
-        {
-            return GetMethodLayoutGroup(classInDiagram.VisualObject);
-        }
 
         private static Transform GetMethodLayoutGroup(GameObject classGo)
         {
@@ -138,56 +129,10 @@ namespace AnimArch.Visualization.Diagrams
                 .Find("MethodLayoutGroup");
         }
 
-        private static Transform GetClassHeader(ClassInDiagram classInDiagram)
-        {
-            return GetClassHeader(classInDiagram.VisualObject);
-        }
 
         private static Transform GetClassHeader(GameObject classGo)
         {
             return classGo.transform.Find("Background").Find("HeaderLayout").Find("Header");
-        }
-
-        public static void SetClassName(string targetClass, string newName, bool fromRpc)
-        {
-            if (!fromRpc)
-                Spawner.Instance.SetClassName(targetClass, newName);
-
-            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
-            if (classInDiagram == null)
-                return;
-
-            classInDiagram.ClassInfo.Name = newName;
-            classInDiagram.ParsedClass.Name = newName;
-            classInDiagram.VisualObject.name = newName;
-            SetClassTmProName(classInDiagram.VisualObject, newName);
-
-            foreach (var relationInDiagram in DiagramPool.Instance.ClassDiagram.Relations)
-            {
-                if (relationInDiagram.ParsedRelation.FromClass == targetClass)
-                {
-                    relationInDiagram.ParsedRelation.FromClass = newName;
-                    relationInDiagram.ParsedRelation.SourceModelName = newName;
-                    relationInDiagram.RelationInfo.FromClass = newName;
-                }
-
-                if (relationInDiagram.ParsedRelation.ToClass == targetClass)
-                {
-                    relationInDiagram.ParsedRelation.ToClass = newName;
-                    relationInDiagram.ParsedRelation.TargetModelName = newName;
-                    relationInDiagram.RelationInfo.ToClass = newName;
-                }
-            }
-
-            foreach (var attribute in GetAttributeLayoutGroup(classInDiagram).GetComponents<AttributePopUpManager>())
-            {
-                attribute.classTxt = GetClassHeader(classInDiagram).GetComponent<TextMeshProUGUI>();
-            }
-
-            foreach (var method in GetMethodLayoutGroup(classInDiagram).GetComponents<MethodPopUpManager>())
-            {
-                method.classTxt = GetClassHeader(classInDiagram).GetComponent<TextMeshProUGUI>();
-            }
         }
 
         private static string GetStringFromMethod(Method method)
@@ -365,11 +310,6 @@ namespace AnimArch.Visualization.Diagrams
                     .GetComponent<RectTransform>()
                     .position = position;
             }
-        }
-
-        private static void SetClassTmProName(GameObject classGo, string name)
-        {
-            GetClassHeader(classGo).GetComponent<TextMeshProUGUI>().text = name;
         }
 
         private static void AddTmProMethod(GameObject classGo, string method)

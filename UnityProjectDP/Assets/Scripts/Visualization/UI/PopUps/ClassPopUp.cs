@@ -10,7 +10,7 @@ namespace AnimArch.Visualization.UI
         {
             if (inp.text != "")
             {
-                ClassEditor.SetClassName(className.text, inp.text, false);
+                MainEditor.UpdateNodeName(className.text, inp.text, false);
             }
             Deactivate();
         }

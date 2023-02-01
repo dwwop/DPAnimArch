@@ -4,14 +4,14 @@ namespace AnimArch.Visualization.Diagrams
 {
     public static class MainEditor
     {
-        public static void CreateNode(Class newClass)
+        private static void CreateNode(Class newClass)
         {
             var newCdClass = CDClassEditor.CreateNode(newClass);
             newClass.Name = newCdClass.Name;
 
             var classGo = VisualEditor.CreateNode(newClass);
 
-            newClass = ParsedClassEditor.UpdateClassGeometry(newClass, classGo);
+            newClass = ParsedClassEditor.UpdateNodeGeometry(newClass, classGo);
 
             var classInDiagram = new ClassInDiagram
                 { ParsedClass = newClass, ClassInfo = newCdClass, VisualObject = classGo };
@@ -20,7 +20,7 @@ namespace AnimArch.Visualization.Diagrams
 
         public static void CreateNodeSpawner(Class newClass)
         {
-            Spawner.Instance.SpawnClass(newClass.Name, newClass.XmiId);
+            Spawner.Instance.SpawnNode(newClass.Name, newClass.XmiId);
             CreateNode(newClass);
         }
 
@@ -28,6 +28,24 @@ namespace AnimArch.Visualization.Diagrams
         {
             var newClass = ParsedClassEditor.CreateNode(name, id);
             CreateNode(newClass);
+        }
+
+        public static void UpdateNodeName(string oldName, string newName, bool fromRpc)
+        {
+            if (!fromRpc)
+                Spawner.Instance.SetNodeName(oldName, newName);
+
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(oldName);
+            if (classInDiagram == null)
+                return;
+
+            classInDiagram.ClassInfo.Name = newName;
+            classInDiagram.ParsedClass.Name = newName;
+            classInDiagram.VisualObject.name = newName;
+
+            VisualEditor.UpdateNode(classInDiagram.VisualObject);
+
+            RelationshipEditor.UpdateNodeName(oldName, newName);
         }
 
         // public override void UpdateNode()

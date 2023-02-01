@@ -68,7 +68,7 @@ namespace AnimArch.Visualization
             transform.position = cursorPosition;
 
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(name);
-            classInDiagram.ParsedClass = ParsedClassEditor.UpdateClassGeometry(classInDiagram.ParsedClass, classInDiagram.VisualObject);
+            classInDiagram.ParsedClass = ParsedClassEditor.UpdateNodeGeometry(classInDiagram.ParsedClass, classInDiagram.VisualObject);
         }
 
         private void OnMouseOver()

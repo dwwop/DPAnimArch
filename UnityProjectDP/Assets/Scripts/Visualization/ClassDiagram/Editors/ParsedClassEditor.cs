@@ -23,7 +23,7 @@ namespace AnimArch.Visualization.Diagrams
         }
         
 
-        public static Class UpdateClassGeometry(Class newClass, GameObject classGo)
+        public static Class UpdateNodeGeometry(Class newClass, GameObject classGo)
         {
             if (newClass.Left != 0)
                 return newClass;

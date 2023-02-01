@@ -17,7 +17,7 @@ namespace Networking
             DontDestroyOnLoad(gameObject);
         }
 
-        public void SpawnClass(string name, string id)
+        public void SpawnNode(string name, string id)
         {
             if (IsServer)
             {
@@ -44,30 +44,30 @@ namespace Networking
             MainEditor.CreateNodeFromRpc(name, id);
         }
 
-        public void SetClassName(string targetClass, string newName)
+        public void SetNodeName(string oldName, string newName)
         {
             if (IsServer)
             {
-                SetClassNameClientRpc(targetClass, newName);
+                SetClassNameClientRpc(oldName, newName);
             }
             else
             {
-                SetClassNameServerRpc(targetClass, newName);
+                SetClassNameServerRpc(oldName, newName);
             }
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void SetClassNameServerRpc(string targetClass, string newName)
+        public void SetClassNameServerRpc(string oldName, string newName)
         {
-            ClassEditor.SetClassName(targetClass, newName, true);
+            MainEditor.UpdateNodeName(oldName, newName, true);
         }
 
         [ClientRpc]
-        public void SetClassNameClientRpc(string targetClass, string newName)
+        public void SetClassNameClientRpc(string oldName, string newName)
         {
             if (IsServer)
                 return;
-            ClassEditor.SetClassName(targetClass, newName, true);
+            MainEditor.UpdateNodeName(oldName, newName, true);
         }
 
         public void AddAttribute(string targetClass, string name, string type)
