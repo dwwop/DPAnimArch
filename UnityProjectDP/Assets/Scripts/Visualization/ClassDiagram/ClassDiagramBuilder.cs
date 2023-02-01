@@ -41,7 +41,9 @@ namespace AnimArch.Visualization.Diagrams
             {
                 currentClass.Name = currentClass.Name.Replace(" ", "_");
 
-                var tempCdClass = Singleton<ClassEditor>.Instance.CreateNode(currentClass);
+                MainEditor.CreateNodeSpawner(currentClass);
+                var tempCdClass = DiagramPool.Instance.ClassDiagram.FindClassByName(currentClass.Name).ClassInfo;
+                
                 if (tempCdClass == null)
                     continue;
 

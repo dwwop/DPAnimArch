@@ -2,18 +2,17 @@
 
 namespace AnimArch.Visualization.Diagrams
 {
-    public class CDClassEditor
+    public static class CDClassEditor
     {
-        private static string CurrentClassName(string name, ref CDClass TempCdClass)
+        public static CDClass CreateNode(Class newClass)
         {
-            TempCdClass = null;
+            CDClass cdClass = null;
             var i = 0;
-            var currentName = name;
-            var baseName = name;
-            while (TempCdClass == null)
+            var baseName = newClass.Name;
+            while (cdClass == null)
             {
-                currentName = baseName + (i == 0 ? "" : i.ToString());
-                TempCdClass = OALProgram.Instance.ExecutionSpace.SpawnClass(currentName);
+                newClass.Name = baseName + (i == 0 ? "" : i.ToString());
+                cdClass = OALProgram.Instance.ExecutionSpace.SpawnClass(newClass.Name);
                 i++;
                 if (i > 1000)
                 {
@@ -21,14 +20,7 @@ namespace AnimArch.Visualization.Diagrams
                 }
             }
 
-            return currentName;
-        }
-        public static CDClass CreateNode(Class newClass)
-        {
-            CDClass tempCdClass = null;
-            CurrentClassName(newClass.Name, ref tempCdClass);
-            
-            return tempCdClass;
+            return cdClass;
         }
     }
 }

@@ -1,18 +1,33 @@
-﻿namespace AnimArch.Visualization.Diagrams
+﻿using Networking;
+
+namespace AnimArch.Visualization.Diagrams
 {
     public static class MainEditor
     {
-        public static void AddNode(Class newClass)
+        public static void CreateNode(Class newClass)
         {
             var newCdClass = CDClassEditor.CreateNode(newClass);
             newClass.Name = newCdClass.Name;
 
             var classGo = VisualEditor.CreateNode(newClass);
-    
+
             newClass = ParsedClassEditor.UpdateClassGeometry(newClass, classGo);
-            
-            var classInDiagram = new ClassInDiagram { ParsedClass = newClass, ClassInfo = newCdClass, VisualObject = classGo};
+
+            var classInDiagram = new ClassInDiagram
+                { ParsedClass = newClass, ClassInfo = newCdClass, VisualObject = classGo };
             DiagramPool.Instance.ClassDiagram.Classes.Add(classInDiagram);
+        }
+
+        public static void CreateNodeSpawner(Class newClass)
+        {
+            Spawner.Instance.SpawnClass(newClass.Name, newClass.XmiId);
+            CreateNode(newClass);
+        }
+
+        public static void CreateNodeFromRpc(string name, string id)
+        {
+            var newClass = ParsedClassEditor.CreateNode(name, id);
+            CreateNode(newClass);
         }
 
         // public override void UpdateNode()

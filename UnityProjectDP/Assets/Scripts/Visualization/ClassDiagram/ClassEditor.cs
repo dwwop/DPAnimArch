@@ -19,12 +19,6 @@ namespace AnimArch.Visualization.Diagrams
     public class ClassEditor : Singleton<ClassEditor>
     {
 
-        // private void Awake()
-        // {
-        //     DontDestroyOnLoad(gameObject);
-        //     InitializeCreation();
-        // }
-
         public enum Source
         {
             RPC,
@@ -39,56 +33,6 @@ namespace AnimArch.Visualization.Diagrams
             ClassDiagramBuilder.CreateGraph();
         }
 
-        public CDClass CreateNode(Class newClass)
-        {
-            Spawner.Instance.SpawnClass(newClass.Name);
-            return GenerateNode(newClass);
-        }
-
-        public void CreateNodeFromRpc(string name)
-        {
-            var newClass = new Class
-            {
-                Name = name,
-                // XmiId = _id.ToString(),
-                Type = "uml:Class",
-                Attributes = new List<Attribute>(),
-                Methods = new List<Method>()
-            };
-            GenerateNode(newClass);
-        }
-
-
-        public CDClass GenerateNode(Class newClass)
-        {
-            MainEditor.AddNode(newClass);
-            return DiagramPool.Instance.ClassDiagram.FindClassByName(newClass.Name).ClassInfo;
-            // if (!DiagramPool.Instance.ClassDiagram.graph)
-            //     InitializeCreation();
-            //
-            // CDClass tempCdClass = null;
-            // var name = CurrentClassName(newClass.Name, ref tempCdClass);
-            // if (tempCdClass == null)
-            //     return null;
-            //
-            // var classInDiagram = new ClassInDiagram { ParsedClass = newClass, ClassInfo = tempCdClass };
-            // DiagramPool.Instance.ClassDiagram.Classes.Add(classInDiagram);
-            // var node = AddClassToGraph(name);
-            // SetPosition(node);
-            // if (classInDiagram.ParsedClass.Left == 0)
-            // {
-            //     SetClassGeometry(classInDiagram);
-            // }
-            //
-            // return tempCdClass;
-        }
-
-        public static void SetClassGeometry(ClassInDiagram classInDiagram)
-        {
-            var position = classInDiagram.VisualObject.transform.localPosition;
-            classInDiagram.ParsedClass.Left = position.x / 2.5f;
-            classInDiagram.ParsedClass.Top = position.y / 2.5f;
-        }
 
         public static void ReverseClassesGeometry()
         {
@@ -98,46 +42,6 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-        private static string CurrentClassName(string name, ref CDClass TempCdClass)
-        {
-            TempCdClass = null;
-            var i = 0;
-            var currentName = name;
-            var baseName = name;
-            while (TempCdClass == null)
-            {
-                currentName = baseName + (i == 0 ? "" : i.ToString());
-                TempCdClass = OALProgram.Instance.ExecutionSpace.SpawnClass(currentName);
-                i++;
-                if (i > 1000)
-                {
-                    break;
-                }
-            }
-
-            return currentName;
-        }
-
-        private static void SetPosition(GameObject node)
-        {
-            var rect = node.GetComponent<RectTransform>();
-            rect.position = new Vector3(100f, 200f, 1);
-        }
-
-        private GameObject AddClassToGraph(string name)
-        {
-            var currentClass = DiagramPool.Instance.ClassDiagram.Classes.Find(item => item.ParsedClass.Name == name)
-                .ParsedClass;
-            var node = DiagramPool.Instance.ClassDiagram.graph.AddNode();
-            node.name = name;
-
-            SetClassTmProName(node, name);
-            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(name);
-            if (classInDiagram == null) return node;
-
-            classInDiagram.VisualObject = node;
-            return node;
-        }
 
         // Parser used to parse data from XML to C# data structures
 

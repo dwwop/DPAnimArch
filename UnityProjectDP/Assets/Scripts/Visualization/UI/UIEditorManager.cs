@@ -91,16 +91,9 @@ namespace AnimArch.Visualization.UI
 
         public void AddNode()
         {
-            var newClass = new Class
-            {
-                Name = "NewClass_" + _id,
-                XmiId = _id.ToString(),
-                Type = "uml:Class",
-                Attributes = new List<Attribute>(),
-                Methods = new List<Method>()
-            };
+            var newClass = ParsedClassEditor.CreateNode(_id);
 
-            ClassEditor.Instance.CreateNode(newClass);
+            MainEditor.CreateNodeSpawner(newClass);
             _id++;
         }
 
