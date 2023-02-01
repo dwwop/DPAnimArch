@@ -45,7 +45,7 @@ namespace AnimArch.Visualization
         {
             if (!_changedPos && MenuManager.Instance.isSelectingNode)
             {
-                ClassEditor.Instance.SelectNode(gameObject);
+                UIEditorManager.Instance.SelectNode(gameObject);
             }
 
             _changedPos = false;

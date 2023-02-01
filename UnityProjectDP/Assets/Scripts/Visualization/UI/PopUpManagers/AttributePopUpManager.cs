@@ -12,7 +12,7 @@ namespace AnimArch.Visualization.UI
 
         public void OpenAttributeEditPopUp()
         {
-            ClassEditor.Instance.attributePopUp.ActivateCreation(classTxt, attributeTxt);
+            UIEditorManager.Instance.attributePopUp.ActivateCreation(classTxt, attributeTxt);
         }
     }
 }

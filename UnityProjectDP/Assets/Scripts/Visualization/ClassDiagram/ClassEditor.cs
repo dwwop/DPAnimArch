@@ -18,23 +18,12 @@ namespace AnimArch.Visualization.Diagrams
 {
     public class ClassEditor : Singleton<ClassEditor>
     {
-        private int _id;
-        private Graph _graph;
-        public bool active;
-        private GameObject _node;
-        private string _relType;
 
-        [FormerlySerializedAs("atrPopUp")] public AttributePopUp attributePopUp;
-        [FormerlySerializedAs("mtdPopUp")] public MethodPopUp methodPopUp;
-        public ClassPopUp classPopUp;
-        public ParameterPopUp parameterPopUp;
-
-        private void Awake()
-        {
-            DontDestroyOnLoad(gameObject);
-            InitializeCreation();
-            _id = 0;
-        }
+        // private void Awake()
+        // {
+        //     DontDestroyOnLoad(gameObject);
+        //     InitializeCreation();
+        // }
 
         public enum Source
         {
@@ -45,48 +34,17 @@ namespace AnimArch.Visualization.Diagrams
 
         public void InitializeCreation()
         {
-            if (_graph) return;
+            if (DiagramPool.Instance.ClassDiagram.graph) return;
 
-            _graph = DiagramPool.Instance.ClassDiagram.graph
+            DiagramPool.Instance.ClassDiagram.graph = DiagramPool.Instance.ClassDiagram.graph
                 ? DiagramPool.Instance.ClassDiagram.graph
                 : DiagramPool.Instance.ClassDiagram.CreateGraph();
-
-            _id = 0;
         }
 
-        public void StartEditing()
+        public CDClass CreateNode(Class newClass)
         {
-            if (_graph != null)
-                DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<Button>(includeInactive: true)
-                    .ForEach(x => x.gameObject.SetActive(true));
-
-            InitializeCreation();
-
-            active = true;
-        }
-
-        public void Uninitialize()
-        {
-            active = false;
-            MenuManager.Instance.isSelectingNode = false;
-
-            DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<Button>()
-                .ForEach(x => x.gameObject.SetActive(false));
-        }
-
-        public void CreateNode()
-        {
-            var newClass = new Class
-            {
-                Name = "NewClass_" + _id,
-                XmiId = _id.ToString(),
-                Type = "uml:Class",
-                Attributes = new List<Attribute>(),
-                Methods = new List<Method>()
-            };
-
             Spawner.Instance.SpawnClass(newClass.Name);
-            GenerateNode(newClass);
+            return GenerateNode(newClass);
         }
 
         public void CreateNodeFromRpc(string name)
@@ -94,7 +52,7 @@ namespace AnimArch.Visualization.Diagrams
             var newClass = new Class
             {
                 Name = name,
-                XmiId = _id.ToString(),
+                // XmiId = _id.ToString(),
                 Type = "uml:Class",
                 Attributes = new List<Attribute>(),
                 Methods = new List<Method>()
@@ -102,15 +60,10 @@ namespace AnimArch.Visualization.Diagrams
             GenerateNode(newClass);
         }
 
-        private CDClass CreateNode(Class newClass)
-        {
-            Spawner.Instance.SpawnClass(newClass.Name);
-            return GenerateNode(newClass);
-        }
 
-        private CDClass GenerateNode(Class newClass)
+        public CDClass GenerateNode(Class newClass)
         {
-            if (!_graph)
+            if (!DiagramPool.Instance.ClassDiagram.graph)
                 InitializeCreation();
             CDClass tempCdClass = null;
             var name = CurrentClassName(newClass.Name, ref tempCdClass);
@@ -126,7 +79,6 @@ namespace AnimArch.Visualization.Diagrams
                 SetClassGeometry(classInDiagram);
             }
 
-            _id++;
             return tempCdClass;
         }
 
@@ -175,7 +127,7 @@ namespace AnimArch.Visualization.Diagrams
         {
             var currentClass = DiagramPool.Instance.ClassDiagram.Classes.Find(item => item.ParsedClass.Name == name)
                 .ParsedClass;
-            var node = _graph.AddNode();
+            var node = DiagramPool.Instance.ClassDiagram.graph.AddNode();
             node.name = name;
 
             SetClassTmProName(node, name);
@@ -266,53 +218,6 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-        public void SelectNode(GameObject selected)
-        {
-            if (!active || !MenuManager.Instance.isSelectingNode)
-                return;
-            if (selected == _node)
-            {
-                Animating.Animation.Instance.HighlightClass(_node.name, false);
-                _node = null;
-            }
-            else if (_node == null)
-            {
-                _node = selected;
-                Animating.Animation.Instance.HighlightClass(_node.name, true);
-            }
-            else
-            {
-                DrawRelation(selected);
-            }
-        }
-
-        private void DrawRelation(GameObject secondNode)
-        {
-            if (_node == null || secondNode == null) return;
-            var type = _relType.Split();
-            if (type.Length > 1)
-                CreateRelation(_node.name, secondNode.name, type[1], false, true);
-            else
-                CreateRelation(_node.name, secondNode.name, type[0], false);
-            EndSelection();
-        }
-
-        private void EndSelection()
-        {
-            Animating.Animation.Instance.HighlightClass(_node.name, false);
-            _relType = null;
-            _node = null;
-            _graph.UpdateGraph();
-            MenuManager.Instance.isSelectingNode = false;
-            GameObject.Find("SelectionPanel").SetActive(false);
-        }
-
-        public void StartSelection(string type)
-        {
-            MenuManager.Instance.isSelectingNode = true;
-            _relType = type;
-        }
-
         private static void CreateRelation(Relation relation)
         {
             Spawner.Instance.AddRelation(relation.FromClass, relation.ToClass, relation.PropertiesEaType);
@@ -334,7 +239,8 @@ namespace AnimArch.Visualization.Diagrams
             var relInDiag = CreateRelationEdge(relation);
             var sourceClassGo = DiagramPool.Instance.ClassDiagram.FindClassByName(sourceClass).VisualObject;
             var destinationClassGo = DiagramPool.Instance.ClassDiagram.FindClassByName(destinationClass).VisualObject;
-            var edge = _graph.AddEdge(sourceClassGo, destinationClassGo, relation.PrefabType);
+            var edge = DiagramPool.Instance.ClassDiagram.graph
+                .AddEdge(sourceClassGo, destinationClassGo, relation.PrefabType);
             relInDiag.VisualObject = edge;
         }
 
@@ -650,7 +556,7 @@ namespace AnimArch.Visualization.Diagrams
             instance.GetComponent<MethodPopUpManager>().classTxt =
                 GetClassHeader(classGo).GetComponent<TextMeshProUGUI>();
 
-            if (Instance.active)
+            if (UIEditorManager.Instance.active)
                 instance.GetComponentsInChildren<Button>(includeInactive: true)
                     .ForEach(x => x.gameObject.SetActive(true));
         }
@@ -674,7 +580,7 @@ namespace AnimArch.Visualization.Diagrams
             instance.GetComponent<AttributePopUpManager>().classTxt =
                 GetClassHeader(classGo).GetComponent<TextMeshProUGUI>();
 
-            if (Instance.active)
+            if (UIEditorManager.Instance.active)
                 instance.GetComponentsInChildren<Button>(includeInactive: true)
                     .ForEach(x => x.gameObject.SetActive(true));
         }
@@ -690,7 +596,7 @@ namespace AnimArch.Visualization.Diagrams
 
         public void ResetGraph()
         {
-            _graph = null;
+            DiagramPool.Instance.ClassDiagram.graph = null;
         }
     }
 }

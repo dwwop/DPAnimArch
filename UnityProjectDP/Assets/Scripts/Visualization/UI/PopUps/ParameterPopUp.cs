@@ -53,11 +53,11 @@ namespace AnimArch.Visualization.UI
             var parameter = dropdown.options[dropdown.value].text + " " + inp.text.Replace(" ", "_");
             if (_formerParam == null)
             {
-                ClassEditor.Instance.methodPopUp.AddArg(parameter);
+                UIEditorManager.Instance.methodPopUp.AddArg(parameter);
             }
             else
             {
-                ClassEditor.Instance.methodPopUp.EditArg(_formerParam, parameter);
+                UIEditorManager.Instance.methodPopUp.EditArg(_formerParam, parameter);
                 _formerParam = null;
             }
             Deactivate();

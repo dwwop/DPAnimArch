@@ -11,7 +11,7 @@ namespace AnimArch.Visualization.UI
         
         public void OpenMethodEditPopUp()
         {
-            ClassEditor.Instance.methodPopUp.ActivateCreation(classTxt, methodTxt);
+            UIEditorManager.Instance.methodPopUp.ActivateCreation(classTxt, methodTxt);
         }
     }
 }
