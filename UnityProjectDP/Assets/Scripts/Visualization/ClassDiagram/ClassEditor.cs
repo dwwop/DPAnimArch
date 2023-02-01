@@ -36,9 +36,7 @@ namespace AnimArch.Visualization.Diagrams
         {
             if (DiagramPool.Instance.ClassDiagram.graph) return;
 
-            DiagramPool.Instance.ClassDiagram.graph = DiagramPool.Instance.ClassDiagram.graph
-                ? DiagramPool.Instance.ClassDiagram.graph
-                : DiagramPool.Instance.ClassDiagram.CreateGraph();
+            ClassDiagramBuilder.CreateGraph();
         }
 
         public CDClass CreateNode(Class newClass)
@@ -139,86 +137,8 @@ namespace AnimArch.Visualization.Diagrams
         }
 
         // Parser used to parse data from XML to C# data structures
-        public static void ParseData()
-        {
-            var path = AnimationData.Instance.GetDiagramPath();
-            List<Class> classList;
-            List<Relation> relationList;
 
-            switch (Path.GetExtension(path))
-            {
-                case ".xml":
-                {
-                    var xmlDocument = XMIParser.OpenDiagram();
-                    classList = XMIParser.ParseClasses(xmlDocument) ?? new List<Class>();
-                    relationList = XMIParser.ParseRelations(xmlDocument) ?? new List<Relation>();
-                    break;
-                }
-                case ".json":
-                {
-                    var jsonDocument = JsonParser.OpenDiagram();
-                    classList = JsonParser.ParseClasses(jsonDocument) ?? new List<Class>();
-                    relationList = JsonParser.ParseRelations(jsonDocument) ?? new List<Relation>();
-                    break;
-                }
-                default:
-                    return;
-            }
-
-            //Parse all data to our List of "Class" objects
-            foreach (var currentClass in classList)
-            {
-                currentClass.Name = currentClass.Name.Replace(" ", "_");
-
-                var tempCdClass = Instance.CreateNode(currentClass);
-                if (tempCdClass == null)
-                    continue;
-
-                if (currentClass.Attributes != null)
-                {
-                    foreach (var attribute in currentClass.Attributes)
-                    {
-                        attribute.Name = attribute.Name.Replace(" ", "_");
-                        var attributeType = EXETypes.ConvertEATypeName(attribute.Type);
-                        if (attributeType == null)
-                        {
-                            continue;
-                        }
-
-                        tempCdClass.AddAttribute(new CDAttribute(attribute.Name,
-                            EXETypes.ConvertEATypeName(attributeType)));
-                        currentClass.Attributes ??= new List<Attribute>();
-
-                        AddAttribute(currentClass.Name, attribute, false);
-                    }
-                }
-
-                if (currentClass.Methods != null)
-                {
-                    foreach (var method in currentClass.Methods)
-                    {
-                        method.Name = method.Name.Replace(" ", "_");
-                        var cdMethod = new CDMethod(tempCdClass, method.Name,
-                            EXETypes.ConvertEATypeName(method.ReturnValue));
-                        tempCdClass.AddMethod(cdMethod);
-
-                        AddParameters(method, cdMethod);
-                        AddMethod(currentClass.Name, method, Source.loader);
-                    }
-                }
-
-                currentClass.Top *= -1;
-            }
-
-
-            foreach (var relation in relationList)
-            {
-                CreateRelationEdge(relation);
-                CreateRelation(relation);
-            }
-        }
-
-        private static void CreateRelation(Relation relation)
+        public static void CreateRelation(Relation relation)
         {
             Spawner.Instance.AddRelation(relation.FromClass, relation.ToClass, relation.PropertiesEaType);
         }
@@ -244,7 +164,7 @@ namespace AnimArch.Visualization.Diagrams
             relInDiag.VisualObject = edge;
         }
 
-        private static RelationInDiagram CreateRelationEdge(Relation relation)
+        public static RelationInDiagram CreateRelationEdge(Relation relation)
         {
             relation.FromClass = relation.SourceModelName.Replace(" ", "_");
             relation.ToClass = relation.TargetModelName.Replace(" ", "_");
@@ -416,7 +336,7 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-        private static void AddParameters(Method method, CDMethod cdMethod)
+        public static void AddParameters(Method method, CDMethod cdMethod)
         {
             foreach (var argument in method.arguments)
             {

@@ -65,7 +65,7 @@ public class FileLoader : MonoBehaviour
 
         if (!FileBrowser.Success) yield break;
         AnimationData.Instance.SetDiagramPath(FileBrowser.Result);
-        DiagramPool.Instance.ClassDiagram.LoadDiagram();
+        ClassDiagramBuilder.LoadDiagram();
     }
 
     private static IEnumerator SaveAnimationCoroutine(Anim newAnim)

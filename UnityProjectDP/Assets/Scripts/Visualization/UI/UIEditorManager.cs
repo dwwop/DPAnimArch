@@ -19,16 +19,16 @@ namespace AnimArch.Visualization.UI
         public MethodPopUp methodPopUp;
         public ClassPopUp classPopUp;
         public ParameterPopUp parameterPopUp;
-        
-        
+
+
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
             ClassEditor.Instance.InitializeCreation();
-            
+
             _id = 0;
         }
-        
+
 
         public void StartEditing()
         {
@@ -37,18 +37,25 @@ namespace AnimArch.Visualization.UI
                     .ForEach(x => x.gameObject.SetActive(true));
 
             ClassEditor.Instance.InitializeCreation();
-            
+
             _id = 0;
             active = true;
         }
 
-        public void Uninitialize()
+        public void EndEditing()
         {
             active = false;
             MenuManager.Instance.isSelectingNode = false;
 
             DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<Button>()
                 .ForEach(x => x.gameObject.SetActive(false));
+        }
+
+
+        public void StartSelection(string type)
+        {
+            MenuManager.Instance.isSelectingNode = true;
+            _relType = type;
         }
 
         public void SelectNode(GameObject selected)
@@ -67,21 +74,11 @@ namespace AnimArch.Visualization.UI
             }
             else
             {
-                DrawRelation(selected);
+                AddRelation(selected);
             }
         }
-        
-        private void DrawRelation(GameObject secondNode)
-        {
-            if (_node == null || secondNode == null) return;
-            var type = _relType.Split();
-            if (type.Length > 1)
-                ClassEditor.Instance.CreateRelation(_node.name, secondNode.name, type[1], false, true);
-            else
-                ClassEditor.Instance.CreateRelation(_node.name, secondNode.name, type[0], false);
-            EndSelection();
-        }
-        
+
+
         private void EndSelection()
         {
             Animating.Animation.Instance.HighlightClass(_node.name, false);
@@ -92,13 +89,7 @@ namespace AnimArch.Visualization.UI
             GameObject.Find("SelectionPanel").SetActive(false);
         }
 
-        public void StartSelection(string type)
-        {
-            MenuManager.Instance.isSelectingNode = true;
-            _relType = type;
-        }
-
-        public void CreateNode()
+        public void AddNode()
         {
             var newClass = new Class
             {
@@ -108,9 +99,20 @@ namespace AnimArch.Visualization.UI
                 Attributes = new List<Attribute>(),
                 Methods = new List<Method>()
             };
-            
+
             ClassEditor.Instance.CreateNode(newClass);
             _id++;
+        }
+
+        private void AddRelation(GameObject secondNode)
+        {
+            if (_node == null || secondNode == null) return;
+            var type = _relType.Split();
+            if (type.Length > 1)
+                ClassEditor.Instance.CreateRelation(_node.name, secondNode.name, type[1], false, true);
+            else
+                ClassEditor.Instance.CreateRelation(_node.name, secondNode.name, type[0], false);
+            EndSelection();
         }
     }
 }
