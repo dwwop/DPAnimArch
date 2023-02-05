@@ -4,12 +4,6 @@ namespace AnimArch.Visualization.Diagrams
 {
     public static class ParsedEditor
     {
-        public static Class CreateNode(int id)
-        {
-            return new Class("NewClass_", id.ToString());
-        }
-
-
         public static Class UpdateNodeGeometry(Class newClass, GameObject classGo)
         {
             if (newClass.Left != 0)

@@ -83,7 +83,7 @@ namespace AnimArch.Visualization.Diagrams
 
             if (!"Generalization".Equals(relation.PropertiesEaType) && !"Realisation".Equals(relation.PropertiesEaType))
                 return cdRelationship;
-            
+
             var fromClass = OALProgram.Instance.ExecutionSpace.getClassByName(relation.FromClass);
             var toClass = OALProgram.Instance.ExecutionSpace.getClassByName(relation.ToClass);
 

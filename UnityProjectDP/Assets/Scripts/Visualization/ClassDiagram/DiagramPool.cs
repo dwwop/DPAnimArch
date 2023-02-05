@@ -29,6 +29,6 @@ namespace AnimArch.Visualization.Diagrams
         public ClassDiagram ClassDiagram;
         public ObjectDiagram ObjectDiagram;
 
-        public List<InterGraphRelation> RelationsClassToObject = new List<InterGraphRelation>();
+        public List<InterGraphRelation> RelationsClassToObject = new();
     }
 }

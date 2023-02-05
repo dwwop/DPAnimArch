@@ -66,6 +66,7 @@ namespace AnimArch.Visualization.Diagrams
                 }
             }
         }
+
         public static void UpdateNodeName(string oldName, string newName, bool fromRpc)
         {
             if (!fromRpc)

@@ -108,19 +108,16 @@ namespace AnimArch.Visualization.UI
         {
             if (_node == null || secondNode == null) return;
             var type = _relType.Split();
-            
+
             var relation = new Relation
             {
                 SourceModelName = _node.name,
                 TargetModelName = secondNode.name,
-                PropertiesEaType =  type.Length > 1 ? type[1] : type[0],
+                PropertiesEaType = type.Length > 1 ? type[1] : type[0],
                 PropertiesDirection = type.Length > 1 ? "none" : "Source -> Destination"
             };
+            
             MainEditor.CreateRelation(relation, MainEditor.Source.Editor);
-            // if (type.Length > 1)
-                // ClassEditor.Instance.CreateRelation(_node.name, secondNode.name, type[1], false, true);
-            // else
-                // ClassEditor.Instance.CreateRelation(_node.name, secondNode.name, type[0], false);
             EndSelection();
         }
     }

@@ -35,8 +35,8 @@ namespace AnimArch.Visualization.Diagrams
                 }
                 default:
                     return;
-            }   
-            
+            }
+
             if (classList.Count == 0)
                 return;
             //Parse all data to our List of "Class" objects

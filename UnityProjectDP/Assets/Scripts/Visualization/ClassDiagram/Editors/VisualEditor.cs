@@ -156,7 +156,7 @@ namespace AnimArch.Visualization.Diagrams
         }
 
 
-        //Fix used to minimalize relation displaying bug
+        //Fix used to minimize relation displaying bug
         private static IEnumerator QuickFix(GameObject g)
         {
             yield return new WaitForSeconds(0.05f);
@@ -164,9 +164,10 @@ namespace AnimArch.Visualization.Diagrams
             yield return new WaitForSeconds(0.05f);
             g.SetActive(true);
         }
+
         public static GameObject CreateRelation(Relation relation)
         {
-            var prefab= relation.PropertiesEaType switch
+            var prefab = relation.PropertiesEaType switch
             {
                 "Association" => relation.PropertiesDirection switch
                 {
@@ -180,15 +181,15 @@ namespace AnimArch.Visualization.Diagrams
                 "Realisation" => DiagramPool.Instance.realisationPrefab,
                 _ => DiagramPool.Instance.associationNonePrefab
             };
-            
+
             var sourceClassGo = DiagramPool.Instance.ClassDiagram.FindClassByName(relation.FromClass).VisualObject;
             var destinationClassGo = DiagramPool.Instance.ClassDiagram.FindClassByName(relation.ToClass).VisualObject;
-            
+
             var edge = DiagramPool.Instance.ClassDiagram.graph.AddEdge(sourceClassGo, destinationClassGo, prefab);
 
             if (edge.gameObject.transform.childCount > 0)
             {
-                DiagramPool.Instance.ClassDiagram.StartCoroutine( QuickFix(edge.transform.GetChild(0).gameObject));
+                DiagramPool.Instance.ClassDiagram.StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
             }
 
             return edge;

@@ -19,8 +19,6 @@ namespace AnimArch.Visualization.Diagrams
         public string PropertiesDirection;
         public string ExtendedPropertiesVirtualInheritance;
 
-        [NonSerialized] 
-        public GameObject PrefabType;
         public string FromClass;
         public string ToClass;
 
