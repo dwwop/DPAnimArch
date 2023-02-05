@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Networking;
+using OALProgramControl;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -14,12 +16,12 @@ namespace AnimArch.Visualization.Diagrams
 
         private static void CreateNode(Class newClass)
         {
-            var newCdClass = CDClassEditor.CreateNode(newClass);
+            var newCdClass = CDEditor.CreateNode(newClass);
             newClass.Name = newCdClass.Name;
 
             var classGo = VisualEditor.CreateNode(newClass);
 
-            newClass = ParsedClassEditor.UpdateNodeGeometry(newClass, classGo);
+            newClass = ParsedEditor.UpdateNodeGeometry(newClass, classGo);
 
             var classInDiagram = new ClassInDiagram
                 { ParsedClass = newClass, ClassInfo = newCdClass, VisualObject = classGo };
@@ -33,18 +35,37 @@ namespace AnimArch.Visualization.Diagrams
             {
                 case Source.Editor:
                     CreateNode(newClass);
-                    Spawner.Instance.SpawnNode(newClass.Name, newClass.XmiId);
+                    Spawner.Instance.SpawnNode(newClass.Name, newClass.Id);
                     break;
                 case Source.RPC:
                     CreateNode(newClass);
                     break;
                 case Source.Loader:
-                    Spawner.Instance.SpawnNode(newClass.Name, newClass.XmiId);
+                    Spawner.Instance.SpawnNode(newClass.Name, newClass.Id);
                     CreateNode(newClass);
                     break;
             }
         }
 
+        private static void UpdateNodeName(string oldName, string newName)
+        {
+            foreach (var relationInDiagram in DiagramPool.Instance.ClassDiagram.Relations)
+            {
+                if (relationInDiagram.ParsedRelation.FromClass == oldName)
+                {
+                    relationInDiagram.ParsedRelation.FromClass = newName;
+                    relationInDiagram.ParsedRelation.SourceModelName = newName;
+                    relationInDiagram.RelationInfo.FromClass = newName;
+                }
+
+                if (relationInDiagram.ParsedRelation.ToClass == oldName)
+                {
+                    relationInDiagram.ParsedRelation.ToClass = newName;
+                    relationInDiagram.ParsedRelation.TargetModelName = newName;
+                    relationInDiagram.RelationInfo.ToClass = newName;
+                }
+            }
+        }
         public static void UpdateNodeName(string oldName, string newName, bool fromRpc)
         {
             if (!fromRpc)
@@ -60,7 +81,7 @@ namespace AnimArch.Visualization.Diagrams
 
             VisualEditor.UpdateNode(classInDiagram.VisualObject);
 
-            RelationshipEditor.UpdateNodeName(oldName, newName);
+            UpdateNodeName(oldName, newName);
         }
 
         private static void AddAttribute(string targetClass, Attribute attribute)
@@ -73,8 +94,8 @@ namespace AnimArch.Visualization.Diagrams
 
             attribute.Id = (classInDiagram.ParsedClass.Attributes.Count + 1).ToString();
 
-            ParsedClassEditor.AddAttribute(classInDiagram, attribute);
-            CDClassEditor.AddAttribute(classInDiagram, attribute);
+            ParsedEditor.AddAttribute(classInDiagram, attribute);
+            CDEditor.AddAttribute(classInDiagram, attribute);
             VisualEditor.AddAttribute(classInDiagram, attribute);
         }
 
@@ -94,7 +115,7 @@ namespace AnimArch.Visualization.Diagrams
                     Spawner.Instance.AddAttribute(targetClass, attribute.Name, attribute.Type);
                     var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
 
-                    CDClassEditor.AddAttribute(classInDiagram, attribute);
+                    CDEditor.AddAttribute(classInDiagram, attribute);
                     VisualEditor.AddAttribute(classInDiagram, attribute);
                     break;
             }
@@ -109,8 +130,8 @@ namespace AnimArch.Visualization.Diagrams
             if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(targetClass, newAttribute.Name) != null)
                 return;
 
-            ParsedClassEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
-            CDClassEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
+            ParsedEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
+            CDEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
             VisualEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
         }
 
@@ -127,8 +148,8 @@ namespace AnimArch.Visualization.Diagrams
 
             method.Id = (classInDiagram.ParsedClass.Methods.Count + 1).ToString();
 
-            ParsedClassEditor.AddMethod(classInDiagram, method);
-            CDClassEditor.AddMethod(classInDiagram, method);
+            ParsedEditor.AddMethod(classInDiagram, method);
+            CDEditor.AddMethod(classInDiagram, method);
             VisualEditor.AddMethod(classInDiagram, method);
         }
 
@@ -149,7 +170,7 @@ namespace AnimArch.Visualization.Diagrams
                     Spawner.Instance.AddMethod(targetClass, method.Name, method.ReturnValue);
                     var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
 
-                    CDClassEditor.AddMethod(classInDiagram, method);
+                    CDEditor.AddMethod(classInDiagram, method);
                     VisualEditor.AddMethod(classInDiagram, method);
                     break;
             }
@@ -164,18 +185,44 @@ namespace AnimArch.Visualization.Diagrams
             if (DiagramPool.Instance.ClassDiagram.FindMethodByName(targetClass, newMethod.Name) != null)
                 return;
 
-            ParsedClassEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);
-            CDClassEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);
+            ParsedEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);
+            CDEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);
             VisualEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);
         }
 
+        private static void CreateRelation(Relation relation)
+        {
+            relation.FromClass = relation.SourceModelName.Replace(" ", "_");
+            relation.ToClass = relation.TargetModelName.Replace(" ", "_");
 
+            var cdRelation = CDEditor.CreateRelation(relation);
+            var relationGo = VisualEditor.CreateRelation(relation);
+
+            var relationInDiagram = new RelationInDiagram
+                { ParsedRelation = relation, RelationInfo = cdRelation, VisualObject = relationGo };
+            DiagramPool.Instance.ClassDiagram.Relations.Add(relationInDiagram);
+        }
+
+
+        public static void CreateRelation(Relation relation, Source source)
+        {
+            switch (source)
+            {
+                case Source.Loader:
+                case Source.Editor:
+                    CreateRelation(relation);
+                    Spawner.Instance.AddRelation(
+                        relation.FromClass,
+                        relation.ToClass,
+                        relation.PropertiesEaType,
+                        relation.PropertiesDirection);
+                    break;
+                case Source.RPC:
+                    CreateRelation(relation);
+                    break;
+            }
+        }
         // public override void DeleteNode()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public override void AddEdge()
         // {
         //     throw new System.NotImplementedException();
         // }

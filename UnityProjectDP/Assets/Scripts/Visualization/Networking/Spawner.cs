@@ -137,30 +137,44 @@ namespace Networking
             MainEditor.AddMethod(targetClass, method, MainEditor.Source.RPC);
         }
 
-        public void AddRelation(string sourceClass, string destinationClass, string relationType)
+        public void AddRelation(string sourceClass, string destinationClass, string relationType, string direction)
         {
             if (IsServer)
             {
-                AddRelationClientRpc(sourceClass, destinationClass, relationType);
+                AddRelationClientRpc(sourceClass, destinationClass, relationType, direction);
             }
             else
             {
-                AddRelationServerRpc(sourceClass, destinationClass, relationType);
+                AddRelationServerRpc(sourceClass, destinationClass, relationType, direction);
             }
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void AddRelationServerRpc(string sourceClass, string destinationClass, string relationType)
+        public void AddRelationServerRpc(string sourceClass, string destinationClass, string relationType, string direction)
         {
-            ClassEditor.Instance.CreateRelation(sourceClass, destinationClass, relationType, true);
+            var relation = new Relation
+            {
+                SourceModelName = sourceClass,
+                TargetModelName = destinationClass,
+                PropertiesEaType = relationType,
+                PropertiesDirection = direction
+            };
+            MainEditor.CreateRelation(relation, MainEditor.Source.RPC);
         }
 
         [ClientRpc]
-        public void AddRelationClientRpc(string sourceClass, string destinationClass, string relationType)
+        public void AddRelationClientRpc(string sourceClass, string destinationClass, string relationType, string direction)
         {
             if (IsServer)
                 return;
-            ClassEditor.Instance.CreateRelation(sourceClass, destinationClass, relationType, true);
+            var relation = new Relation
+            {
+                SourceModelName = sourceClass,
+                TargetModelName = destinationClass,
+                PropertiesEaType = relationType,
+                PropertiesDirection = direction
+            };
+            MainEditor.CreateRelation(relation, MainEditor.Source.RPC);
         }
 
         public void SetPosition(string className, Vector3 position)

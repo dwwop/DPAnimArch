@@ -1,8 +1,9 @@
-﻿using OALProgramControl;
+﻿using System;
+using OALProgramControl;
 
 namespace AnimArch.Visualization.Diagrams
 {
-    public static class CDClassEditor
+    public static class CDEditor
     {
         public static CDClass CreateNode(Class newClass)
         {
@@ -71,6 +72,27 @@ namespace AnimArch.Visualization.Diagrams
             var index = classInDiagram.ClassInfo.Methods.FindIndex(x => x.Name == oldMethod);
             var newCdMethod = CreateCdMethodFromMethod(classInDiagram.ClassInfo, newMethod);
             classInDiagram.ClassInfo.Methods[index] = newCdMethod;
+        }
+
+        public static CDRelationship CreateRelation(Relation relation)
+        {
+            var cdRelationship =
+                OALProgram.Instance.RelationshipSpace.SpawnRelationship(relation.FromClass, relation.ToClass)
+                ?? throw new ArgumentNullException(nameof(relation));
+            relation.OALName = cdRelationship.RelationshipName;
+
+            if (!"Generalization".Equals(relation.PropertiesEaType) && !"Realisation".Equals(relation.PropertiesEaType))
+                return cdRelationship;
+            
+            var fromClass = OALProgram.Instance.ExecutionSpace.getClassByName(relation.FromClass);
+            var toClass = OALProgram.Instance.ExecutionSpace.getClassByName(relation.ToClass);
+
+            if (fromClass != null && toClass != null)
+            {
+                fromClass.SuperClass = toClass;
+            }
+
+            return cdRelationship;
         }
     }
 }

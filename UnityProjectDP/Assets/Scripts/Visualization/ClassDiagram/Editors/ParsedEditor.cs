@@ -2,7 +2,7 @@
 
 namespace AnimArch.Visualization.Diagrams
 {
-    public static class ParsedClassEditor
+    public static class ParsedEditor
     {
         public static Class CreateNode(int id)
         {

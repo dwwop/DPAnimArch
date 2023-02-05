@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using AnimArch.Parsing;
@@ -34,8 +35,10 @@ namespace AnimArch.Visualization.Diagrams
                 }
                 default:
                     return;
-            }
-
+            }   
+            
+            if (classList.Count == 0)
+                return;
             //Parse all data to our List of "Class" objects
             foreach (var currentClass in classList)
             {
@@ -66,9 +69,10 @@ namespace AnimArch.Visualization.Diagrams
 
             foreach (var relation in relationList)
             {
-                ClassEditor.CreateRelationEdge(relation);
-                ClassEditor.CreateRelation(relation);
+                MainEditor.CreateRelation(relation, MainEditor.Source.Loader);
             }
+
+            Debug.Log("");
         }
 
 
@@ -99,55 +103,6 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-
-        //Fix used to minimalize relation displaying bug
-        private static IEnumerator QuickFix(GameObject g)
-        {
-            yield return new WaitForSeconds(0.05f);
-            g.SetActive(false);
-            yield return new WaitForSeconds(0.05f);
-            g.SetActive(true);
-        }
-
-        //Create GameObjects from the parsed data stored in list of Classes and Relations
-        private static void RenderRelations()
-        {
-            //Render Relations between classes
-            foreach (var rel in DiagramPool.Instance.ClassDiagram.Relations)
-            {
-                var prefab = rel.ParsedRelation.PrefabType;
-                if (prefab == null)
-                {
-                    prefab = DiagramPool.Instance.associationNonePrefab;
-                }
-
-                var fromClass = DiagramPool.Instance.ClassDiagram.FindClassByName(rel.ParsedRelation.FromClass)
-                    ?.VisualObject;
-                var toClass = DiagramPool.Instance.ClassDiagram.FindClassByName(rel.ParsedRelation.ToClass)
-                    ?.VisualObject;
-                if (fromClass != null && toClass != null)
-                {
-                    var edge = DiagramPool.Instance.ClassDiagram.graph.AddEdge(fromClass, toClass, prefab);
-
-                    rel.VisualObject = edge;
-                    // Quickfix
-
-                    if (edge.gameObject.transform.childCount > 0)
-                    {
-                        DiagramPool.Instance.ClassDiagram.StartCoroutine(
-                            QuickFix(edge.transform.GetChild(0).gameObject));
-                    }
-                }
-                else
-                {
-                    Debug.LogError
-                    (
-                        $"Can't find specified Edge \"{rel.ParsedRelation.FromClass}\"->\"{rel.ParsedRelation.ToClass}\""
-                    );
-                }
-            }
-        }
-
         public static void LoadDiagram()
         {
             CreateGraph();
@@ -160,7 +115,6 @@ namespace AnimArch.Visualization.Diagrams
                 AnimationData.Instance.diagramId++;
             }
 
-            RenderRelations();
             RenderClassesManual();
         }
     }

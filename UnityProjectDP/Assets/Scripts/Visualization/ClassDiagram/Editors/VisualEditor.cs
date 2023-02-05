@@ -1,4 +1,5 @@
-﻿using AnimArch.Extensions;
+﻿using System.Collections;
+using AnimArch.Extensions;
 using AnimArch.Visualization.UI;
 using Networking;
 using TMPro;
@@ -152,6 +153,45 @@ namespace AnimArch.Visualization.Diagrams
 
             method.name = newMethod.Name;
             method.Find("MethodText").GetComponent<TextMeshProUGUI>().text = GetStringFromMethod(newMethod);
+        }
+
+
+        //Fix used to minimalize relation displaying bug
+        private static IEnumerator QuickFix(GameObject g)
+        {
+            yield return new WaitForSeconds(0.05f);
+            g.SetActive(false);
+            yield return new WaitForSeconds(0.05f);
+            g.SetActive(true);
+        }
+        public static GameObject CreateRelation(Relation relation)
+        {
+            var prefab= relation.PropertiesEaType switch
+            {
+                "Association" => relation.PropertiesDirection switch
+                {
+                    "Source -> Destination" => DiagramPool.Instance.associationSDPrefab,
+                    "Destination -> Source" => DiagramPool.Instance.associationDSPrefab,
+                    "Bi-Directional" => DiagramPool.Instance.associationFullPrefab,
+                    _ => DiagramPool.Instance.associationNonePrefab
+                },
+                "Generalization" => DiagramPool.Instance.generalizationPrefab,
+                "Dependency" => DiagramPool.Instance.dependsPrefab,
+                "Realisation" => DiagramPool.Instance.realisationPrefab,
+                _ => DiagramPool.Instance.associationNonePrefab
+            };
+            
+            var sourceClassGo = DiagramPool.Instance.ClassDiagram.FindClassByName(relation.FromClass).VisualObject;
+            var destinationClassGo = DiagramPool.Instance.ClassDiagram.FindClassByName(relation.ToClass).VisualObject;
+            
+            var edge = DiagramPool.Instance.ClassDiagram.graph.AddEdge(sourceClassGo, destinationClassGo, prefab);
+
+            if (edge.gameObject.transform.childCount > 0)
+            {
+                DiagramPool.Instance.ClassDiagram.StartCoroutine( QuickFix(edge.transform.GetChild(0).gameObject));
+            }
+
+            return edge;
         }
     }
 }
