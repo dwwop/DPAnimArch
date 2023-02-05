@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AnimArch.Extensions;
 using UnityEngine;
@@ -36,11 +37,28 @@ namespace AnimArch.Visualization.UI
         }
         
         
+        private static Method GetMethodFromString(string str)
+        {
+            var method = new Method();
+
+            var parts = str.Split(new[] { ": ", "\n" }, StringSplitOptions.None);
+
+            var nameAndArguments = parts[0].Split(new[] { "(", ")" }, StringSplitOptions.None);
+            method.Name = nameAndArguments[0];
+            method.ReturnValue = parts[1];
+
+
+            method.arguments = nameAndArguments[1].Split(", ").Where(x => x != "").ToList();
+
+            return method;
+        }
+        
+        
         public void ActivateCreation(TMP_Text classTxt, TMP_Text methodTxt)
         {
             ActivateCreation(classTxt);
 
-            var formerMethod = ClassEditor.GetMethodFromString(methodTxt.text);
+            var formerMethod = GetMethodFromString(methodTxt.text);
             inp.text = formerMethod.Name;
             
             dropdown.value = dropdown.options.FindIndex(x => x.text == formerMethod.ReturnValue);
@@ -66,11 +84,11 @@ namespace AnimArch.Visualization.UI
             };
             if (_formerName == null)
             {
-                ClassEditor.AddMethod(className.text, newMethod, ClassEditor.Source.editor);
+                MainEditor.AddMethod(className.text, newMethod, ClassEditor.Source.editor);
             }
             else
             {
-                ClassEditor.UpdateMethod(className.text, _formerName, newMethod);
+                MainEditor.UpdateMethod(className.text, _formerName, newMethod);
                 _formerName = null;
             }
             

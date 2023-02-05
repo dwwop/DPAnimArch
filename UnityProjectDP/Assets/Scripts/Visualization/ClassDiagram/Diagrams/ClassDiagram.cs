@@ -57,7 +57,6 @@ namespace AnimArch.Visualization.Diagrams
             }
 
             OALProgram.Instance.Reset();
-            ClassEditor.Instance.ResetGraph();
 
             AnimationData.Instance.ClearData();
         }

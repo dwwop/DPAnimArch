@@ -21,10 +21,17 @@ namespace AnimArch.Visualization.UI
         public ParameterPopUp parameterPopUp;
 
 
+        private static void InitializeCreation()
+        {
+            if (DiagramPool.Instance.ClassDiagram.graph) return;
+
+            ClassDiagramBuilder.CreateGraph();
+        }
+        
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            ClassEditor.Instance.InitializeCreation();
+            InitializeCreation();
 
             _id = 0;
         }
@@ -36,7 +43,7 @@ namespace AnimArch.Visualization.UI
                 DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<Button>(includeInactive: true)
                     .ForEach(x => x.gameObject.SetActive(true));
 
-            ClassEditor.Instance.InitializeCreation();
+            InitializeCreation();
 
             _id = 0;
             active = true;

@@ -42,9 +42,9 @@ namespace AnimArch.Visualization.Diagrams
                 currentClass.Name = currentClass.Name.Replace(" ", "_");
 
                 MainEditor.CreateNodeSpawner(currentClass);
-                var tempCdClass = DiagramPool.Instance.ClassDiagram.FindClassByName(currentClass.Name).ClassInfo;
-                
-                if (tempCdClass == null)
+                var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(currentClass.Name);
+
+                if (classInDiagram.ClassInfo == null)
                     continue;
 
                 if (currentClass.Attributes != null)
@@ -58,7 +58,7 @@ namespace AnimArch.Visualization.Diagrams
                             continue;
                         }
 
-                        tempCdClass.AddAttribute(new CDAttribute(attribute.Name,
+                        classInDiagram.ClassInfo.AddAttribute(new CDAttribute(attribute.Name,
                             EXETypes.ConvertEATypeName(attributeType)));
                         currentClass.Attributes ??= new List<Attribute>();
 
@@ -66,18 +66,10 @@ namespace AnimArch.Visualization.Diagrams
                     }
                 }
 
-                if (currentClass.Methods != null)
+                currentClass.Methods ??= new List<Method>();
+                foreach (var method in currentClass.Methods)
                 {
-                    foreach (var method in currentClass.Methods)
-                    {
-                        method.Name = method.Name.Replace(" ", "_");
-                        var cdMethod = new CDMethod(tempCdClass, method.Name,
-                            EXETypes.ConvertEATypeName(method.ReturnValue));
-                        tempCdClass.AddMethod(cdMethod);
-
-                        ClassEditor.AddParameters(method, cdMethod);
-                        ClassEditor.AddMethod(currentClass.Name, method, ClassEditor.Source.loader);
-                    }
+                    MainEditor.AddMethod(currentClass.Name, method, ClassEditor.Source.loader);
                 }
 
                 currentClass.Top *= -1;
@@ -161,7 +153,8 @@ namespace AnimArch.Visualization.Diagrams
 
                     if (edge.gameObject.transform.childCount > 0)
                     {
-                        DiagramPool.Instance.ClassDiagram.StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
+                        DiagramPool.Instance.ClassDiagram.StartCoroutine(
+                            QuickFix(edge.transform.GetChild(0).gameObject));
                     }
                 }
                 else

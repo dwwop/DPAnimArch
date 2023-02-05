@@ -33,6 +33,18 @@ namespace AnimArch.Visualization.Diagrams
             return newClass;
         }
         
+        public static void AddMethod(ClassInDiagram classInDiagram, Method method){
+            classInDiagram.ParsedClass.Methods.Add(method);
+        }
+
+        public static void UpdateMethod(ClassInDiagram classInDiagram, string oldMethod, Method newMethod)
+        {
+            
+            var index = classInDiagram.ParsedClass.Methods.FindIndex(x => x.Name == oldMethod);
+            // var formerMethodTxt = GetStringFromMethod(classInDiagram.ParsedClass.Methods[index]);
+            newMethod.Id = classInDiagram.ParsedClass.Methods[index].Id;
+            classInDiagram.ParsedClass.Methods[index] = newMethod;
+        }
         // public  void UpdateNode()
         // {
         //     throw new System.NotImplementedException();

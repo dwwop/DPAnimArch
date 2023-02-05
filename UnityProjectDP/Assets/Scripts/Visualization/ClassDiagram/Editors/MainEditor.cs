@@ -1,4 +1,6 @@
-﻿using Networking;
+﻿using System.Collections.Generic;
+using Networking;
+using OALProgramControl;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -39,8 +41,8 @@ namespace AnimArch.Visualization.Diagrams
             if (classInDiagram == null)
                 return;
 
-            classInDiagram.ClassInfo.Name = newName;
             classInDiagram.ParsedClass.Name = newName;
+            classInDiagram.ClassInfo.Name = newName;
             classInDiagram.VisualObject.name = newName;
 
             VisualEditor.UpdateNode(classInDiagram.VisualObject);
@@ -48,11 +50,62 @@ namespace AnimArch.Visualization.Diagrams
             RelationshipEditor.UpdateNodeName(oldName, newName);
         }
 
-        // public override void UpdateNode()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
+        private static void AddMethod(string targetClass, Method method)
+        {
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
+            if (classInDiagram == null)
+                return;
+
+            classInDiagram.ParsedClass.Methods ??= new List<Method>();
+
+            if (DiagramPool.Instance.ClassDiagram.FindMethodByName(targetClass, method.Name) != null)
+                return;
+
+            method.Id = (classInDiagram.ParsedClass.Methods.Count + 1).ToString();
+
+            ParsedClassEditor.AddMethod(classInDiagram, method);
+            CDClassEditor.AddMethod(classInDiagram, method);
+            VisualEditor.AddMethod(classInDiagram, method);
+        }
+
+    
+
+        public static void AddMethod(string targetClass, Method method, ClassEditor.Source source)
+        {
+            switch (source)
+            {
+                case ClassEditor.Source.editor:
+                    AddMethod(targetClass, method);
+                    Spawner.Instance.AddMethod(targetClass, method.Name, method.ReturnValue);
+                    break;
+                case ClassEditor.Source.RPC:
+                    AddMethod(targetClass, method);
+                    break;
+                case ClassEditor.Source.loader:
+                    Spawner.Instance.AddMethod(targetClass, method.Name, method.ReturnValue);
+                    var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
+                    
+                    CDClassEditor.AddMethod(classInDiagram, method);
+                    VisualEditor.AddMethod(classInDiagram, method);
+                    break;
+            }
+        }
+
+        public static void UpdateMethod(string targetClass, string oldMethod, Method newMethod)
+        {
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
+            if (classInDiagram == null)
+                return;
+
+            if (DiagramPool.Instance.ClassDiagram.FindMethodByName(targetClass, newMethod.Name) != null)
+                return;
+
+            ParsedClassEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);
+            CDClassEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);
+            VisualEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);
+        }
+
+
         // public override void DeleteNode()
         // {
         //     throw new System.NotImplementedException();

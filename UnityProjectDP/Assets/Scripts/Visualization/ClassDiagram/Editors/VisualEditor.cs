@@ -1,11 +1,17 @@
-﻿using AnimArch.Visualization.UI;
+﻿using AnimArch.Extensions;
+using AnimArch.Visualization.UI;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AnimArch.Visualization.Diagrams
 {
     public static class VisualEditor
     {
+        static VisualEditor()
+        {
+        }
+
         public static GameObject CreateNode(Class newClass)
         {
             var node = DiagramPool.Instance.ClassDiagram.graph.AddNode();
@@ -64,6 +70,51 @@ namespace AnimArch.Visualization.Diagrams
             {
                 method.classTxt = GetNodeHeader(classGo).GetComponent<TextMeshProUGUI>();
             }
+        }
+
+        private static string GetStringFromMethod(Method method)
+        {
+            var arguments = "(";
+            if (method.arguments != null)
+            {
+                for (var index = 0; index < method.arguments.Count; index++)
+                {
+                    if (index < method.arguments.Count - 1)
+                        arguments += (method.arguments[index] + ", ");
+                    else arguments += (method.arguments[index]);
+                }
+            }
+
+            arguments += "): ";
+
+            return method.Name + arguments + method.ReturnValue;
+        }
+
+        public static void AddMethod(ClassInDiagram classInDiagram, Method method)
+        {
+            var methodString = GetStringFromMethod(method);
+            var attributesTransform = GetMethodLayoutGroup(classInDiagram.VisualObject);
+
+            var instance = Object.Instantiate(DiagramPool.Instance.classMethodPrefab, attributesTransform, false);
+            instance.name = method.Name;
+            instance.transform.Find("MethodText").GetComponent<TextMeshProUGUI>().text += methodString;
+
+            instance.GetComponent<MethodPopUpManager>().classTxt =
+                GetNodeHeader(classInDiagram.VisualObject).GetComponent<TextMeshProUGUI>();
+
+            if (UIEditorManager.Instance.active)
+                instance.GetComponentsInChildren<Button>(includeInactive: true)
+                    .ForEach(x => x.gameObject.SetActive(true));
+        }
+
+        public static void UpdateMethod(ClassInDiagram classInDiagram, string oldMethod, Method newMethod)
+        {
+            var method = GetMethodLayoutGroup(classInDiagram.VisualObject).Find(oldMethod);
+
+            method.name = newMethod.Name;
+            var newMethodText = GetStringFromMethod(newMethod);
+
+            method.Find("MethodText").GetComponent<TextMeshProUGUI>().text = newMethodText;
         }
     }
 }

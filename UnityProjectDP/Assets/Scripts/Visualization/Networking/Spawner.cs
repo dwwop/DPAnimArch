@@ -118,7 +118,7 @@ namespace Networking
                 Name = name,
                 ReturnValue = returnValue
             };
-            ClassEditor.AddMethod(targetClass, method, ClassEditor.Source.RPC);
+            MainEditor.AddMethod(targetClass, method, ClassEditor.Source.RPC);
         }
 
         [ClientRpc]
@@ -131,7 +131,7 @@ namespace Networking
                 Name = name,
                 ReturnValue = returnValue
             };
-            ClassEditor.AddMethod(targetClass, method, ClassEditor.Source.RPC);
+            MainEditor.AddMethod(targetClass, method, ClassEditor.Source.RPC);
         }
 
         public void AddRelation(string sourceClass, string destinationClass, string relationType)
