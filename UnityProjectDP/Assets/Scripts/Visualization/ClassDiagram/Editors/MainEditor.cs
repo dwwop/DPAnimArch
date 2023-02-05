@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Networking;
-using OALProgramControl;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -12,6 +11,7 @@ namespace AnimArch.Visualization.Diagrams
             Editor,
             Loader
         }
+
         private static void CreateNode(Class newClass)
         {
             var newCdClass = CDClassEditor.CreateNode(newClass);
@@ -26,16 +26,23 @@ namespace AnimArch.Visualization.Diagrams
             DiagramPool.Instance.ClassDiagram.Classes.Add(classInDiagram);
         }
 
-        public static void CreateNodeSpawner(Class newClass)
+        public static void CreateNode(Class newClass, Source source)
         {
-            Spawner.Instance.SpawnNode(newClass.Name, newClass.XmiId);
-            CreateNode(newClass);
-        }
-
-        public static void CreateNodeFromRpc(string name, string id)
-        {
-            var newClass = ParsedClassEditor.CreateNode(name, id);
-            CreateNode(newClass);
+            newClass.Name = newClass.Name.Replace(" ", "_");
+            switch (source)
+            {
+                case Source.Editor:
+                    CreateNode(newClass);
+                    Spawner.Instance.SpawnNode(newClass.Name, newClass.XmiId);
+                    break;
+                case Source.RPC:
+                    CreateNode(newClass);
+                    break;
+                case Source.Loader:
+                    Spawner.Instance.SpawnNode(newClass.Name, newClass.XmiId);
+                    CreateNode(newClass);
+                    break;
+            }
         }
 
         public static void UpdateNodeName(string oldName, string newName, bool fromRpc)
@@ -56,6 +63,57 @@ namespace AnimArch.Visualization.Diagrams
             RelationshipEditor.UpdateNodeName(oldName, newName);
         }
 
+        private static void AddAttribute(string targetClass, Attribute attribute)
+        {
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
+            if (classInDiagram == null) return;
+
+            if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(targetClass, attribute.Name) != null)
+                return;
+
+            attribute.Id = (classInDiagram.ParsedClass.Attributes.Count + 1).ToString();
+
+            ParsedClassEditor.AddAttribute(classInDiagram, attribute);
+            CDClassEditor.AddAttribute(classInDiagram, attribute);
+            VisualEditor.AddAttribute(classInDiagram, attribute);
+        }
+
+        public static void AddAttribute(string targetClass, Attribute attribute, Source source)
+        {
+            attribute.Name = attribute.Name.Replace(" ", "_");
+            switch (source)
+            {
+                case Source.Editor:
+                    AddAttribute(targetClass, attribute);
+                    Spawner.Instance.AddAttribute(targetClass, attribute.Name, attribute.Type);
+                    break;
+                case Source.RPC:
+                    AddAttribute(targetClass, attribute);
+                    break;
+                case Source.Loader:
+                    Spawner.Instance.AddAttribute(targetClass, attribute.Name, attribute.Type);
+                    var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
+
+                    CDClassEditor.AddAttribute(classInDiagram, attribute);
+                    VisualEditor.AddAttribute(classInDiagram, attribute);
+                    break;
+            }
+        }
+
+        public static void UpdateAttribute(string targetClass, string oldAttribute, Attribute newAttribute)
+        {
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
+            if (classInDiagram == null)
+                return;
+
+            if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(targetClass, newAttribute.Name) != null)
+                return;
+
+            ParsedClassEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
+            CDClassEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
+            VisualEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
+        }
+
         private static void AddMethod(string targetClass, Method method)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
@@ -74,7 +132,7 @@ namespace AnimArch.Visualization.Diagrams
             VisualEditor.AddMethod(classInDiagram, method);
         }
 
-        
+
         public static void AddMethod(string targetClass, Method method, Source source)
         {
             method.Name = method.Name.Replace(" ", "_");
@@ -90,7 +148,7 @@ namespace AnimArch.Visualization.Diagrams
                 case Source.Loader:
                     Spawner.Instance.AddMethod(targetClass, method.Name, method.ReturnValue);
                     var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
-                    
+
                     CDClassEditor.AddMethod(classInDiagram, method);
                     VisualEditor.AddMethod(classInDiagram, method);
                     break;
@@ -112,60 +170,6 @@ namespace AnimArch.Visualization.Diagrams
         }
 
 
-        private static void AddAttribute(string targetClass, Attribute attribute)
-        {
-            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
-            if (classInDiagram == null)
-            {
-                return;
-            }
-            
-            if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(targetClass, attribute.Name) != null)
-                return;
-            
-            attribute.Id = (classInDiagram.ParsedClass.Attributes.Count + 1).ToString();
-            
-            ParsedClassEditor.AddAttribute(classInDiagram, attribute);
-            CDClassEditor.AddAttribute(classInDiagram, attribute);
-            VisualEditor.AddAttribute(classInDiagram, attribute);
-        }
-
-        public static void AddAttribute(string targetClass, Attribute attribute, Source source)
-        {
-            attribute.Name = attribute.Name.Replace(" ", "_");
-            switch (source)
-            {
-                case Source.Editor:
-                    AddAttribute(targetClass, attribute);
-                    Spawner.Instance.AddAttribute(targetClass, attribute.Name, attribute.Type);
-                    break;
-                case Source.RPC:
-                    AddAttribute(targetClass, attribute);
-                    break;
-                case Source.Loader:
-                    Spawner.Instance.AddAttribute(targetClass, attribute.Name, attribute.Type);
-                    var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
-                    
-                    CDClassEditor.AddAttribute(classInDiagram, attribute);
-                    VisualEditor.AddAttribute(classInDiagram, attribute);
-                    break;
-            }
-        }
-        
-        public static void UpdateAttribute(string targetClass, string oldAttribute, Attribute newAttribute)
-        {
-            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
-            if (classInDiagram == null)
-                return;
-
-            if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(targetClass, newAttribute.Name) != null)
-                return;
-            
-            ParsedClassEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
-            CDClassEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
-            VisualEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
-        }
-
         // public override void DeleteNode()
         // {
         //     throw new System.NotImplementedException();
@@ -181,27 +185,7 @@ namespace AnimArch.Visualization.Diagrams
         //     throw new System.NotImplementedException();
         // }
         //
-        // public override void AddMethod()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public override void UpdateMethod()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
         // public override void DeleteMethod()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public override void AddAttribute()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public override void UpdateAttribute()
         // {
         //     throw new System.NotImplementedException();
         // }

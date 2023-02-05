@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 2130
+  controlID: 8905
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 2131
+  controlID: 8906
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -167,7 +167,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 2132
+  controlID: 8907
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -225,10 +225,10 @@ MonoBehaviour:
     m_SaveData: []
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 0}
+      scrollPos: {x: 0, y: 99.599976}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 14dcffff3edcffff4cdcffffcedcffffe2dcffffd8e1fffff4e1ffff26fbffff
+      m_ExpandedIDs: 14dcffff3edcffff4cdcffffcedcffffe2dcffffd8e1fffff4e1ffff26fbffff82600000126300004864000024680000546800006c690000da690000f0690000826a00008a6a0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -571,9 +571,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -222.59837, y: -78.10477, z: -601.36865}
+    m_Target: {x: 85.91691, y: 29.629313, z: -600.393}
     speed: 2
-    m_Value: {x: -222.59837, y: -78.10477, z: -601.36865}
+    m_Value: {x: 85.91691, y: 29.629313, z: -600.393}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -624,9 +624,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 145.01945
+    m_Target: 42.947353
     speed: 2
-    m_Value: 145.01945
+    m_Value: 42.947353
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -909,7 +909,7 @@ MonoBehaviour:
     m_CachedPref: 160
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
-  m_LastInspectedObjectInstanceID: -1
+  m_LastInspectedObjectInstanceID: 24706
   m_LastVerticalScrollValue: 0
   m_GlobalObjectId: 
   m_InspectorMode: 0

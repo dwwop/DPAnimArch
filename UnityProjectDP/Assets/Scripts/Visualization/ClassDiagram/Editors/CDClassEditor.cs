@@ -14,13 +14,28 @@ namespace AnimArch.Visualization.Diagrams
                 newClass.Name = baseName + (i == 0 ? "" : i.ToString());
                 cdClass = OALProgram.Instance.ExecutionSpace.SpawnClass(newClass.Name);
                 i++;
-                if (i > 1000)
-                {
-                    break;
-                }
+                if (i > 1000) break;
             }
 
             return cdClass;
+        }
+
+        private static CDAttribute CreateCdAttributeFromAttribute(Attribute attribute)
+        {
+            return new CDAttribute(attribute.Name, EXETypes.ConvertEATypeName(attribute.Type));
+        }
+
+        public static void AddAttribute(ClassInDiagram classInDiagram, Attribute attribute)
+        {
+            var cdAttribute = CreateCdAttributeFromAttribute(attribute);
+            classInDiagram.ClassInfo.AddAttribute(cdAttribute);
+        }
+
+        public static void UpdateAttribute(ClassInDiagram classInDiagram, string oldAttribute, Attribute newAttribute)
+        {
+            var index = classInDiagram.ClassInfo.Attributes.FindIndex(x => x.Name == oldAttribute);
+            var newCdAttribute = CreateCdAttributeFromAttribute(newAttribute);
+            classInDiagram.ClassInfo.Attributes[index] = newCdAttribute;
         }
 
         private static CDMethod CreateCdMethodFromMethod(CDClass cdClass, Method method)
@@ -56,23 +71,6 @@ namespace AnimArch.Visualization.Diagrams
             var index = classInDiagram.ClassInfo.Methods.FindIndex(x => x.Name == oldMethod);
             var newCdMethod = CreateCdMethodFromMethod(classInDiagram.ClassInfo, newMethod);
             classInDiagram.ClassInfo.Methods[index] = newCdMethod;
-        }
-
-        private static CDAttribute CreateCdAttributeFromAttribute(Attribute attribute)
-        {
-            return new CDAttribute(attribute.Name, EXETypes.ConvertEATypeName(attribute.Type));
-        }
-        public static void AddAttribute(ClassInDiagram classInDiagram, Attribute attribute)
-        {
-            var cdAttribute = CreateCdAttributeFromAttribute(attribute);
-            classInDiagram.ClassInfo.AddAttribute(cdAttribute);
-        }
-
-        public static void UpdateAttribute(ClassInDiagram classInDiagram, string oldAttribute, Attribute newAttribute)
-        {
-            var index = classInDiagram.ClassInfo.Attributes.FindIndex(x => x.Name == oldAttribute);
-            var newCdAttribute = CreateCdAttributeFromAttribute(newAttribute);
-            classInDiagram.ClassInfo.Attributes[index] = newCdAttribute;
         }
     }
 }

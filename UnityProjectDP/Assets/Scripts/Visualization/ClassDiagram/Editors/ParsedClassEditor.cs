@@ -1,29 +1,14 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace AnimArch.Visualization.Diagrams
 {
     public static class ParsedClassEditor
     {
-        
-        
-        public static Class CreateNode(string name, string id)
-        {
-            return new Class
-            {
-                Name = name,
-                XmiId = id,
-                Type = "uml:Class",
-                Attributes = new List<Attribute>(),
-                Methods = new List<Method>()
-            };
-        }
-        
         public static Class CreateNode(int id)
         {
-            return CreateNode("NewClass_", id.ToString());
+            return new Class("NewClass_", id.ToString());
         }
-        
+
 
         public static Class UpdateNodeGeometry(Class newClass, GameObject classGo)
         {
@@ -34,13 +19,10 @@ namespace AnimArch.Visualization.Diagrams
             newClass.Top = position.y / 2.5f;
             return newClass;
         }
-        
+
         public static void ReverseNodesGeometry()
         {
-            foreach (var parsedClass in DiagramPool.Instance.ClassDiagram.GetClassList())
-            {
-                parsedClass.Top *= -1;
-            }
+            foreach (var parsedClass in DiagramPool.Instance.ClassDiagram.GetClassList()) parsedClass.Top *= -1;
         }
 
         public static void AddAttribute(ClassInDiagram classInDiagram, Attribute attribute)
@@ -54,7 +36,9 @@ namespace AnimArch.Visualization.Diagrams
             newAttribute.Id = classInDiagram.ParsedClass.Attributes[index].Id;
             classInDiagram.ParsedClass.Attributes[index] = newAttribute;
         }
-        public static void AddMethod(ClassInDiagram classInDiagram, Method method){
+
+        public static void AddMethod(ClassInDiagram classInDiagram, Method method)
+        {
             classInDiagram.ParsedClass.Methods.Add(method);
         }
 
@@ -64,60 +48,5 @@ namespace AnimArch.Visualization.Diagrams
             newMethod.Id = classInDiagram.ParsedClass.Methods[index].Id;
             classInDiagram.ParsedClass.Methods[index] = newMethod;
         }
-        
-        // public  void UpdateNode()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public  void DeleteNode()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public  void AddEdge()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public  void DeleteEdge()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public  void AddMethod()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public  void UpdateMethod()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public  void DeleteMethod()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public  void AddAttribute()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public  void UpdateAttribute()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public  void DeleteAttribute()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public  void ClearDiagram()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
     }
 }

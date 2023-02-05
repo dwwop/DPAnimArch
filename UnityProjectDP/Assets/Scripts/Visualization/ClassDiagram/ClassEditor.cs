@@ -12,11 +12,6 @@ namespace AnimArch.Visualization.Diagrams
 {
     public class ClassEditor : Singleton<ClassEditor>
     {
-
-
-
-        // Parser used to parse data from XML to C# data structures
-
         public static void CreateRelation(Relation relation)
         {
             Spawner.Instance.AddRelation(relation.FromClass, relation.ToClass, relation.PropertiesEaType);

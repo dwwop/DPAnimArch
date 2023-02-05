@@ -27,7 +27,7 @@ namespace AnimArch.Visualization.UI
 
             ClassDiagramBuilder.CreateGraph();
         }
-        
+
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -100,7 +100,7 @@ namespace AnimArch.Visualization.UI
         {
             var newClass = ParsedClassEditor.CreateNode(_id);
 
-            MainEditor.CreateNodeSpawner(newClass);
+            MainEditor.CreateNode(newClass, MainEditor.Source.Editor);
             _id++;
         }
 

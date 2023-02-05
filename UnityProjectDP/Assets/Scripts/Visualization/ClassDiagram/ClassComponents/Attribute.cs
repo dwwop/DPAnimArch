@@ -15,6 +15,6 @@ namespace AnimArch.Visualization.Diagrams
             Name = name;
         }
         public Attribute() { }
-
+        
     }
 }

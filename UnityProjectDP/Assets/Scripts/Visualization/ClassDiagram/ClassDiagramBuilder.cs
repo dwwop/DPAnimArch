@@ -41,7 +41,7 @@ namespace AnimArch.Visualization.Diagrams
             {
                 currentClass.Name = currentClass.Name.Replace(" ", "_");
 
-                MainEditor.CreateNodeSpawner(currentClass);
+                MainEditor.CreateNode(currentClass, MainEditor.Source.Loader);
                 var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(currentClass.Name);
 
                 if (classInDiagram.ClassInfo == null)
@@ -52,7 +52,7 @@ namespace AnimArch.Visualization.Diagrams
                 {
                     MainEditor.AddAttribute(currentClass.Name, attribute, MainEditor.Source.Loader);
                 }
-                
+
 
                 currentClass.Methods ??= new List<Method>();
                 foreach (var method in currentClass.Methods)
@@ -80,23 +80,6 @@ namespace AnimArch.Visualization.Diagrams
             DiagramPool.Instance.ClassDiagram.graph.nodePrefab = DiagramPool.Instance.classPrefab;
         }
 
-
-        public static void LoadDiagram()
-        {
-            CreateGraph();
-            var k = 0;
-            // A trick used to skip empty diagrams in XMI file from EA
-            while (DiagramPool.Instance.ClassDiagram.Classes.Count < 1 && k < 10)
-            {
-                ParseData();
-                k++;
-                AnimationData.Instance.diagramId++;
-            }
-
-            RenderRelations();
-            RenderClassesManual();
-        }
-
         //Auto arrange objects in space
         public void RenderClassesAuto()
         {
@@ -114,6 +97,16 @@ namespace AnimArch.Visualization.Diagrams
                 var z = classInDiagram.VisualObject.GetComponent<RectTransform>().position.z;
                 VisualEditor.SetPosition(classInDiagram.ParsedClass.Name, new Vector3(x, y, z), false);
             }
+        }
+
+
+        //Fix used to minimalize relation displaying bug
+        private static IEnumerator QuickFix(GameObject g)
+        {
+            yield return new WaitForSeconds(0.05f);
+            g.SetActive(false);
+            yield return new WaitForSeconds(0.05f);
+            g.SetActive(true);
         }
 
         //Create GameObjects from the parsed data stored in list of Classes and Relations
@@ -155,13 +148,20 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-        //Fix used to minimalize relation displaying bug
-        private static IEnumerator QuickFix(GameObject g)
+        public static void LoadDiagram()
         {
-            yield return new WaitForSeconds(0.05f);
-            g.SetActive(false);
-            yield return new WaitForSeconds(0.05f);
-            g.SetActive(true);
+            CreateGraph();
+            var k = 0;
+            // A trick used to skip empty diagrams in XMI file from EA
+            while (DiagramPool.Instance.ClassDiagram.Classes.Count < 1 && k < 10)
+            {
+                ParseData();
+                k++;
+                AnimationData.Instance.diagramId++;
+            }
+
+            RenderRelations();
+            RenderClassesManual();
         }
     }
 }

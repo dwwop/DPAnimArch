@@ -33,7 +33,8 @@ namespace Networking
         [ServerRpc(RequireOwnership = false)]
         public void SpawnClassServerRpc(string name, string id)
         {
-            MainEditor.CreateNodeFromRpc(name, id);
+            var newClass = new Class(name, id);
+            MainEditor.CreateNode(newClass, MainEditor.Source.RPC);
         }
 
         [ClientRpc]
@@ -41,7 +42,9 @@ namespace Networking
         {
             if (IsServer)
                 return;
-            MainEditor.CreateNodeFromRpc(name, id);
+
+            var newClass = new Class(name, id);
+            MainEditor.CreateNode(newClass, MainEditor.Source.RPC);
         }
 
         public void SetNodeName(string oldName, string newName)

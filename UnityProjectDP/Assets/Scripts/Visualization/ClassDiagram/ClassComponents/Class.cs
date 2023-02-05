@@ -20,5 +20,18 @@ namespace AnimArch.Visualization.Diagrams
         public string Type;
         public List<Attribute> Attributes;
         public List<Method> Methods;
+
+        public Class()
+        {
+        }
+
+        public Class(string name, string xmiId)
+        {
+            Name = name;
+            XmiId = xmiId;
+            Type = "uml:Class";
+            Attributes = new List<Attribute>();
+            Methods = new List<Method>();
+        }
     }
 }
