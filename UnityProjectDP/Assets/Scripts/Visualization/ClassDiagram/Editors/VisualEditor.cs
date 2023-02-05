@@ -1,5 +1,6 @@
 ﻿using AnimArch.Extensions;
 using AnimArch.Visualization.UI;
+using Networking;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,6 +28,22 @@ namespace AnimArch.Visualization.Diagrams
         {
             var rect = node.GetComponent<RectTransform>();
             rect.position = new Vector3(100f, 200f, 1);
+        }
+        
+        
+        // called at manual layout
+        public static void SetPosition(string className, Vector3 position, bool fromRpc)
+        {
+            if (!fromRpc)
+                Spawner.Instance.SetPosition(className, position);
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
+            if (classInDiagram != null)
+            {
+                classInDiagram
+                    .VisualObject
+                    .GetComponent<RectTransform>()
+                    .position = position;
+            }
         }
 
         private static void UpdateNodeName(GameObject classGo)
@@ -92,13 +109,11 @@ namespace AnimArch.Visualization.Diagrams
 
         public static void AddMethod(ClassInDiagram classInDiagram, Method method)
         {
-            var methodString = GetStringFromMethod(method);
-            var attributesTransform = GetMethodLayoutGroup(classInDiagram.VisualObject);
+            var methodLayoutGroup = GetMethodLayoutGroup(classInDiagram.VisualObject);
+            var instance = Object.Instantiate(DiagramPool.Instance.classMethodPrefab, methodLayoutGroup, false);
 
-            var instance = Object.Instantiate(DiagramPool.Instance.classMethodPrefab, attributesTransform, false);
             instance.name = method.Name;
-            instance.transform.Find("MethodText").GetComponent<TextMeshProUGUI>().text += methodString;
-
+            instance.transform.Find("MethodText").GetComponent<TextMeshProUGUI>().text += GetStringFromMethod(method);
             instance.GetComponent<MethodPopUpManager>().classTxt =
                 GetNodeHeader(classInDiagram.VisualObject).GetComponent<TextMeshProUGUI>();
 
@@ -112,9 +127,37 @@ namespace AnimArch.Visualization.Diagrams
             var method = GetMethodLayoutGroup(classInDiagram.VisualObject).Find(oldMethod);
 
             method.name = newMethod.Name;
-            var newMethodText = GetStringFromMethod(newMethod);
+            method.Find("MethodText").GetComponent<TextMeshProUGUI>().text = GetStringFromMethod(newMethod);
+        }
 
-            method.Find("MethodText").GetComponent<TextMeshProUGUI>().text = newMethodText;
+        private static string GetStringFromAttribute(Attribute attribute)
+        {
+            return attribute.Name + ": " + attribute.Type;
+        }
+
+        public static void AddAttribute(ClassInDiagram classInDiagram, Attribute attribute)
+        {
+            var attributeLayoutGroup = GetAttributeLayoutGroup(classInDiagram.VisualObject);
+            var instance = Object.Instantiate(DiagramPool.Instance.classAttributePrefab, attributeLayoutGroup, false);
+
+            instance.name = attribute.Name;
+            instance.transform.Find("AttributeText").GetComponent<TextMeshProUGUI>().text +=
+                GetStringFromAttribute(attribute);
+            instance.GetComponent<AttributePopUpManager>().classTxt =
+                GetNodeHeader(classInDiagram.VisualObject).GetComponent<TextMeshProUGUI>();
+
+            if (UIEditorManager.Instance.active)
+                instance.GetComponentsInChildren<Button>(includeInactive: true)
+                    .ForEach(x => x.gameObject.SetActive(true));
+        }
+
+
+        public static void UpdateAttribute(ClassInDiagram classInDiagram, string oldAttribute, Attribute newAttribute)
+        {
+            var attribute = GetAttributeLayoutGroup(classInDiagram.VisualObject).Find(oldAttribute);
+
+            attribute.name = newAttribute.Name;
+            attribute.Find("AttributeText").GetComponent<TextMeshProUGUI>().text = GetStringFromAttribute(newAttribute);
         }
     }
 }

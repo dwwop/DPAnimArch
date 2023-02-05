@@ -71,14 +71,11 @@ namespace AnimArch.Visualization.UI
             };
             if (_formerAttributeName == null)
             {
-                if (!ClassEditor.AddAttribute(className.text, newAttribute))
-                    return;
-                ClassEditor.AddAttribute(className.text, newAttribute, false);
+                MainEditor.AddAttribute(className.text, newAttribute, MainEditor.Source.Editor);
             }
             else
             {
-                if (!ClassEditor.UpdateAttribute(className.text, _formerAttributeName, newAttribute))
-                    return;
+                MainEditor.UpdateAttribute(className.text, _formerAttributeName, newAttribute);
                 _formerAttributeName = null;
             }
 

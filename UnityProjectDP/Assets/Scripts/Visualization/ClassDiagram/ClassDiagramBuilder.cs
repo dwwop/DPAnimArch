@@ -47,29 +47,17 @@ namespace AnimArch.Visualization.Diagrams
                 if (classInDiagram.ClassInfo == null)
                     continue;
 
-                if (currentClass.Attributes != null)
+                currentClass.Attributes ??= new List<Attribute>();
+                foreach (var attribute in currentClass.Attributes)
                 {
-                    foreach (var attribute in currentClass.Attributes)
-                    {
-                        attribute.Name = attribute.Name.Replace(" ", "_");
-                        var attributeType = EXETypes.ConvertEATypeName(attribute.Type);
-                        if (attributeType == null)
-                        {
-                            continue;
-                        }
-
-                        classInDiagram.ClassInfo.AddAttribute(new CDAttribute(attribute.Name,
-                            EXETypes.ConvertEATypeName(attributeType)));
-                        currentClass.Attributes ??= new List<Attribute>();
-
-                        ClassEditor.AddAttribute(currentClass.Name, attribute, false);
-                    }
+                    MainEditor.AddAttribute(currentClass.Name, attribute, MainEditor.Source.Loader);
                 }
+                
 
                 currentClass.Methods ??= new List<Method>();
                 foreach (var method in currentClass.Methods)
                 {
-                    MainEditor.AddMethod(currentClass.Name, method, ClassEditor.Source.loader);
+                    MainEditor.AddMethod(currentClass.Name, method, MainEditor.Source.Loader);
                 }
 
                 currentClass.Top *= -1;
@@ -124,7 +112,7 @@ namespace AnimArch.Visualization.Diagrams
                 var x = classInDiagram.ParsedClass.Left * 1.25f;
                 var y = classInDiagram.ParsedClass.Top * 1.25f;
                 var z = classInDiagram.VisualObject.GetComponent<RectTransform>().position.z;
-                ClassEditor.SetPosition(classInDiagram.ParsedClass.Name, new Vector3(x, y, z), false);
+                VisualEditor.SetPosition(classInDiagram.ParsedClass.Name, new Vector3(x, y, z), false);
             }
         }
 

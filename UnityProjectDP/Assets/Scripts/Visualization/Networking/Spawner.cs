@@ -86,7 +86,7 @@ namespace Networking
                 Name = name,
                 Type = type
             };
-            ClassEditor.AddAttribute(targetClass, attribute, true);
+            MainEditor.AddAttribute(targetClass, attribute, MainEditor.Source.RPC);
         }
 
         [ClientRpc]
@@ -99,7 +99,7 @@ namespace Networking
                 Name = name,
                 Type = type
             };
-            ClassEditor.AddAttribute(targetClass, attribute, true);
+            MainEditor.AddAttribute(targetClass, attribute, MainEditor.Source.RPC);
         }
 
         public void AddMethod(string targetClass, string name, string returnValue)
@@ -118,7 +118,7 @@ namespace Networking
                 Name = name,
                 ReturnValue = returnValue
             };
-            MainEditor.AddMethod(targetClass, method, ClassEditor.Source.RPC);
+            MainEditor.AddMethod(targetClass, method, MainEditor.Source.RPC);
         }
 
         [ClientRpc]
@@ -131,7 +131,7 @@ namespace Networking
                 Name = name,
                 ReturnValue = returnValue
             };
-            MainEditor.AddMethod(targetClass, method, ClassEditor.Source.RPC);
+            MainEditor.AddMethod(targetClass, method, MainEditor.Source.RPC);
         }
 
         public void AddRelation(string sourceClass, string destinationClass, string relationType)
@@ -175,7 +175,7 @@ namespace Networking
         [ServerRpc(RequireOwnership = false)]
         public void SetPositionServerRpc(string className, Vector3 position)
         {
-            ClassEditor.SetPosition(className, position, true);
+            VisualEditor.SetPosition(className, position, true);
         }
 
         [ClientRpc]
@@ -183,7 +183,7 @@ namespace Networking
         {
             if (IsServer)
                 return;
-            ClassEditor.SetPosition(className, position, true);
+            VisualEditor.SetPosition(className, position, true);
         }
     }
 }

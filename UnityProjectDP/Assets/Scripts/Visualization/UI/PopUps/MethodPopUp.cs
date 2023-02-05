@@ -84,7 +84,7 @@ namespace AnimArch.Visualization.UI
             };
             if (_formerName == null)
             {
-                MainEditor.AddMethod(className.text, newMethod, ClassEditor.Source.editor);
+                MainEditor.AddMethod(className.text, newMethod, MainEditor.Source.Editor);
             }
             else
             {
