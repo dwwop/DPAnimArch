@@ -71,8 +71,6 @@ namespace AnimArch.Visualization.Diagrams
             {
                 MainEditor.CreateRelation(relation, MainEditor.Source.Loader);
             }
-
-            Debug.Log("");
         }
 
 

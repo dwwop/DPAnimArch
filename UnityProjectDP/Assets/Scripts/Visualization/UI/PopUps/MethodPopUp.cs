@@ -1,38 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AnimArch.Extensions;
 using UnityEngine;
 using TMPro;
 using AnimArch.Visualization.Diagrams;
-using Microsoft.Msagl.Core.DataStructures;
 
 namespace AnimArch.Visualization.UI
 {
-    public class MethodPopUp : AbstractPopUp
+    public class MethodPopUp : DropdownPopUp
     {
-        public TMP_Dropdown dropdown;
         public TMP_Text confirm;
         [SerializeField] Transform parameterContent;
         private List<string> _parameters = new();
-        private readonly HashSet<TMP_Dropdown.OptionData> _variableData = new();
         private string _formerName;
         
-        private void UpdateDropdown()
-        {
-            var classNames = DiagramPool.Instance.ClassDiagram.GetClassList().Select(x => x.Name);
-            
-            dropdown.options.RemoveAll(x => _variableData.Contains(x));
-            _variableData.Clear();
-            _variableData.UnionWith(classNames.Select(x => new TMP_Dropdown.OptionData(x)));
-            dropdown.options.AddRange(_variableData);
-        }
 
 
         public override void ActivateCreation(TMP_Text classTxt)
         {
             base.ActivateCreation(classTxt);
-            UpdateDropdown();
             confirm.text = "Add";
         }
         

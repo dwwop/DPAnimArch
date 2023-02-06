@@ -19,7 +19,7 @@ namespace AnimArch.Visualization.UI
             UIEditorManager.Instance.StartSelection(dropdown.options[dropdown.value].text);
         }
 
-        public virtual void Deactivate()
+        public void Deactivate()
         {
             panel.SetActive(false);
         }
