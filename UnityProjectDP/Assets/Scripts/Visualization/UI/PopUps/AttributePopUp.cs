@@ -1,8 +1,7 @@
 ﻿using System.Text.RegularExpressions;
+using AnimArch.Visualization.Diagrams;
 using TMPro;
 using UnityEngine.UI;
-using AnimArch.Visualization.Diagrams;
-using Attribute = AnimArch.Visualization.Diagrams.Attribute;
 
 namespace AnimArch.Visualization.UI
 {

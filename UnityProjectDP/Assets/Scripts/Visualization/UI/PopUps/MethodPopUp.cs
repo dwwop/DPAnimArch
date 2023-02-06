@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using TMPro;
 using AnimArch.Visualization.Diagrams;
+using TMPro;
+using UnityEngine;
 
 namespace AnimArch.Visualization.UI
 {
     public class MethodPopUp : DropdownPopUp
     {
         public TMP_Text confirm;
-        [SerializeField] Transform parameterContent;
-        private List<string> _parameters = new();
+        [SerializeField] private Transform parameterContent;
         private string _formerName;
-        
+        private List<string> _parameters = new();
 
 
         public override void ActivateCreation(TMP_Text classTxt)
@@ -21,8 +20,8 @@ namespace AnimArch.Visualization.UI
             base.ActivateCreation(classTxt);
             confirm.text = "Add";
         }
-        
-        
+
+
         private static Method GetMethodFromString(string str)
         {
             var method = new Method();
@@ -38,15 +37,15 @@ namespace AnimArch.Visualization.UI
 
             return method;
         }
-        
-        
+
+
         public void ActivateCreation(TMP_Text classTxt, TMP_Text methodTxt)
         {
             ActivateCreation(classTxt);
 
             var formerMethod = GetMethodFromString(methodTxt.text);
             inp.text = formerMethod.Name;
-            
+
             dropdown.value = dropdown.options.FindIndex(x => x.text == formerMethod.ReturnValue);
             formerMethod.arguments.ForEach(AddArg);
             _formerName = formerMethod.Name;
@@ -77,7 +76,7 @@ namespace AnimArch.Visualization.UI
                 MainEditor.UpdateMethod(className.text, _formerName, newMethod);
                 _formerName = null;
             }
-            
+
             Deactivate();
         }
 
@@ -100,10 +99,9 @@ namespace AnimArch.Visualization.UI
         {
             var index = _parameters.FindIndex(x => x == formerParam);
             _parameters[index] = newParam;
-            parameterContent.GetComponentsInChildren<ParameterPopUpManager>()
+            parameterContent.GetComponentsInChildren<ParameterManager>()
                 .First(x => x.parameterTxt.text == formerParam)
                 .parameterTxt.text = newParam;
-
         }
     }
 }

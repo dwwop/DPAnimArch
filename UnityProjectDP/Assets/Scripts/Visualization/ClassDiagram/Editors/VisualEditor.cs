@@ -76,10 +76,10 @@ namespace AnimArch.Visualization.Diagrams
         {
             UpdateNodeName(classGo);
 
-            foreach (var attribute in GetAttributeLayoutGroup(classGo).GetComponents<AttributePopUpManager>())
+            foreach (var attribute in GetAttributeLayoutGroup(classGo).GetComponents<AttributeManager>())
                 attribute.classTxt = GetNodeHeader(classGo).GetComponent<TextMeshProUGUI>();
 
-            foreach (var method in GetMethodLayoutGroup(classGo).GetComponents<MethodPopUpManager>())
+            foreach (var method in GetMethodLayoutGroup(classGo).GetComponents<MethodManager>())
                 method.classTxt = GetNodeHeader(classGo).GetComponent<TextMeshProUGUI>();
         }
 
@@ -98,7 +98,7 @@ namespace AnimArch.Visualization.Diagrams
             instance.name = attribute.Name;
             instance.transform.Find("AttributeText").GetComponent<TextMeshProUGUI>().text +=
                 GetStringFromAttribute(attribute);
-            instance.GetComponent<AttributePopUpManager>().classTxt =
+            instance.GetComponent<AttributeManager>().classTxt =
                 GetNodeHeader(classInDiagram.VisualObject).GetComponent<TextMeshProUGUI>();
 
             if (UIEditorManager.Instance.active)
@@ -138,7 +138,7 @@ namespace AnimArch.Visualization.Diagrams
 
             instance.name = method.Name;
             instance.transform.Find("MethodText").GetComponent<TextMeshProUGUI>().text += GetStringFromMethod(method);
-            instance.GetComponent<MethodPopUpManager>().classTxt =
+            instance.GetComponent<MethodManager>().classTxt =
                 GetNodeHeader(classInDiagram.VisualObject).GetComponent<TextMeshProUGUI>();
 
             if (UIEditorManager.Instance.active)

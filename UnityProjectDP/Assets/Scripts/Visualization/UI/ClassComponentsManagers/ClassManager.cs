@@ -4,7 +4,7 @@ using AnimArch.Visualization.Diagrams;
 
 namespace AnimArch.Visualization.UI
 {
-    public class ClassPopUpManager : MonoBehaviour
+    public class ClassManager : MonoBehaviour
     {
         public TMP_Text classTxt;
 

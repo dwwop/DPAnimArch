@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AnimArch.Visualization.UI
 {
-    public class MethodPopUpManager : MonoBehaviour
+    public class MethodManager : MonoBehaviour
     {
         public TMP_Text classTxt;
         public TMP_Text methodTxt;

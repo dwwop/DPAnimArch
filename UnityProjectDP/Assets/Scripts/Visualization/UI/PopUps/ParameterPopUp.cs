@@ -6,7 +6,7 @@ namespace AnimArch.Visualization.UI
     {
         public TMP_Text confirm;
         private string _formerParam;
-        
+
         public void ActivateCreation()
         {
             panel.SetActive(true);
@@ -19,11 +19,12 @@ namespace AnimArch.Visualization.UI
             ActivateCreation();
             var par = parameterTxt.text.Split(" ");
             inp.text = par[1];
-            
+
             dropdown.value = dropdown.options.FindIndex(x => x.text == par[0]);
             confirm.text = "Edit";
             _formerParam = parameterTxt.text;
         }
+
         public override void Confirmation()
         {
             if (inp.text == "")
@@ -42,6 +43,7 @@ namespace AnimArch.Visualization.UI
                 UIEditorManager.Instance.methodPopUp.EditArg(_formerParam, parameter);
                 _formerParam = null;
             }
+
             Deactivate();
         }
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AnimArch.Visualization.UI
 {
-    public class ParameterPopUpManager : MonoBehaviour
+    public class ParameterManager : MonoBehaviour
     {
         public TMP_Text parameterTxt;
 

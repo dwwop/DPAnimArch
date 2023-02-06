@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnimArch.Visualization.UI
 {
-    public class AttributePopUpManager : MonoBehaviour
+    public class AttributeManager : MonoBehaviour
     {
         public TMP_Text classTxt;
         public TMP_Text attributeTxt;
