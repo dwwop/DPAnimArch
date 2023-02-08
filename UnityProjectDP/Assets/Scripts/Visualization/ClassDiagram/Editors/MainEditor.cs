@@ -221,29 +221,5 @@ namespace AnimArch.Visualization.Diagrams
                     break;
             }
         }
-        // public override void DeleteNode()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public override void DeleteEdge()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public override void DeleteMethod()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public override void DeleteAttribute()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public override void ClearDiagram()
-        // {
-        //     throw new System.NotImplementedException();
-        // }
     }
 }
