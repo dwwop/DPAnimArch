@@ -2,7 +2,7 @@ using TMPro;
 
 namespace AnimArch.Visualization.UI
 {
-    public class ParameterPopUp : DropdownPopUp
+    public class ParameterPopUp : TypePopUp
     {
         public TMP_Text confirm;
         private string _formerParam;
@@ -19,8 +19,8 @@ namespace AnimArch.Visualization.UI
             ActivateCreation();
             var par = parameterTxt.text.Split(" ");
             inp.text = par[1];
-
-            dropdown.value = dropdown.options.FindIndex(x => x.text == par[0]);
+            
+            SetType(par[0]);
             confirm.text = "Edit";
             _formerParam = parameterTxt.text;
         }
@@ -33,7 +33,7 @@ namespace AnimArch.Visualization.UI
                 return;
             }
 
-            var parameter = dropdown.options[dropdown.value].text + " " + inp.text.Replace(" ", "_");
+            var parameter = GetType() + " " + inp.text.Replace(" ", "_");
             if (_formerParam == null)
             {
                 UIEditorManager.Instance.methodPopUp.AddArg(parameter);

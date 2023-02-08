@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace AnimArch.Visualization.UI
 {
-    public class MethodPopUp : DropdownPopUp
+    public class MethodPopUp : TypePopUp
     {
         public TMP_Text confirm;
         [SerializeField] private Transform parameterContent;
@@ -45,8 +45,8 @@ namespace AnimArch.Visualization.UI
 
             var formerMethod = GetMethodFromString(methodTxt.text);
             inp.text = formerMethod.Name;
-
-            dropdown.value = dropdown.options.FindIndex(x => x.text == formerMethod.ReturnValue);
+            
+            SetType(formerMethod.ReturnValue);
             formerMethod.arguments.ForEach(AddArg);
             _formerName = formerMethod.Name;
             confirm.text = "Edit";
@@ -64,7 +64,7 @@ namespace AnimArch.Visualization.UI
             var newMethod = new Method
             {
                 Name = inp.text,
-                ReturnValue = dropdown.options[dropdown.value].text,
+                ReturnValue = GetType(),
                 arguments = _parameters
             };
             if (_formerName == null)
