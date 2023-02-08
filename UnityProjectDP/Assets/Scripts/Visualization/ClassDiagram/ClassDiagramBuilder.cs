@@ -76,7 +76,7 @@ namespace AnimArch.Visualization.Diagrams
 
         public static void CreateGraph()
         {
-            DiagramPool.Instance.ClassDiagram.ResetDiagram();
+            MainEditor.ClearDiagram();
             var go = Instantiate(DiagramPool.Instance.graphPrefab);
             DiagramPool.Instance.ClassDiagram.graph = go.GetComponent<Graph>();
             DiagramPool.Instance.ClassDiagram.graph.nodePrefab = DiagramPool.Instance.classPrefab;

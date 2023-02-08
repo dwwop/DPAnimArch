@@ -45,7 +45,7 @@ namespace AnimArch.Visualization.UI
 
             var formerMethod = GetMethodFromString(methodTxt.text);
             inp.text = formerMethod.Name;
-            
+
             SetType(formerMethod.ReturnValue);
             formerMethod.arguments.ForEach(AddArg);
             _formerName = formerMethod.Name;
@@ -102,6 +102,12 @@ namespace AnimArch.Visualization.UI
             parameterContent.GetComponentsInChildren<ParameterManager>()
                 .First(x => x.parameterTxt.text == formerParam)
                 .parameterTxt.text = newParam;
+        }
+
+        public void RemoveArg(string parameter)
+        {
+            _parameters.RemoveAll(x => Equals(x, parameter));
+            Destroy(parameterContent.Find(parameter).transform.gameObject);
         }
     }
 }

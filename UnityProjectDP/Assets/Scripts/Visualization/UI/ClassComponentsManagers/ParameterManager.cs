@@ -1,5 +1,4 @@
-﻿using AnimArch.Visualization.Diagrams;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 namespace AnimArch.Visualization.UI
@@ -12,6 +11,11 @@ namespace AnimArch.Visualization.UI
         {
             UIEditorManager.Instance.methodPopUp.panel.SetActive(false);
             UIEditorManager.Instance.parameterPopUp.ActivateCreation(parameterTxt);
+        }
+
+        public void DeleteParameter()
+        {
+            UIEditorManager.Instance.methodPopUp.RemoveArg(name);
         }
     }
 }

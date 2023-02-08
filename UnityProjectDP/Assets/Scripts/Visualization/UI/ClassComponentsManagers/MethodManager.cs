@@ -8,10 +8,15 @@ namespace AnimArch.Visualization.UI
     {
         public TMP_Text classTxt;
         public TMP_Text methodTxt;
-        
+
         public void OpenMethodEditPopUp()
         {
             UIEditorManager.Instance.methodPopUp.ActivateCreation(classTxt, methodTxt);
+        }
+
+        public void DeleteMethod()
+        {
+            MainEditor.DeleteMethod(classTxt.text, name);
         }
     }
 }

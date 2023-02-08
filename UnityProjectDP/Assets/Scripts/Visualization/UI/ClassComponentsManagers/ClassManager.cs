@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using TMPro;
-using AnimArch.Visualization.Diagrams;
+﻿using TMPro;
+using UnityEngine;
 
 namespace AnimArch.Visualization.UI
 {

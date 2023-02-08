@@ -1,66 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using OALProgramControl;
 using AnimArch.Extensions;
-using AnimArch.Visualization.Animating;
 
 namespace AnimArch.Visualization.Diagrams
 {
     public class ClassDiagram : Diagram
     {
         public Graph graph;
-        public List<ClassInDiagram> Classes { get; private set; }
-        public List<RelationInDiagram> Relations { get; private set; }
+        public List<ClassInDiagram> Classes { get; } = new();
+        public List<RelationInDiagram> Relations { get; } = new();
 
         //Awake is called before the first frame and before Start()
         private void Awake()
         {
-            Classes = new List<ClassInDiagram>();
             DiagramPool.Instance.ClassDiagram = this;
-            ResetDiagram();
+            MainEditor.ClearDiagram();
         }
-
-        public void ResetDiagram()
-        {
-            // Get rid of already rendered classes in diagram.
-            if (Classes != null)
-            {
-                foreach (var Class in Classes)
-                {
-                    Destroy(Class.VisualObject);
-                }
-
-                Classes.Clear();
-            }
-
-            Classes = new List<ClassInDiagram>();
-
-            // Get rid of already rendered relations in diagram.
-            if (Relations != null)
-            {
-                foreach (var relation in Relations)
-                {
-                    Destroy(relation.VisualObject);
-                }
-
-                Relations.Clear();
-            }
-
-            Relations = new List<RelationInDiagram>();
-
-            if (graph != null)
-            {
-                Destroy(graph.gameObject);
-                graph = null;
-            }
-
-            OALProgram.Instance.Reset();
-
-            AnimationData.Instance.ClearData();
-        }
-
 
         public ClassInDiagram FindClassByName(string className)
         {
@@ -81,7 +38,7 @@ namespace AnimArch.Visualization.Diagrams
             var _class = FindClassByName(className);
 
             return _class?.ParsedClass.Methods
-                .Where(_ => string.Equals(methodName, _class.ParsedClass.Name))
+                .Where(x => string.Equals(methodName, x.Name))
                 .IfMoreThan
                 (
                     _ => Debug.LogError
@@ -97,7 +54,7 @@ namespace AnimArch.Visualization.Diagrams
             var _class = FindClassByName(className);
 
             return _class?.ParsedClass.Attributes
-                .Where(_ => string.Equals(attributeName, _class.ParsedClass.Name))
+                .Where(x => Equals(attributeName, x.Name))
                 .IfMoreThan
                 (
                     _ => Debug.LogError

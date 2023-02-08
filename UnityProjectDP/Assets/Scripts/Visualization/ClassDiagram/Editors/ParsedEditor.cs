@@ -42,5 +42,16 @@ namespace AnimArch.Visualization.Diagrams
             newMethod.Id = classInDiagram.ParsedClass.Methods[index].Id;
             classInDiagram.ParsedClass.Methods[index] = newMethod;
         }
+
+
+        public static void DeleteAttribute(ClassInDiagram classInDiagram, string attribute)
+        {
+            classInDiagram.ParsedClass.Attributes.RemoveAll(x => x.Name == attribute);
+        }
+
+        public static void DeleteMethod(ClassInDiagram classInDiagram, string method)
+        {
+            classInDiagram.ParsedClass.Methods.RemoveAll(x => x.Name == method);
+        }
     }
 }

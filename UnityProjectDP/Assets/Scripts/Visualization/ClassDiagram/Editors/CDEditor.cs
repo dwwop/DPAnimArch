@@ -87,12 +87,19 @@ namespace AnimArch.Visualization.Diagrams
             var fromClass = OALProgram.Instance.ExecutionSpace.getClassByName(relation.FromClass);
             var toClass = OALProgram.Instance.ExecutionSpace.getClassByName(relation.ToClass);
 
-            if (fromClass != null && toClass != null)
-            {
-                fromClass.SuperClass = toClass;
-            }
+            if (fromClass != null && toClass != null) fromClass.SuperClass = toClass;
 
             return cdRelationship;
+        }
+
+        public static void DeleteAttribute(ClassInDiagram classInDiagram, string attribute)
+        {
+            classInDiagram.ClassInfo.Attributes.RemoveAll(x => x.Name == attribute);
+        }
+
+        public static void DeleteMethod(ClassInDiagram classInDiagram, string method)
+        {
+            classInDiagram.ClassInfo.Attributes.RemoveAll(x => x.Name == method);
         }
     }
 }
