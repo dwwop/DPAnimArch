@@ -17,57 +17,60 @@ namespace Networking
             DontDestroyOnLoad(gameObject);
         }
 
-        public void SpawnClass(string name)
+        public void SpawnNode(string name, string id)
         {
             if (IsServer)
             {
-                SpawnClassClientRpc(name);
+                SpawnClassClientRpc(name, id);
             }
             else
             {
-                SpawnClassServerRpc(name);
+                SpawnClassServerRpc(name, id);
             }
         }
 
         // Server RPC - if client creates instance, server RPC is called and instance is created at server side.
         [ServerRpc(RequireOwnership = false)]
-        public void SpawnClassServerRpc(string name)
+        public void SpawnClassServerRpc(string name, string id)
         {
-           ClassEditor.Instance.CreateNodeFromRpc(name);
+            var newClass = new Class(name, id);
+            MainEditor.CreateNode(newClass, MainEditor.Source.RPC);
         }
 
         [ClientRpc]
-        public void SpawnClassClientRpc(string name)
+        public void SpawnClassClientRpc(string name, string id)
         {
             if (IsServer)
                 return;
-            ClassEditor.Instance.CreateNodeFromRpc(name);
+
+            var newClass = new Class(name, id);
+            MainEditor.CreateNode(newClass, MainEditor.Source.RPC);
         }
 
-        public void SetClassName(string targetClass, string newName)
+        public void SetNodeName(string oldName, string newName)
         {
             if (IsServer)
             {
-                SetClassNameClientRpc(targetClass, newName);
+                SetClassNameClientRpc(oldName, newName);
             }
             else
             {
-                SetClassNameServerRpc(targetClass, newName);
+                SetClassNameServerRpc(oldName, newName);
             }
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void SetClassNameServerRpc(string targetClass, string newName)
+        public void SetClassNameServerRpc(string oldName, string newName)
         {
-            ClassEditor.SetClassName(targetClass, newName, true);
+            MainEditor.UpdateNodeName(oldName, newName, true);
         }
 
         [ClientRpc]
-        public void SetClassNameClientRpc(string targetClass, string newName)
+        public void SetClassNameClientRpc(string oldName, string newName)
         {
             if (IsServer)
                 return;
-            ClassEditor.SetClassName(targetClass, newName, true);
+            MainEditor.UpdateNodeName(oldName, newName, true);
         }
 
         public void AddAttribute(string targetClass, string name, string type)
@@ -86,7 +89,7 @@ namespace Networking
                 Name = name,
                 Type = type
             };
-            ClassEditor.AddAttribute(targetClass, attribute, true);
+            MainEditor.AddAttribute(targetClass, attribute, MainEditor.Source.RPC);
         }
 
         [ClientRpc]
@@ -99,7 +102,7 @@ namespace Networking
                 Name = name,
                 Type = type
             };
-            ClassEditor.AddAttribute(targetClass, attribute, true);
+            MainEditor.AddAttribute(targetClass, attribute, MainEditor.Source.RPC);
         }
 
         public void AddMethod(string targetClass, string name, string returnValue)
@@ -118,7 +121,7 @@ namespace Networking
                 Name = name,
                 ReturnValue = returnValue
             };
-            ClassEditor.AddMethod(targetClass, method, ClassEditor.Source.RPC);
+            MainEditor.AddMethod(targetClass, method, MainEditor.Source.RPC);
         }
 
         [ClientRpc]
@@ -131,33 +134,47 @@ namespace Networking
                 Name = name,
                 ReturnValue = returnValue
             };
-            ClassEditor.AddMethod(targetClass, method, ClassEditor.Source.RPC);
+            MainEditor.AddMethod(targetClass, method, MainEditor.Source.RPC);
         }
 
-        public void AddRelation(string sourceClass, string destinationClass, string relationType)
+        public void AddRelation(string sourceClass, string destinationClass, string relationType, string direction)
         {
             if (IsServer)
             {
-                AddRelationClientRpc(sourceClass, destinationClass, relationType);
+                AddRelationClientRpc(sourceClass, destinationClass, relationType, direction);
             }
             else
             {
-                AddRelationServerRpc(sourceClass, destinationClass, relationType);
+                AddRelationServerRpc(sourceClass, destinationClass, relationType, direction);
             }
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void AddRelationServerRpc(string sourceClass, string destinationClass, string relationType)
+        public void AddRelationServerRpc(string sourceClass, string destinationClass, string relationType, string direction)
         {
-            ClassEditor.Instance.CreateRelation(sourceClass, destinationClass, relationType, true);
+            var relation = new Relation
+            {
+                SourceModelName = sourceClass,
+                TargetModelName = destinationClass,
+                PropertiesEaType = relationType,
+                PropertiesDirection = direction
+            };
+            MainEditor.CreateRelation(relation, MainEditor.Source.RPC);
         }
 
         [ClientRpc]
-        public void AddRelationClientRpc(string sourceClass, string destinationClass, string relationType)
+        public void AddRelationClientRpc(string sourceClass, string destinationClass, string relationType, string direction)
         {
             if (IsServer)
                 return;
-            ClassEditor.Instance.CreateRelation(sourceClass, destinationClass, relationType, true);
+            var relation = new Relation
+            {
+                SourceModelName = sourceClass,
+                TargetModelName = destinationClass,
+                PropertiesEaType = relationType,
+                PropertiesDirection = direction
+            };
+            MainEditor.CreateRelation(relation, MainEditor.Source.RPC);
         }
 
         public void SetPosition(string className, Vector3 position)
@@ -175,7 +192,7 @@ namespace Networking
         [ServerRpc(RequireOwnership = false)]
         public void SetPositionServerRpc(string className, Vector3 position)
         {
-            ClassEditor.SetPosition(className, position, true);
+            VisualEditor.SetPosition(className, position, true);
         }
 
         [ClientRpc]
@@ -183,7 +200,7 @@ namespace Networking
         {
             if (IsServer)
                 return;
-            ClassEditor.SetPosition(className, position, true);
+            VisualEditor.SetPosition(className, position, true);
         }
     }
 }

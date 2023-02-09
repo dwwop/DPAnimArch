@@ -45,7 +45,7 @@ namespace AnimArch.Visualization
         {
             if (!_changedPos && MenuManager.Instance.isSelectingNode)
             {
-                ClassEditor.Instance.SelectNode(gameObject);
+                UIEditorManager.Instance.SelectNode(gameObject);
             }
 
             _changedPos = false;
@@ -68,7 +68,7 @@ namespace AnimArch.Visualization
             transform.position = cursorPosition;
 
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(name);
-            ClassEditor.SetClassGeometry(classInDiagram);
+            classInDiagram.ParsedClass = ParsedEditor.UpdateNodeGeometry(classInDiagram.ParsedClass, classInDiagram.VisualObject);
         }
 
         private void OnMouseOver()

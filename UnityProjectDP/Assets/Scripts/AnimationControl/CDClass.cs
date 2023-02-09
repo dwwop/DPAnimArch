@@ -117,24 +117,14 @@ namespace OALProgramControl
             return Result;
         }
 
-        public Boolean AddMethod(CDMethod NewMethod)
+        public void AddMethod(CDMethod newMethod)
         {
-            Boolean Result = true;
-            foreach (CDMethod Method in this.Methods)
-            {
-                if (Method.Name == NewMethod.Name)
-                {
-                    Result = false;
-                    break;
-                }
-            }
+            var result = Methods.All(method => method.Name != newMethod.Name);
 
-            if (Result)
+            if (result)
             {
-                this.Methods.Add(NewMethod);
+                Methods.Add(newMethod);
             }
-
-            return Result;
         }
 
         public Boolean AddAttribute(CDAttribute NewAttribute)

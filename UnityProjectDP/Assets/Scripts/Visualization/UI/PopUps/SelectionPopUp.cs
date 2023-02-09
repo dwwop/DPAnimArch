@@ -1,5 +1,4 @@
-﻿using AnimArch.Visualization.Diagrams;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 namespace AnimArch.Visualization.UI
@@ -8,7 +7,7 @@ namespace AnimArch.Visualization.UI
     {
         public GameObject panel;
         public TMP_Dropdown dropdown;
-        
+
         public void ActivateCreation()
         {
             panel.SetActive(true);
@@ -16,10 +15,10 @@ namespace AnimArch.Visualization.UI
 
         public void Confirmation()
         {
-            ClassEditor.Instance.StartSelection(dropdown.options[dropdown.value].text);
+            UIEditorManager.Instance.StartSelection(dropdown.options[dropdown.value].text);
         }
-        
-        public virtual void Deactivate()
+
+        public void Deactivate()
         {
             panel.SetActive(false);
         }

@@ -22,7 +22,7 @@ namespace AnimArch.Visualization.Diagrams
             ResetDiagram();
         }
 
-        private void ResetDiagram()
+        public void ResetDiagram()
         {
             // Get rid of already rendered classes in diagram.
             if (Classes != null)
@@ -57,89 +57,10 @@ namespace AnimArch.Visualization.Diagrams
             }
 
             OALProgram.Instance.Reset();
-            ClassEditor.Instance.ResetGraph();
 
             AnimationData.Instance.ClearData();
         }
 
-        public void LoadDiagram()
-        {
-            CreateGraph();
-            var k = 0;
-            // A trick used to skip empty diagrams in XMI file from EA
-            while (Classes.Count < 1 && k < 10)
-            {
-                ClassEditor.ParseData();
-                k++;
-                AnimationData.Instance.diagramId++;
-            }
-
-            RenderRelations();
-            RenderClassesManual();
-        }
-
-        public Graph CreateGraph()
-        {
-            ResetDiagram();
-            var go = Instantiate(DiagramPool.Instance.graphPrefab);
-            graph = go.GetComponent<Graph>();
-            graph.nodePrefab = DiagramPool.Instance.classPrefab;
-            return graph;
-        }
-
-        //Auto arrange objects in space
-        public void RenderClassesAuto()
-        {
-            graph.Layout();
-        }
-
-        //Set layout as close as possible to EA layout
-        private void RenderClassesManual()
-        {
-            foreach (var classInDiagram in Classes)
-            {
-                var x = classInDiagram.ParsedClass.Left * 1.25f;
-                var y = classInDiagram.ParsedClass.Top * 1.25f;
-                var z = classInDiagram.VisualObject.GetComponent<RectTransform>().position.z;
-                ClassEditor.SetPosition(classInDiagram.ParsedClass.Name, new Vector3(x, y, z), false);
-            }
-        }
-
-        //Create GameObjects from the parsed data stored in list of Classes and Relations
-        private void RenderRelations()
-        {
-            //Render Relations between classes
-            foreach (var rel in Relations)
-            {
-                var prefab = rel.ParsedRelation.PrefabType;
-                if (prefab == null)
-                {
-                    prefab = DiagramPool.Instance.associationNonePrefab;
-                }
-
-                var fromClass = FindClassByName(rel.ParsedRelation.FromClass)?.VisualObject;
-                var toClass = FindClassByName(rel.ParsedRelation.ToClass)?.VisualObject;
-                if (fromClass != null && toClass != null)
-                {
-                    var edge = graph.AddEdge(fromClass, toClass, prefab);
-
-                    rel.VisualObject = edge;
-                    // Quickfix
-
-                    if (edge.gameObject.transform.childCount > 0)
-                    {
-                        StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
-                    }
-                }
-                else
-                {
-                    Debug.LogError
-                    (
-                        $"Can't find specified Edge \"{rel.ParsedRelation.FromClass}\"->\"{rel.ParsedRelation.ToClass}\""
-                    );
-                }
-            }
-        }
 
         public ClassInDiagram FindClassByName(string className)
         {
@@ -228,14 +149,6 @@ namespace AnimArch.Visualization.Diagrams
                     relationInDiagram => relationInDiagram.ParsedRelation.FromClass, "");
         }
 
-        //Fix used to minimalize relation displaying bug
-        private static IEnumerator QuickFix(GameObject g)
-        {
-            yield return new WaitForSeconds(0.05f);
-            g.SetActive(false);
-            yield return new WaitForSeconds(0.05f);
-            g.SetActive(true);
-        }
 
         public IEnumerable<Class> GetClassList()
         {

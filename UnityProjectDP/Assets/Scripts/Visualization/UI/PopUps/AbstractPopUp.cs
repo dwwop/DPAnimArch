@@ -1,5 +1,4 @@
-﻿using AnimArch.Visualization.Diagrams;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 namespace AnimArch.Visualization.UI
@@ -17,7 +16,7 @@ namespace AnimArch.Visualization.UI
         }
 
         public abstract void Confirmation();
-        
+
         public virtual void Deactivate()
         {
             panel.SetActive(false);

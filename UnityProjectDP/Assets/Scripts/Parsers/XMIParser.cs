@@ -93,7 +93,7 @@ namespace AnimArch.Parsing
                     // ignored
                 }
 
-                XMIClass.XmiId = elementsClass[i].Attributes["xmi:idref"].Value;
+                XMIClass.Id = elementsClass[i].Attributes["xmi:idref"].Value;
                 //  XMIClassList.Add(XMIClass);
                 if (!(XMIClass.Type.Equals("uml:Interface") || XMIClass.Type.Equals("uml:Class"))) continue;
 
@@ -208,7 +208,7 @@ namespace AnimArch.Parsing
                     }
                 }
 
-                if (currDiagramElements.Contains(XMIClass.XmiId)) XMIClassList.Add(XMIClass);
+                if (currDiagramElements.Contains(XMIClass.Id)) XMIClassList.Add(XMIClass);
             }
 
             if (geometryElements == null)
@@ -219,7 +219,7 @@ namespace AnimArch.Parsing
             for (int i = 0; i < geometryElements.Count; i++)
             {
                 var subject = geometryElements[i].Attributes["subject"].Value;
-                foreach (var item in XMIClassList.Where(item => item.XmiId == subject))
+                foreach (var item in XMIClassList.Where(item => item.Id == subject))
                 {
                     item.Geometry = geometryElements[i].Attributes["geometry"].Value;
 
@@ -524,11 +524,11 @@ namespace AnimArch.Parsing
                 element.SetAttribute("type", xmiUri, xmiClass.Type);
                 element.SetAttribute("name", xmiClass.Name);
                 // element.SetAttribute("idref", xmiUri, xmiClass.Name + xmiClass.XmiId);
-                element.SetAttribute("idref", xmiUri, xmiClass.XmiId);
+                element.SetAttribute("idref", xmiUri, xmiClass.Id);
                 elements.AppendChild(element);
 
                 var geometryElement = doc.CreateElement("element");
-                geometryElement.SetAttribute("subject", xmiClass.XmiId);
+                geometryElement.SetAttribute("subject", xmiClass.Id);
                 geometryElement.SetAttribute("geometry", "Left=" + Math.Floor(xmiClass.Left) +
                                                          ";Top=" + Math.Floor(-xmiClass.Top) +
                                                          ";Right=" + Math.Floor(xmiClass.Right) +
@@ -583,7 +583,7 @@ namespace AnimArch.Parsing
                     {
                         var parameter = doc.CreateElement("parameter");
                         var nameAndType = argument.Split(" ");
-                        var argumentId = xmiClass.XmiId + xmiClassMethod.Id + argument;
+                        var argumentId = xmiClass.Id + xmiClassMethod.Id + argument;
                         parameter.SetAttribute("idref", xmiUri, argumentId);
 
                         var ownedParameter = doc.CreateElement("ownedParameter");

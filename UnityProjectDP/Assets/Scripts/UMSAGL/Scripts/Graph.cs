@@ -11,6 +11,7 @@ using Microsoft.Msagl.Core.DataStructures;
 using System;
 using AnimArch.Extensions;
 using AnimArch.Visualization.Diagrams;
+using AnimArch.Visualization.UI;
 using UnityEngine.UI;
 
 public class Graph : MonoBehaviour
@@ -53,7 +54,7 @@ public class Graph : MonoBehaviour
     public GameObject AddNode()
     {
         var go = Instantiate(nodePrefab, units);
-        if (ClassEditor.Instance.active)
+        if (UIEditorManager.Instance.active)
             go.GetComponentsInChildren<Button>(includeInactive:true).ForEach(x => x.gameObject.SetActive(true));
 
         //Following step required otherwise Size will return wrong rect

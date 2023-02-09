@@ -18,10 +18,10 @@ namespace AnimArch.Parsing
 
         public static string SaveDiagramToJson()
         {
-            ClassEditor.ReverseClassesGeometry();
+            ParsedEditor.ReverseNodesGeometry();
             var serializedClasses =
                 JsonConvert.SerializeObject(DiagramPool.Instance.ClassDiagram.GetClassList());
-            ClassEditor.ReverseClassesGeometry();
+            ParsedEditor.ReverseNodesGeometry();
 
             var serializedRelations = JsonConvert.SerializeObject(DiagramPool.Instance.ClassDiagram.GetRelationList());
             var serializedDiagram = "{\"classes\":" + serializedClasses + ",\"relations\":" + serializedRelations + "}";

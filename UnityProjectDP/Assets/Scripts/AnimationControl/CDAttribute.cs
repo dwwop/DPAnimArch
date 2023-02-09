@@ -8,8 +8,8 @@ namespace OALProgramControl
 {
     public class CDAttribute
     {
-        public String Name { get; }
-        public String Type { get; }
+        public String Name { get; set; }
+        public String Type { get; set; }
         public Boolean IsMockedByCompiler { get; }
         public CDAttribute(String Name, String Type)
         {

@@ -1,48 +1,51 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using AnimArch.Extensions;
-using UnityEngine;
-using TMPro;
 using AnimArch.Visualization.Diagrams;
-using Microsoft.Msagl.Core.DataStructures;
+using TMPro;
+using UnityEngine;
 
 namespace AnimArch.Visualization.UI
 {
-    public class MethodPopUp : AbstractPopUp
+    public class MethodPopUp : DropdownPopUp
     {
-        public TMP_Dropdown dropdown;
         public TMP_Text confirm;
-        [SerializeField] Transform parameterContent;
-        private List<string> _parameters = new();
-        private readonly HashSet<TMP_Dropdown.OptionData> _variableData = new();
+        [SerializeField] private Transform parameterContent;
         private string _formerName;
-        
-        private void UpdateDropdown()
-        {
-            var classNames = DiagramPool.Instance.ClassDiagram.GetClassList().Select(x => x.Name);
-            
-            dropdown.options.RemoveAll(x => _variableData.Contains(x));
-            _variableData.Clear();
-            _variableData.UnionWith(classNames.Select(x => new TMP_Dropdown.OptionData(x)));
-            dropdown.options.AddRange(_variableData);
-        }
+        private List<string> _parameters = new();
 
 
         public override void ActivateCreation(TMP_Text classTxt)
         {
             base.ActivateCreation(classTxt);
-            UpdateDropdown();
             confirm.text = "Add";
         }
-        
-        
+
+
+        private static Method GetMethodFromString(string str)
+        {
+            var method = new Method();
+
+            var parts = str.Split(new[] { ": ", "\n" }, StringSplitOptions.None);
+
+            var nameAndArguments = parts[0].Split(new[] { "(", ")" }, StringSplitOptions.None);
+            method.Name = nameAndArguments[0];
+            method.ReturnValue = parts[1];
+
+
+            method.arguments = nameAndArguments[1].Split(", ").Where(x => x != "").ToList();
+
+            return method;
+        }
+
+
         public void ActivateCreation(TMP_Text classTxt, TMP_Text methodTxt)
         {
             ActivateCreation(classTxt);
 
-            var formerMethod = ClassEditor.GetMethodFromString(methodTxt.text);
+            var formerMethod = GetMethodFromString(methodTxt.text);
             inp.text = formerMethod.Name;
-            
+
             dropdown.value = dropdown.options.FindIndex(x => x.text == formerMethod.ReturnValue);
             formerMethod.arguments.ForEach(AddArg);
             _formerName = formerMethod.Name;
@@ -66,14 +69,14 @@ namespace AnimArch.Visualization.UI
             };
             if (_formerName == null)
             {
-                ClassEditor.AddMethod(className.text, newMethod, ClassEditor.Source.editor);
+                MainEditor.AddMethod(className.text, newMethod, MainEditor.Source.Editor);
             }
             else
             {
-                ClassEditor.UpdateMethod(className.text, _formerName, newMethod);
+                MainEditor.UpdateMethod(className.text, _formerName, newMethod);
                 _formerName = null;
             }
-            
+
             Deactivate();
         }
 
@@ -96,10 +99,9 @@ namespace AnimArch.Visualization.UI
         {
             var index = _parameters.FindIndex(x => x == formerParam);
             _parameters[index] = newParam;
-            parameterContent.GetComponentsInChildren<ParameterPopUpManager>()
+            parameterContent.GetComponentsInChildren<ParameterManager>()
                 .First(x => x.parameterTxt.text == formerParam)
                 .parameterTxt.text = newParam;
-
         }
     }
 }
