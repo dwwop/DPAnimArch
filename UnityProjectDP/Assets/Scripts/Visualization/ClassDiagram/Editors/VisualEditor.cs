@@ -193,6 +193,16 @@ namespace AnimArch.Visualization.Diagrams
             return edge;
         }
 
+        public static void DeleteRelation(RelationInDiagram relationInDiagram)
+        {
+            DiagramPool.Instance.ClassDiagram.graph.RemoveEdge(relationInDiagram.VisualObject);
+        }
+
+        public static void DeleteNode(ClassInDiagram classInDiagram)
+        {
+            DiagramPool.Instance.ClassDiagram.graph.RemoveNode(classInDiagram.VisualObject);
+        }
+        
         public static void DeleteAttribute(ClassInDiagram classInDiagram, string attribute)
         {
             Object.Destroy(GetAttributeLayoutGroup(classInDiagram.VisualObject).Find(attribute).transform.gameObject);

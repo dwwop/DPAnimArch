@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using AnimArch.Extensions;
 using AnimArch.Visualization.Animating;
 using Networking;
 using OALProgramControl;
@@ -225,6 +227,31 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
+        private static void DeleteNodeFromRelations(ClassInDiagram classInDiagram)
+        {
+            DiagramPool.Instance.ClassDiagram.Relations
+                .Where(x => x.ParsedRelation.FromClass == classInDiagram.ParsedClass.Name 
+                             || x.ParsedRelation.ToClass == classInDiagram.ParsedClass.Name)
+                .ForEach(VisualEditor.DeleteRelation);
+
+            DiagramPool.Instance.ClassDiagram.Relations
+                .RemoveAll(x => x.ParsedRelation.FromClass == classInDiagram.ParsedClass.Name
+                                || x.ParsedRelation.ToClass == classInDiagram.ParsedClass.Name);
+        }
+
+        public static void DeleteNode(string className)
+        {
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
+            if (classInDiagram == null)
+                return;
+            
+            DeleteNodeFromRelations(classInDiagram);
+            
+            VisualEditor.DeleteNode(classInDiagram);
+            
+            DiagramPool.Instance.ClassDiagram.Classes.Remove(classInDiagram);
+        }
+        
         public static void DeleteAttribute(string className, string attributeName)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);

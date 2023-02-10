@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using AnimArch.Visualization.Diagrams;
+using TMPro;
 using UnityEngine;
 
 namespace AnimArch.Visualization.UI
@@ -20,6 +21,11 @@ namespace AnimArch.Visualization.UI
         public void OpenClassPopUp()
         {
             UIEditorManager.Instance.classPopUp.ActivateCreation(classTxt);
+        }
+
+        public void DeleteClass()
+        {
+            MainEditor.DeleteNode(name);
         }
     }
 }
