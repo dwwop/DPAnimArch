@@ -5400,6 +5400,8 @@ MonoBehaviour:
     type: 3}
   interGraphArrowPrefab: {fileID: 2511745522907912916, guid: acc81195bd5b641c3b95dc9f282ab13a,
     type: 3}
+  relationDeleteButtonPrefab: {fileID: 6251318437781553612, guid: 0af9a63443d46fa478102c15c61f1519,
+    type: 3}
   ClassDiagram: {fileID: 1164213134}
   ObjectDiagram: {fileID: 0}
   RelationsClassToObject: []
