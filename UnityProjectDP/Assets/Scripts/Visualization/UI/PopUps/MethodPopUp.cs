@@ -7,12 +7,17 @@ using UnityEngine;
 
 namespace AnimArch.Visualization.UI
 {
-    public class MethodPopUp : TypePopUp
+    public class MethodPopUp : AbstractTypePopUp
     {
         public TMP_Text confirm;
         [SerializeField] private Transform parameterContent;
         private string _formerName;
         private List<string> _parameters = new();
+
+        public void OnEnable()
+        {
+            ChangeStateOfButtons(false);
+        }
 
 
         public override void ActivateCreation(TMP_Text classTxt)

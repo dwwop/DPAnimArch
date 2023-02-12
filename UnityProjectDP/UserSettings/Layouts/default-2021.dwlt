@@ -119,7 +119,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 18426
+  controlID: 35987
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 18427
+  controlID: 35993
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 18428
+  controlID: 35978
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -403,7 +403,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 52e8feff5ce8feffb8e8feffccf4feffe8f4feffa056ffffbc56ffffd4d0ffffded0ffff30d1ffff3ad1ffff4eddffff6addffff98f1ffffb4f1ffff26fbffffd8680000086900002a6a0000ae6a0000
+      m_ExpandedIDs: 38a5fbff54a5fbff66d9fbff72d9fbff7ae5fbff96e5fbffd2edfbffd6edfbffe2edfbffeaf9fbff06fafbff8a35fdff8e35fdff9a35fdffc235fdffc635fdffd035fdfff035fdfffc35fdff0442fdff2042fdffc49bfdffc89bfdffd49bfdffdca7fdfff8a7fdfffcc5fdff08c6fdff10d2fdff2cd2fdff5204feff5604feff6004feff7c04feff8004feff8c04feff9410feffb010feffae3ffeffba3ffeffc24bfeffde4bfeffb453feffc053feffc85ffeffe45ffeff6874feff5692feff6292feff6a9efeff869efeff2aacfeff36acfeff3eb8feff5ab8feff4ad8feff56d8feff5ee4feff7ae4fefffaf3feffe2f5feffecf5feff14f6feff18f6feff24f6feff4cf6feff50f6feff5af6feff7af6feff86f6feff8e02ffffaa02ffff2c0fffff380fffff401bffff5c1bfffff098ffff0899ffff2899ffff3e99ffff6a99ffff72a5ffff8ea5ffff72e6ffff7af2ffff96f2ffff26fbffffb85f000008690000486b0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -714,14 +714,14 @@ MonoBehaviour:
   m_OverrideSceneCullingMask: 6917529027641081856
   m_SceneIsLit: 1
   m_SceneLighting: 1
-  m_2DMode: 1
+  m_2DMode: 0
   m_isRotationLocked: 0
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -23.247555, y: 20.192476, z: 242.72508}
+    m_Target: {x: -0.4378338, y: -219.55066, z: 613.7012}
     speed: 2
-    m_Value: {x: -23.247555, y: 20.192476, z: 242.72508}
+    m_Value: {x: -0.4378338, y: -219.55066, z: 613.7012}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -750,15 +750,15 @@ MonoBehaviour:
       m_Size: {x: 1, y: 1}
     yGrid:
       m_Fade:
-        m_Target: 0
+        m_Target: 1
         speed: 2
-        m_Value: 0
+        m_Value: 1
       m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 0.4}
       m_Pivot: {x: 0, y: 0, z: 0}
       m_Size: {x: 1, y: 1}
     zGrid:
       m_Fade:
-        m_Target: 1
+        m_Target: 0
         speed: 2
         m_Value: 1
       m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 0.4}
@@ -768,17 +768,17 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0, y: 0, z: 0, w: 1}
+    m_Target: {x: -0.109585345, y: -0.0083521865, z: 0.0009207556, w: -0.99394286}
     speed: 2
-    m_Value: {x: 0, y: 0, z: 0, w: 1}
+    m_Value: {x: -0.109585345, y: -0.0083521865, z: 0.0009207556, w: -0.99394286}
   m_Size:
-    m_Target: 323.45963
+    m_Target: 769.7619
     speed: 2
-    m_Value: 323.45963
+    m_Value: 769.7619
   m_Ortho:
-    m_Target: 1
+    m_Target: 0
     speed: 2
-    m_Value: 1
+    m_Value: 0
   m_CameraSettings:
     m_Speed: 1
     m_SpeedNormalized: 0.5
@@ -792,7 +792,7 @@ MonoBehaviour:
     m_FarClip: 10000
     m_DynamicClip: 1
     m_OcclusionCulling: 0
-  m_LastSceneViewRotation: {x: -0.08717229, y: 0.89959055, z: -0.21045254, w: -0.3726226}
+  m_LastSceneViewRotation: {x: -0.109585345, y: -0.0083521865, z: 0.0009207556, w: -0.99394286}
   m_LastSceneViewOrtho: 0
   m_ReplacementShader: {fileID: 0}
   m_ReplacementString: 
@@ -841,21 +841,21 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Prefabs
+    - Assets/Scripts/UMSAGL/Prefabs
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Prefabs
+  - Assets/Scripts/UMSAGL/Prefabs
   m_LastFoldersGridSize: -1
   m_LastProjectPath: "D:\\Programovanie\\Bakal\xE1rka\\DPAnimArch\\UnityProjectDP"
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 41.99994}
-    m_SelectedIDs: 92730000
-    m_LastClickedID: 29586
+    scrollPos: {x: 0, y: 167}
+    m_SelectedIDs: a8730000
+    m_LastClickedID: 29608
     m_ExpandedIDs: 0000000070730000727300007473000076730000787300007a7300007c7300007e73000080730000
     m_RenameOverlay:
       m_UserAcceptedRename: 0

@@ -3,7 +3,7 @@ using TMPro;
 
 namespace AnimArch.Visualization.UI
 {
-    public class AttributePopUp : TypePopUp
+    public class AttributePopUp : AbstractTypePopUp
     {
         public TMP_Text confirm;
         private string _formerAttributeName;
@@ -20,7 +20,7 @@ namespace AnimArch.Visualization.UI
             ActivateCreation(classTxt);
             var text = attributeTxt.text.Split(": ");
             var formerName = text[0];
-            
+
             var attributeType = text[1];
             SetType(attributeType);
 

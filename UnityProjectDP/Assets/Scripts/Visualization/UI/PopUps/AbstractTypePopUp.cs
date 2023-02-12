@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AnimArch.Visualization.Diagrams;
@@ -8,14 +7,32 @@ using UnityEngine.UI;
 
 namespace AnimArch.Visualization.UI
 {
-    public abstract class TypePopUp : AbstractPopUp
+    public abstract class AbstractTypePopUp : AbstractClassPopUp
     {
+        private const string CUSTOM = "custom";
         public TMP_Dropdown dropdown;
-        private readonly HashSet<TMP_Dropdown.OptionData> _variableData = new();
         public TMP_Text customType;
         public TMP_InputField customTypeField;
         public Toggle isArray;
-        private const string CUSTOM = "custom";
+        private readonly HashSet<TMP_Dropdown.OptionData> _variableData = new();
+
+        private void Awake()
+        {
+            dropdown.onValueChanged.AddListener(delegate
+            {
+                if (dropdown.options[dropdown.value].text == CUSTOM)
+                {
+                    customType.transform.gameObject.SetActive(true);
+                    customTypeField.transform.gameObject.SetActive(true);
+                }
+                else
+                {
+                    customType.transform.gameObject.SetActive(false);
+                    customTypeField.transform.gameObject.SetActive(false);
+                    customTypeField.text = "";
+                }
+            });
+        }
 
         protected void SetType(string attributeType)
         {
@@ -38,14 +55,12 @@ namespace AnimArch.Visualization.UI
         protected new string GetType()
         {
             if (dropdown.options[dropdown.value].text == CUSTOM)
-            {
                 return (isArray.isOn ? "[]" : "") + customTypeField.text.Replace(" ", "_");
-            }
 
             return (isArray.isOn ? "[]" : "") + dropdown.options[dropdown.value].text;
         }
-        
-        protected void UpdateDropdown()
+
+        private void UpdateDropdown()
         {
             var classNames = DiagramPool.Instance.ClassDiagram.GetClassList().Select(x => x.Name);
 
@@ -55,27 +70,9 @@ namespace AnimArch.Visualization.UI
             dropdown.options.AddRange(_variableData);
         }
 
-        private void Awake()
+        public override void ActivateCreation()
         {
-            dropdown.onValueChanged.AddListener(delegate
-            {
-                if (dropdown.options[dropdown.value].text == CUSTOM)
-                {
-                    customType.transform.gameObject.SetActive(true);
-                    customTypeField.transform.gameObject.SetActive(true);
-                }
-                else
-                {
-                    customType.transform.gameObject.SetActive(false);
-                    customTypeField.transform.gameObject.SetActive(false);
-                    customTypeField.text = "";
-                }
-            });
-        }
-
-        public override void ActivateCreation(TMP_Text classTxt)
-        {
-            base.ActivateCreation(classTxt);
+            base.ActivateCreation();
             UpdateDropdown();
         }
 
