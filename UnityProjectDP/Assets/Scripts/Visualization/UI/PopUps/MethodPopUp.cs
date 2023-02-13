@@ -7,12 +7,17 @@ using UnityEngine;
 
 namespace AnimArch.Visualization.UI
 {
-    public class MethodPopUp : DropdownPopUp
+    public class MethodPopUp : AbstractTypePopUp
     {
         public TMP_Text confirm;
         [SerializeField] private Transform parameterContent;
         private string _formerName;
         private List<string> _parameters = new();
+
+        public void OnEnable()
+        {
+            ChangeStateOfButtons(false);
+        }
 
 
         public override void ActivateCreation(TMP_Text classTxt)
@@ -46,7 +51,7 @@ namespace AnimArch.Visualization.UI
             var formerMethod = GetMethodFromString(methodTxt.text);
             inp.text = formerMethod.Name;
 
-            dropdown.value = dropdown.options.FindIndex(x => x.text == formerMethod.ReturnValue);
+            SetType(formerMethod.ReturnValue);
             formerMethod.arguments.ForEach(AddArg);
             _formerName = formerMethod.Name;
             confirm.text = "Edit";
@@ -64,7 +69,7 @@ namespace AnimArch.Visualization.UI
             var newMethod = new Method
             {
                 Name = inp.text,
-                ReturnValue = dropdown.options[dropdown.value].text,
+                ReturnValue = GetType(),
                 arguments = _parameters
             };
             if (_formerName == null)
@@ -102,6 +107,12 @@ namespace AnimArch.Visualization.UI
             parameterContent.GetComponentsInChildren<ParameterManager>()
                 .First(x => x.parameterTxt.text == formerParam)
                 .parameterTxt.text = newParam;
+        }
+
+        public void RemoveArg(string parameter)
+        {
+            _parameters.RemoveAll(x => Equals(x, parameter));
+            Destroy(parameterContent.Find(parameter).transform.gameObject);
         }
     }
 }

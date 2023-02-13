@@ -10,7 +10,6 @@ namespace AnimArch.Visualization.UI
 {
     public class UIEditorManager : Singleton<UIEditorManager>
     {
-        private int _id;
         public bool active;
         private GameObject _node;
         private string _relType;
@@ -32,8 +31,6 @@ namespace AnimArch.Visualization.UI
         {
             DontDestroyOnLoad(gameObject);
             InitializeCreation();
-
-            _id = 0;
         }
 
 
@@ -45,7 +42,6 @@ namespace AnimArch.Visualization.UI
 
             InitializeCreation();
 
-            _id = 0;
             active = true;
         }
 
@@ -94,14 +90,6 @@ namespace AnimArch.Visualization.UI
             DiagramPool.Instance.ClassDiagram.graph.UpdateGraph();
             MenuManager.Instance.isSelectingNode = false;
             GameObject.Find("SelectionPanel").SetActive(false);
-        }
-
-        public void AddNode()
-        {
-            var newClass = new Class(_id.ToString());
-
-            MainEditor.CreateNode(newClass, MainEditor.Source.Editor);
-            _id++;
         }
 
         private void AddRelation(GameObject secondNode)

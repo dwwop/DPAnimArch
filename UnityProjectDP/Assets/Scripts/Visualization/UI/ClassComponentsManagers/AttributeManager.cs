@@ -1,5 +1,4 @@
-﻿using System;
-using AnimArch.Visualization.Diagrams;
+﻿using AnimArch.Visualization.Diagrams;
 using TMPro;
 using UnityEngine;
 
@@ -13,6 +12,11 @@ namespace AnimArch.Visualization.UI
         public void OpenAttributeEditPopUp()
         {
             UIEditorManager.Instance.attributePopUp.ActivateCreation(classTxt, attributeTxt);
+        }
+
+        public void DeleteAttribute()
+        {
+            MainEditor.DeleteAttribute(classTxt.text, name);
         }
     }
 }

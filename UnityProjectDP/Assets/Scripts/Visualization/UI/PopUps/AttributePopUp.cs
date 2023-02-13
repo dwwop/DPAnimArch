@@ -1,13 +1,10 @@
-﻿using System.Text.RegularExpressions;
-using AnimArch.Visualization.Diagrams;
+﻿using AnimArch.Visualization.Diagrams;
 using TMPro;
-using UnityEngine.UI;
 
 namespace AnimArch.Visualization.UI
 {
-    public class AttributePopUp : DropdownPopUp
+    public class AttributePopUp : AbstractTypePopUp
     {
-        public Toggle isArray;
         public TMP_Text confirm;
         private string _formerAttributeName;
 
@@ -25,14 +22,9 @@ namespace AnimArch.Visualization.UI
             var formerName = text[0];
 
             var attributeType = text[1];
-            var formerArray = attributeType.Contains("[]");
-            attributeType = Regex.Replace(attributeType, "[\\[\\]\\n]", "");
-            var formerType = attributeType;
+            SetType(attributeType);
 
-            isArray.isOn = formerArray;
             inp.text = formerName;
-            dropdown.value = dropdown.options.FindIndex(x => x.text == formerType);
-
             _formerAttributeName = formerName;
 
             confirm.text = "Edit";
@@ -49,7 +41,7 @@ namespace AnimArch.Visualization.UI
             var newAttribute = new Attribute
             {
                 Name = inp.text,
-                Type = (isArray.isOn ? "[]" : "") + dropdown.options[dropdown.value].text
+                Type = GetType()
             };
             if (_formerAttributeName == null)
             {
@@ -62,12 +54,6 @@ namespace AnimArch.Visualization.UI
             }
 
             Deactivate();
-        }
-
-        public override void Deactivate()
-        {
-            base.Deactivate();
-            isArray.isOn = false;
         }
     }
 }

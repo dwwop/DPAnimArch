@@ -189,11 +189,30 @@ namespace AnimArch.Visualization.Diagrams
             var edge = DiagramPool.Instance.ClassDiagram.graph.AddEdge(sourceClassGo, destinationClassGo, prefab);
 
             if (edge.gameObject.transform.childCount > 0)
-            {
                 DiagramPool.Instance.ClassDiagram.StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
-            }
 
             return edge;
+        }
+
+        public static void DeleteRelation(RelationInDiagram relationInDiagram)
+        {
+            DiagramPool.Instance.ClassDiagram.graph.RemoveEdge(relationInDiagram.VisualObject);
+        }
+
+        public static void DeleteNode(ClassInDiagram classInDiagram)
+        {
+            DiagramPool.Instance.ClassDiagram.graph.RemoveNode(classInDiagram.VisualObject);
+        }
+        
+        public static void DeleteAttribute(ClassInDiagram classInDiagram, string attribute)
+        {
+            Object.Destroy(GetAttributeLayoutGroup(classInDiagram.VisualObject).Find(attribute).transform.gameObject);
+        }
+
+
+        public static void DeleteMethod(ClassInDiagram classInDiagram, string method)
+        {
+            Object.Destroy(GetMethodLayoutGroup(classInDiagram.VisualObject).Find(method).transform.gameObject);
         }
     }
 }
