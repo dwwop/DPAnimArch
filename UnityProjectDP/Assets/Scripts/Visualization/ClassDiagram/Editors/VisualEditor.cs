@@ -3,6 +3,7 @@ using AnimArch.Extensions;
 using AnimArch.Visualization.UI;
 using Networking;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -55,14 +56,14 @@ namespace AnimArch.Visualization.Diagrams
             SetDefaultPosition(node);
             UpdateNodeName(node);
 
+            node.GetComponent<NetworkObject>().Spawn();
+
             return node;
         }
 
 
         public static void SetPosition(string className, Vector3 position, bool fromRpc)
         {
-            if (!fromRpc)
-                Spawner.Instance.SetPosition(className, position);
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
             if (classInDiagram != null)
                 classInDiagram

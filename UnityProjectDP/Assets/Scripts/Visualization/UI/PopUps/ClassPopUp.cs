@@ -6,7 +6,8 @@ namespace AnimArch.Visualization.UI
     {
         public override void Confirmation()
         {
-            if (inp.text != "") MainEditor.UpdateNodeName(className.text, inp.text, false);
+            if (inp.text != "")
+                MainEditor.UpdateNodeName(className.text, inp.text, false);
             Deactivate();
         }
     }

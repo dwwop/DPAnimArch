@@ -5,6 +5,7 @@ using System.IO;
 using AnimArch.Parsing;
 using AnimArch.Visualization.Animating;
 using OALProgramControl;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace AnimArch.Visualization.Diagrams
@@ -78,6 +79,7 @@ namespace AnimArch.Visualization.Diagrams
         {
             DiagramPool.Instance.ClassDiagram.ResetDiagram();
             var go = Instantiate(DiagramPool.Instance.graphPrefab);
+            go.GetComponent<NetworkObject>().Spawn();
             DiagramPool.Instance.ClassDiagram.graph = go.GetComponent<Graph>();
             DiagramPool.Instance.ClassDiagram.graph.nodePrefab = DiagramPool.Instance.classPrefab;
         }

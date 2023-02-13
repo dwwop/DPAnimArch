@@ -33,13 +33,11 @@ namespace AnimArch.Visualization.Diagrams
             {
                 case Source.Editor:
                     CreateNode(newClass);
-                    Spawner.Instance.SpawnNode(newClass.Name, newClass.Id);
                     break;
                 case Source.RPC:
                     CreateNode(newClass);
                     break;
                 case Source.Loader:
-                    Spawner.Instance.SpawnNode(newClass.Name, newClass.Id);
                     CreateNode(newClass);
                     break;
             }
@@ -67,9 +65,6 @@ namespace AnimArch.Visualization.Diagrams
 
         public static void UpdateNodeName(string oldName, string newName, bool fromRpc)
         {
-            if (!fromRpc)
-                Spawner.Instance.SetNodeName(oldName, newName);
-
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(oldName);
             if (classInDiagram == null)
                 return;
@@ -105,13 +100,11 @@ namespace AnimArch.Visualization.Diagrams
             {
                 case Source.Editor:
                     AddAttribute(targetClass, attribute);
-                    Spawner.Instance.AddAttribute(targetClass, attribute.Name, attribute.Type);
                     break;
                 case Source.RPC:
                     AddAttribute(targetClass, attribute);
                     break;
                 case Source.Loader:
-                    Spawner.Instance.AddAttribute(targetClass, attribute.Name, attribute.Type);
                     var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
 
                     CDEditor.AddAttribute(classInDiagram, attribute);
@@ -160,13 +153,11 @@ namespace AnimArch.Visualization.Diagrams
             {
                 case Source.Editor:
                     AddMethod(targetClass, method);
-                    Spawner.Instance.AddMethod(targetClass, method.Name, method.ReturnValue);
                     break;
                 case Source.RPC:
                     AddMethod(targetClass, method);
                     break;
                 case Source.Loader:
-                    Spawner.Instance.AddMethod(targetClass, method.Name, method.ReturnValue);
                     var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
 
                     CDEditor.AddMethod(classInDiagram, method);
@@ -210,11 +201,6 @@ namespace AnimArch.Visualization.Diagrams
                 case Source.Loader:
                 case Source.Editor:
                     CreateRelation(relation);
-                    Spawner.Instance.AddRelation(
-                        relation.FromClass,
-                        relation.ToClass,
-                        relation.PropertiesEaType,
-                        relation.PropertiesDirection);
                     break;
                 case Source.RPC:
                     CreateRelation(relation);
