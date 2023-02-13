@@ -78,9 +78,25 @@ namespace AnimArch.Visualization.Diagrams
         public static void CreateGraph()
         {
             MainEditor.ClearDiagram();
-            var go = Instantiate(DiagramPool.Instance.graphPrefab);
-            go.GetComponent<NetworkObject>().Spawn();
-            DiagramPool.Instance.ClassDiagram.graph = go.GetComponent<Graph>();
+            var graphGo = Instantiate(DiagramPool.Instance.networkGraphPrefab);
+            var unitsGo = Instantiate(DiagramPool.Instance.networkUnitsPrefab);
+            if (NetworkManager.Singleton.IsServer)
+            {
+                graphGo.name = "Graph";
+                graphGo.GetComponent<Graph>().units = unitsGo.GetComponent<Transform>();
+
+                unitsGo.name = "Units";
+                graphGo.GetComponent<NetworkObject>().Spawn();
+                var unitsNo = unitsGo.GetComponent<NetworkObject>();
+                unitsNo.Spawn();
+
+                if (!unitsNo.TrySetParent(graphGo))
+                {
+                    throw new InvalidParentException(unitsGo.name);
+                }
+                unitsGo.GetComponent<Transform>().localScale = new Vector3(1, 1, 1);
+            }
+            DiagramPool.Instance.ClassDiagram.graph = graphGo.GetComponent<Graph>();
             DiagramPool.Instance.ClassDiagram.graph.nodePrefab = DiagramPool.Instance.classPrefab;
         }
 

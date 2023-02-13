@@ -30,7 +30,6 @@ namespace AnimArch.Visualization.UI
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            InitializeCreation();
         }
 
 
@@ -104,7 +103,7 @@ namespace AnimArch.Visualization.UI
                 PropertiesEaType = type.Length > 1 ? type[1] : type[0],
                 PropertiesDirection = type.Length > 1 ? "none" : "Source -> Destination"
             };
-            
+
             MainEditor.CreateRelation(relation, MainEditor.Source.Editor);
             EndSelection();
         }

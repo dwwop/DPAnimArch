@@ -50,15 +50,25 @@ namespace AnimArch.Visualization.Diagrams
 
         public static GameObject CreateNode(Class newClass)
         {
-            var node = DiagramPool.Instance.ClassDiagram.graph.AddNode();
-            node.name = newClass.Name;
+            var nodeGo = DiagramPool.Instance.ClassDiagram.graph.AddNode();
+            nodeGo.name = newClass.Name;
 
-            SetDefaultPosition(node);
-            UpdateNodeName(node);
+            SetDefaultPosition(nodeGo);
+            UpdateNodeName(nodeGo);
 
-            node.GetComponent<NetworkObject>().Spawn();
+            var nodeNo = nodeGo.GetComponent<NetworkObject>();
+            nodeNo.Spawn();
 
-            return node;
+            var graphTransform = DiagramPool.Instance.ClassDiagram.graph.gameObject.GetComponent<Transform>();
+            var graphUnits = graphTransform.Find("Units");
+
+            var utr = graphUnits.GetComponent<Transform>();
+            if (!nodeNo.TrySetParent(utr))
+            {
+                throw new InvalidParentException(utr.name);
+            }
+
+            return nodeGo;
         }
 
 

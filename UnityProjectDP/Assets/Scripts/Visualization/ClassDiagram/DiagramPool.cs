@@ -10,7 +10,9 @@ namespace AnimArch.Visualization.Diagrams
     public class DiagramPool : Singleton<DiagramPool>
     {
         public GameObject graphPrefab;
+        public GameObject networkGraphPrefab;
         public GameObject classPrefab;
+        public GameObject networkUnitsPrefab;
         public GameObject objectPrefab;
         public GameObject classAttributePrefab;
         public GameObject classMethodPrefab;

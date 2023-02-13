@@ -5370,7 +5370,13 @@ MonoBehaviour:
   _persistent: 1
   graphPrefab: {fileID: 1889724182012266, guid: a7fcacb0848a8ac4898c34e492bf8dc8,
     type: 3}
+  networkGraphPrefab: {fileID: 1889724182012266, guid: a7fcacb0848a8ac4898c34e492bf8dc8,
+    type: 3}
   classPrefab: {fileID: 1226358218867430, guid: a6ff44ea34772e341bd52a30b491e1f7,
+    type: 3}
+  networkClassPrefab: {fileID: 1226358218867430, guid: 4d07daf923badd446a06ab1bd5273bab,
+    type: 3}
+  networkUnitsPrefab: {fileID: 1460369043516150375, guid: 87f2d64d43790a74bbb4e79a922a28c6,
     type: 3}
   objectPrefab: {fileID: 1226358218867430, guid: 279771eab0b5f3248a5dd667c8f312e5,
     type: 3}
