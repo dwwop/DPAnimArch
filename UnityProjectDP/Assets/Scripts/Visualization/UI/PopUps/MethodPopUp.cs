@@ -16,7 +16,7 @@ namespace AnimArch.Visualization.UI
 
         public void OnEnable()
         {
-            ChangeStateOfButtons(false);
+            SetButtonsActive(false);
         }
 
 

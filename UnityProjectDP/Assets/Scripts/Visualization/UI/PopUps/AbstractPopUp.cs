@@ -10,22 +10,22 @@ namespace AnimArch.Visualization.UI
     {
         public GameObject panel;
 
-        protected void ChangeStateOfButtons(bool state)
+        protected void SetButtonsActive(bool active)
         {
             DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<GraphicRaycaster>()
-                .ForEach(x => x.enabled = state);
+                .ForEach(x => x.enabled = active);
             var parent = transform.parent.parent;
             parent.Find("RightMenu").GetComponentsInChildren<Button>()
-                .ForEach(x => x.enabled = state);
+                .ForEach(x => x.enabled = active);
             parent.Find("TopMenu").GetComponentsInChildren<Button>()
-                .ForEach(x => x.enabled = state);
+                .ForEach(x => x.enabled = active);
             parent.Find("TopMenu").GetComponentsInChildren<EventTrigger>()
-                .ForEach(x => x.enabled = state);
+                .ForEach(x => x.enabled = active);
         }
 
         public virtual void ActivateCreation()
         {
-            ChangeStateOfButtons(false);
+            SetButtonsActive(false);
             panel.SetActive(true);
         }
 
@@ -33,7 +33,7 @@ namespace AnimArch.Visualization.UI
 
         public virtual void Deactivate()
         {
-            ChangeStateOfButtons(true);
+            SetButtonsActive(true);
             panel.SetActive(false);
         }
     }
