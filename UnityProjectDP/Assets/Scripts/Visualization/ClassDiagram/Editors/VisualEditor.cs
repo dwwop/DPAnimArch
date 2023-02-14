@@ -48,7 +48,6 @@ namespace AnimArch.Visualization.Diagrams
             GetNodeHeader(classGo).GetComponent<TextMeshProUGUI>().text = classGo.name;
         }
 
-
         public static GameObject CreateNode(Class newClass)
         {
             var nodeGo = DiagramPool.Instance.ClassDiagram.graph.AddNode();
@@ -75,7 +74,6 @@ namespace AnimArch.Visualization.Diagrams
             return nodeGo;
         }
 
-
         public static void SetPosition(string className, Vector3 position, bool fromRpc)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
@@ -85,7 +83,6 @@ namespace AnimArch.Visualization.Diagrams
                     .GetComponent<RectTransform>()
                     .position = position;
         }
-
 
         public static void UpdateNode(GameObject classGo)
         {
@@ -97,7 +94,6 @@ namespace AnimArch.Visualization.Diagrams
             foreach (var method in GetMethodLayoutGroup(classGo).GetComponents<MethodManager>())
                 method.classTxt = GetNodeHeader(classGo).GetComponent<TextMeshProUGUI>();
         }
-
 
         private static string GetStringFromAttribute(Attribute attribute)
         {
@@ -121,7 +117,6 @@ namespace AnimArch.Visualization.Diagrams
                     .ForEach(x => x.gameObject.SetActive(true));
         }
 
-
         public static void UpdateAttribute(ClassInDiagram classInDiagram, string oldAttribute, Attribute newAttribute)
         {
             var attribute = GetAttributeLayoutGroup(classInDiagram.VisualObject).Find(oldAttribute);
@@ -129,7 +124,6 @@ namespace AnimArch.Visualization.Diagrams
             attribute.name = newAttribute.Name;
             attribute.Find("AttributeText").GetComponent<TextMeshProUGUI>().text = GetStringFromAttribute(newAttribute);
         }
-
 
         private static string GetStringFromMethod(Method method)
         {
@@ -144,7 +138,6 @@ namespace AnimArch.Visualization.Diagrams
 
             return method.Name + arguments + method.ReturnValue;
         }
-
 
         public static void AddMethod(ClassInDiagram classInDiagram, Method method)
         {
@@ -161,7 +154,6 @@ namespace AnimArch.Visualization.Diagrams
                     .ForEach(x => x.gameObject.SetActive(true));
         }
 
-
         public static void UpdateMethod(ClassInDiagram classInDiagram, string oldMethod, Method newMethod)
         {
             var method = GetMethodLayoutGroup(classInDiagram.VisualObject).Find(oldMethod);
@@ -169,7 +161,6 @@ namespace AnimArch.Visualization.Diagrams
             method.name = newMethod.Name;
             method.Find("MethodText").GetComponent<TextMeshProUGUI>().text = GetStringFromMethod(newMethod);
         }
-
 
         //Fix used to minimize relation displaying bug
         private static IEnumerator QuickFix(GameObject g)
@@ -222,7 +213,6 @@ namespace AnimArch.Visualization.Diagrams
         {
             Object.Destroy(GetAttributeLayoutGroup(classInDiagram.VisualObject).Find(attribute).transform.gameObject);
         }
-
 
         public static void DeleteMethod(ClassInDiagram classInDiagram, string method)
         {
