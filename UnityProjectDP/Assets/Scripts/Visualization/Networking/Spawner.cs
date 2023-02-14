@@ -32,7 +32,8 @@ namespace Networking
             var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
             var obj = objects[id];
             var go = obj.GetComponent<NetworkObject>().gameObject;
-            VisualEditor.UpdateNodeName(go);
+            var visualEditor = new VisualEditor();
+            visualEditor.UpdateNodeName(go);
         }
 
         [ClientRpc]

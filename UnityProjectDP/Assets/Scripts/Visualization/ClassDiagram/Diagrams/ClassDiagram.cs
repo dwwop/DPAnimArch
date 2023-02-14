@@ -16,7 +16,7 @@ namespace AnimArch.Visualization.Diagrams
         private void Awake()
         {
             DiagramPool.Instance.ClassDiagram = this;
-            MainEditor.ClearDiagram();
+            MainEditor.Instance.ClearDiagram();
         }
 
         public ClassInDiagram FindClassByName(string className)

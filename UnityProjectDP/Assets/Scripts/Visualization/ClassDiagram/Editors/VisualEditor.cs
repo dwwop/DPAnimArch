@@ -10,45 +10,14 @@ using UnityEngine.UI;
 
 namespace AnimArch.Visualization.Diagrams
 {
-    public static class VisualEditor
+    public class VisualEditor : IVisualEditor
     {
-        private static Transform GetNodeHeader(GameObject classGo)
-        {
-            return classGo.transform.Find("Background").Find("HeaderLayout").Find("Header");
-        }
-
-
-        private static Transform GetAttributeLayoutGroup(GameObject classGo)
-        {
-            return classGo.transform
-                .Find("Background")
-                .Find("Attributes")
-                .Find("AttributeLayoutGroup");
-        }
-
-
-        private static Transform GetMethodLayoutGroup(GameObject classGo)
-        {
-            return classGo.transform
-                .Find("Background")
-                .Find("Methods")
-                .Find("MethodLayoutGroup");
-        }
-
-
-        private static void SetDefaultPosition(GameObject node)
-        {
-            var rect = node.GetComponent<RectTransform>();
-            rect.position = new Vector3(100f, 200f, 1);
-        }
-
-
-        public static void UpdateNodeName(GameObject classGo)
+        public override void UpdateNodeName(GameObject classGo)
         {
             GetNodeHeader(classGo).GetComponent<TextMeshProUGUI>().text = classGo.name;
         }
 
-        public static GameObject CreateNode(Class newClass)
+        public override GameObject CreateNode(Class newClass)
         {
             var nodeGo = DiagramPool.Instance.ClassDiagram.graph.AddNode();
             nodeGo.name = newClass.Name;
@@ -74,7 +43,7 @@ namespace AnimArch.Visualization.Diagrams
             return nodeGo;
         }
 
-        public static void SetPosition(string className, Vector3 position, bool fromRpc)
+        public override void SetPosition(string className, Vector3 position, bool fromRpc)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
             if (classInDiagram != null)
@@ -84,7 +53,7 @@ namespace AnimArch.Visualization.Diagrams
                     .position = position;
         }
 
-        public static void UpdateNode(GameObject classGo)
+        public override void UpdateNode(GameObject classGo)
         {
             UpdateNodeName(classGo);
 
@@ -95,13 +64,12 @@ namespace AnimArch.Visualization.Diagrams
                 method.classTxt = GetNodeHeader(classGo).GetComponent<TextMeshProUGUI>();
         }
 
-        private static string GetStringFromAttribute(Attribute attribute)
+        private string GetStringFromAttribute(Attribute attribute)
         {
             return attribute.Name + ": " + attribute.Type;
         }
 
-
-        public static void AddAttribute(ClassInDiagram classInDiagram, Attribute attribute)
+        public override void AddAttribute(ClassInDiagram classInDiagram, Attribute attribute)
         {
             var attributeLayoutGroup = GetAttributeLayoutGroup(classInDiagram.VisualObject);
             var instance = Object.Instantiate(DiagramPool.Instance.classAttributePrefab, attributeLayoutGroup, false);
@@ -117,7 +85,7 @@ namespace AnimArch.Visualization.Diagrams
                     .ForEach(x => x.gameObject.SetActive(true));
         }
 
-        public static void UpdateAttribute(ClassInDiagram classInDiagram, string oldAttribute, Attribute newAttribute)
+        public override void UpdateAttribute(ClassInDiagram classInDiagram, string oldAttribute, Attribute newAttribute)
         {
             var attribute = GetAttributeLayoutGroup(classInDiagram.VisualObject).Find(oldAttribute);
 
@@ -125,7 +93,7 @@ namespace AnimArch.Visualization.Diagrams
             attribute.Find("AttributeText").GetComponent<TextMeshProUGUI>().text = GetStringFromAttribute(newAttribute);
         }
 
-        private static string GetStringFromMethod(Method method)
+        private string GetStringFromMethod(Method method)
         {
             var arguments = "(";
             if (method.arguments != null)
@@ -139,7 +107,7 @@ namespace AnimArch.Visualization.Diagrams
             return method.Name + arguments + method.ReturnValue;
         }
 
-        public static void AddMethod(ClassInDiagram classInDiagram, Method method)
+        public override void AddMethod(ClassInDiagram classInDiagram, Method method)
         {
             var methodLayoutGroup = GetMethodLayoutGroup(classInDiagram.VisualObject);
             var instance = Object.Instantiate(DiagramPool.Instance.classMethodPrefab, methodLayoutGroup, false);
@@ -154,7 +122,7 @@ namespace AnimArch.Visualization.Diagrams
                     .ForEach(x => x.gameObject.SetActive(true));
         }
 
-        public static void UpdateMethod(ClassInDiagram classInDiagram, string oldMethod, Method newMethod)
+        public override void UpdateMethod(ClassInDiagram classInDiagram, string oldMethod, Method newMethod)
         {
             var method = GetMethodLayoutGroup(classInDiagram.VisualObject).Find(oldMethod);
 
@@ -162,16 +130,7 @@ namespace AnimArch.Visualization.Diagrams
             method.Find("MethodText").GetComponent<TextMeshProUGUI>().text = GetStringFromMethod(newMethod);
         }
 
-        //Fix used to minimize relation displaying bug
-        private static IEnumerator QuickFix(GameObject g)
-        {
-            yield return new WaitForSeconds(0.05f);
-            g.SetActive(false);
-            yield return new WaitForSeconds(0.05f);
-            g.SetActive(true);
-        }
-
-        public static GameObject CreateRelation(Relation relation)
+        public override GameObject CreateRelation(Relation relation)
         {
             var prefab = relation.PropertiesEaType switch
             {
@@ -199,24 +158,60 @@ namespace AnimArch.Visualization.Diagrams
             return edge;
         }
 
-        public static void DeleteRelation(RelationInDiagram relationInDiagram)
+        public override void DeleteRelation(RelationInDiagram relationInDiagram)
         {
             DiagramPool.Instance.ClassDiagram.graph.RemoveEdge(relationInDiagram.VisualObject);
         }
 
-        public static void DeleteNode(ClassInDiagram classInDiagram)
+        public override void DeleteNode(ClassInDiagram classInDiagram)
         {
             DiagramPool.Instance.ClassDiagram.graph.RemoveNode(classInDiagram.VisualObject);
         }
         
-        public static void DeleteAttribute(ClassInDiagram classInDiagram, string attribute)
+        public override void DeleteAttribute(ClassInDiagram classInDiagram, string attribute)
         {
             Object.Destroy(GetAttributeLayoutGroup(classInDiagram.VisualObject).Find(attribute).transform.gameObject);
         }
 
-        public static void DeleteMethod(ClassInDiagram classInDiagram, string method)
+        public override void DeleteMethod(ClassInDiagram classInDiagram, string method)
         {
             Object.Destroy(GetMethodLayoutGroup(classInDiagram.VisualObject).Find(method).transform.gameObject);
+        }
+
+        //Fix used to minimize relation displaying bug
+        private IEnumerator QuickFix(GameObject g)
+        {
+            yield return new WaitForSeconds(0.05f);
+            g.SetActive(false);
+            yield return new WaitForSeconds(0.05f);
+            g.SetActive(true);
+        }
+
+        private Transform GetNodeHeader(GameObject classGo)
+        {
+            return classGo.transform.Find("Background").Find("HeaderLayout").Find("Header");
+        }
+
+        private Transform GetAttributeLayoutGroup(GameObject classGo)
+        {
+            return classGo.transform
+                .Find("Background")
+                .Find("Attributes")
+                .Find("AttributeLayoutGroup");
+        }
+
+        private Transform GetMethodLayoutGroup(GameObject classGo)
+        {
+            return classGo.transform
+                .Find("Background")
+                .Find("Methods")
+                .Find("MethodLayoutGroup");
+        }
+
+        private void SetDefaultPosition(GameObject node)
+        {
+            var rect = node.GetComponent<RectTransform>();
+            rect.position = new Vector3(100f, 200f, 1);
         }
     }
 }

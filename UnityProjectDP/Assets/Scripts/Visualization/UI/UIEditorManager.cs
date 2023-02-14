@@ -108,7 +108,7 @@ namespace AnimArch.Visualization.UI
                 PropertiesDirection = type.Length > 1 ? "none" : "Source -> Destination"
             };
 
-            MainEditor.CreateRelation(relation, MainEditor.Source.Editor);
+            MainEditor.Instance.CreateRelation(relation, MainEditor.Source.Editor);
             EndSelection();
         }
     }

@@ -16,7 +16,7 @@ namespace AnimArch.Visualization.UI
 
         public void DeleteMethod()
         {
-            MainEditor.DeleteMethod(classTxt.text, name);
+            MainEditor.Instance.DeleteMethod(classTxt.text, name);
         }
     }
 }

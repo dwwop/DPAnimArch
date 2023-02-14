@@ -8,8 +8,15 @@ using UnityEngine;
 
 namespace AnimArch.Visualization.Diagrams
 {
-    public static class MainEditor
+    public class MainEditor : Singleton<MainEditor>
     {
+        private IVisualEditor _visualEditor;
+
+        private void Awake()
+        {
+            _visualEditor = VisualEditorFactory.Create();
+        }
+
         public enum Source
         {
             RPC,
@@ -17,12 +24,12 @@ namespace AnimArch.Visualization.Diagrams
             Loader
         }
 
-        private static void CreateNode(Class newClass)
+        private void CreateNode(Class newClass)
         {
             var newCdClass = CDEditor.CreateNode(newClass);
             newClass.Name = newCdClass.Name;
 
-            var classGo = VisualEditor.CreateNode(newClass);
+            var classGo = _visualEditor.CreateNode(newClass);
 
             newClass = ParsedEditor.UpdateNodeGeometry(newClass, classGo);
 
@@ -31,7 +38,7 @@ namespace AnimArch.Visualization.Diagrams
             DiagramPool.Instance.ClassDiagram.Classes.Add(classInDiagram);
         }
 
-        public static void CreateNode(Class newClass, Source source)
+        public void CreateNode(Class newClass, Source source)
         {
             newClass.Name = newClass.Name.Replace(" ", "_");
             switch (source)
@@ -48,7 +55,7 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-        private static void UpdateNodeName(string oldName, string newName)
+        private void UpdateNodeName(string oldName, string newName)
         {
             foreach (var relationInDiagram in DiagramPool.Instance.ClassDiagram.Relations)
             {
@@ -68,7 +75,7 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-        public static void UpdateNodeName(string oldName, string newName, bool fromRpc)
+        public void UpdateNodeName(string oldName, string newName, bool fromRpc)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(oldName);
             if (classInDiagram == null)
@@ -78,12 +85,12 @@ namespace AnimArch.Visualization.Diagrams
             classInDiagram.ClassInfo.Name = newName;
             classInDiagram.VisualObject.name = newName;
 
-            VisualEditor.UpdateNode(classInDiagram.VisualObject);
+            _visualEditor.UpdateNode(classInDiagram.VisualObject);
 
             UpdateNodeName(oldName, newName);
         }
 
-        private static void AddAttribute(string targetClass, Attribute attribute)
+        private void AddAttribute(string targetClass, Attribute attribute)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
             if (classInDiagram == null) return;
@@ -95,10 +102,10 @@ namespace AnimArch.Visualization.Diagrams
 
             ParsedEditor.AddAttribute(classInDiagram, attribute);
             CDEditor.AddAttribute(classInDiagram, attribute);
-            VisualEditor.AddAttribute(classInDiagram, attribute);
+            _visualEditor.AddAttribute(classInDiagram, attribute);
         }
 
-        public static void AddAttribute(string targetClass, Attribute attribute, Source source)
+        public void AddAttribute(string targetClass, Attribute attribute, Source source)
         {
             attribute.Name = attribute.Name.Replace(" ", "_");
             switch (source)
@@ -113,12 +120,12 @@ namespace AnimArch.Visualization.Diagrams
                     var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
 
                     CDEditor.AddAttribute(classInDiagram, attribute);
-                    VisualEditor.AddAttribute(classInDiagram, attribute);
+                    _visualEditor.AddAttribute(classInDiagram, attribute);
                     break;
             }
         }
 
-        public static void UpdateAttribute(string targetClass, string oldAttribute, Attribute newAttribute)
+        public void UpdateAttribute(string targetClass, string oldAttribute, Attribute newAttribute)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
             if (classInDiagram == null)
@@ -129,10 +136,10 @@ namespace AnimArch.Visualization.Diagrams
 
             ParsedEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
             CDEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
-            VisualEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
+            _visualEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
         }
 
-        private static void AddMethod(string targetClass, Method method)
+        private void AddMethod(string targetClass, Method method)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
             if (classInDiagram == null)
@@ -147,11 +154,11 @@ namespace AnimArch.Visualization.Diagrams
 
             ParsedEditor.AddMethod(classInDiagram, method);
             CDEditor.AddMethod(classInDiagram, method);
-            VisualEditor.AddMethod(classInDiagram, method);
+            _visualEditor.AddMethod(classInDiagram, method);
         }
 
 
-        public static void AddMethod(string targetClass, Method method, Source source)
+        public void AddMethod(string targetClass, Method method, Source source)
         {
             method.Name = method.Name.Replace(" ", "_");
             switch (source)
@@ -166,12 +173,12 @@ namespace AnimArch.Visualization.Diagrams
                     var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
 
                     CDEditor.AddMethod(classInDiagram, method);
-                    VisualEditor.AddMethod(classInDiagram, method);
+                    _visualEditor.AddMethod(classInDiagram, method);
                     break;
             }
         }
 
-        public static void UpdateMethod(string targetClass, string oldMethod, Method newMethod)
+        public void UpdateMethod(string targetClass, string oldMethod, Method newMethod)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
             if (classInDiagram == null)
@@ -182,16 +189,16 @@ namespace AnimArch.Visualization.Diagrams
 
             ParsedEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);
             CDEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);
-            VisualEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);
+            _visualEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);
         }
 
-        private static void CreateRelation(Relation relation)
+        private void CreateRelation(Relation relation)
         {
             relation.FromClass = relation.SourceModelName.Replace(" ", "_");
             relation.ToClass = relation.TargetModelName.Replace(" ", "_");
 
             var cdRelation = CDEditor.CreateRelation(relation);
-            var relationGo = VisualEditor.CreateRelation(relation);
+            var relationGo = _visualEditor.CreateRelation(relation);
 
             var relationInDiagram = new RelationInDiagram
                 { ParsedRelation = relation, RelationInfo = cdRelation, VisualObject = relationGo };
@@ -199,7 +206,7 @@ namespace AnimArch.Visualization.Diagrams
         }
 
 
-        public static void CreateRelation(Relation relation, Source source)
+        public void CreateRelation(Relation relation, Source source)
         {
             switch (source)
             {
@@ -213,28 +220,28 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-        public static void DeleteRelation(GameObject relation)
+        public void DeleteRelation(GameObject relation)
         {
             var relationInDiagram = DiagramPool.Instance.ClassDiagram.Relations
                 .Find(x => x.VisualObject.Equals(relation));
 
-            VisualEditor.DeleteRelation(relationInDiagram);
+            _visualEditor.DeleteRelation(relationInDiagram);
             DiagramPool.Instance.ClassDiagram.Relations.Remove(relationInDiagram);
         }
 
-        private static void DeleteNodeFromRelations(ClassInDiagram classInDiagram)
+        private void DeleteNodeFromRelations(ClassInDiagram classInDiagram)
         {
             DiagramPool.Instance.ClassDiagram.Relations
                 .Where(x => x.ParsedRelation.FromClass == classInDiagram.ParsedClass.Name
                             || x.ParsedRelation.ToClass == classInDiagram.ParsedClass.Name)
-                .ForEach(VisualEditor.DeleteRelation);
+                .ForEach(_visualEditor.DeleteRelation);
 
             DiagramPool.Instance.ClassDiagram.Relations
                 .RemoveAll(x => x.ParsedRelation.FromClass == classInDiagram.ParsedClass.Name
                                 || x.ParsedRelation.ToClass == classInDiagram.ParsedClass.Name);
         }
 
-        public static void DeleteNode(string className)
+        public void DeleteNode(string className)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
             if (classInDiagram == null)
@@ -242,12 +249,12 @@ namespace AnimArch.Visualization.Diagrams
 
             DeleteNodeFromRelations(classInDiagram);
 
-            VisualEditor.DeleteNode(classInDiagram);
+            _visualEditor.DeleteNode(classInDiagram);
 
             DiagramPool.Instance.ClassDiagram.Classes.Remove(classInDiagram);
         }
 
-        public static void DeleteAttribute(string className, string attributeName)
+        public void DeleteAttribute(string className, string attributeName)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
             if (classInDiagram == null)
@@ -258,10 +265,10 @@ namespace AnimArch.Visualization.Diagrams
 
             ParsedEditor.DeleteAttribute(classInDiagram, attributeName);
             CDEditor.DeleteAttribute(classInDiagram, attributeName);
-            VisualEditor.DeleteAttribute(classInDiagram, attributeName);
+            _visualEditor.DeleteAttribute(classInDiagram, attributeName);
         }
 
-        public static void DeleteMethod(string className, string methodName)
+        public void DeleteMethod(string className, string methodName)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
             if (classInDiagram == null)
@@ -272,10 +279,10 @@ namespace AnimArch.Visualization.Diagrams
 
             ParsedEditor.DeleteMethod(classInDiagram, methodName);
             CDEditor.DeleteMethod(classInDiagram, methodName);
-            VisualEditor.DeleteMethod(classInDiagram, methodName);
+            _visualEditor.DeleteMethod(classInDiagram, methodName);
         }
 
-        public static void ClearDiagram()
+        public void ClearDiagram()
         {
             // Get rid of already rendered classes in diagram.
             if (DiagramPool.Instance.ClassDiagram.Classes != null)

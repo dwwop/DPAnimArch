@@ -45,11 +45,11 @@ namespace AnimArch.Visualization.UI
             };
             if (_formerAttributeName == null)
             {
-                MainEditor.AddAttribute(className.text, newAttribute, MainEditor.Source.Editor);
+                MainEditor.Instance.AddAttribute(className.text, newAttribute, MainEditor.Source.Editor);
             }
             else
             {
-                MainEditor.UpdateAttribute(className.text, _formerAttributeName, newAttribute);
+                MainEditor.Instance.UpdateAttribute(className.text, _formerAttributeName, newAttribute);
                 _formerAttributeName = null;
             }
 
