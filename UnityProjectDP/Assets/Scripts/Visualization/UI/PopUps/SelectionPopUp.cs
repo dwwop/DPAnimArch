@@ -9,6 +9,7 @@ namespace AnimArch.Visualization.UI
         public override void Confirmation()
         {
             UIEditorManager.Instance.StartSelection(dropdown.options[dropdown.value].text);
+            Deactivate();
         }
     }
 }
