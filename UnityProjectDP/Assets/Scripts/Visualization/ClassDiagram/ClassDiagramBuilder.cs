@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using AnimArch.Parsing;
 using AnimArch.Visualization.Animating;
+using Networking;
 using OALProgramControl;
 using Unity.Netcode;
 using UnityEngine;
@@ -86,9 +87,14 @@ namespace AnimArch.Visualization.Diagrams
                 graphGo.GetComponent<Graph>().units = unitsGo.GetComponent<Transform>();
 
                 unitsGo.name = "Units";
-                graphGo.GetComponent<NetworkObject>().Spawn();
+                var graphNo = graphGo.GetComponent<NetworkObject>();
+                graphNo.Spawn();
+                Spawner.Instance.SetNetworkObjectNameClientRpc(graphNo.name, graphNo.NetworkObjectId);
+
                 var unitsNo = unitsGo.GetComponent<NetworkObject>();
                 unitsNo.Spawn();
+
+                Spawner.Instance.SetNetworkObjectNameClientRpc(unitsNo.name, unitsNo.NetworkObjectId);
 
                 if (!unitsNo.TrySetParent(graphGo))
                 {
