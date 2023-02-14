@@ -6,22 +6,17 @@ using AnimArch.Parsing;
 using AnimArch.Visualization.Animating;
 using AnimArch.Visualization.UI;
 using AnimArch.Visualization.Diagrams;
-using Unity.Netcode;
 
 public class FileLoader : MonoBehaviour
 {
     private IClassDiagramBuilder _classDiagramBuilder;
 
+    private void Awake()
+    {
+        _classDiagramBuilder = ClassDiagramBuilderFactory.Create();
+    }
     private void Start()
     {
-        if (NetworkManager.Singleton.IsServer)
-        {
-            _classDiagramBuilder = new ClassDiagramBuilderServer();
-        }
-        else
-        {
-            _classDiagramBuilder = new ClassDiagramBuilderClient();
-        }
 
         var filters = new FileBrowser.Filter[2];
         filters[0] = new FileBrowser.Filter("JSON files", ".json");

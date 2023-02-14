@@ -29,6 +29,7 @@ namespace AnimArch.Visualization.UI
         {
             if (!DiagramPool.Instance.ClassDiagram.graph)
             {
+                Debug.Assert(_classDiagramBuilder != null);
                 _classDiagramBuilder.CreateGraph();
                 _classDiagramBuilder.MakeNetworkedGraph();
             }
@@ -37,21 +38,7 @@ namespace AnimArch.Visualization.UI
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            if (NetworkEnabled)
-            {
-                if (NetworkManager.Singleton.IsServer)
-                {
-                    _classDiagramBuilder = new ClassDiagramBuilderServer();
-                }
-                else
-                {
-                    _classDiagramBuilder = new ClassDiagramBuilderClient();
-                }
-            }
-            else
-            {
-                _classDiagramBuilder = new ClassDiagramBuilder();
-            }
+            _classDiagramBuilder = ClassDiagramBuilderFactory.Create();
         }
 
         public void StartEditing()
