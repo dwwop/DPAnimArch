@@ -24,12 +24,11 @@ namespace AnimArch.Visualization.UI
         public ClassPopUp classPopUp;
         public ParameterPopUp parameterPopUp;
 
-
-        private void InitializeCreation()
+        public void InitializeCreation()
         {
-            if (!DiagramPool.Instance.ClassDiagram.graph)
+            Debug.Assert(_classDiagramBuilder != null);
+            if (DiagramPool.Instance.ClassDiagram.graph == null)
             {
-                Debug.Assert(_classDiagramBuilder != null);
                 _classDiagramBuilder.CreateGraph();
                 _classDiagramBuilder.MakeNetworkedGraph();
             }
@@ -43,12 +42,11 @@ namespace AnimArch.Visualization.UI
 
         public void StartEditing()
         {
-            if (DiagramPool.Instance.ClassDiagram.graph != null)
-                DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<Button>(includeInactive: true)
-                    .ForEach(x => x.gameObject.SetActive(true));
-
-            InitializeCreation();
-
+            if (DiagramPool.Instance.ClassDiagram.graph == null)
+                InitializeCreation();
+            Debug.Assert(DiagramPool.Instance.ClassDiagram.graph);
+            DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<Button>(includeInactive: true)
+                .ForEach(x => x.gameObject.SetActive(true));
             active = true;
         }
 
@@ -87,7 +85,6 @@ namespace AnimArch.Visualization.UI
                 AddRelation(selected);
             }
         }
-
 
         private void EndSelection()
         {

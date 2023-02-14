@@ -15,6 +15,7 @@ namespace AnimArch.Visualization.Diagrams
 
             var graphNo = graphGo.GetComponent<NetworkObject>();
             graphNo.Spawn();
+            Spawner.Instance.SetNetworkObjectNameClientRpc(graphNo.name, graphNo.NetworkObjectId);
 
             var unitsGo = GameObject.Find("Units");
             var unitsNo = unitsGo.GetComponent<NetworkObject>();

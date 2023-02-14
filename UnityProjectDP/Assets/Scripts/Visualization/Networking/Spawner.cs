@@ -1,5 +1,6 @@
 ﻿using AnimArch.Extensions;
 using AnimArch.Visualization.Diagrams;
+using AnimArch.Visualization.UI;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,6 +42,24 @@ namespace Networking
                 return;
             DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<GraphicRaycaster>()
                 .ForEach(x => x.enabled = active);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void CreateGraphServerRpc()
+        {
+            if (IsClient && !IsHost)
+                return;
+            UIEditorManager.Instance.InitializeCreation();
+            GraphCreatedClientRpc();
+        }
+
+
+        [ClientRpc]
+        public void GraphCreatedClientRpc()
+        {
+            if (IsServer)
+                return;
+            DiagramPool.Instance.ClassDiagram.graph = GameObject.Find("Graph").GetComponent<Graph>();
         }
     }
 }
