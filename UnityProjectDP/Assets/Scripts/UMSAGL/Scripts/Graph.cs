@@ -45,9 +45,22 @@ public class Graph : MonoBehaviour
 
     public void Center()
     {
+        if (!units && !TryGetUnits())
+            return;
         _graph.UpdateBoundingBox();
         units.localPosition =
             new Vector3(ToUnitySpace(_graph.BoundingBox.Center.X), ToUnitySpace(_graph.BoundingBox.Center.Y)) * -1.0f;
+    }
+
+    private bool TryGetUnits()
+    {
+        if (!transform.Find("Units"))
+            return false;
+        else
+        {
+            units = transform.Find("Units");
+            return true;
+        }
     }
 
     public GameObject AddNode()

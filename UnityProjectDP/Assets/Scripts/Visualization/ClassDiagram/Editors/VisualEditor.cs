@@ -42,7 +42,7 @@ namespace AnimArch.Visualization.Diagrams
         }
 
 
-        private static void UpdateNodeName(GameObject classGo)
+        public static void UpdateNodeName(GameObject classGo)
         {
             GetNodeHeader(classGo).GetComponent<TextMeshProUGUI>().text = classGo.name;
         }
@@ -59,6 +59,8 @@ namespace AnimArch.Visualization.Diagrams
             var nodeNo = nodeGo.GetComponent<NetworkObject>();
             nodeNo.Spawn();
 
+            Spawner.Instance.SetNetworkObjectNameClientRpc(nodeNo.name, nodeNo.NetworkObjectId);
+
             var graphTransform = DiagramPool.Instance.ClassDiagram.graph.gameObject.GetComponent<Transform>();
             var graphUnits = graphTransform.Find("Units");
 
@@ -68,6 +70,7 @@ namespace AnimArch.Visualization.Diagrams
                 throw new InvalidParentException(utr.name);
             }
 
+            Spawner.Instance.SetClassNameClientRpc(nodeNo.name, nodeNo.NetworkObjectId);
             return nodeGo;
         }
 

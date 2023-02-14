@@ -93,13 +93,13 @@ namespace AnimArch.Visualization.Diagrams
 
                 var unitsNo = unitsGo.GetComponent<NetworkObject>();
                 unitsNo.Spawn();
-
                 Spawner.Instance.SetNetworkObjectNameClientRpc(unitsNo.name, unitsNo.NetworkObjectId);
 
                 if (!unitsNo.TrySetParent(graphGo))
                 {
                     throw new InvalidParentException(unitsGo.name);
                 }
+
                 unitsGo.GetComponent<Transform>().localScale = new Vector3(1, 1, 1);
             }
             DiagramPool.Instance.ClassDiagram.graph = graphGo.GetComponent<Graph>();

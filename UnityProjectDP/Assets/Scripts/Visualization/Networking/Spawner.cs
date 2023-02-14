@@ -20,5 +20,16 @@ namespace Networking
             var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
             objects[id].name = name;
         }
+
+        [ClientRpc]
+        public void SetClassNameClientRpc(string name, ulong id)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[id];
+            var go = obj.GetComponent<NetworkObject>().gameObject;
+            VisualEditor.UpdateNodeName(go);
+        }
     }
 }
