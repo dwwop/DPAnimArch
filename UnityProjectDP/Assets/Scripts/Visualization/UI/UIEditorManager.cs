@@ -59,7 +59,6 @@ namespace AnimArch.Visualization.UI
                 .ForEach(x => x.gameObject.SetActive(false));
         }
 
-
         public void StartSelection(string type)
         {
             MenuManager.Instance.isSelectingNode = true;
