@@ -6,11 +6,23 @@ using AnimArch.Parsing;
 using AnimArch.Visualization.Animating;
 using AnimArch.Visualization.UI;
 using AnimArch.Visualization.Diagrams;
+using Unity.Netcode;
 
 public class FileLoader : MonoBehaviour
 {
+    private IClassDiagramBuilder _classDiagramBuilder;
+
     private void Start()
     {
+        if (NetworkManager.Singleton.IsServer)
+        {
+            _classDiagramBuilder = new ClassDiagramBuilderServer();
+        }
+        else
+        {
+            _classDiagramBuilder = new ClassDiagramBuilderClient();
+        }
+
         var filters = new FileBrowser.Filter[2];
         filters[0] = new FileBrowser.Filter("JSON files", ".json");
         filters[1] = new FileBrowser.Filter("XML files", ".xml");
@@ -58,14 +70,14 @@ public class FileLoader : MonoBehaviour
     }
 
 
-    private static IEnumerator LoadDiagramCoroutine()
+    private IEnumerator LoadDiagramCoroutine()
     {
         FileBrowser.SetDefaultFilter(".xml");
         yield return FileBrowser.WaitForLoadDialog(false, @"Assets\Resources\", "Load Diagram", "Load");
 
         if (!FileBrowser.Success) yield break;
         AnimationData.Instance.SetDiagramPath(FileBrowser.Result);
-        ClassDiagramBuilder.LoadDiagram();
+        _classDiagramBuilder.LoadDiagram();
     }
 
     private static IEnumerator SaveAnimationCoroutine(Anim newAnim)

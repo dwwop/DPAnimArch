@@ -2,6 +2,7 @@
 using AnimArch.Extensions;
 using AnimArch.Visualization.Diagrams;
 using Networking;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -13,6 +14,10 @@ namespace AnimArch.Visualization.UI
         public bool active;
         private GameObject _node;
         private string _relType;
+        private IClassDiagramBuilder _classDiagramBuilder;
+
+        [SerializeField]
+        public bool NetworkEnabled;
 
         public AttributePopUp attributePopUp;
         public MethodPopUp methodPopUp;
@@ -20,18 +25,34 @@ namespace AnimArch.Visualization.UI
         public ParameterPopUp parameterPopUp;
 
 
-        private static void InitializeCreation()
+        private void InitializeCreation()
         {
-            if (DiagramPool.Instance.ClassDiagram.graph) return;
-
-            ClassDiagramBuilder.CreateGraph();
+            if (!DiagramPool.Instance.ClassDiagram.graph)
+            {
+                _classDiagramBuilder.CreateGraph();
+                _classDiagramBuilder.MakeNetworkedGraph();
+            }
         }
 
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
+            if (NetworkEnabled)
+            {
+                if (NetworkManager.Singleton.IsServer)
+                {
+                    _classDiagramBuilder = new ClassDiagramBuilderServer();
+                }
+                else
+                {
+                    _classDiagramBuilder = new ClassDiagramBuilderClient();
+                }
+            }
+            else
+            {
+                _classDiagramBuilder = new ClassDiagramBuilder();
+            }
         }
-
 
         public void StartEditing()
         {

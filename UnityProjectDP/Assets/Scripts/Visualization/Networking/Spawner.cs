@@ -1,6 +1,8 @@
-﻿using AnimArch.Visualization.Diagrams;
+﻿using AnimArch.Extensions;
+using AnimArch.Visualization.Diagrams;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Networking
 {
@@ -30,6 +32,15 @@ namespace Networking
             var obj = objects[id];
             var go = obj.GetComponent<NetworkObject>().gameObject;
             VisualEditor.UpdateNodeName(go);
+        }
+
+        [ClientRpc]
+        public void SetButtonsActiveClientRpc(bool active = true)
+        {
+            if (IsServer)
+                return;
+            DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<GraphicRaycaster>()
+                .ForEach(x => x.enabled = active);
         }
     }
 }

@@ -5,6 +5,7 @@ using Networking;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnimArch.Visualization.Diagrams

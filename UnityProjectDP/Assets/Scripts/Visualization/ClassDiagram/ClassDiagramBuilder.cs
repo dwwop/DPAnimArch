@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using AnimArch.Parsing;
 using AnimArch.Visualization.Animating;
-using Networking;
-using OALProgramControl;
-using Unity.Netcode;
+using AnimArch.Visualization.UI;
 using UnityEngine;
 
 namespace AnimArch.Visualization.Diagrams
 {
-    public class ClassDiagramBuilder : MonoBehaviour
+    public class ClassDiagramBuilder : IClassDiagramBuilder
     {
-        private static void ParseData()
+        protected void ParseData()
         {
             var path = AnimationData.Instance.GetDiagramPath();
             List<Class> classList;
@@ -75,33 +71,19 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-
-        public static void CreateGraph()
+        public override void CreateGraph()
         {
             MainEditor.ClearDiagram();
-            var graphGo = Instantiate(DiagramPool.Instance.networkGraphPrefab);
-            var unitsGo = Instantiate(DiagramPool.Instance.networkUnitsPrefab);
-            if (NetworkManager.Singleton.IsServer)
+            var graphGo = GameObject.Instantiate(DiagramPool.Instance.networkGraphPrefab);
+            graphGo.name = "Graph";
+            var unitsGo = GameObject.Instantiate(DiagramPool.Instance.networkUnitsPrefab);
+            unitsGo.name = "Units";
+
+            if (!UIEditorManager.Instance.NetworkEnabled)
             {
-                graphGo.name = "Graph";
-                graphGo.GetComponent<Graph>().units = unitsGo.GetComponent<Transform>();
-
-                unitsGo.name = "Units";
-                var graphNo = graphGo.GetComponent<NetworkObject>();
-                graphNo.Spawn();
-                Spawner.Instance.SetNetworkObjectNameClientRpc(graphNo.name, graphNo.NetworkObjectId);
-
-                var unitsNo = unitsGo.GetComponent<NetworkObject>();
-                unitsNo.Spawn();
-                Spawner.Instance.SetNetworkObjectNameClientRpc(unitsNo.name, unitsNo.NetworkObjectId);
-
-                if (!unitsNo.TrySetParent(graphGo))
-                {
-                    throw new InvalidParentException(unitsGo.name);
-                }
-
-                unitsGo.GetComponent<Transform>().localScale = new Vector3(1, 1, 1);
+                unitsGo.GetComponent<Transform>().SetParent(graphGo.GetComponent<Transform>());
             }
+
             DiagramPool.Instance.ClassDiagram.graph = graphGo.GetComponent<Graph>();
             DiagramPool.Instance.ClassDiagram.graph.nodePrefab = DiagramPool.Instance.classPrefab;
         }
@@ -114,7 +96,7 @@ namespace AnimArch.Visualization.Diagrams
 
 
         //Set layout as close as possible to EA layout
-        private static void RenderClassesManual()
+        private void RenderClassesManual()
         {
             foreach (var classInDiagram in DiagramPool.Instance.ClassDiagram.Classes)
             {
@@ -125,7 +107,7 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-        public static void LoadDiagram()
+        public override void LoadDiagram()
         {
             CreateGraph();
             var k = 0;
