@@ -10,9 +10,8 @@ namespace AnimArch.Visualization.UI
 {
     public class UIEditorManager : Singleton<UIEditorManager>
     {
-        private int _id;
         public bool active;
-        private GameObject _node;
+        private GameObject _fromClass;
         private string _relType;
 
         public AttributePopUp attributePopUp;
@@ -31,9 +30,6 @@ namespace AnimArch.Visualization.UI
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            InitializeCreation();
-
-            _id = 0;
         }
 
 
@@ -45,7 +41,6 @@ namespace AnimArch.Visualization.UI
 
             InitializeCreation();
 
-            _id = 0;
             active = true;
         }
 
@@ -69,15 +64,15 @@ namespace AnimArch.Visualization.UI
         {
             if (!active || !MenuManager.Instance.isSelectingNode)
                 return;
-            if (selected == _node)
+            if (selected == _fromClass)
             {
-                Animating.Animation.Instance.HighlightClass(_node.name, false);
-                _node = null;
+                Animating.Animation.Instance.HighlightClass(_fromClass.name, false);
+                _fromClass = null;
             }
-            else if (_node == null)
+            else if (_fromClass == null)
             {
-                _node = selected;
-                Animating.Animation.Instance.HighlightClass(_node.name, true);
+                _fromClass = selected;
+                Animating.Animation.Instance.HighlightClass(_fromClass.name, true);
             }
             else
             {
@@ -88,31 +83,23 @@ namespace AnimArch.Visualization.UI
 
         private void EndSelection()
         {
-            Animating.Animation.Instance.HighlightClass(_node.name, false);
+            Animating.Animation.Instance.HighlightClass(_fromClass.name, false);
             _relType = null;
-            _node = null;
+            _fromClass = null;
             DiagramPool.Instance.ClassDiagram.graph.UpdateGraph();
             MenuManager.Instance.isSelectingNode = false;
             GameObject.Find("SelectionPanel").SetActive(false);
         }
 
-        public void AddNode()
+        private void AddRelation(GameObject toClass)
         {
-            var newClass = new Class(_id.ToString());
-
-            MainEditor.CreateNode(newClass, MainEditor.Source.Editor);
-            _id++;
-        }
-
-        private void AddRelation(GameObject secondNode)
-        {
-            if (_node == null || secondNode == null) return;
+            if (_fromClass == null || toClass == null) return;
             var type = _relType.Split();
 
             var relation = new Relation
             {
-                SourceModelName = _node.name,
-                TargetModelName = secondNode.name,
+                SourceModelName = _fromClass.name,
+                TargetModelName = toClass.name,
                 PropertiesEaType = type.Length > 1 ? type[1] : type[0],
                 PropertiesDirection = type.Length > 1 ? "none" : "Source -> Destination"
             };

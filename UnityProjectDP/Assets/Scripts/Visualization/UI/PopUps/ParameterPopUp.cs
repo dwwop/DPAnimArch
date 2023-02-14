@@ -2,16 +2,15 @@ using TMPro;
 
 namespace AnimArch.Visualization.UI
 {
-    public class ParameterPopUp : DropdownPopUp
+    public class ParameterPopUp : AbstractTypePopUp
     {
         public TMP_Text confirm;
         private string _formerParam;
 
-        public void ActivateCreation()
+        public override void ActivateCreation()
         {
-            panel.SetActive(true);
+            base.ActivateCreation();
             confirm.text = "Add";
-            UpdateDropdown();
         }
 
         public override void ActivateCreation(TMP_Text parameterTxt)
@@ -20,7 +19,7 @@ namespace AnimArch.Visualization.UI
             var par = parameterTxt.text.Split(" ");
             inp.text = par[1];
 
-            dropdown.value = dropdown.options.FindIndex(x => x.text == par[0]);
+            SetType(par[0]);
             confirm.text = "Edit";
             _formerParam = parameterTxt.text;
         }
@@ -33,7 +32,7 @@ namespace AnimArch.Visualization.UI
                 return;
             }
 
-            var parameter = dropdown.options[dropdown.value].text + " " + inp.text.Replace(" ", "_");
+            var parameter = GetType() + " " + inp.text.Replace(" ", "_");
             if (_formerParam == null)
             {
                 UIEditorManager.Instance.methodPopUp.AddArg(parameter);

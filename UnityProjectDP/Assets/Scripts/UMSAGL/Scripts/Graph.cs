@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using Microsoft.Msagl.Core.DataStructures;
 using System;
 using AnimArch.Extensions;
-using AnimArch.Visualization.Diagrams;
 using AnimArch.Visualization.UI;
 using UnityEngine.UI;
 
@@ -21,14 +20,14 @@ public class Graph : MonoBehaviour
     public float factor = 0.2f;
     public Vector2 margins;
 
-    private GeometryGraph graph;
-    private LayoutAlgorithmSettings settings;
+    private GeometryGraph _graph;
+    private LayoutAlgorithmSettings _settings;
 
-    private Task graphTask = null;
-    private bool reroute = false;
-    private bool redraw = false;
-    private bool reposition = false;
-    private bool relayout = false;
+    private Task _graphTask;
+    private bool _reroute;
+    private bool _redraw;
+    private bool _reposition;
+    private bool _relayout;
 
     public Transform units;
     public GameObject panel;
@@ -37,37 +36,39 @@ public class Graph : MonoBehaviour
     {
         get
         {
-            graph.UpdateBoundingBox();
-            var size = graph.BoundingBox.Size;
-            return new Vector2(ToUnitySpace((float) size.Width) + margins.x,
-                ToUnitySpace((float) size.Height) + margins.y);
+            _graph.UpdateBoundingBox();
+            var size = _graph.BoundingBox.Size;
+            return new Vector2(ToUnitySpace((float)size.Width) + margins.x,
+                ToUnitySpace((float)size.Height) + margins.y);
         }
     }
 
     public void Center()
     {
-        graph.UpdateBoundingBox();
+        _graph.UpdateBoundingBox();
         units.localPosition =
-            new Vector3(ToUnitySpace(graph.BoundingBox.Center.X), ToUnitySpace(graph.BoundingBox.Center.Y)) * -1.0f;
+            new Vector3(ToUnitySpace(_graph.BoundingBox.Center.X), ToUnitySpace(_graph.BoundingBox.Center.Y)) * -1.0f;
     }
 
     public GameObject AddNode()
     {
         var go = Instantiate(nodePrefab, units);
         if (UIEditorManager.Instance.active)
-            go.GetComponentsInChildren<Button>(includeInactive:true).ForEach(x => x.gameObject.SetActive(true));
+            go.GetComponentsInChildren<Button>(includeInactive: true).ForEach(x => x.gameObject.SetActive(true));
 
         //Following step required otherwise Size will return wrong rect
         Canvas.ForceUpdateCanvases();
 
         var unode = go.GetComponent<UNode>();
-        double w = ToGraphSpace(unode.Size.width);
-        double h = ToGraphSpace(unode.Size.height);
+        var w = ToGraphSpace(unode.Size.width);
+        var h = ToGraphSpace(unode.Size.height);
 
-        Node node = new Node(CurveFactory.CreateRectangle(w, h, new Point()));
-        node.UserData = go;
+        var node = new Node(CurveFactory.CreateRectangle(w, h, new Point()))
+        {
+            UserData = go
+        };
         unode.GraphNode = node;
-        graph.Nodes.Add(node);
+        _graph.Nodes.Add(node);
 
         return go;
     }
@@ -77,111 +78,115 @@ public class Graph : MonoBehaviour
         var graphNode = node.GetComponent<UNode>().GraphNode;
         foreach (var edge in graphNode.Edges)
         {
-            GameObject.Destroy((GameObject) edge.UserData);
+            Destroy((GameObject)edge.UserData);
             //in MSAGL edges are automatically removed, only UnityObjects have to be removed
         }
 
-        graph.Nodes.Remove(graphNode);
-        GameObject.Destroy(node);
+        _graph.Nodes.Remove(graphNode);
+        Destroy(node);
     }
 
-    public GameObject AddEdge(GameObject from, GameObject to)
+    public void AddEdge(GameObject from, GameObject to)
     {
-        return AddEdge(from, to, edgePrefab);
+        AddEdge(from, to, edgePrefab);
     }
 
     public GameObject AddEdge(GameObject from, GameObject to, GameObject prefab)
     {
-        var go = GameObject.Instantiate(prefab, units);
+        var go = Instantiate(prefab, units);
         var uEdge = go.GetComponent<UEdge>();
 
-        Edge edge = new Edge(from.GetComponent<UNode>().GraphNode, to.GetComponent<UNode>().GraphNode);
-        edge.LineWidth = ToGraphSpace(uEdge.Width);
-        edge.UserData = go;
+        var edge = new Edge(from.GetComponent<UNode>().GraphNode, to.GetComponent<UNode>().GraphNode)
+        {
+            LineWidth = ToGraphSpace(uEdge.Width),
+            UserData = go
+        };
         uEdge.GraphEdge = edge;
-        graph.Edges.Add(edge);
+        _graph.Edges.Add(edge);
 
         return go;
     }
 
     public void RemoveEdge(GameObject edge)
     {
-        graph.Edges.Remove(edge.GetComponent<UEdge>().GraphEdge);
-        GameObject.Destroy(edge);
+        _graph.Edges.Remove(edge.GetComponent<UEdge>().GraphEdge);
+        Destroy(edge);
     }
 
-    double ToGraphSpace(float x)
+    private double ToGraphSpace(float x)
     {
         return x / factor;
     }
 
-    float ToUnitySpace(double x)
+    private float ToUnitySpace(double x)
     {
-        return (float) x * factor;
+        return (float)x * factor;
     }
 
     protected virtual void Awake()
     {
-        graph = new GeometryGraph();
+        _graph = new GeometryGraph();
         units = transform.Find("Units"); //extra object to center graph
-        
+
         panel = GameObject.Find("Panel");
-        
-        settings = new SugiyamaLayoutSettings();
-        settings.EdgeRoutingSettings.EdgeRoutingMode = EdgeRoutingMode.RectilinearToCenter;
+
+        _settings = new SugiyamaLayoutSettings();
+        _settings.EdgeRoutingSettings.EdgeRoutingMode = EdgeRoutingMode.RectilinearToCenter;
         GetComponent<Canvas>().worldCamera = Camera.main;
     }
 
-    void PositionNodes()
+    private void PositionNodes()
     {
-        foreach (var node in graph.Nodes)
+        foreach (var node in _graph.Nodes)
         {
-            var go = (GameObject) node.UserData;
+            var go = (GameObject)node.UserData;
             go.transform.localPosition = new Vector3(ToUnitySpace(node.Center.X), ToUnitySpace(node.Center.Y), 0.0f);
         }
     }
 
-    void UpdateNodes()
+    private void UpdateNodes()
     {
         Canvas.ForceUpdateCanvases();
-        foreach (var node in graph.Nodes)
+        foreach (var node in _graph.Nodes)
         {
-            var go = (GameObject) node.UserData;
-            node.Center = new Point(ToGraphSpace(go.transform.localPosition.x),
-                ToGraphSpace(go.transform.localPosition.y));
+            var go = (GameObject)node.UserData;
+            var localPosition = go.transform.localPosition;
+            node.Center = new Point(ToGraphSpace(localPosition.x),
+                ToGraphSpace(localPosition.y));
             var unode = go.GetComponent<UNode>();
             node.BoundingBox = new Rectangle(new Size(ToGraphSpace(unode.Size.width), ToGraphSpace(unode.Size.height)),
                 node.Center);
         }
     }
 
-    void RedrawEdges()
+    private void RedrawEdges()
     {
-        foreach (var edge in graph.Edges)
+        foreach (var edge in _graph.Edges)
         {
-            List<Vector2> vertices = new List<Vector2>();
-            GameObject go = (GameObject) edge.UserData;
+            var vertices = new List<Vector2>();
+            var go = (GameObject)edge.UserData;
 
-            Curve curve = edge.Curve as Curve;
-            if (curve != null)
+            switch (edge.Curve)
             {
-                Point p = curve[curve.ParStart];
-                vertices.Add(new Vector3(ToUnitySpace(p.X), ToUnitySpace(p.Y), 0));
-                foreach (ICurve seg in curve.Segments)
+                case Curve curve:
                 {
-                    p = seg[seg.ParEnd];
+                    var p = curve[curve.ParStart];
                     vertices.Add(new Vector3(ToUnitySpace(p.X), ToUnitySpace(p.Y), 0));
+                    foreach (var seg in curve.Segments)
+                    {
+                        p = seg[seg.ParEnd];
+                        vertices.Add(new Vector3(ToUnitySpace(p.X), ToUnitySpace(p.Y), 0));
+                    }
+
+                    break;
                 }
-            }
-            else
-            {
-                LineSegment ls = edge.Curve as LineSegment;
-                if (ls != null)
+                case LineSegment ls:
                 {
-                    Point p = ls.Start;
+                    var p = ls.Start;
                     vertices.Add(new Vector3(ToUnitySpace(p.X), ToUnitySpace(p.Y)));
                     p = ls.End;
                     vertices.Add(new Vector3(ToUnitySpace(p.X), ToUnitySpace(p.Y)));
+                    break;
                 }
             }
 
@@ -189,13 +194,13 @@ public class Graph : MonoBehaviour
         }
     }
 
-    private async void Forget(Task t, Action f = null)
+    private static async void Forget(Task t, Action f = null)
     {
         try
         {
             await t;
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Debug.LogWarning(e);
         }
@@ -205,62 +210,58 @@ public class Graph : MonoBehaviour
 
     public void UpdateGraph()
     {
-        reroute = true;
+        _reroute = true;
     }
 
     public void Layout()
     {
-        relayout = true;
+        _relayout = true;
     }
 
     private void Update()
     {
-        if (reposition)
+        if (_reposition)
         {
             PositionNodes();
             Center();
-            reposition = false;
+            _reposition = false;
         }
 
-        if (redraw)
+        if (_redraw)
         {
             RedrawEdges();
-            redraw = false;
+            _redraw = false;
         }
 
-        if (relayout)
+        if (_relayout)
         {
-            if (graphTask == null)
+            if (_graphTask == null)
             {
                 UpdateNodes();
-                graphTask = Task.Run(() =>
+                _graphTask = Task.Run(() =>
                 {
-                    LayoutHelpers.CalculateLayout(graph, settings, null);
-                    LayoutHelpers.RouteAndLabelEdges(graph, settings, graph.Edges);
+                    LayoutHelpers.CalculateLayout(_graph, _settings, null);
+                    LayoutHelpers.RouteAndLabelEdges(_graph, _settings, _graph.Edges);
                 });
-                Forget(graphTask, () =>
+                Forget(_graphTask, () =>
                 {
-                    graphTask = null;
-                    reposition = true;
-                    redraw = true;
+                    _graphTask = null;
+                    _reposition = true;
+                    _redraw = true;
                 });
-                relayout = false;
+                _relayout = false;
             }
         }
 
-        if (reroute)
+        if (!_reroute) return;
+        if (_graphTask != null) return;
+        UpdateNodes();
+        _graphTask = Task.Run(() => LayoutHelpers.RouteAndLabelEdges(_graph, _settings, _graph.Edges));
+        Forget(_graphTask, () =>
         {
-            if (graphTask == null)
-            {
-                UpdateNodes();
-                graphTask = Task.Run(() => LayoutHelpers.RouteAndLabelEdges(graph, settings, graph.Edges));
-                Forget(graphTask, () =>
-                {
-                    graphTask = null;
-                    redraw = true;
-                });
-                reroute = false;
-            }
-        }
+            _graphTask = null;
+            _redraw = true;
+        });
+        _reroute = false;
     }
 }

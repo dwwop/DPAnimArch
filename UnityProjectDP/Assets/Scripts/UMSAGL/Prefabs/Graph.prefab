@@ -46,7 +46,6 @@ GameObject:
   - component: {fileID: 114650227409034106}
   - component: {fileID: 222222143851985230}
   - component: {fileID: 114631764084499072}
-  - component: {fileID: 5931889635415703630}
   m_Layer: 0
   m_Name: Graph
   m_TagString: Untagged
@@ -188,23 +187,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5931889635415703630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1889724182012266}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!1 &5839517624281850263
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using AnimArch.Extensions;
+using AnimArch.Visualization.Animating;
 using Networking;
+using OALProgramControl;
+using UnityEngine;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -126,7 +131,7 @@ namespace AnimArch.Visualization.Diagrams
             if (classInDiagram == null)
                 return;
 
-            if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(targetClass, newAttribute.Name) != null)
+            if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(targetClass, newAttribute.Name) == null)
                 return;
 
             ParsedEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
@@ -181,7 +186,7 @@ namespace AnimArch.Visualization.Diagrams
             if (classInDiagram == null)
                 return;
 
-            if (DiagramPool.Instance.ClassDiagram.FindMethodByName(targetClass, newMethod.Name) != null)
+            if (DiagramPool.Instance.ClassDiagram.FindMethodByName(targetClass, newMethod.Name) == null)
                 return;
 
             ParsedEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);
@@ -220,6 +225,100 @@ namespace AnimArch.Visualization.Diagrams
                     CreateRelation(relation);
                     break;
             }
+        }
+
+        public static void DeleteRelation(GameObject relation)
+        {
+            var relationInDiagram = DiagramPool.Instance.ClassDiagram.Relations
+                .Find(x => x.VisualObject.Equals(relation));
+
+            VisualEditor.DeleteRelation(relationInDiagram);
+            DiagramPool.Instance.ClassDiagram.Relations.Remove(relationInDiagram);
+        }
+
+        private static void DeleteNodeFromRelations(ClassInDiagram classInDiagram)
+        {
+            DiagramPool.Instance.ClassDiagram.Relations
+                .Where(x => x.ParsedRelation.FromClass == classInDiagram.ParsedClass.Name
+                            || x.ParsedRelation.ToClass == classInDiagram.ParsedClass.Name)
+                .ForEach(VisualEditor.DeleteRelation);
+
+            DiagramPool.Instance.ClassDiagram.Relations
+                .RemoveAll(x => x.ParsedRelation.FromClass == classInDiagram.ParsedClass.Name
+                                || x.ParsedRelation.ToClass == classInDiagram.ParsedClass.Name);
+        }
+
+        public static void DeleteNode(string className)
+        {
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
+            if (classInDiagram == null)
+                return;
+
+            DeleteNodeFromRelations(classInDiagram);
+
+            VisualEditor.DeleteNode(classInDiagram);
+
+            DiagramPool.Instance.ClassDiagram.Classes.Remove(classInDiagram);
+        }
+
+        public static void DeleteAttribute(string className, string attributeName)
+        {
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
+            if (classInDiagram == null)
+                return;
+
+            if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(className, attributeName) == null)
+                return;
+
+            ParsedEditor.DeleteAttribute(classInDiagram, attributeName);
+            CDEditor.DeleteAttribute(classInDiagram, attributeName);
+            VisualEditor.DeleteAttribute(classInDiagram, attributeName);
+        }
+
+        public static void DeleteMethod(string className, string methodName)
+        {
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
+            if (classInDiagram == null)
+                return;
+
+            if (DiagramPool.Instance.ClassDiagram.FindMethodByName(className, methodName) == null)
+                return;
+
+            ParsedEditor.DeleteMethod(classInDiagram, methodName);
+            CDEditor.DeleteMethod(classInDiagram, methodName);
+            VisualEditor.DeleteMethod(classInDiagram, methodName);
+        }
+
+        public static void ClearDiagram()
+        {
+            // Get rid of already rendered classes in diagram.
+            if (DiagramPool.Instance.ClassDiagram.Classes != null)
+            {
+                foreach (var Class in DiagramPool.Instance.ClassDiagram.Classes) Object.Destroy(Class.VisualObject);
+
+                DiagramPool.Instance.ClassDiagram.Classes.Clear();
+            }
+
+
+            // Get rid of already rendered relations in diagram.
+            if (DiagramPool.Instance.ClassDiagram.Relations != null)
+            {
+                foreach (var relation in DiagramPool.Instance.ClassDiagram.Relations)
+                    Object.Destroy(relation.VisualObject);
+
+                DiagramPool.Instance.ClassDiagram.Relations.Clear();
+            }
+
+
+            if (DiagramPool.Instance.ClassDiagram.graph != null)
+            {
+                Object.Destroy(DiagramPool.Instance.ClassDiagram.graph.gameObject);
+                DiagramPool.Instance.ClassDiagram.graph = null;
+            }
+
+            OALProgram.Instance.Reset();
+
+            AnimationData.Instance.ClearData();
         }
     }
 }
