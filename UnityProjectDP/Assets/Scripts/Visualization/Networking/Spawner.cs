@@ -4,6 +4,7 @@ using AnimArch.Visualization.UI;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
 
 namespace Networking
 {
@@ -16,21 +17,21 @@ namespace Networking
         }
 
         [ClientRpc]
-        public void SetNetworkObjectNameClientRpc(string name, ulong id)
+        public void SetNetworkObjectNameClientRpc(string name, ulong networkId)
         {
             if (IsServer)
                 return;
             var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
-            objects[id].name = name;
+            objects[networkId].name = name;
         }
 
         [ClientRpc]
-        public void SetClassNameClientRpc(string name, ulong id)
+        public void SetClassNameClientRpc(string name, ulong networkId)
         {
             if (IsServer)
                 return;
             var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
-            var obj = objects[id];
+            var obj = objects[networkId];
             var go = obj.GetComponent<NetworkObject>().gameObject;
             var visualEditor = new VisualEditor();
             visualEditor.UpdateNodeName(go);
@@ -61,6 +62,29 @@ namespace Networking
             if (IsServer)
                 return;
             DiagramPool.Instance.ClassDiagram.graph = GameObject.Find("Graph").GetComponent<Graph>();
+            DiagramPool.Instance.ClassDiagram.graph.enabled = false;
+        }
+
+        [ClientRpc]
+        public void SetLinePointsClientRpc(ulong networkId, Vector2[] points)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            Debug.Assert(objects[networkId].GetComponent<UILineRenderer>());
+            var lineRenderer = objects[networkId].GetComponent<UILineRenderer>();
+            lineRenderer.Points = points;
+        }
+
+        [ClientRpc]
+        public void SetLineResolutionClientRpc(ulong networkId, float resolution)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            Debug.Assert(objects[networkId].GetComponent<UILineRenderer>());
+            var lineRenderer = objects[networkId].GetComponent<UILineRenderer>();
+            lineRenderer.Resoloution = resolution;
         }
     }
 }

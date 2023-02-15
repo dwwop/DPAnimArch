@@ -45,6 +45,7 @@ namespace AnimArch.Visualization.Diagrams
                     _ => DiagramPool.Instance.networkAssociationNonePrefab
                 },
                 "Generalization" => DiagramPool.Instance.networkGeneralizationPrefab,
+                "Dependency" => DiagramPool.Instance.networkDependsPrefab,
                 "Realisation" => DiagramPool.Instance.networkRealisationPrefab,
                 _ => DiagramPool.Instance.networkAssociationNonePrefab
             };
@@ -56,15 +57,16 @@ namespace AnimArch.Visualization.Diagrams
 
             var edgeNo = edge.GetComponent<NetworkObject>();
 
+
+            if (edge.gameObject.transform.childCount > 0)
+                DiagramPool.Instance.ClassDiagram.StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
+
             edgeNo.Spawn();
 
             if (!edgeNo.TrySetParent(GetGraphUnits(), false))
             {
                 throw new InvalidParentException(edgeNo.name);
             }
-
-            if (edge.gameObject.transform.childCount > 0)
-                DiagramPool.Instance.ClassDiagram.StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
 
             return edge;
         }

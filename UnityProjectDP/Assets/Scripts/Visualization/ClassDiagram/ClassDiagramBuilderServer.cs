@@ -39,6 +39,5 @@ namespace AnimArch.Visualization.Diagrams
             unitsGo.GetComponent<Transform>().localScale = new Vector3(1, 1, 1);
             Spawner.Instance.GraphCreatedClientRpc();
         }
-
     }
 }

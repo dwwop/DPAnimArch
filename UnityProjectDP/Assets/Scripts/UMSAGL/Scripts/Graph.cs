@@ -20,7 +20,7 @@ public class Graph : MonoBehaviour
     public float factor = 0.2f;
     public Vector2 margins;
 
-    private GeometryGraph _graph;
+    protected GeometryGraph _graph;
     private LayoutAlgorithmSettings _settings;
 
     private Task _graphTask;
@@ -114,7 +114,7 @@ public class Graph : MonoBehaviour
             LineWidth = ToGraphSpace(uEdge.Width),
             UserData = go
         };
-        go.name = edge.ToString();
+        go.name += edge.ToString();
         uEdge.GraphEdge = edge;
         _graph.Edges.Add(edge);
 
@@ -132,7 +132,7 @@ public class Graph : MonoBehaviour
         return x / factor;
     }
 
-    private float ToUnitySpace(double x)
+    protected float ToUnitySpace(double x)
     {
         return (float)x * factor;
     }
@@ -173,7 +173,7 @@ public class Graph : MonoBehaviour
         }
     }
 
-    private void RedrawEdges()
+    protected virtual void RedrawEdges()
     {
         foreach (var edge in _graph.Edges)
         {

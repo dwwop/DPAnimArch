@@ -15,7 +15,7 @@ namespace AnimArch.Visualization.Diagrams
                 }
                 else
                 {
-                    throw new NotServerException();
+                    return new VisualEditorClient();
                 }
             }
             else
