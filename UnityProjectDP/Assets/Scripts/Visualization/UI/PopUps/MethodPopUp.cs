@@ -14,11 +14,6 @@ namespace AnimArch.Visualization.UI
         private string _formerName;
         private List<string> _parameters = new();
 
-        public void OnEnable()
-        {
-            SetButtonsActive(false);
-        }
-
 
         public override void ActivateCreation(TMP_Text classTxt)
         {

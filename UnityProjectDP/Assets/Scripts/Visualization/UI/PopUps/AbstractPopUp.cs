@@ -10,7 +10,7 @@ namespace AnimArch.Visualization.UI
     {
         public GameObject panel;
 
-        protected void SetButtonsActive(bool active)
+        private void SetButtonsActive(bool active)
         {
             DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<GraphicRaycaster>()
                 .ForEach(x => x.enabled = active);
@@ -23,9 +23,18 @@ namespace AnimArch.Visualization.UI
                 .ForEach(x => x.enabled = active);
         }
 
-        public virtual void ActivateCreation()
+        public void OnEnable()
         {
             SetButtonsActive(false);
+        }
+
+        public void OnDisable()
+        {
+            SetButtonsActive(true);
+        }
+
+        public virtual void ActivateCreation()
+        {
             panel.SetActive(true);
         }
 
@@ -33,7 +42,6 @@ namespace AnimArch.Visualization.UI
 
         public virtual void Deactivate()
         {
-            SetButtonsActive(true);
             panel.SetActive(false);
         }
     }
