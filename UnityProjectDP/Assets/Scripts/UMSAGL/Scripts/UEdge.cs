@@ -85,10 +85,6 @@ public class UEdge : Unit
     {
         base.Awake();
         _lineRenderer = GetComponent<UILineRenderer>();
-        var button = Instantiate(DiagramPool.Instance.relationDeleteButtonPrefab, transform);
-        deleteButton = button.transform;
-        button.GetComponentInChildren<Button>().onClick.AddListener(DeleteEdge);
-        button.GetComponentInChildren<Button>().gameObject.SetActive(UIEditorManager.Instance.active);
         Points = _lineRenderer.Points;
         SegmentLength = segmentLength;
         UpdateCaps();
@@ -198,6 +194,12 @@ public class UEdge : Unit
         }
     }
 
+    public void SetupButton(GameObject button)
+    {
+        deleteButton = button.transform;
+        button.GetComponentInChildren<Button>().onClick.AddListener(DeleteEdge);
+        button.GetComponentInChildren<Button>().gameObject.SetActive(UIEditorManager.Instance.active);
+    }
 
     private void DeleteEdge()
     {
