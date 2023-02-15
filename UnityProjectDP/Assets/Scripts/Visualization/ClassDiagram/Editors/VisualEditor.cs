@@ -54,7 +54,7 @@ namespace AnimArch.Visualization.Diagrams
                 method.classTxt = GetNodeHeader(classGo).GetComponent<TextMeshProUGUI>();
         }
 
-        private string GetStringFromAttribute(Attribute attribute)
+        protected string GetStringFromAttribute(Attribute attribute)
         {
             return attribute.Name + ": " + attribute.Type;
         }
@@ -83,7 +83,7 @@ namespace AnimArch.Visualization.Diagrams
             attribute.Find("AttributeText").GetComponent<TextMeshProUGUI>().text = GetStringFromAttribute(newAttribute);
         }
 
-        private string GetStringFromMethod(Method method)
+        protected string GetStringFromMethod(Method method)
         {
             var arguments = "(";
             if (method.arguments != null)
@@ -177,12 +177,12 @@ namespace AnimArch.Visualization.Diagrams
             g.SetActive(true);
         }
 
-        private Transform GetNodeHeader(GameObject classGo)
+        protected Transform GetNodeHeader(GameObject classGo)
         {
             return classGo.transform.Find("Background").Find("HeaderLayout").Find("Header");
         }
 
-        private Transform GetAttributeLayoutGroup(GameObject classGo)
+        protected Transform GetAttributeLayoutGroup(GameObject classGo)
         {
             return classGo.transform
                 .Find("Background")
@@ -190,7 +190,7 @@ namespace AnimArch.Visualization.Diagrams
                 .Find("AttributeLayoutGroup");
         }
 
-        private Transform GetMethodLayoutGroup(GameObject classGo)
+        protected Transform GetMethodLayoutGroup(GameObject classGo)
         {
             return classGo.transform
                 .Find("Background")

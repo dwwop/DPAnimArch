@@ -16,6 +16,23 @@ namespace AnimArch.Visualization.Diagrams
             var graphUnits = graphTransform.Find("Units");
             return graphUnits.GetComponent<Transform>();
         }
+
+        public override void AddAttribute(ClassInDiagram classInDiagram, Attribute attribute)
+        {
+            base.AddAttribute(classInDiagram, attribute);
+
+            var parentClass = classInDiagram.VisualObject.GetComponent<NetworkObject>();
+            Spawner.Instance.AddAttributeClientRpc(attribute.Name, GetStringFromAttribute(attribute), parentClass.NetworkObjectId);
+        }
+
+        public override void AddMethod(ClassInDiagram classInDiagram, Method method)
+        {
+            base.AddMethod(classInDiagram, method);
+
+            var parentClass = classInDiagram.VisualObject.GetComponent<NetworkObject>();
+            Spawner.Instance.AddMethodClientRpc(method.Name, GetStringFromMethod(method), parentClass.NetworkObjectId);
+        }
+
         public override GameObject CreateNode(Class newClass)
         {
             var nodeGo = base.CreateNode(newClass);

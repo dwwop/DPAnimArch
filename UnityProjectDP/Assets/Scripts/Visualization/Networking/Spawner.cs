@@ -38,6 +38,30 @@ namespace Networking
         }
 
         [ClientRpc]
+        public void AddAttributeClientRpc(string attributeName, string attributeText, ulong parentClassNetworkId)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[parentClassNetworkId];
+            var parentClass = obj.GetComponent<NetworkObject>().gameObject;
+            var visualEditor = new VisualEditorClient();
+            visualEditor.AddAttribute(attributeName, attributeText, parentClass);
+        }
+
+        [ClientRpc]
+        public void AddMethodClientRpc(string methodName, string methodText, ulong parentClassNetworkId)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[parentClassNetworkId];
+            var parentClass = obj.GetComponent<NetworkObject>().gameObject;
+            var visualEditor = new VisualEditorClient();
+            visualEditor.AddMethod(methodName, methodText, parentClass);
+        }
+
+        [ClientRpc]
         public void SetButtonsActiveClientRpc(bool active = true)
         {
             if (IsServer)
