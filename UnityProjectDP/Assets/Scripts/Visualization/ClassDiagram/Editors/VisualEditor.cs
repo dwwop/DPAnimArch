@@ -24,22 +24,12 @@ namespace AnimArch.Visualization.Diagrams
 
             SetDefaultPosition(nodeGo);
             UpdateNodeName(nodeGo);
-
-            var nodeNo = nodeGo.GetComponent<NetworkObject>();
-            nodeNo.Spawn();
-
-            Spawner.Instance.SetNetworkObjectNameClientRpc(nodeNo.name, nodeNo.NetworkObjectId);
-
-            var graphTransform = DiagramPool.Instance.ClassDiagram.graph.gameObject.GetComponent<Transform>();
-            var graphUnits = graphTransform.Find("Units");
-
-            var utr = graphUnits.GetComponent<Transform>();
-            if (!nodeNo.TrySetParent(utr))
+            if (!UIEditorManager.Instance.NetworkEnabled)
             {
-                throw new InvalidParentException(utr.name);
+                var graphTransform = DiagramPool.Instance.ClassDiagram.graph.gameObject.GetComponent<Transform>();
+                var graphUnits = graphTransform.Find("Units");
+                nodeGo.GetComponent<Transform>().SetParent(graphUnits.GetComponent<Transform>());
             }
-
-            Spawner.Instance.SetClassNameClientRpc(nodeNo.name, nodeNo.NetworkObjectId);
             return nodeGo;
         }
 

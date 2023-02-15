@@ -8,6 +8,18 @@ namespace AnimArch.Visualization.Diagrams
 {
     public class ClassDiagramBuilderServer : ClassDiagramBuilder
     {
+        public override void CreateGraph()
+        {
+            MainEditor.Instance.ClearDiagram();
+            var graphGo = GameObject.Instantiate(DiagramPool.Instance.networkGraphPrefab);
+            graphGo.name = "Graph";
+            var unitsGo = GameObject.Instantiate(DiagramPool.Instance.networkUnitsPrefab);
+            unitsGo.name = "Units";
+
+            DiagramPool.Instance.ClassDiagram.graph = graphGo.GetComponent<Graph>();
+            DiagramPool.Instance.ClassDiagram.graph.nodePrefab = DiagramPool.Instance.classPrefab;
+        }
+
         public override void MakeNetworkedGraph()
         {
             var graphGo = DiagramPool.Instance.ClassDiagram.graph.gameObject;

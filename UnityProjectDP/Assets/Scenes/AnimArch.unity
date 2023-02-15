@@ -5368,7 +5368,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _persistent: 1
-  graphPrefab: {fileID: 1889724182012266, guid: a7fcacb0848a8ac4898c34e492bf8dc8,
+  graphPrefab: {fileID: 1889724182012266, guid: daffb671362f7f341a379c59370e789d,
     type: 3}
   networkGraphPrefab: {fileID: 1889724182012266, guid: a7fcacb0848a8ac4898c34e492bf8dc8,
     type: 3}
