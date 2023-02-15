@@ -169,7 +169,7 @@ namespace AnimArch.Visualization.Diagrams
         }
 
         //Fix used to minimize relation displaying bug
-        private IEnumerator QuickFix(GameObject g)
+        protected IEnumerator QuickFix(GameObject g)
         {
             yield return new WaitForSeconds(0.05f);
             g.SetActive(false);

@@ -1,8 +1,8 @@
 
 namespace AnimArch.Visualization.Diagrams
 {
-    //public class VisualEditorClient : IVisualEditor
-    //{
+    public class VisualEditorClient : VisualEditor
+    {
 
-    //}
+    }
 }

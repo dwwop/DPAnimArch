@@ -5370,11 +5370,7 @@ MonoBehaviour:
   _persistent: 1
   graphPrefab: {fileID: 1889724182012266, guid: daffb671362f7f341a379c59370e789d,
     type: 3}
-  networkGraphPrefab: {fileID: 1889724182012266, guid: a7fcacb0848a8ac4898c34e492bf8dc8,
-    type: 3}
   classPrefab: {fileID: 1226358218867430, guid: a6ff44ea34772e341bd52a30b491e1f7,
-    type: 3}
-  networkUnitsPrefab: {fileID: 1460369043516150375, guid: 87f2d64d43790a74bbb4e79a922a28c6,
     type: 3}
   objectPrefab: {fileID: 1226358218867430, guid: 279771eab0b5f3248a5dd667c8f312e5,
     type: 3}
@@ -5405,6 +5401,24 @@ MonoBehaviour:
   interGraphArrowPrefab: {fileID: 2511745522907912916, guid: acc81195bd5b641c3b95dc9f282ab13a,
     type: 3}
   relationDeleteButtonPrefab: {fileID: 6251318437781553612, guid: 0af9a63443d46fa478102c15c61f1519,
+    type: 3}
+  networkGraphPrefab: {fileID: 1889724182012266, guid: a7fcacb0848a8ac4898c34e492bf8dc8,
+    type: 3}
+  networkUnitsPrefab: {fileID: 1460369043516150375, guid: 87f2d64d43790a74bbb4e79a922a28c6,
+    type: 3}
+  networkAssociationDSPrefab: {fileID: 2080456151626043265, guid: c8196d89fb605954a9b75e82eae45185,
+    type: 3}
+  networkAssociationFullPrefab: {fileID: 5632121676657761073, guid: 93e799a4c058abf4c9adb495cdcea78b,
+    type: 3}
+  networkAssociationNonePrefab: {fileID: 844717564252624985, guid: dc84f3c76adaf824da150ffe510a7e19,
+    type: 3}
+  networkAssociationSDPrefab: {fileID: 1523548488617654, guid: ee7a1cd03ae93934c891846f04168ed6,
+    type: 3}
+  networkGeneralizationPrefab: {fileID: 1523548488617654, guid: 8388f35ca8e5d3f43b9686b6c9ff8326,
+    type: 3}
+  networkDependsPrefab: {fileID: 1333350112338376, guid: 46fd3b2addee83147a6cdeebb1e800ac,
+    type: 3}
+  networkRealisationPrefab: {fileID: 1250365410247918905, guid: 30cd4580fef21734d83ecd870d192fca,
     type: 3}
   ClassDiagram: {fileID: 1164213134}
   ObjectDiagram: {fileID: 0}

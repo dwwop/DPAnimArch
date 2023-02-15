@@ -105,6 +105,7 @@ namespace AnimArch.Visualization.Diagrams
         public override void LoadDiagram()
         {
             CreateGraph();
+            MakeNetworkedGraph();
             var k = 0;
             // A trick used to skip empty diagrams in XMI file from EA
             while (DiagramPool.Instance.ClassDiagram.Classes.Count < 1 && k < 10)

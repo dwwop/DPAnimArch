@@ -114,6 +114,7 @@ public class Graph : MonoBehaviour
             LineWidth = ToGraphSpace(uEdge.Width),
             UserData = go
         };
+        go.name = edge.ToString();
         uEdge.GraphEdge = edge;
         _graph.Edges.Add(edge);
 
