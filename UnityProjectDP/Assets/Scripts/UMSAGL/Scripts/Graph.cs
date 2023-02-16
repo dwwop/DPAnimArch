@@ -95,6 +95,7 @@ public class Graph : MonoBehaviour
     public GameObject AddEdge(GameObject from, GameObject to, GameObject prefab)
     {
         var go = Instantiate(prefab, units);
+        go.transform.SetSiblingIndex(0);
         var uEdge = go.GetComponent<UEdge>();
         
         var deleteButton = Instantiate(DiagramPool.Instance.relationDeleteButtonPrefab, uEdge.transform);
