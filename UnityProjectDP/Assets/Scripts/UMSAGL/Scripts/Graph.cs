@@ -97,8 +97,8 @@ public class Graph : MonoBehaviour
         var go = Instantiate(prefab, units);
         var uEdge = go.GetComponent<UEdge>();
         
-        var button = Instantiate(DiagramPool.Instance.relationDeleteButtonPrefab, uEdge.transform);
-        uEdge.SetupButton(button);
+        var deleteButton = Instantiate(DiagramPool.Instance.relationDeleteButtonPrefab, uEdge.transform);
+        uEdge.SetupButton(deleteButton);
         
         var edge = new Edge(from.GetComponent<UNode>().GraphNode, to.GetComponent<UNode>().GraphNode)
         {

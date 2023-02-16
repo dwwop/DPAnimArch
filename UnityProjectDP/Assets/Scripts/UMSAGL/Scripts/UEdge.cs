@@ -12,7 +12,7 @@ public class UEdge : Unit
     public GameObject endCap;
     public bool dashed;
     public float segmentLength = 10f;
-    public Transform deleteButton;
+    private Transform _deleteButtonTransform;
 
     private UILineRenderer _lineRenderer;
     private bool _dashed = false;
@@ -156,7 +156,7 @@ public class UEdge : Unit
             prev = next;
         }
 
-        deleteButton.localPosition = Vector2.Lerp(first, second, 0.5f);
+        _deleteButtonTransform.localPosition = Vector2.Lerp(first, second, 0.5f);
     }
 
     private void Update()
@@ -196,9 +196,10 @@ public class UEdge : Unit
 
     public void SetupButton(GameObject button)
     {
-        deleteButton = button.transform;
-        button.GetComponentInChildren<Button>().onClick.AddListener(DeleteEdge);
-        button.GetComponentInChildren<Button>().gameObject.SetActive(UIEditorManager.Instance.active);
+        _deleteButtonTransform = button.transform;
+        var deleteButton = button.GetComponentInChildren<Button>();
+        deleteButton.onClick.AddListener(DeleteEdge);
+        deleteButton.gameObject.SetActive(UIEditorManager.Instance.active);
     }
 
     private void DeleteEdge()
