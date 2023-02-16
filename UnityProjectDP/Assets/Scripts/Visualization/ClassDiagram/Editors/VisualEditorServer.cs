@@ -10,6 +10,12 @@ namespace AnimArch.Visualization.Diagrams
 {
     public class VisualEditorServer : VisualEditor
     {
+        public override void UpdateNodeName(GameObject classGo)
+        {
+            base.UpdateNodeName(classGo);
+            var networkId = classGo.GetComponent<NetworkObject>().NetworkObjectId;
+            Spawner.Instance.SetClassNameClientRpc(classGo.name, networkId);
+        }
         private Transform GetGraphUnits()
         {
             var graphTransform = DiagramPool.Instance.ClassDiagram.graph.gameObject.GetComponent<Transform>();

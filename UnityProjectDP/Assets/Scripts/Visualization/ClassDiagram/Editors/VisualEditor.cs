@@ -14,7 +14,9 @@ namespace AnimArch.Visualization.Diagrams
     {
         public override void UpdateNodeName(GameObject classGo)
         {
-            GetNodeHeader(classGo).GetComponent<TextMeshProUGUI>().text = classGo.name;
+            GetNodeHeader(classGo)
+                .GetComponent<TextMeshProUGUI>()
+                .text = classGo.name;
         }
 
         public override GameObject CreateNode(Class newClass)

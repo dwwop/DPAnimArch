@@ -33,6 +33,7 @@ namespace Networking
             var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
             var obj = objects[networkId];
             var go = obj.GetComponent<NetworkObject>().gameObject;
+            go.name = name;
             var visualEditor = new VisualEditor();
             visualEditor.UpdateNodeName(go);
         }
