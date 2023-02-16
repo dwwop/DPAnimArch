@@ -131,7 +131,7 @@ namespace AnimArch.Visualization.Diagrams
             if (classInDiagram == null)
                 return;
 
-            if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(targetClass, newAttribute.Name) == null)
+            if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(targetClass, oldAttribute) == null)
                 return;
 
             ParsedEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
@@ -184,7 +184,7 @@ namespace AnimArch.Visualization.Diagrams
             if (classInDiagram == null)
                 return;
 
-            if (DiagramPool.Instance.ClassDiagram.FindMethodByName(targetClass, newMethod.Name) == null)
+            if (DiagramPool.Instance.ClassDiagram.FindMethodByName(targetClass, oldMethod) == null)
                 return;
 
             ParsedEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);

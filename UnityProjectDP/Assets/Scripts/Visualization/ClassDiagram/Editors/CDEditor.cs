@@ -71,6 +71,10 @@ namespace AnimArch.Visualization.Diagrams
         {
             var index = classInDiagram.ClassInfo.Methods.FindIndex(x => x.Name == oldMethod);
             var newCdMethod = CreateCdMethodFromMethod(classInDiagram.ClassInfo, newMethod);
+            
+            if (newMethod.arguments != null)
+                AddParameters(newMethod, newCdMethod);
+            
             classInDiagram.ClassInfo.Methods[index] = newCdMethod;
         }
 
@@ -99,7 +103,7 @@ namespace AnimArch.Visualization.Diagrams
 
         public static void DeleteMethod(ClassInDiagram classInDiagram, string method)
         {
-            classInDiagram.ClassInfo.Attributes.RemoveAll(x => x.Name == method);
+            classInDiagram.ClassInfo.Methods.RemoveAll(x => x.Name == method);
         }
     }
 }

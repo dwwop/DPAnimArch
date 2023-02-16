@@ -40,6 +40,12 @@ namespace AnimArch.Visualization.UI
             _classDiagramBuilder = ClassDiagramBuilderFactory.Create();
         }
 
+        public void CreateNewDiagram()
+        {
+            MainEditor.ClearDiagram();
+            StartEditing();
+        }
+        
         public void StartEditing()
         {
             if (DiagramPool.Instance.ClassDiagram.graph == null)
