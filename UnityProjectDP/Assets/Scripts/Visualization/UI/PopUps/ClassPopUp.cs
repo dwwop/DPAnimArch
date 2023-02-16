@@ -40,6 +40,7 @@ namespace AnimArch.Visualization.UI
             else
             {
                 MainEditor.UpdateNodeName(className.text, inp.text, false);
+                _formerName = null;
             }
 
             Deactivate();

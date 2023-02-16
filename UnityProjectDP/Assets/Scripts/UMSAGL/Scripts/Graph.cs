@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Msagl.Core.DataStructures;
 using System;
 using AnimArch.Extensions;
+using AnimArch.Visualization.Diagrams;
 using AnimArch.Visualization.UI;
 using UnityEngine.UI;
 
@@ -94,8 +95,12 @@ public class Graph : MonoBehaviour
     public GameObject AddEdge(GameObject from, GameObject to, GameObject prefab)
     {
         var go = Instantiate(prefab, units);
+        go.transform.SetSiblingIndex(0);
         var uEdge = go.GetComponent<UEdge>();
-
+        
+        var deleteButton = Instantiate(DiagramPool.Instance.relationDeleteButtonPrefab, uEdge.transform);
+        uEdge.SetupButton(deleteButton);
+        
         var edge = new Edge(from.GetComponent<UNode>().GraphNode, to.GetComponent<UNode>().GraphNode)
         {
             LineWidth = ToGraphSpace(uEdge.Width),
