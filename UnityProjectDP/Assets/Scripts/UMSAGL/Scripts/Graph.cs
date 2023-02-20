@@ -87,7 +87,7 @@ public class Graph : MonoBehaviour
         return go;
     }
 
-    public void RemoveNode(GameObject node)
+    public virtual void RemoveNode(GameObject node)
     {
         var graphNode = node.GetComponent<UNode>().GraphNode;
         foreach (var edge in graphNode.Edges)

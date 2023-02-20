@@ -38,6 +38,14 @@ namespace Networking
             visualEditor.UpdateNodeName(go);
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void DeleteClassServerRpc(string className)
+        {
+            if (IsClient && !IsHost)
+                return;
+            UIEditorManager.Instance.mainEditor.DeleteNode(className);
+        }
+
         [ClientRpc]
         public void AddAttributeClientRpc(string attributeName, string attributeText, ulong classNetworkId)
         {

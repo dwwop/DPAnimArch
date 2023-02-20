@@ -44,4 +44,19 @@ public class NetworkGraph : Graph
             Spawner.Instance.SetLineResolutionClientRpc(edgeNo.NetworkObjectId, go.GetComponent<UnityEngine.UI.Extensions.UILineRenderer>().Resoloution);
         }
     }
+
+    public override void RemoveNode(GameObject node)
+    {
+        if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost) // Only server can remove components
+            return;
+        var graphNode = node.GetComponent<UNode>().GraphNode;
+        foreach (var edge in graphNode.Edges)
+        {
+            Destroy((GameObject)edge.UserData);
+            //in MSAGL edges are automatically removed, only UnityObjects have to be removed
+        }
+
+        _graph.Nodes.Remove(graphNode);
+        Destroy(node);
+    }
 }

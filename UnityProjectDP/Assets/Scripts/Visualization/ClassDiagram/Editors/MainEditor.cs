@@ -241,7 +241,7 @@ namespace AnimArch.Visualization.Diagrams
                                 || x.ParsedRelation.ToClass == classInDiagram.ParsedClass.Name);
         }
 
-        public void DeleteNode(string className)
+        public virtual void DeleteNode(string className)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
             if (classInDiagram == null)
