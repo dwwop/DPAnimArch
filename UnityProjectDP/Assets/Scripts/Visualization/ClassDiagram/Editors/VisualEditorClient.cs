@@ -28,6 +28,11 @@ namespace AnimArch.Visualization.Diagrams
             attribute.Find("AttributeText").GetComponent<TextMeshProUGUI>().text = attributeText;
         }
 
+        public void DeleteAttribute(string attributeName, GameObject classGo)
+        {
+            Object.Destroy(GetAttributeLayoutGroup(classGo).Find(attributeName).transform.gameObject);
+        }
+
         public void AddMethod(string methodName, string methodText, GameObject parentClass)
         {
             var methodLayoutGroup = GetMethodLayoutGroup(parentClass);
@@ -48,6 +53,10 @@ namespace AnimArch.Visualization.Diagrams
             method.Find("MethodText").GetComponent<TextMeshProUGUI>().text = methodText;
         }
 
+        public void DeleteMethod(string methodName, GameObject classGo)
+        {
+            Object.Destroy(GetMethodLayoutGroup(classGo).Find(methodName).transform.gameObject);
+        }
 
     }
 }

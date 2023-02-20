@@ -63,6 +63,18 @@ namespace Networking
         }
 
         [ClientRpc]
+        public void DeleteAttributeClientRpc(string attributeName, ulong classNetworkId)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[classNetworkId];
+            var classGo = obj.GetComponent<NetworkObject>().gameObject;
+            var visualEditor = new VisualEditorClient();
+            visualEditor.DeleteAttribute(attributeName, classGo);
+        }
+
+        [ClientRpc]
         public void AddMethodClientRpc(string methodName, string methodText, ulong classNetworkId)
         {
             if (IsServer)
@@ -84,6 +96,18 @@ namespace Networking
             var classNo = obj.GetComponent<NetworkObject>().gameObject;
             var visualEditor = new VisualEditorClient();
             visualEditor.UpdateMethod(oldMethodName, newMethodName, methodText, classNo);
+        }
+
+        [ClientRpc]
+        public void DeleteMethodClientRpc(string methodName, ulong classNetworkId)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[classNetworkId];
+            var classGo = obj.GetComponent<NetworkObject>().gameObject;
+            var visualEditor = new VisualEditorClient();
+            visualEditor.DeleteMethod(methodName, classGo);
         }
 
         [ClientRpc]

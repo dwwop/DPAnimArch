@@ -55,7 +55,9 @@ public class UEdge : Unit
 
     protected override void OnDestroy()
     {
-        _graph.RemoveEdge(gameObject);
+        // TODO: client edge class?
+        if (_graph)
+            _graph.RemoveEdge(gameObject);
     }
 
     private void Dash(bool active)
