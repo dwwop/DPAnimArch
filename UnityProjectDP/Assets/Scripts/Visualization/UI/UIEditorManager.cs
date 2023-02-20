@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AnimArch.Extensions;
 using AnimArch.Visualization.Diagrams;
 using Networking;
@@ -42,7 +43,7 @@ namespace AnimArch.Visualization.UI
 
         public void CreateNewDiagram()
         {
-            MainEditor.ClearDiagram();
+            MainEditor.Instance.ClearDiagram();
             StartEditing();
         }
         
