@@ -200,7 +200,7 @@ namespace AnimArch.Visualization.Diagrams
                 .Find("MethodLayoutGroup");
         }
 
-        private void SetDefaultPosition(GameObject node)
+        protected void SetDefaultPosition(GameObject node)
         {
             var rect = node.GetComponent<RectTransform>();
             rect.position = new Vector3(100f, 200f, 1);

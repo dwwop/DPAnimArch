@@ -22874,7 +22874,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _persistent: 1
   active: 0
-  NetworkEnabled: 0
+  NetworkEnabled: 1
   attributePopUp: {fileID: 1969025750}
   methodPopUp: {fileID: 1093984234}
   classPopUp: {fileID: 1480568710}
