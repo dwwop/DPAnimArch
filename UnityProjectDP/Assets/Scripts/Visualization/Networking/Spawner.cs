@@ -46,6 +46,17 @@ namespace Networking
             UIEditorManager.Instance.mainEditor.DeleteNode(className);
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void DeleteRelationServerRpc(ulong relationNetworkId)
+        {
+            if (IsClient && !IsHost)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[relationNetworkId];
+            var classGo = obj.GetComponent<NetworkObject>().gameObject;
+            UIEditorManager.Instance.mainEditor.DeleteRelation(classGo);
+        }
+
         [ClientRpc]
         public void AddAttributeClientRpc(string attributeName, string attributeText, ulong classNetworkId)
         {
@@ -53,9 +64,9 @@ namespace Networking
                 return;
             var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
             var obj = objects[classNetworkId];
-            var classNo = obj.GetComponent<NetworkObject>().gameObject;
+            var classGo = obj.GetComponent<NetworkObject>().gameObject;
             var visualEditor = new VisualEditorClient();
-            visualEditor.AddAttribute(attributeName, attributeText, classNo);
+            visualEditor.AddAttribute(attributeName, attributeText, classGo);
         }
 
         [ClientRpc]
@@ -65,9 +76,9 @@ namespace Networking
                 return;
             var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
             var obj = objects[classNetworkId];
-            var classNo = obj.GetComponent<NetworkObject>().gameObject;
+            var classGo = obj.GetComponent<NetworkObject>().gameObject;
             var visualEditor = new VisualEditorClient();
-            visualEditor.UpdateAttribute(oldAttributeName, newAttributeName, attributeText, classNo);
+            visualEditor.UpdateAttribute(oldAttributeName, newAttributeName, attributeText, classGo);
         }
 
         [ClientRpc]
@@ -101,9 +112,9 @@ namespace Networking
                 return;
             var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
             var obj = objects[classNetworkId];
-            var classNo = obj.GetComponent<NetworkObject>().gameObject;
+            var classGo = obj.GetComponent<NetworkObject>().gameObject;
             var visualEditor = new VisualEditorClient();
-            visualEditor.UpdateMethod(oldMethodName, newMethodName, methodText, classNo);
+            visualEditor.UpdateMethod(oldMethodName, newMethodName, methodText, classGo);
         }
 
         [ClientRpc]

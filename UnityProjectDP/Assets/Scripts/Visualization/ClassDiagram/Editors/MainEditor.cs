@@ -220,7 +220,7 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-        public void DeleteRelation(GameObject relation)
+        public virtual void DeleteRelation(GameObject relation)
         {
             var relationInDiagram = DiagramPool.Instance.ClassDiagram.Relations
                 .Find(x => x.VisualObject.Equals(relation));

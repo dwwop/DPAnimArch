@@ -1,5 +1,6 @@
 using Networking;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -12,6 +13,12 @@ namespace AnimArch.Visualization.Diagrams
         public override void DeleteNode(string className)
         {
             Spawner.Instance.DeleteClassServerRpc(className);
+        }
+
+        public override void DeleteRelation(GameObject relation)
+        {
+            var relationNetworkId = relation.GetComponent<NetworkObject>().NetworkObjectId;
+            Spawner.Instance.DeleteRelationServerRpc(relationNetworkId);
         }
     }
 }

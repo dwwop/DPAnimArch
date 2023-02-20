@@ -8,11 +8,6 @@ namespace AnimArch.Visualization.Diagrams
 {
     public class VisualEditorClient : VisualEditor
     {
-        public override void DeleteNode(ClassInDiagram classInDiagram)
-        {
-            DiagramPool.Instance.ClassDiagram.graph.RemoveNode(classInDiagram.VisualObject);
-        }
-
         public void AddAttribute(string attributeName, string attributeText, GameObject parentClass)
         {
             var attributeLayoutGroup = GetAttributeLayoutGroup(parentClass);
