@@ -5535,8 +5535,6 @@ MonoBehaviour:
     type: 3}
   interGraphArrowPrefab: {fileID: 2511745522907912916, guid: acc81195bd5b641c3b95dc9f282ab13a,
     type: 3}
-  relationDeleteButtonPrefab: {fileID: 6251318437781553612, guid: 0af9a63443d46fa478102c15c61f1519,
-    type: 3}
   networkGraphPrefab: {fileID: 1889724182012266, guid: a7fcacb0848a8ac4898c34e492bf8dc8,
     type: 3}
   networkUnitsPrefab: {fileID: 1460369043516150375, guid: 87f2d64d43790a74bbb4e79a922a28c6,
@@ -22876,7 +22874,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _persistent: 1
   active: 0
-  NetworkEnabled: 1
+  NetworkEnabled: 0
   attributePopUp: {fileID: 1969025750}
   methodPopUp: {fileID: 1093984234}
   classPopUp: {fileID: 1480568710}

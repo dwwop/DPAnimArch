@@ -25,7 +25,6 @@ namespace AnimArch.Visualization.Diagrams
         public GameObject realisationPrefab;
         public GameObject interGraphLinePrefab;
         public GameObject interGraphArrowPrefab;
-        public GameObject relationDeleteButtonPrefab;
 
         public GameObject networkGraphPrefab;
         public GameObject networkUnitsPrefab;
