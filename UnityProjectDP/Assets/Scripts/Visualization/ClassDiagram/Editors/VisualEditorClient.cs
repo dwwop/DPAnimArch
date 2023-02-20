@@ -21,6 +21,13 @@ namespace AnimArch.Visualization.Diagrams
                     .ForEach(x => x.gameObject.SetActive(true));
         }
 
+        public void UpdateAttribute(string oldAttributeName, string newAttributeName, string attributeText, GameObject parentClass)
+        {
+            var attribute = GetAttributeLayoutGroup(parentClass).Find(oldAttributeName);
+            attribute.name = newAttributeName;
+            attribute.Find("AttributeText").GetComponent<TextMeshProUGUI>().text = attributeText;
+        }
+
         public void AddMethod(string methodName, string methodText, GameObject parentClass)
         {
             var methodLayoutGroup = GetMethodLayoutGroup(parentClass);
@@ -34,5 +41,13 @@ namespace AnimArch.Visualization.Diagrams
                 instance.GetComponentsInChildren<Button>(true)
                     .ForEach(x => x.gameObject.SetActive(true));
         }
+        public void UpdateMethod(string oldMethodName, string newMethodName, string methodText, GameObject parentClass)
+        {
+            var method = GetMethodLayoutGroup(parentClass).Find(oldMethodName);
+            method.name = newMethodName;
+            method.Find("MethodText").GetComponent<TextMeshProUGUI>().text = methodText;
+        }
+
+
     }
 }

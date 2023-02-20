@@ -27,16 +27,29 @@ namespace AnimArch.Visualization.Diagrams
         {
             base.AddAttribute(classInDiagram, attribute);
 
-            var parentClass = classInDiagram.VisualObject.GetComponent<NetworkObject>();
-            Spawner.Instance.AddAttributeClientRpc(attribute.Name, GetStringFromAttribute(attribute), parentClass.NetworkObjectId);
+            var classNo = classInDiagram.VisualObject.GetComponent<NetworkObject>();
+            Spawner.Instance.AddAttributeClientRpc(attribute.Name, GetStringFromAttribute(attribute), classNo.NetworkObjectId);
+        }
+
+        public override void UpdateAttribute(ClassInDiagram classInDiagram, string oldAttribute, Attribute newAttribute)
+        {
+            base.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
+            var classNo = classInDiagram.VisualObject.GetComponent<NetworkObject>();
+            Spawner.Instance.UpdateAttributeClientRpc(oldAttribute, newAttribute.Name, GetStringFromAttribute(newAttribute), classNo.NetworkObjectId);
         }
 
         public override void AddMethod(ClassInDiagram classInDiagram, Method method)
         {
             base.AddMethod(classInDiagram, method);
+            var classNo = classInDiagram.VisualObject.GetComponent<NetworkObject>();
+            Spawner.Instance.AddMethodClientRpc(method.Name, GetStringFromMethod(method), classNo.NetworkObjectId);
+        }
 
-            var parentClass = classInDiagram.VisualObject.GetComponent<NetworkObject>();
-            Spawner.Instance.AddMethodClientRpc(method.Name, GetStringFromMethod(method), parentClass.NetworkObjectId);
+        public override void UpdateMethod(ClassInDiagram classInDiagram, string oldMethod, Method newMethod)
+        {
+            base.UpdateMethod(classInDiagram, oldMethod, newMethod);
+            var classNo = classInDiagram.VisualObject.GetComponent<NetworkObject>();
+            Spawner.Instance.UpdateMethodClientRpc(oldMethod, newMethod.Name, GetStringFromMethod(newMethod), classNo.NetworkObjectId);
         }
 
         public override GameObject CreateNode(Class newClass)

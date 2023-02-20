@@ -39,27 +39,51 @@ namespace Networking
         }
 
         [ClientRpc]
-        public void AddAttributeClientRpc(string attributeName, string attributeText, ulong parentClassNetworkId)
+        public void AddAttributeClientRpc(string attributeName, string attributeText, ulong classNetworkId)
         {
             if (IsServer)
                 return;
             var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
-            var obj = objects[parentClassNetworkId];
-            var parentClass = obj.GetComponent<NetworkObject>().gameObject;
+            var obj = objects[classNetworkId];
+            var classNo = obj.GetComponent<NetworkObject>().gameObject;
             var visualEditor = new VisualEditorClient();
-            visualEditor.AddAttribute(attributeName, attributeText, parentClass);
+            visualEditor.AddAttribute(attributeName, attributeText, classNo);
         }
 
         [ClientRpc]
-        public void AddMethodClientRpc(string methodName, string methodText, ulong parentClassNetworkId)
+        public void UpdateAttributeClientRpc(string oldAttributeName, string newAttributeName, string attributeText, ulong classNetworkId)
         {
             if (IsServer)
                 return;
             var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
-            var obj = objects[parentClassNetworkId];
-            var parentClass = obj.GetComponent<NetworkObject>().gameObject;
+            var obj = objects[classNetworkId];
+            var classNo = obj.GetComponent<NetworkObject>().gameObject;
             var visualEditor = new VisualEditorClient();
-            visualEditor.AddMethod(methodName, methodText, parentClass);
+            visualEditor.UpdateAttribute(oldAttributeName, newAttributeName, attributeText, classNo);
+        }
+
+        [ClientRpc]
+        public void AddMethodClientRpc(string methodName, string methodText, ulong classNetworkId)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[classNetworkId];
+            var classGo = obj.GetComponent<NetworkObject>().gameObject;
+            var visualEditor = new VisualEditorClient();
+            visualEditor.AddMethod(methodName, methodText, classGo);
+        }
+
+        [ClientRpc]
+        public void UpdateMethodClientRpc(string oldMethodName, string newMethodName, string methodText, ulong classNetworkId)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[classNetworkId];
+            var classNo = obj.GetComponent<NetworkObject>().gameObject;
+            var visualEditor = new VisualEditorClient();
+            visualEditor.UpdateMethod(oldMethodName, newMethodName, methodText, classNo);
         }
 
         [ClientRpc]
