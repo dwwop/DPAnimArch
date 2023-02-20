@@ -9,8 +9,6 @@ namespace AnimArch.Visualization.Diagrams
 {
     public class ClassDiagramBuilder : IClassDiagramBuilder
     {
-        private VisualEditor _visualEditor = new VisualEditor();
-
         protected void ParseData()
         {
             var path = AnimationData.Instance.GetDiagramPath();
@@ -44,7 +42,7 @@ namespace AnimArch.Visualization.Diagrams
             {
                 currentClass.Name = currentClass.Name.Replace(" ", "_");
 
-                MainEditor.Instance.CreateNode(currentClass, MainEditor.Source.Loader);
+                UIEditorManager.Instance.mainEditor.CreateNode(currentClass, MainEditor.Source.Loader);
                 var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(currentClass.Name);
 
                 if (classInDiagram.ClassInfo == null)
@@ -53,14 +51,14 @@ namespace AnimArch.Visualization.Diagrams
                 currentClass.Attributes ??= new List<Attribute>();
                 foreach (var attribute in currentClass.Attributes)
                 {
-                    MainEditor.Instance.AddAttribute(currentClass.Name, attribute, MainEditor.Source.Loader);
+                    UIEditorManager.Instance.mainEditor.AddAttribute(currentClass.Name, attribute, MainEditor.Source.Loader);
                 }
 
 
                 currentClass.Methods ??= new List<Method>();
                 foreach (var method in currentClass.Methods)
                 {
-                    MainEditor.Instance.AddMethod(currentClass.Name, method, MainEditor.Source.Loader);
+                    UIEditorManager.Instance.mainEditor.AddMethod(currentClass.Name, method, MainEditor.Source.Loader);
                 }
 
                 currentClass.Top *= -1;
@@ -69,13 +67,13 @@ namespace AnimArch.Visualization.Diagrams
 
             foreach (var relation in relationList)
             {
-                MainEditor.Instance.CreateRelation(relation, MainEditor.Source.Loader);
+                UIEditorManager.Instance.mainEditor.CreateRelation(relation, MainEditor.Source.Loader);
             }
         }
 
         public override void CreateGraph()
         {
-            MainEditor.Instance.ClearDiagram();
+            UIEditorManager.Instance.mainEditor.ClearDiagram();
             var graphGo = GameObject.Instantiate(DiagramPool.Instance.graphPrefab);
             graphGo.name = "Graph";
 
@@ -98,7 +96,7 @@ namespace AnimArch.Visualization.Diagrams
                 var x = classInDiagram.ParsedClass.Left * 1.25f;
                 var y = classInDiagram.ParsedClass.Top * 1.25f;
                 var z = classInDiagram.VisualObject.GetComponent<RectTransform>().position.z;
-                _visualEditor.SetPosition(classInDiagram.ParsedClass.Name, new Vector3(x, y, z), false);
+                visualEditor.SetPosition(classInDiagram.ParsedClass.Name, new Vector3(x, y, z), false);
             }
         }
 

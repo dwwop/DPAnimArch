@@ -8,13 +8,13 @@ using UnityEngine;
 
 namespace AnimArch.Visualization.Diagrams
 {
-    public class MainEditor : Singleton<MainEditor>
+    public class MainEditor
     {
-        private IVisualEditor _visualEditor;
+        protected IVisualEditor _visualEditor;
 
-        private void Awake()
+        public MainEditor(IVisualEditor visualEditor)
         {
-            _visualEditor = VisualEditorFactory.Create();
+            _visualEditor = visualEditor;
         }
 
         public enum Source

@@ -34,12 +34,12 @@ namespace AnimArch.Visualization.UI
             if (_formerName == null)
             {
                 var newClass = new Class(inp.text, _id.ToString());
-                MainEditor.Instance.CreateNode(newClass, MainEditor.Source.Editor);
+                UIEditorManager.Instance.mainEditor.CreateNode(newClass, MainEditor.Source.Editor);
                 _id++;
             }
             else
             {
-                MainEditor.Instance.UpdateNodeName(className.text, inp.text, false);
+                UIEditorManager.Instance.mainEditor.UpdateNodeName(className.text, inp.text, false);
                 _formerName = null;
             }
 

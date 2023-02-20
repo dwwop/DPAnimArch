@@ -1,3 +1,4 @@
+using AnimArch.Visualization.UI;
 using Networking;
 using Unity.Netcode;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace AnimArch.Visualization.Diagrams
     {
         public override void CreateGraph()
         {
-            MainEditor.Instance.ClearDiagram();
+            UIEditorManager.Instance.mainEditor.ClearDiagram();
             var graphGo = GameObject.Instantiate(DiagramPool.Instance.networkGraphPrefab);
             graphGo.name = "Graph";
             var unitsGo = GameObject.Instantiate(DiagramPool.Instance.networkUnitsPrefab);

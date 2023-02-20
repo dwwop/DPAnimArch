@@ -1,18 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class MainEditorClient : MonoBehaviour
+namespace AnimArch.Visualization.Diagrams
 {
-    // Start is called before the first frame update
-    void Start()
+    public class MainEditorClient : MainEditor
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public MainEditorClient(IVisualEditor visualEditor) : base(visualEditor)
+        {
+        }
     }
 }

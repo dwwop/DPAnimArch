@@ -16,6 +16,7 @@ namespace AnimArch.Visualization.UI
         private GameObject _fromClass;
         private string _relType;
         private IClassDiagramBuilder _classDiagramBuilder;
+        public MainEditor mainEditor;
 
         [SerializeField]
         public bool NetworkEnabled;
@@ -39,11 +40,12 @@ namespace AnimArch.Visualization.UI
         {
             DontDestroyOnLoad(gameObject);
             _classDiagramBuilder = ClassDiagramBuilderFactory.Create();
+            mainEditor = MainEditorFactory.Create(_classDiagramBuilder.visualEditor);
         }
 
         public void CreateNewDiagram()
         {
-            MainEditor.Instance.ClearDiagram();
+            mainEditor.ClearDiagram();
             StartEditing();
         }
         
@@ -115,7 +117,7 @@ namespace AnimArch.Visualization.UI
                 PropertiesDirection = type.Length > 1 ? "none" : "Source -> Destination"
             };
 
-            MainEditor.Instance.CreateRelation(relation, MainEditor.Source.Editor);
+            mainEditor.CreateRelation(relation, MainEditor.Source.Editor);
             EndSelection();
         }
     }
