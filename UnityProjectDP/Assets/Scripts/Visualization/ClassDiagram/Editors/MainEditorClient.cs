@@ -23,6 +23,11 @@ namespace AnimArch.Visualization.Diagrams
             Spawner.Instance.DeleteRelationServerRpc(relationNetworkId);
         }
 
+        public override void AddAttribute(string targetClass, Attribute attribute)
+        {
+            Spawner.Instance.AddAttributeServerRpc(targetClass, attribute.Name, attribute.Type);
+        }
+
         public override void AddMethod(string targetClass, Method method)
         {
             string arguments = string.Join(",", method.arguments);

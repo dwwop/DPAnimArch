@@ -60,18 +60,31 @@ namespace Networking
         }
 
         [ServerRpc(RequireOwnership = false)]
+
+        public void AddAttributeServerRpc(string targetClass, string attributeName, string type)
+        {
+            if (IsClient && !IsHost)
+                return;
+
+            var attribute = new AnimArch.Visualization.Diagrams.Attribute
+            {
+                Name = attributeName,
+                Type = type
+            };
+            UIEditorManager.Instance.mainEditor.AddAttribute(targetClass, attribute);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void AddMethodServerRpc(string targetClass, string methodName, string methodReturnValue, string methodArguments)
         {
             if (IsClient && !IsHost)
                 return;
 
-            var args = methodArguments.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList();
-
             var newMethod = new Method
             {
                 Name = methodName,
                 ReturnValue = methodReturnValue,
-                arguments =  args ?? new()
+                arguments = methodArguments.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList() ?? new()
             };
             UIEditorManager.Instance.mainEditor.AddMethod(targetClass, newMethod);
         }

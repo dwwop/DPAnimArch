@@ -90,39 +90,23 @@ namespace AnimArch.Visualization.Diagrams
             UpdateNodeName(oldName, newName);
         }
 
-        private void AddAttribute(string targetClass, Attribute attribute)
+        public virtual void AddAttribute(string targetClass, Attribute attribute)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
             if (classInDiagram == null) return;
 
             if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(targetClass, attribute.Name) != null)
+            {
+                CDEditor.AddAttribute(classInDiagram, attribute);
+                _visualEditor.AddAttribute(classInDiagram, attribute);
                 return;
+            }
 
             attribute.Id = (classInDiagram.ParsedClass.Attributes.Count + 1).ToString();
 
             ParsedEditor.AddAttribute(classInDiagram, attribute);
             CDEditor.AddAttribute(classInDiagram, attribute);
             _visualEditor.AddAttribute(classInDiagram, attribute);
-        }
-
-        public void AddAttribute(string targetClass, Attribute attribute, Source source)
-        {
-            attribute.Name = attribute.Name.Replace(" ", "_");
-            switch (source)
-            {
-                case Source.Editor:
-                    AddAttribute(targetClass, attribute);
-                    break;
-                case Source.RPC:
-                    AddAttribute(targetClass, attribute);
-                    break;
-                case Source.Loader:
-                    var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
-
-                    CDEditor.AddAttribute(classInDiagram, attribute);
-                    _visualEditor.AddAttribute(classInDiagram, attribute);
-                    break;
-            }
         }
 
         public void UpdateAttribute(string targetClass, string oldAttribute, Attribute newAttribute)

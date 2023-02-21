@@ -51,7 +51,7 @@ namespace AnimArch.Visualization.Diagrams
                 currentClass.Attributes ??= new List<Attribute>();
                 foreach (var attribute in currentClass.Attributes)
                 {
-                    UIEditorManager.Instance.mainEditor.AddAttribute(currentClass.Name, attribute, MainEditor.Source.Loader);
+                    UIEditorManager.Instance.mainEditor.AddAttribute(currentClass.Name, attribute);
                 }
 
 
