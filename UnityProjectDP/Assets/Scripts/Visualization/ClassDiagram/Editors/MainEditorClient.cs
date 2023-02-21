@@ -1,4 +1,6 @@
+using AnimArch.Visualization.UI;
 using Networking;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -19,6 +21,12 @@ namespace AnimArch.Visualization.Diagrams
         {
             var relationNetworkId = relation.GetComponent<NetworkObject>().NetworkObjectId;
             Spawner.Instance.DeleteRelationServerRpc(relationNetworkId);
+        }
+
+        public override void AddMethod(string targetClass, Method method)
+        {
+            string arguments = string.Join(",", method.arguments);
+            Spawner.Instance.AddMethodServerRpc(targetClass, method.Name, method.ReturnValue, arguments);
         }
     }
 }

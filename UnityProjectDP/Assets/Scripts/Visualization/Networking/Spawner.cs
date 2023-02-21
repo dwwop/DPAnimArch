@@ -1,10 +1,12 @@
 ﻿using AnimArch.Extensions;
 using AnimArch.Visualization.Diagrams;
 using AnimArch.Visualization.UI;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
+using System;
 
 namespace Networking
 {
@@ -55,6 +57,23 @@ namespace Networking
             var obj = objects[relationNetworkId];
             var classGo = obj.GetComponent<NetworkObject>().gameObject;
             UIEditorManager.Instance.mainEditor.DeleteRelation(classGo);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void AddMethodServerRpc(string targetClass, string methodName, string methodReturnValue, string methodArguments)
+        {
+            if (IsClient && !IsHost)
+                return;
+
+            var args = methodArguments.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            var newMethod = new Method
+            {
+                Name = methodName,
+                ReturnValue = methodReturnValue,
+                arguments =  args ?? new()
+            };
+            UIEditorManager.Instance.mainEditor.AddMethod(targetClass, newMethod);
         }
 
         [ClientRpc]

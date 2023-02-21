@@ -139,7 +139,7 @@ namespace AnimArch.Visualization.Diagrams
             _visualEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
         }
 
-        public void AddMethod(string targetClass, Method method)
+        public virtual void AddMethod(string targetClass, Method method)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
             if (classInDiagram == null)
