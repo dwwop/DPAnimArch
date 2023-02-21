@@ -58,7 +58,7 @@ namespace AnimArch.Visualization.Diagrams
                 currentClass.Methods ??= new List<Method>();
                 foreach (var method in currentClass.Methods)
                 {
-                    UIEditorManager.Instance.mainEditor.AddMethod(currentClass.Name, method, MainEditor.Source.Loader);
+                    UIEditorManager.Instance.mainEditor.AddMethod(currentClass.Name, method);
                 }
 
                 currentClass.Top *= -1;

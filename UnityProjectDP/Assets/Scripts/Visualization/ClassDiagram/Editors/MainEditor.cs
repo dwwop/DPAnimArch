@@ -139,7 +139,7 @@ namespace AnimArch.Visualization.Diagrams
             _visualEditor.UpdateAttribute(classInDiagram, oldAttribute, newAttribute);
         }
 
-        private void AddMethod(string targetClass, Method method)
+        public void AddMethod(string targetClass, Method method)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
             if (classInDiagram == null)
@@ -148,34 +148,18 @@ namespace AnimArch.Visualization.Diagrams
             classInDiagram.ParsedClass.Methods ??= new List<Method>();
 
             if (DiagramPool.Instance.ClassDiagram.FindMethodByName(targetClass, method.Name) != null)
+            {
+                //TODO: david skontrolovat - vetva kedy je diagram z loadera?
+                CDEditor.AddMethod(classInDiagram, method);
+                _visualEditor.AddMethod(classInDiagram, method);
                 return;
+            }
 
             method.Id = (classInDiagram.ParsedClass.Methods.Count + 1).ToString();
 
             ParsedEditor.AddMethod(classInDiagram, method);
             CDEditor.AddMethod(classInDiagram, method);
             _visualEditor.AddMethod(classInDiagram, method);
-        }
-
-
-        public void AddMethod(string targetClass, Method method, Source source)
-        {
-            method.Name = method.Name.Replace(" ", "_");
-            switch (source)
-            {
-                case Source.Editor:
-                    AddMethod(targetClass, method);
-                    break;
-                case Source.RPC:
-                    AddMethod(targetClass, method);
-                    break;
-                case Source.Loader:
-                    var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
-
-                    CDEditor.AddMethod(classInDiagram, method);
-                    _visualEditor.AddMethod(classInDiagram, method);
-                    break;
-            }
         }
 
         public void UpdateMethod(string targetClass, string oldMethod, Method newMethod)
