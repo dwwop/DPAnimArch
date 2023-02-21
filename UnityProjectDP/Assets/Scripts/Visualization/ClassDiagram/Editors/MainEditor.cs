@@ -222,7 +222,7 @@ namespace AnimArch.Visualization.Diagrams
             DiagramPool.Instance.ClassDiagram.Classes.Remove(classInDiagram);
         }
 
-        public void DeleteAttribute(string className, string attributeName)
+        public virtual void DeleteAttribute(string className, string attributeName)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
             if (classInDiagram == null)
@@ -236,7 +236,7 @@ namespace AnimArch.Visualization.Diagrams
             _visualEditor.DeleteAttribute(classInDiagram, attributeName);
         }
 
-        public void DeleteMethod(string className, string methodName)
+        public virtual void DeleteMethod(string className, string methodName)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
             if (classInDiagram == null)

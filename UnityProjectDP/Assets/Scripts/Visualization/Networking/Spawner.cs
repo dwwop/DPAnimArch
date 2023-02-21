@@ -75,6 +75,15 @@ namespace Networking
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void DeleteAttributeServerRpc(string className, string attributeName)
+        {
+            if (IsClient && !IsHost)
+                return;
+
+            UIEditorManager.Instance.mainEditor.DeleteAttribute(className, attributeName);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void AddMethodServerRpc(string targetClass, string methodName, string methodReturnValue, string methodArguments)
         {
             if (IsClient && !IsHost)
@@ -87,6 +96,15 @@ namespace Networking
                 arguments = methodArguments.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList() ?? new()
             };
             UIEditorManager.Instance.mainEditor.AddMethod(targetClass, newMethod);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void DeleteMethodServerRpc(string className, string methodName)
+        {
+            if (IsClient && !IsHost)
+                return;
+
+            UIEditorManager.Instance.mainEditor.DeleteMethod(className, methodName);
         }
 
         [ClientRpc]

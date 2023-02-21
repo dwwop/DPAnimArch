@@ -28,10 +28,20 @@ namespace AnimArch.Visualization.Diagrams
             Spawner.Instance.AddAttributeServerRpc(targetClass, attribute.Name, attribute.Type);
         }
 
+        public override void DeleteAttribute(string className, string attributeName)
+        {
+            Spawner.Instance.DeleteAttributeServerRpc(className, attributeName);
+        }
+
         public override void AddMethod(string targetClass, Method method)
         {
             string arguments = string.Join(",", method.arguments);
             Spawner.Instance.AddMethodServerRpc(targetClass, method.Name, method.ReturnValue, arguments);
+        }
+
+        public override void DeleteMethod(string className, string methodName)
+        {
+            Spawner.Instance.DeleteMethodServerRpc(className, methodName);
         }
     }
 }
