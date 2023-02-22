@@ -24,7 +24,7 @@ namespace AnimArch.Visualization.Diagrams
             Loader
         }
 
-        private void CreateNode(Class newClass)
+        public virtual void CreateNode(Class newClass)
         {
             var newCdClass = CDEditor.CreateNode(newClass);
             newClass.Name = newCdClass.Name;
@@ -36,23 +36,6 @@ namespace AnimArch.Visualization.Diagrams
             var classInDiagram = new ClassInDiagram
                 { ParsedClass = newClass, ClassInfo = newCdClass, VisualObject = classGo };
             DiagramPool.Instance.ClassDiagram.Classes.Add(classInDiagram);
-        }
-
-        public void CreateNode(Class newClass, Source source)
-        {
-            newClass.Name = newClass.Name.Replace(" ", "_");
-            switch (source)
-            {
-                case Source.Editor:
-                    CreateNode(newClass);
-                    break;
-                case Source.RPC:
-                    CreateNode(newClass);
-                    break;
-                case Source.Loader:
-                    CreateNode(newClass);
-                    break;
-            }
         }
 
         public virtual void UpdateNodeName(string oldName, string newName)

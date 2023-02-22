@@ -34,7 +34,8 @@ namespace AnimArch.Visualization.UI
             if (_formerName == null)
             {
                 var newClass = new Class(inp.text, _id.ToString());
-                UIEditorManager.Instance.mainEditor.CreateNode(newClass, MainEditor.Source.Editor);
+                newClass.Name = newClass.Name.Replace(" ", "_");
+                UIEditorManager.Instance.mainEditor.CreateNode(newClass);
                 _id++;
             }
             else

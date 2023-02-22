@@ -42,7 +42,7 @@ namespace AnimArch.Visualization.Diagrams
             {
                 currentClass.Name = currentClass.Name.Replace(" ", "_");
 
-                UIEditorManager.Instance.mainEditor.CreateNode(currentClass, MainEditor.Source.Loader);
+                UIEditorManager.Instance.mainEditor.CreateNode(currentClass);
                 var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(currentClass.Name);
 
                 if (classInDiagram.ClassInfo == null)
