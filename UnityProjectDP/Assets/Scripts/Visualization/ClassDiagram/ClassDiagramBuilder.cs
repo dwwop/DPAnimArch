@@ -87,7 +87,6 @@ namespace AnimArch.Visualization.Diagrams
             DiagramPool.Instance.ClassDiagram.graph.Layout();
         }
 
-
         //Set layout as close as possible to EA layout
         private void RenderClassesManual()
         {
