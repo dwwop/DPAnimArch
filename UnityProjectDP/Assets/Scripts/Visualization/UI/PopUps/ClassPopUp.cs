@@ -39,7 +39,7 @@ namespace AnimArch.Visualization.UI
             }
             else
             {
-                UIEditorManager.Instance.mainEditor.UpdateNodeName(className.text, inp.text, false);
+                UIEditorManager.Instance.mainEditor.UpdateNodeName(className.text, inp.text);
                 _formerName = null;
             }
 

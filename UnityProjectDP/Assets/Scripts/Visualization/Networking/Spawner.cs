@@ -41,6 +41,14 @@ namespace Networking
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void UpdateClassNameServerRpc(string oldName, string newName)
+        {
+            if (IsClient && !IsHost)
+                return;
+            UIEditorManager.Instance.mainEditor.UpdateNodeName(oldName, newName);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void DeleteClassServerRpc(string className)
         {
             if (IsClient && !IsHost)
@@ -75,6 +83,19 @@ namespace Networking
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void UpdateAttributeServerRpc(string targetClass, string oldAttribute, string attributeName, string type)
+        {
+            if (IsClient && !IsHost)
+                return;
+            var attribute = new AnimArch.Visualization.Diagrams.Attribute
+            {
+                Name = attributeName,
+                Type = type
+            };
+            UIEditorManager.Instance.mainEditor.UpdateAttribute(targetClass, oldAttribute, attribute);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void DeleteAttributeServerRpc(string className, string attributeName)
         {
             if (IsClient && !IsHost)
@@ -96,6 +117,21 @@ namespace Networking
                 arguments = methodArguments.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList() ?? new()
             };
             UIEditorManager.Instance.mainEditor.AddMethod(targetClass, newMethod);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void UpdateMethodServerRpc(string targetClass, string oldMethod, string methodName, string methodReturnValue, string methodArguments)
+        {
+            if (IsClient && !IsHost)
+                return;
+
+            var newMethod = new Method
+            {
+                Name = methodName,
+                ReturnValue = methodReturnValue,
+                arguments = methodArguments.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList() ?? new()
+            };
+            UIEditorManager.Instance.mainEditor.UpdateMethod(targetClass, oldMethod, newMethod);
         }
 
         [ServerRpc(RequireOwnership = false)]

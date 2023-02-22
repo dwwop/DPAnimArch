@@ -55,8 +55,18 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-        private void UpdateNodeName(string oldName, string newName)
+        public virtual void UpdateNodeName(string oldName, string newName)
         {
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(oldName);
+            if (classInDiagram == null)
+                return;
+
+            classInDiagram.ParsedClass.Name = newName;
+            classInDiagram.ClassInfo.Name = newName;
+            classInDiagram.VisualObject.name = newName;
+
+            _visualEditor.UpdateNode(classInDiagram.VisualObject);
+
             foreach (var relationInDiagram in DiagramPool.Instance.ClassDiagram.Relations)
             {
                 if (relationInDiagram.ParsedRelation.FromClass == oldName)
@@ -73,21 +83,6 @@ namespace AnimArch.Visualization.Diagrams
                     relationInDiagram.RelationInfo.ToClass = newName;
                 }
             }
-        }
-
-        public void UpdateNodeName(string oldName, string newName, bool fromRpc)
-        {
-            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(oldName);
-            if (classInDiagram == null)
-                return;
-
-            classInDiagram.ParsedClass.Name = newName;
-            classInDiagram.ClassInfo.Name = newName;
-            classInDiagram.VisualObject.name = newName;
-
-            _visualEditor.UpdateNode(classInDiagram.VisualObject);
-
-            UpdateNodeName(oldName, newName);
         }
 
         public virtual void AddAttribute(string targetClass, Attribute attribute)
@@ -109,7 +104,7 @@ namespace AnimArch.Visualization.Diagrams
             _visualEditor.AddAttribute(classInDiagram, attribute);
         }
 
-        public void UpdateAttribute(string targetClass, string oldAttribute, Attribute newAttribute)
+        public virtual void UpdateAttribute(string targetClass, string oldAttribute, Attribute newAttribute)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
             if (classInDiagram == null)
@@ -146,7 +141,7 @@ namespace AnimArch.Visualization.Diagrams
             _visualEditor.AddMethod(classInDiagram, method);
         }
 
-        public void UpdateMethod(string targetClass, string oldMethod, Method newMethod)
+        public virtual void UpdateMethod(string targetClass, string oldMethod, Method newMethod)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
             if (classInDiagram == null)
