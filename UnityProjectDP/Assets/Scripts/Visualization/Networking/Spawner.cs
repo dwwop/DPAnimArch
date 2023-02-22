@@ -27,6 +27,16 @@ namespace Networking
             objects[networkId].name = name;
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void CreateClassServerRpc(string className)
+        {
+            if (IsClient && !IsHost)
+                return;
+
+            var newClass = new Class(className, DiagramPool.Instance.ClassDiagram.NextClassId());
+            UIEditorManager.Instance.mainEditor.CreateNode(newClass);
+        }
+
         [ClientRpc]
         public void SetClassNameClientRpc(string name, ulong networkId)
         {

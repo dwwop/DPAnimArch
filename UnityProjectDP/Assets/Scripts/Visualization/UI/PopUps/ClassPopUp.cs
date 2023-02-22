@@ -7,7 +7,6 @@ namespace AnimArch.Visualization.UI
     {
         public TMP_Text confirm;
         private string _formerName;
-        private int _id;
 
         public override void ActivateCreation()
         {
@@ -33,10 +32,9 @@ namespace AnimArch.Visualization.UI
 
             if (_formerName == null)
             {
-                var newClass = new Class(inp.text, _id.ToString());
-                newClass.Name = newClass.Name.Replace(" ", "_");
+                var className = inp.text.Replace(" ", "_");
+                var newClass = new Class(className, DiagramPool.Instance.ClassDiagram.NextClassId());
                 UIEditorManager.Instance.mainEditor.CreateNode(newClass);
-                _id++;
             }
             else
             {

@@ -12,6 +12,11 @@ namespace AnimArch.Visualization.Diagrams
         {
         }
 
+        public override void CreateNode(Class newClass)
+        {
+            Spawner.Instance.CreateClassServerRpc(newClass.Name);
+        }
+
         public override void DeleteNode(string className)
         {
             Spawner.Instance.DeleteClassServerRpc(className);

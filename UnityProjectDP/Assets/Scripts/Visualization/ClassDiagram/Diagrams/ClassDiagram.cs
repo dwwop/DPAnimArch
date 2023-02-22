@@ -20,6 +20,11 @@ namespace AnimArch.Visualization.Diagrams
             UIEditorManager.Instance.mainEditor.ClearDiagram();
         }
 
+        public string NextClassId()
+        {
+            return (Classes.Count).ToString();
+        }
+
         public ClassInDiagram FindClassByName(string className)
         {
             return Classes
