@@ -11,7 +11,7 @@ namespace AnimArch.Visualization.Diagrams
             {
                 if (NetworkManager.Singleton.IsServer)
                 {
-                    return new MainEditorServer(visualEditor);
+                    return new MainEditor(visualEditor);
                 }
                 else
                 {
