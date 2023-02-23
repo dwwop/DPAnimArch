@@ -11,7 +11,7 @@ namespace AnimArch.Visualization.Diagrams
 
         public abstract GameObject CreateNode(Class newClass);
 
-        public abstract void SetPosition(string className, Vector3 position, bool fromRpc);
+        public abstract void SetPosition(string className, Vector3 position);
 
         public abstract void UpdateNode(GameObject classGo);
 

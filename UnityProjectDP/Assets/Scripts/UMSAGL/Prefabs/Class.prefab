@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 114721600210392802}
   - component: {fileID: 114568245614193200}
   - component: {fileID: 114654169875532780}
-  - component: {fileID: 114752474515285174}
+  - component: {fileID: 8009475719242403050}
   - component: {fileID: 54018352948757740}
   - component: {fileID: 2398271712557318398}
   - component: {fileID: 4761082860158751167}
@@ -188,7 +188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b68da0dcaa20fb43a878d4b9ed58a3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114752474515285174
+--- !u!114 &8009475719242403050
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -197,14 +197,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1226358218867430}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1c73421490d37348863dfad679cb4a1, type: 3}
+  m_Script: {fileID: 11500000, guid: a187a21ffe51e464ea053077aae7ab2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   triggerHighlighAction:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114654169875532780}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: BackgroundHighlighter, XDE
         m_MethodName: HighlightBackground
         m_Mode: 1
         m_Arguments:
@@ -219,7 +219,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114654169875532780}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: BackgroundHighlighter, XDE
         m_MethodName: UnhighlightBackground
         m_Mode: 1
         m_Arguments:

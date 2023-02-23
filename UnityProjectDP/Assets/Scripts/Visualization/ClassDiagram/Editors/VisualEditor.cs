@@ -35,7 +35,7 @@ namespace AnimArch.Visualization.Diagrams
             return nodeGo;
         }
 
-        public override void SetPosition(string className, Vector3 position, bool fromRpc)
+        public override void SetPosition(string className, Vector3 position)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(className);
             if (classInDiagram != null)
