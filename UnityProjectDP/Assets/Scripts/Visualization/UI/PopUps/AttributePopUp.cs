@@ -1,5 +1,7 @@
-﻿using AnimArch.Visualization.Diagrams;
+﻿using System;
+using AnimArch.Visualization.Diagrams;
 using TMPro;
+using Attribute = AnimArch.Visualization.Diagrams.Attribute;
 
 namespace AnimArch.Visualization.UI
 {
@@ -45,10 +47,23 @@ namespace AnimArch.Visualization.UI
             };
             if (_formerAttributeName == null)
             {
+                if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(className.text, newAttribute.Name) != null)
+                {
+                    errorMessage.gameObject.SetActive(true);
+                    return;
+                }
+
                 MainEditor.AddAttribute(className.text, newAttribute, MainEditor.Source.Editor);
             }
             else
             {
+                if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(className.text, newAttribute.Name) !=
+                    null)
+                {
+                    errorMessage.gameObject.SetActive(true);
+                    return;
+                }
+
                 MainEditor.UpdateAttribute(className.text, _formerAttributeName, newAttribute);
                 _formerAttributeName = null;
             }

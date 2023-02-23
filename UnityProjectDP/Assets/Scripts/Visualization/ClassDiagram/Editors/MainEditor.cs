@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AnimArch.Extensions;
 using AnimArch.Visualization.Animating;
 using Networking;
 using OALProgramControl;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -146,9 +148,6 @@ namespace AnimArch.Visualization.Diagrams
                 return;
 
             classInDiagram.ParsedClass.Methods ??= new List<Method>();
-
-            if (DiagramPool.Instance.ClassDiagram.FindMethodByName(targetClass, method.Name) != null)
-                return;
 
             method.Id = (classInDiagram.ParsedClass.Methods.Count + 1).ToString();
 

@@ -65,5 +65,11 @@ namespace AnimArch.Visualization.UI
 
             SelectedColor = c;
         }
+
+        protected override void OnAwake()
+        {
+            base.OnAwake();
+            SelectedTool = "CameraMovement";
+        }
     }
 }

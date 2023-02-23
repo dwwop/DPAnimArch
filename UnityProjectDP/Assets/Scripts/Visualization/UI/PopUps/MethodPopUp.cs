@@ -69,10 +69,22 @@ namespace AnimArch.Visualization.UI
             };
             if (_formerName == null)
             {
+                if (DiagramPool.Instance.ClassDiagram.FindMethodByName(className.text, newMethod.Name) != null)
+                {
+                    errorMessage.gameObject.SetActive(true);
+                    return;
+                }
+
                 MainEditor.AddMethod(className.text, newMethod, MainEditor.Source.Editor);
             }
             else
             {
+                if (DiagramPool.Instance.ClassDiagram.FindMethodByName(className.text, newMethod.Name) != null)
+                {
+                    errorMessage.gameObject.SetActive(true);
+                    return;
+                }
+
                 MainEditor.UpdateMethod(className.text, _formerName, newMethod);
                 _formerName = null;
             }
@@ -85,6 +97,11 @@ namespace AnimArch.Visualization.UI
             base.Deactivate();
             _parameters = new List<string>();
             parameterContent.DetachChildren();
+        }
+
+        public bool ArgExists(string parameter)
+        {
+            return _parameters.Any(x => x == parameter);
         }
 
         public void AddArg(string parameter)
@@ -100,8 +117,7 @@ namespace AnimArch.Visualization.UI
             var index = _parameters.FindIndex(x => x == formerParam);
             _parameters[index] = newParam;
             parameterContent.GetComponentsInChildren<ParameterManager>()
-                .First(x => x.parameterTxt.text == formerParam)
-                .parameterTxt.text = newParam;
+                .First(x => x.parameterTxt.text == formerParam).parameterTxt.text = newParam;
         }
 
         public void RemoveArg(string parameter)

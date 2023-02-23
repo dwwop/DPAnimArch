@@ -6,6 +6,7 @@ namespace AnimArch.Visualization.UI
     {
         public TMP_InputField inp;
         protected TMP_Text className;
+        public TMP_Text errorMessage;
 
 
         public virtual void ActivateCreation(TMP_Text classTxt)
@@ -19,6 +20,7 @@ namespace AnimArch.Visualization.UI
         {
             base.Deactivate();
             inp.text = "";
+            errorMessage.gameObject.SetActive(false);
         }
     }
 }
