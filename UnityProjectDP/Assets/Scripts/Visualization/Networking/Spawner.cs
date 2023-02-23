@@ -241,6 +241,7 @@ namespace Networking
                 return;
             UIEditorManager.Instance.InitializeCreation();
             GraphCreatedClientRpc();
+            GameObject.Find("EditBtn").GetComponentInChildren<Button>().interactable = true;
         }
 
 
@@ -251,6 +252,8 @@ namespace Networking
                 return;
             DiagramPool.Instance.ClassDiagram.graph = GameObject.Find("Graph").GetComponent<Graph>();
             DiagramPool.Instance.ClassDiagram.graph.enabled = false;
+
+            GameObject.Find("EditBtn").GetComponentInChildren<Button>().interactable = true;
         }
 
         [ClientRpc]
