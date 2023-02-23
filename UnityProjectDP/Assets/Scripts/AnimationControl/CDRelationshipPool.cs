@@ -113,5 +113,10 @@ namespace OALProgramControl
             }
             return Tupples;
         }
+
+        public void RemoveRelationship(CDRelationship relationship)
+        {
+            RelationshipPool.Remove(relationship);
+        }
     }
 }

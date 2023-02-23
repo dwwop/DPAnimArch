@@ -166,12 +166,18 @@ namespace AnimArch.Visualization.Diagrams
             }
         }
 
-        public virtual void DeleteRelation(GameObject relation)
+        private static void DeleteRelation(RelationInDiagram relationInDiagram)
+        {
+            CDEditor.DeleteRelation(relationInDiagram);
+            _visualEditor.DeleteRelation(relationInDiagram);
+        }
+
+        public static void DeleteRelation(GameObject relation)
         {
             var relationInDiagram = DiagramPool.Instance.ClassDiagram.Relations
                 .Find(x => x.VisualObject.Equals(relation));
 
-            _visualEditor.DeleteRelation(relationInDiagram);
+            DeleteRelation(relationInDiagram);
             DiagramPool.Instance.ClassDiagram.Relations.Remove(relationInDiagram);
         }
 
@@ -180,7 +186,7 @@ namespace AnimArch.Visualization.Diagrams
             DiagramPool.Instance.ClassDiagram.Relations
                 .Where(x => x.ParsedRelation.FromClass == classInDiagram.ParsedClass.Name
                             || x.ParsedRelation.ToClass == classInDiagram.ParsedClass.Name)
-                .ForEach(_visualEditor.DeleteRelation);
+                .ForEach(DeleteRelation);
 
             DiagramPool.Instance.ClassDiagram.Relations
                 .RemoveAll(x => x.ParsedRelation.FromClass == classInDiagram.ParsedClass.Name
@@ -195,6 +201,7 @@ namespace AnimArch.Visualization.Diagrams
 
             DeleteNodeFromRelations(classInDiagram);
 
+            CDEditor.DeleteNode(classInDiagram);
             _visualEditor.DeleteNode(classInDiagram);
 
             DiagramPool.Instance.ClassDiagram.Classes.Remove(classInDiagram);

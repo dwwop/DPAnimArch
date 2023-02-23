@@ -25,7 +25,10 @@ namespace AnimArch.Visualization.UI
 
         public void DeleteClass()
         {
-            UIEditorManager.Instance.mainEditor.DeleteNode(name);
+            UIEditorManager.Instance.confirmPopUp.ActivateCreation(delegate
+            {
+                UIEditorManager.Instance.mainEditor.DeleteNode(name);
+            });
         }
     }
 }

@@ -15,7 +15,21 @@ namespace AnimArch.Visualization.UI
 
         public void DeleteParameter()
         {
-            UIEditorManager.Instance.methodPopUp.RemoveArg(name);
+            UIEditorManager.Instance.methodPopUp.panel.SetActive(false);
+            UIEditorManager.Instance.confirmPopUp.ActivateCreation(delegate
+            {
+                UIEditorManager.Instance.methodPopUp.RemoveArg(name);
+                UIEditorManager.Instance.methodPopUp.panel.SetActive(true);
+            });
+            UIEditorManager.Instance.confirmPopUp.cancelButton.onClick.AddListener(delegate
+            {
+                UIEditorManager.Instance.methodPopUp.panel.SetActive(true);
+            });
+            
+            UIEditorManager.Instance.confirmPopUp.exitButton.onClick.AddListener(delegate
+            {
+                UIEditorManager.Instance.methodPopUp.panel.SetActive(true);
+            });
         }
     }
 }

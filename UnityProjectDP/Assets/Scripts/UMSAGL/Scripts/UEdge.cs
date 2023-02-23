@@ -208,6 +208,6 @@ public class UEdge : Unit
 
     private void DeleteEdge()
     {
-        UIEditorManager.Instance.mainEditor.DeleteRelation(gameObject);
+        UIEditorManager.Instance.confirmPopUp.ActivateCreation(delegate { MainEditor.DeleteRelation(gameObject); });
     }
 }

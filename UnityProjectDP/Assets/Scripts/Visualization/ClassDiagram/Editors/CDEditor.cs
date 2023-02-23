@@ -71,10 +71,10 @@ namespace AnimArch.Visualization.Diagrams
         {
             var index = classInDiagram.ClassInfo.Methods.FindIndex(x => x.Name == oldMethod);
             var newCdMethod = CreateCdMethodFromMethod(classInDiagram.ClassInfo, newMethod);
-            
+
             if (newMethod.arguments != null)
                 AddParameters(newMethod, newCdMethod);
-            
+
             classInDiagram.ClassInfo.Methods[index] = newCdMethod;
         }
 
@@ -104,6 +104,27 @@ namespace AnimArch.Visualization.Diagrams
         public static void DeleteMethod(ClassInDiagram classInDiagram, string method)
         {
             classInDiagram.ClassInfo.Methods.RemoveAll(x => x.Name == method);
+        }
+
+        public static void DeleteNode(ClassInDiagram classInDiagram)
+        {
+            OALProgram.Instance.ExecutionSpace.ClassPool.Remove(classInDiagram.ClassInfo);
+        }
+
+        public static void DeleteRelation(RelationInDiagram relationInDiagram)
+        {
+            OALProgram.Instance.RelationshipSpace.RemoveRelationship(relationInDiagram.RelationInfo);
+
+            if (!"Generalization".Equals(relationInDiagram.ParsedRelation.PropertiesEaType) &&
+                !"Realisation".Equals(relationInDiagram.ParsedRelation.PropertiesEaType))
+                return;
+
+            var fromClass = OALProgram.Instance.ExecutionSpace.getClassByName(relationInDiagram.RelationInfo.FromClass);
+            OALProgram.Instance.ExecutionSpace.getClassByName(relationInDiagram.RelationInfo.FromClass)
+                .SuperClass = null;
+
+            OALProgram.Instance.ExecutionSpace.getClassByName(relationInDiagram.RelationInfo.ToClass).SubClasses
+                .Remove(fromClass);
         }
     }
 }

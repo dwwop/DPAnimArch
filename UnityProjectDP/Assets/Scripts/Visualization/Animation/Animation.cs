@@ -378,6 +378,7 @@ namespace AnimArch.Visualization.Animating
 
         private object FillNewFiller(string ownerOfRelation, string calledClassName, GameObject edge)
         {
+            
             GameObject newFiller = Instantiate(LineFill);
             Fillers.Add(newFiller);
             newFiller.transform.position = classDiagram.graph.transform.GetChild(0).transform.position;
