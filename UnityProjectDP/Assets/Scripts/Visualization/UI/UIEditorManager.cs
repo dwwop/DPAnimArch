@@ -18,6 +18,7 @@ namespace AnimArch.Visualization.UI
         public MethodPopUp methodPopUp;
         public ClassPopUp classPopUp;
         public ParameterPopUp parameterPopUp;
+        public ConfirmPopUp confirmPopUp;
 
 
         private static void InitializeCreation()
