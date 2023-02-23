@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AnimArch.Extensions;
 using AnimArch.Visualization.Animating;
 using Networking;
 using OALProgramControl;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace AnimArch.Visualization.Diagrams
 {

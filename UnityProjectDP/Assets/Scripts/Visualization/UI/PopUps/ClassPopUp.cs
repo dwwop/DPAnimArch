@@ -1,4 +1,5 @@
-﻿using AnimArch.Visualization.Diagrams;
+﻿using System;
+using AnimArch.Visualization.Diagrams;
 using TMPro;
 
 namespace AnimArch.Visualization.UI
@@ -33,12 +34,25 @@ namespace AnimArch.Visualization.UI
             if (_formerName == null)
             {
                 var className = inp.text.Replace(" ", "_");
+
+                if (DiagramPool.Instance.ClassDiagram.FindClassByName(className) != null)
+                {
+                    errorMessage.gameObject.SetActive(true);
+                    return;
+                }
+
                 var newClass = new Class(className, DiagramPool.Instance.ClassDiagram.NextClassId());
-                UIEditorManager.Instance.mainEditor.CreateNode(newClass);
+                UIEditorManager.Instance.mainEditor.CreateNode(newClass, MainEditor.Source.Editor);
             }
             else
             {
-                UIEditorManager.Instance.mainEditor.UpdateNodeName(className.text, inp.text);
+                if (DiagramPool.Instance.ClassDiagram.FindClassByName(inp.text) != null)
+                {
+                    errorMessage.gameObject.SetActive(true);
+                    return;
+                }
+
+                UIEditorManager.Instance.mainEditor.UpdateNodeName(className.text, inp.text, false);
                 _formerName = null;
             }
 

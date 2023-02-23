@@ -35,10 +35,22 @@ namespace AnimArch.Visualization.UI
             var parameter = GetType() + " " + inp.text.Replace(" ", "_");
             if (_formerParam == null)
             {
+                if (UIEditorManager.Instance.methodPopUp.ArgExists(parameter))
+                {
+                    errorMessage.gameObject.SetActive(true);
+                    return;
+                }
+
                 UIEditorManager.Instance.methodPopUp.AddArg(parameter);
             }
             else
             {
+                if (UIEditorManager.Instance.methodPopUp.ArgExists(parameter))
+                {
+                    errorMessage.gameObject.SetActive(true);
+                    return;
+                }
+
                 UIEditorManager.Instance.methodPopUp.EditArg(_formerParam, parameter);
                 _formerParam = null;
             }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,6 +30,11 @@ namespace AnimArch.Visualization.UI
             SetAllButtonsInteractable();
 
             clickedButton.interactable = false;
+        }
+
+        private void Awake()
+        {
+            OnButtonClicked(buttons[0]);
         }
     }
 }
