@@ -53,7 +53,7 @@ namespace AnimArch.Visualization.UI
                     return;
                 }
 
-                UIEditorManager.Instance.mainEditor.AddAttribute(className.text, newAttribute, MainEditor.Source.Editor);
+                UIEditorManager.Instance.mainEditor.AddAttribute(className.text, newAttribute);
             }
             else
             {

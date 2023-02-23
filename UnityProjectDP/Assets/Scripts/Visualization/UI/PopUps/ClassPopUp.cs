@@ -42,7 +42,7 @@ namespace AnimArch.Visualization.UI
                 }
 
                 var newClass = new Class(className, DiagramPool.Instance.ClassDiagram.NextClassId());
-                UIEditorManager.Instance.mainEditor.CreateNode(newClass, MainEditor.Source.Editor);
+                UIEditorManager.Instance.mainEditor.CreateNode(newClass);
             }
             else
             {
@@ -52,7 +52,7 @@ namespace AnimArch.Visualization.UI
                     return;
                 }
 
-                UIEditorManager.Instance.mainEditor.UpdateNodeName(className.text, inp.text, false);
+                UIEditorManager.Instance.mainEditor.UpdateNodeName(className.text, inp.text);
                 _formerName = null;
             }
 
