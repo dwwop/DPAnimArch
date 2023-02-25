@@ -15,6 +15,23 @@ namespace Visualization.ClassDiagram.ClassComponents
             Name = name;
         }
         public Attribute() { }
-        
+
+        protected bool Equals(Attribute other)
+        {
+            return Id == other.Id;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Attribute)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Id != null ? Id.GetHashCode() : 0);
+        }
     }
 }

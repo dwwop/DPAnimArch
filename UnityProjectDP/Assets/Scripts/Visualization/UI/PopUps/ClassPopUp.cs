@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using Visualization.ClassDiagram;
 using Visualization.ClassDiagram.ClassComponents;
 
@@ -7,7 +8,7 @@ namespace Visualization.UI.PopUps
     public class ClassPopUp : AbstractClassPopUp
     {
         public TMP_Text confirm;
-        private string _formerName;
+        private Class _formerClass;
 
         public override void ActivateCreation()
         {
@@ -19,7 +20,7 @@ namespace Visualization.UI.PopUps
         {
             base.ActivateCreation(classTxt);
             inp.text = classTxt.text;
-            _formerName = classTxt.text;
+            _formerClass = DiagramPool.Instance.ClassDiagram.FindClassByName(inp.text).ParsedClass;
             confirm.text = "Edit";
         }
 
@@ -32,9 +33,9 @@ namespace Visualization.UI.PopUps
             }
 
             var inpClassName = inp.text.Replace(" ", "_");
-            if (_formerName == null)
+            if (_formerClass == null)
             {
-                var newClass = new Class(inpClassName, DiagramPool.Instance.ClassDiagram.NextClassId());
+                var newClass = new Class(inpClassName, DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString());
 
                 if (DiagramPool.Instance.ClassDiagram.FindClassByName(newClass.Name) != null)
                 {
@@ -46,17 +47,23 @@ namespace Visualization.UI.PopUps
             }
             else
             {
-                if (DiagramPool.Instance.ClassDiagram.FindClassByName(inpClassName) != null)
+                var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(inpClassName).ParsedClass;
+                if (classInDiagram != null && !_formerClass.Equals(classInDiagram))
                 {
                     errorMessage.gameObject.SetActive(true);
                     return;
                 }
 
                 UIEditorManager.Instance.mainEditor.UpdateNodeName(className.text, inpClassName);
-                _formerName = null;
             }
 
             Deactivate();
+        }
+
+        public override void Deactivate()
+        {
+            base.Deactivate();
+            _formerClass = null;
         }
     }
 }

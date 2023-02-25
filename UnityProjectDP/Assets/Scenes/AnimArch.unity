@@ -2251,12 +2251,12 @@ GameObject:
   - component: {fileID: 109579150}
   - component: {fileID: 109579149}
   m_Layer: 5
-  m_Name: Options
+  m_Name: MethodOptions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &109579148
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8945,7 +8945,7 @@ GameObject:
   - component: {fileID: 375743472}
   - component: {fileID: 375743471}
   m_Layer: 5
-  m_Name: Options
+  m_Name: AttributeOptions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10257,7 +10257,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &444883018
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11293,7 +11293,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &488615158
 RectTransform:
   m_ObjectHideFlags: 0
@@ -24448,6 +24448,8 @@ MonoBehaviour:
   isArray: {fileID: 444883019}
   confirm: {fileID: 1407883468}
   parameterContent: {fileID: 1162187659}
+  options: {fileID: 109579149}
+  isArrayText: {fileID: 1648575868}
 --- !u!114 &1093984235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35217,7 +35219,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1648575867
 RectTransform:
   m_ObjectHideFlags: 0
@@ -36625,7 +36627,7 @@ GameObject:
   - component: {fileID: 1709171774}
   - component: {fileID: 1709171773}
   m_Layer: 5
-  m_Name: Options
+  m_Name: ParameterOptions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40645,7 +40647,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1911245694
 RectTransform:
   m_ObjectHideFlags: 0

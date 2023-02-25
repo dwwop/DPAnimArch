@@ -16,10 +16,13 @@ namespace Visualization.UI.PopUps
         public Toggle isArray;
         private readonly HashSet<TMP_Dropdown.OptionData> _variableData = new();
 
-        private void Awake()
+        protected void Awake()
         {
+            base.Awake();
+            
             dropdown.onValueChanged.AddListener(delegate
             {
+                
                 if (dropdown.options[dropdown.value].text == CUSTOM)
                 {
                     customType.transform.gameObject.SetActive(true);
@@ -31,6 +34,18 @@ namespace Visualization.UI.PopUps
                     customTypeField.transform.gameObject.SetActive(false);
                     customTypeField.text = "";
                 }
+            });
+            
+            customTypeField.onValueChanged.AddListener(delegate(string arg)
+            {
+                if (string.IsNullOrEmpty(arg))
+                    return;
+                if (arg.Length == 1 && (char.IsLetter(arg[0]) || arg[0] == '_'))
+                    customTypeField.text = arg;
+                else if (arg.Length > 1 && char.IsLetterOrDigit(arg[^1]) || arg[^1] == '_')
+                    customTypeField.text = arg;
+                else
+                    customTypeField.text = arg[..^1];
             });
         }
 

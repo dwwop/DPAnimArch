@@ -32,12 +32,12 @@ namespace Visualization.Networking
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void CreateClassServerRpc(string className)
+        public void CreateClassServerRpc(string className, string id)
         {
             if (IsClient && !IsHost)
                 return;
 
-            var newClass = new Class(className, DiagramPool.Instance.ClassDiagram.NextClassId());
+            var newClass = new Class(className, id);
             UIEditorManager.Instance.mainEditor.CreateNode(newClass);
         }
 

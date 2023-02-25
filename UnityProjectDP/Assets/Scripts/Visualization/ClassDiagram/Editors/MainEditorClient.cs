@@ -13,7 +13,7 @@ namespace Visualization.ClassDiagram.Editors
 
         public override void CreateNode(Class newClass)
         {
-            Spawner.Instance.CreateClassServerRpc(newClass.Name);
+            Spawner.Instance.CreateClassServerRpc(newClass.Name, newClass.Id);
         }
 
         public override void DeleteNode(string className)

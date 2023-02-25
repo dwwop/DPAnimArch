@@ -1,13 +1,14 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using Visualization.ClassDiagram;
-using Visualization.ClassDiagram.ClassComponents;
+using Attribute = Visualization.ClassDiagram.ClassComponents.Attribute;
 
 namespace Visualization.UI.PopUps
 {
     public class AttributePopUp : AbstractTypePopUp
     {
         public TMP_Text confirm;
-        private string _formerAttributeName;
+        private Attribute _formerAttribute;
 
         public override void ActivateCreation(TMP_Text classTxt)
         {
@@ -15,7 +16,7 @@ namespace Visualization.UI.PopUps
             confirm.text = "Add";
         }
 
-
+        
         public void ActivateCreation(TMP_Text classTxt, TMP_Text attributeTxt)
         {
             ActivateCreation(classTxt);
@@ -24,9 +25,9 @@ namespace Visualization.UI.PopUps
 
             var attributeType = text[1];
             SetType(attributeType);
-
+            
             inp.text = formerName;
-            _formerAttributeName = formerName;
+            _formerAttribute = DiagramPool.Instance.ClassDiagram.FindAttributeByName(className.text, formerName);
 
             confirm.text = "Edit";
         }
@@ -44,7 +45,7 @@ namespace Visualization.UI.PopUps
                 Name = inp.text,
                 Type = GetType()
             };
-            if (_formerAttributeName == null)
+            if (_formerAttribute == null)
             {
                 if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(className.text, newAttribute.Name) != null)
                 {
@@ -52,22 +53,30 @@ namespace Visualization.UI.PopUps
                     return;
                 }
 
+                newAttribute.Id = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
                 UIEditorManager.Instance.mainEditor.AddAttribute(className.text, newAttribute);
             }
             else
             {
-                if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(className.text, newAttribute.Name) !=
-                    null)
+                var attributeInDiagram =
+                    DiagramPool.Instance.ClassDiagram.FindAttributeByName(className.text, newAttribute.Name);
+                if (attributeInDiagram != null && !_formerAttribute.Equals(attributeInDiagram))
                 {
                     errorMessage.gameObject.SetActive(true);
                     return;
                 }
 
-                UIEditorManager.Instance.mainEditor.UpdateAttribute(className.text, _formerAttributeName, newAttribute);
-                _formerAttributeName = null;
+                newAttribute.Id = _formerAttribute.Id;
+                UIEditorManager.Instance.mainEditor.UpdateAttribute(className.text, _formerAttribute.Name, newAttribute);
             }
 
             Deactivate();
+        }
+
+        public override void Deactivate()
+        {
+            base.Deactivate();
+            _formerAttribute = null;
         }
     }
 }
