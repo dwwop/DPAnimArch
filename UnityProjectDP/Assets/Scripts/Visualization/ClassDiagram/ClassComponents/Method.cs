@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.ClassComponents
 {
     [Serializable]
     public class Method

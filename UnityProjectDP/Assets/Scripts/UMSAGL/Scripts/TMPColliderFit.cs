@@ -1,25 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
+﻿using UnityEngine;
 
-[ExecuteInEditMode]
-public class TMPColliderFit : MonoBehaviour {
+namespace UMSAGL.Scripts
+{
+	[ExecuteInEditMode]
+	public class TMPColliderFit : MonoBehaviour {
 
-	public float zSize = 5;
+		public float zSize = 5;
 
-	private BoxCollider bc;
-	private RectTransform rt;
+		private BoxCollider bc;
+		private RectTransform rt;
 
-	// Use this for initialization
-	void Awake () {
-		bc = GetComponent<BoxCollider>();
-		rt = GetComponent<RectTransform>();
-	}
+		// Use this for initialization
+		void Awake () {
+			bc = GetComponent<BoxCollider>();
+			rt = GetComponent<RectTransform>();
+		}
 	
-	// Update is called once per frame
-	void Update () {
-		var size = rt.rect.size;
-		bc.size = new Vector3(size.x, size.y, zSize);
+		// Update is called once per frame
+		void Update () {
+			var size = rt.rect.size;
+			bc.size = new Vector3(size.x, size.y, zSize);
+		}
 	}
 }

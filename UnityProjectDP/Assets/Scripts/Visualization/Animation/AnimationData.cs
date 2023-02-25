@@ -1,10 +1,9 @@
-﻿using AnimArch.Visualization.UI;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Visualization.UI;
 
-namespace AnimArch.Visualization.Animating
+namespace Visualization.Animation
 {
     //Holds data for created animations
     //Implemets methods to find, create and remove animations
@@ -29,6 +28,7 @@ namespace AnimArch.Visualization.Animating
         {
             animations.Add(anim);
             GameObject.Find("MainPanel").transform.Find("Edit").GetComponentInChildren<Button>().interactable = true;
+            GameObject.Find("MainPanel").transform.Find("Play").GetComponentInChildren<Button>().interactable = true;
         }
         public bool RemoveAnim(Anim anim)
         {
@@ -36,6 +36,7 @@ namespace AnimArch.Visualization.Animating
             {
                 selectedAnim = new Anim("");
                 GameObject.Find("MainPanel").transform.Find("Edit").GetComponentInChildren<Button>().interactable = false;
+                GameObject.Find("MainPanel").transform.Find("Play").GetComponentInChildren<Button>().interactable = true;
             }
             return animations.Remove(anim);
         }

@@ -1,14 +1,18 @@
-﻿using AnimArch.Extensions;
-using AnimArch.Visualization.Diagrams;
-using AnimArch.Visualization.UI;
+﻿using System;
 using System.Linq;
+using AnimArch.Extensions;
+using UMSAGL.Scripts;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
-using System;
+using Visualization.ClassDiagram;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.Editors;
+using Visualization.UI;
+using Attribute = Visualization.ClassDiagram.ClassComponents.Attribute;
 
-namespace Networking
+namespace Visualization.Networking
 {
     [RequireComponent(typeof(NetworkObject))]
     public class Spawner : NetworkSingleton<Spawner>
@@ -84,7 +88,7 @@ namespace Networking
             if (IsClient && !IsHost)
                 return;
 
-            var attribute = new AnimArch.Visualization.Diagrams.Attribute
+            var attribute = new Attribute
             {
                 Name = attributeName,
                 Type = type
@@ -97,7 +101,7 @@ namespace Networking
         {
             if (IsClient && !IsHost)
                 return;
-            var attribute = new AnimArch.Visualization.Diagrams.Attribute
+            var attribute = new Attribute
             {
                 Name = attributeName,
                 Type = type

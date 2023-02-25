@@ -1,12 +1,8 @@
-using AnimArch.Extensions.Unity;
-using OALProgramControl;
-using System.Collections.Generic;
-using TMPro;
+using UMSAGL.Scripts;
 using UnityEngine;
-using UnityEngine.UI.Extensions;
+using Visualization.ClassDiagram.ComponentsInDiagram;
 
-
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.Relations
 {
     public class ObjectRelation
     {

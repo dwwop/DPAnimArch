@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using AnimArch.Extensions;
-using AnimArch.Visualization.Diagrams;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Visualization.ClassDiagram;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI.PopUps
 {
     public abstract class AbstractPopUp : MonoBehaviour
     {

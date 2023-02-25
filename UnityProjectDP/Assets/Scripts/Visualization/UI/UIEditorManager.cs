@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using AnimArch.Extensions;
-using AnimArch.Visualization.Diagrams;
-using Networking;
-using Unity.Netcode;
+﻿using AnimArch.Extensions;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Visualization.ClassDiagram;
+using Visualization.ClassDiagram.Editors;
+using Visualization.ClassDiagram.Relations;
+using Visualization.UI.PopUps;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI
 {
     public class UIEditorManager : Singleton<UIEditorManager>
     {
@@ -81,13 +79,13 @@ namespace AnimArch.Visualization.UI
                 return;
             if (selected == _fromClass)
             {
-                Animating.Animation.Instance.HighlightClass(_fromClass.name, false);
+                Animation.Animation.Instance.HighlightClass(_fromClass.name, false);
                 _fromClass = null;
             }
             else if (_fromClass == null)
             {
                 _fromClass = selected;
-                Animating.Animation.Instance.HighlightClass(_fromClass.name, true);
+                Animation.Animation.Instance.HighlightClass(_fromClass.name, true);
             }
             else
             {
@@ -97,7 +95,7 @@ namespace AnimArch.Visualization.UI
 
         private void EndSelection()
         {
-            Animating.Animation.Instance.HighlightClass(_fromClass.name, false);
+            Animation.Animation.Instance.HighlightClass(_fromClass.name, false);
             _relType = null;
             _fromClass = null;
             DiagramPool.Instance.ClassDiagram.graph.UpdateGraph();

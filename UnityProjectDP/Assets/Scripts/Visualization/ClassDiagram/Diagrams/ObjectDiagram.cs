@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
 using OALProgramControl;
 using TMPro;
+using UMSAGL.Scripts;
 using UnityEngine;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.ComponentsInDiagram;
+using Visualization.ClassDiagram.Relations;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.Diagrams
 {
     public class ObjectDiagram : Diagram
     {

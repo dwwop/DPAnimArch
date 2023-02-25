@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.ClassComponents
 {
     [Serializable]
     public class Class

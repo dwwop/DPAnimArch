@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI.ClassComponentsManagers
 {
     public class ParameterManager : MonoBehaviour
     {

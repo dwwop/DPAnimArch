@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Visualization.ClassDiagram.Editors;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram
 {
     public class IClassDiagramBuilder
     {

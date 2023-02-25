@@ -1,11 +1,12 @@
-using AnimArch.Visualization.Diagrams;
-using AnimArch.Visualization.UI;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using Visualization.ClassDiagram;
+using Visualization.ClassDiagram.Editors;
+using Visualization.UI;
 
-namespace AnimArch.Visualization
+namespace Visualization
 {
     [Serializable]
     public class GameObjectEvent : UnityEvent<GameObject>

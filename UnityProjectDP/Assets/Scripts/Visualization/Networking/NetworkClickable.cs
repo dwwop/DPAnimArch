@@ -1,9 +1,10 @@
-using AnimArch.Visualization.Diagrams;
-using AnimArch.Visualization.UI;
 using Unity.Netcode;
 using UnityEngine;
+using Visualization.ClassDiagram;
+using Visualization.ClassDiagram.Editors;
+using Visualization.UI;
 
-namespace AnimArch.Visualization
+namespace Visualization.Networking
 {
     public class NetworkClickable : Clickable
     {

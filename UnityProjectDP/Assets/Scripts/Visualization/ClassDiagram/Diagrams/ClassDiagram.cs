@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using OALProgramControl;
 using AnimArch.Extensions;
-using AnimArch.Visualization.UI;
+using OALProgramControl;
+using UMSAGL.Scripts;
+using UnityEngine;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.ComponentsInDiagram;
+using Visualization.ClassDiagram.Relations;
+using Visualization.UI;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.Diagrams
 {
     public class ClassDiagram : Diagram
     {

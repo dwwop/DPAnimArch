@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using AnimArch.Visualization.Diagrams;
 using TMPro;
 using UnityEngine.UI;
+using Visualization.ClassDiagram;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI.PopUps
 {
     public abstract class AbstractTypePopUp : AbstractClassPopUp
     {

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AnimArch.Visualization.Diagrams;
 using TMPro;
 using UnityEngine;
+using Visualization.ClassDiagram;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.UI.ClassComponentsManagers;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI.PopUps
 {
     public class MethodPopUp : AbstractTypePopUp
     {

@@ -2611,7 +2611,6 @@ MonoBehaviour:
   PanelInteractiveCompleted: {fileID: 890052688}
   speedSlider: {fileID: 373190888}
   speedLabel: {fileID: 641744831}
-  panelError: {fileID: 1898668916}
   panelAnimationPlay: {fileID: 311521134}
   panelStepMode: {fileID: 1515429650}
   panelPlayMode: {fileID: 1006772527}
@@ -6927,7 +6926,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 289379909}
   m_OnClick:
     m_PersistentCalls:
@@ -12759,18 +12758,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: AnimArch.Visualization.UI.MenuManager, XDE
         m_MethodName: UnshowAnimation
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 2097194283}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-        m_MethodName: set_interactable
-        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -32293,18 +32280,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2097194283}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-        m_MethodName: set_interactable
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
 --- !u!114 &1481876646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44910,7 +44885,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 2095842171}
   m_OnClick:
     m_PersistentCalls:
@@ -45732,7 +45707,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 536a3d33312a1274f8f5ca555237f060, type: 3}
+  m_Texture: {fileID: 2800000, guid: a8f7c07e54b555046a52279533425a2f, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0

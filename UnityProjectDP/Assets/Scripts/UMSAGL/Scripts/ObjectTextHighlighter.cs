@@ -1,50 +1,51 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+using Animation = Visualization.Animation.Animation;
 
-public class ObjectTextHighlighter : MonoBehaviour
+namespace UMSAGL.Scripts
 {
-    string startColorTag = "<color=>";
-    string endColorTag = "</color>";
-    [SerializeField] private TMP_Text methodsText;
-    string text;
-
-
-    public void HighlightObjectLine(string line)
+    public class ObjectTextHighlighter : MonoBehaviour
     {
-        startColorTag = "<color=#" + AnimArch.Visualization.Animating.Animation.Instance.GetColorCode("method") + ">";
-        text = methodsText.text;
-        Debug.Log(text);
-        string startline = line.Replace(")", "");
-        int start, end = 0;
-        if (text.Contains(startline))
-        {
-            Debug.Log("Contains " + startline);
-            start = text.IndexOf(startline, 0);
-            string processedText = text.Substring(start);
-            int i = 0;
-            while (i < processedText.Length - 1 && processedText[i] != '\n')
-            {
-                i++;
-            }
+        string startColorTag = "<color=>";
+        string endColorTag = "</color>";
+        [SerializeField] private TMP_Text methodsText;
+        string text;
 
-            end = start + i + 1;
-            //end = methodsText.text.Length - 2;
-            if (end != -1)
-                text = text.Insert(end, endColorTag);
-            if (start != -1)
-                text = text.Insert(start, startColorTag);
+
+        public void HighlightObjectLine(string line)
+        {
+            startColorTag = "<color=#" + Animation.Instance.GetColorCode("method") + ">";
+            text = methodsText.text;
+            Debug.Log(text);
+            string startline = line.Replace(")", "");
+            int start, end = 0;
+            if (text.Contains(startline))
+            {
+                Debug.Log("Contains " + startline);
+                start = text.IndexOf(startline, 0);
+                string processedText = text.Substring(start);
+                int i = 0;
+                while (i < processedText.Length - 1 && processedText[i] != '\n')
+                {
+                    i++;
+                }
+
+                end = start + i + 1;
+                //end = methodsText.text.Length - 2;
+                if (end != -1)
+                    text = text.Insert(end, endColorTag);
+                if (start != -1)
+                    text = text.Insert(start, startColorTag);
+                methodsText.text = text;
+            }
+        }
+
+        public void UnHighlightObjectLine(string line)
+        {
+            text = methodsText.text;
+            text = text.Replace(startColorTag, "");
+            text = text.Replace(endColorTag, "");
             methodsText.text = text;
         }
-    }
-
-    public void UnHighlightObjectLine(string line)
-    {
-        text = methodsText.text;
-        text = text.Replace(startColorTag, "");
-        text = text.Replace(endColorTag, "");
-        methodsText.text = text;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.ClassComponents
 {
     [Serializable]
     public class Attribute

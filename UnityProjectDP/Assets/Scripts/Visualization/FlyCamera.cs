@@ -1,10 +1,10 @@
-using UnityEngine;
 using System.Linq;
 using TMPro;
+using UnityEngine;
 using UnityEngine.EventSystems;
-using AnimArch.Visualization.UI;
+using Visualization.UI;
 
-namespace AnimArch.Visualization
+namespace Visualization
 {
     public class FlyCamera : MonoBehaviour
     {

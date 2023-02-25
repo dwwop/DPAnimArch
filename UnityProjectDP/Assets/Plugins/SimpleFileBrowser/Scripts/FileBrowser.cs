@@ -6,9 +6,8 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using AnimArch.Extensions;
-using AnimArch.Visualization.Diagrams;
-using AnimArch.Visualization.UI;
 using UnityEngine.EventSystems;
+using Visualization.UI.PopUps;
 
 namespace SimpleFileBrowser
 {

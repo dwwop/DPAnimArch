@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using AnimArch.Extensions;
+﻿using AnimArch.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI
 {
     public class ToolManager : Singleton<ToolManager>
     {

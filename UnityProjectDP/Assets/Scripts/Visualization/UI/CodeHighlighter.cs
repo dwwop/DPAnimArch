@@ -1,12 +1,10 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
 using System.Text.RegularExpressions;
-using OALProgramControl;
-using System;
+using TMPro;
+using UnityEngine;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI
 {
     public class CodeHighlighter : MonoBehaviour
     {

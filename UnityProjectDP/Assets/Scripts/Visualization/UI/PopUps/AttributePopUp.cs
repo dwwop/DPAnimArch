@@ -1,7 +1,8 @@
-﻿using AnimArch.Visualization.Diagrams;
-using TMPro;
+﻿using TMPro;
+using Visualization.ClassDiagram;
+using Visualization.ClassDiagram.ClassComponents;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI.PopUps
 {
     public class AttributePopUp : AbstractTypePopUp
     {

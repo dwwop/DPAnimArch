@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AnimArch.Visualization
+namespace Visualization
 {
 	public class CouroutineManager
 	{

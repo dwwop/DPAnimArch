@@ -1,7 +1,7 @@
-using AnimArch.Visualization.UI;
 using Unity.Netcode;
+using Visualization.UI;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.Editors
 {
     public static class MainEditorFactory
     {

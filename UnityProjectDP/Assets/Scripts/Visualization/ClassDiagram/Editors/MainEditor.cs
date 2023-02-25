@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AnimArch.Extensions;
-using AnimArch.Visualization.Animating;
-using Networking;
 using OALProgramControl;
 using UnityEngine;
+using Visualization.Animation;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.ComponentsInDiagram;
+using Visualization.ClassDiagram.Relations;
+using Attribute = Visualization.ClassDiagram.ClassComponents.Attribute;
 using Object = UnityEngine.Object;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.Editors
 {
     public class MainEditor
     {

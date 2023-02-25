@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Text;
-using AnimArch.Visualization.Diagrams;
-using AnimArch.Visualization.Animating;
-using Attribute = AnimArch.Visualization.Diagrams.Attribute;
+using System.Xml;
+using Visualization.Animation;
+using Visualization.ClassDiagram;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.Relations;
+using Attribute = Visualization.ClassDiagram.ClassComponents.Attribute;
 
-namespace AnimArch.Parsing
+namespace Parsers
 {
     public class XMIParser
     {

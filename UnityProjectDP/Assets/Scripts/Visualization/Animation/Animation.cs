@@ -1,22 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using OALProgramControl;
-using TMPro;
-using UnityEngine.UI;
-using UnityEngine.UI.Extensions;
 using Assets.Scripts.AnimationControl.OAL;
-using AnimArch.Visualization.Diagrams;
+using OALProgramControl;
 using UMSAGL.Scripts;
-using Object = System.Object;
+using UnityEngine;
+using UnityEngine.UI.Extensions;
+using Visualization.ClassDiagram;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.ComponentsInDiagram;
+using Visualization.ClassDiagram.Diagrams;
+using Visualization.ClassDiagram.Relations;
 
-namespace AnimArch.Visualization.Animating
+namespace Visualization.Animation
 {
     //Controls the entire animation process
     public class Animation : Singleton<Animation>
     {
-        private ClassDiagram classDiagram;
+        private ClassDiagram.Diagrams.ClassDiagram classDiagram;
         private ObjectDiagram objectDiagram;
         public Color classColor;
         public Color methodColor;
@@ -36,7 +36,7 @@ namespace AnimArch.Visualization.Animating
 
         private void Awake()
         {
-            classDiagram = GameObject.Find("ClassDiagram").GetComponent<ClassDiagram>();
+            classDiagram = GameObject.Find("ClassDiagram").GetComponent<ClassDiagram.Diagrams.ClassDiagram>();
             objectDiagram = GameObject.Find("ObjectDiagram").GetComponent<ObjectDiagram>();
             standardPlayMode = true;
         }

@@ -1,8 +1,7 @@
 ﻿using UnityEngine.Events;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI.PopUps
 {
     public class ConfirmPopUp : AbstractPopUp
     {
