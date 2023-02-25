@@ -9,8 +9,15 @@ using AnimArch.Visualization.Diagrams;
 
 public class FileLoader : MonoBehaviour
 {
+    private IClassDiagramBuilder _classDiagramBuilder;
+
+    private void Awake()
+    {
+        _classDiagramBuilder = ClassDiagramBuilderFactory.Create();
+    }
     private void Start()
     {
+
         var filters = new FileBrowser.Filter[2];
         filters[0] = new FileBrowser.Filter("JSON files", ".json");
         filters[1] = new FileBrowser.Filter("XML files", ".xml");
@@ -58,14 +65,14 @@ public class FileLoader : MonoBehaviour
     }
 
 
-    private static IEnumerator LoadDiagramCoroutine()
+    private IEnumerator LoadDiagramCoroutine()
     {
         FileBrowser.SetDefaultFilter(".xml");
         yield return FileBrowser.WaitForLoadDialog(false, @"Assets\Resources\", "Load Diagram", "Load");
 
         if (!FileBrowser.Success) yield break;
         AnimationData.Instance.SetDiagramPath(FileBrowser.Result);
-        ClassDiagramBuilder.LoadDiagram();
+        _classDiagramBuilder.LoadDiagram();
     }
 
     private static IEnumerator SaveAnimationCoroutine(Anim newAnim)

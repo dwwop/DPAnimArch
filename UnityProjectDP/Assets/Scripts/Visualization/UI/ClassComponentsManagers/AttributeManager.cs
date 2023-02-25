@@ -18,7 +18,7 @@ namespace AnimArch.Visualization.UI
         {
             UIEditorManager.Instance.confirmPopUp.ActivateCreation(delegate
             {
-                MainEditor.DeleteAttribute(classTxt.text, name);
+                UIEditorManager.Instance.mainEditor.DeleteAttribute(classTxt.text, name);
             });
         }
     }

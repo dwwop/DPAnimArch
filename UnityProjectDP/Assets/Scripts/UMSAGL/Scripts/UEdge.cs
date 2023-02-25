@@ -10,9 +10,9 @@ public class UEdge : Unit
 {
     public GameObject startCap;
     public GameObject endCap;
+    public GameObject deleteButton;
     public bool dashed;
     public float segmentLength = 10f;
-    private Transform _deleteButtonTransform;
 
     private UILineRenderer _lineRenderer;
     private bool _dashed = false;
@@ -55,7 +55,9 @@ public class UEdge : Unit
 
     protected override void OnDestroy()
     {
-        graph.RemoveEdge(gameObject);
+        // TODO: client edge class?
+        if (_graph)
+            _graph.RemoveEdge(gameObject);
     }
 
     private void Dash(bool active)
@@ -88,6 +90,7 @@ public class UEdge : Unit
         Points = _lineRenderer.Points;
         SegmentLength = segmentLength;
         UpdateCaps();
+        SetupDeleteButton();
     }
 
     private static float CapAngle(Vector2 p1, Vector2 p2)
@@ -155,8 +158,8 @@ public class UEdge : Unit
 
             prev = next;
         }
-
-        _deleteButtonTransform.localPosition = Vector2.Lerp(first, second, 0.5f);
+        var buttonTransform = transform.Find("DeleteButton");
+        buttonTransform.localPosition = Vector2.Lerp(first, second, 0.5f);
     }
 
     private void Update()
@@ -194,16 +197,17 @@ public class UEdge : Unit
         }
     }
 
-    public void SetupButton(GameObject button)
+    public void SetupDeleteButton()
     {
-        _deleteButtonTransform = button.transform;
-        var deleteButton = button.GetComponentInChildren<Button>();
-        deleteButton.onClick.AddListener(DeleteEdge);
-        deleteButton.gameObject.SetActive(UIEditorManager.Instance.active);
+        var deleteButtonGo = Instantiate(deleteButton, transform);
+        deleteButtonGo.name = "DeleteButton";
+        var button = deleteButtonGo.transform.Find("DeleteButton").GetComponent<Button>();
+        button.onClick.AddListener(DeleteEdge);
+        button.gameObject.SetActive(UIEditorManager.Instance.active);
     }
 
     private void DeleteEdge()
     {
-        UIEditorManager.Instance.confirmPopUp.ActivateCreation(delegate { MainEditor.DeleteRelation(gameObject); });
+        UIEditorManager.Instance.confirmPopUp.ActivateCreation(delegate { UIEditorManager.Instance.mainEditor.DeleteRelation(gameObject); });
     }
 }

@@ -27,7 +27,7 @@ namespace AnimArch.Visualization.UI
         {
             UIEditorManager.Instance.confirmPopUp.ActivateCreation(delegate
             {
-                MainEditor.DeleteNode(name);
+                UIEditorManager.Instance.mainEditor.DeleteNode(name);
             });
         }
     }

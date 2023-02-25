@@ -1,7 +1,5 @@
-﻿using System;
-using AnimArch.Visualization.Diagrams;
+﻿using AnimArch.Visualization.Diagrams;
 using TMPro;
-using Attribute = AnimArch.Visualization.Diagrams.Attribute;
 
 namespace AnimArch.Visualization.UI
 {
@@ -53,7 +51,7 @@ namespace AnimArch.Visualization.UI
                     return;
                 }
 
-                MainEditor.AddAttribute(className.text, newAttribute, MainEditor.Source.Editor);
+                UIEditorManager.Instance.mainEditor.AddAttribute(className.text, newAttribute);
             }
             else
             {
@@ -64,7 +62,7 @@ namespace AnimArch.Visualization.UI
                     return;
                 }
 
-                MainEditor.UpdateAttribute(className.text, _formerAttributeName, newAttribute);
+                UIEditorManager.Instance.mainEditor.UpdateAttribute(className.text, _formerAttributeName, newAttribute);
                 _formerAttributeName = null;
             }
 

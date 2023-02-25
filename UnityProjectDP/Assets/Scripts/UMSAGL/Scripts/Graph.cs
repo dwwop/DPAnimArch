@@ -21,7 +21,7 @@ public class Graph : MonoBehaviour
     public float factor = 0.2f;
     public Vector2 margins;
 
-    private GeometryGraph _graph;
+    protected GeometryGraph _graph;
     private LayoutAlgorithmSettings _settings;
 
     private Task _graphTask;
@@ -46,9 +46,22 @@ public class Graph : MonoBehaviour
 
     public void Center()
     {
+        if (!units && !TryGetUnits())
+            return;
         _graph.UpdateBoundingBox();
         units.localPosition =
             new Vector3(ToUnitySpace(_graph.BoundingBox.Center.X), ToUnitySpace(_graph.BoundingBox.Center.Y)) * -1.0f;
+    }
+
+    private bool TryGetUnits()
+    {
+        if (!transform.Find("Units"))
+            return false;
+        else
+        {
+            units = transform.Find("Units");
+            return true;
+        }
     }
 
     public GameObject AddNode()
@@ -74,7 +87,7 @@ public class Graph : MonoBehaviour
         return go;
     }
 
-    public void RemoveNode(GameObject node)
+    public virtual void RemoveNode(GameObject node)
     {
         var graphNode = node.GetComponent<UNode>().GraphNode;
         foreach (var edge in graphNode.Edges)
@@ -97,15 +110,13 @@ public class Graph : MonoBehaviour
         var go = Instantiate(prefab, units);
         go.transform.SetSiblingIndex(0);
         var uEdge = go.GetComponent<UEdge>();
-        
-        var deleteButton = Instantiate(DiagramPool.Instance.relationDeleteButtonPrefab, uEdge.transform);
-        uEdge.SetupButton(deleteButton);
-        
+
         var edge = new Edge(from.GetComponent<UNode>().GraphNode, to.GetComponent<UNode>().GraphNode)
         {
             LineWidth = ToGraphSpace(uEdge.Width),
             UserData = go
         };
+        go.name += edge.ToString();
         uEdge.GraphEdge = edge;
         _graph.Edges.Add(edge);
 
@@ -123,7 +134,7 @@ public class Graph : MonoBehaviour
         return x / factor;
     }
 
-    private float ToUnitySpace(double x)
+    protected float ToUnitySpace(double x)
     {
         return (float)x * factor;
     }
@@ -164,7 +175,7 @@ public class Graph : MonoBehaviour
         }
     }
 
-    private void RedrawEdges()
+    protected virtual void RedrawEdges()
     {
         foreach (var edge in _graph.Edges)
         {

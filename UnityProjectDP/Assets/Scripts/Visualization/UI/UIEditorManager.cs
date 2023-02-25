@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AnimArch.Extensions;
 using AnimArch.Visualization.Diagrams;
 using Networking;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -13,6 +15,11 @@ namespace AnimArch.Visualization.UI
         public bool active;
         private GameObject _fromClass;
         private string _relType;
+        private IClassDiagramBuilder _classDiagramBuilder;
+        public MainEditor mainEditor;
+
+        [SerializeField]
+        public bool NetworkEnabled;
 
         public AttributePopUp attributePopUp;
         public MethodPopUp methodPopUp;
@@ -20,33 +27,36 @@ namespace AnimArch.Visualization.UI
         public ParameterPopUp parameterPopUp;
         public ConfirmPopUp confirmPopUp;
 
-
-        private static void InitializeCreation()
+        public void InitializeCreation()
         {
-            if (DiagramPool.Instance.ClassDiagram.graph) return;
-
-            ClassDiagramBuilder.CreateGraph();
+            Debug.Assert(_classDiagramBuilder != null);
+            if (DiagramPool.Instance.ClassDiagram.graph == null)
+            {
+                _classDiagramBuilder.CreateGraph();
+                _classDiagramBuilder.MakeNetworkedGraph();
+            }
         }
 
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
+            _classDiagramBuilder = ClassDiagramBuilderFactory.Create();
+            mainEditor = MainEditorFactory.Create(_classDiagramBuilder.visualEditor);
         }
 
         public void CreateNewDiagram()
         {
-            MainEditor.ClearDiagram();
+            mainEditor.ClearDiagram();
             StartEditing();
         }
         
         public void StartEditing()
         {
-            if (DiagramPool.Instance.ClassDiagram.graph != null)
-                DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<Button>(includeInactive: true)
-                    .ForEach(x => x.gameObject.SetActive(true));
-
-            InitializeCreation();
-
+            if (DiagramPool.Instance.ClassDiagram.graph == null)
+                InitializeCreation();
+            Debug.Assert(DiagramPool.Instance.ClassDiagram.graph);
+            DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<Button>(includeInactive: true)
+                .ForEach(x => x.gameObject.SetActive(true));
             active = true;
         }
 
@@ -58,7 +68,6 @@ namespace AnimArch.Visualization.UI
             DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<Button>()
                 .ForEach(x => x.gameObject.SetActive(false));
         }
-
 
         public void StartSelection(string type)
         {
@@ -86,7 +95,6 @@ namespace AnimArch.Visualization.UI
             }
         }
 
-
         private void EndSelection()
         {
             Animating.Animation.Instance.HighlightClass(_fromClass.name, false);
@@ -109,8 +117,8 @@ namespace AnimArch.Visualization.UI
                 PropertiesEaType = type.Length > 1 ? type[1] : type[0],
                 PropertiesDirection = type.Length > 1 ? "none" : "Source -> Destination"
             };
-            
-            MainEditor.CreateRelation(relation, MainEditor.Source.Editor);
+
+            mainEditor.CreateRelation(relation, MainEditor.Source.Editor);
             EndSelection();
         }
     }

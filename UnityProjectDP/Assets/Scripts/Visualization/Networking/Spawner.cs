@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AnimArch.Extensions;
 using AnimArch.Visualization.Diagrams;
+using AnimArch.Visualization.UI;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
+using System;
 
 namespace Networking
 {
@@ -17,190 +18,264 @@ namespace Networking
             DontDestroyOnLoad(gameObject);
         }
 
-        public void SpawnNode(string name, string id)
-        {
-            if (IsServer)
-            {
-                SpawnClassClientRpc(name, id);
-            }
-            else
-            {
-                SpawnClassServerRpc(name, id);
-            }
-        }
-
-        // Server RPC - if client creates instance, server RPC is called and instance is created at server side.
-        [ServerRpc(RequireOwnership = false)]
-        public void SpawnClassServerRpc(string name, string id)
-        {
-            var newClass = new Class(name, id);
-            MainEditor.CreateNode(newClass, MainEditor.Source.RPC);
-        }
-
         [ClientRpc]
-        public void SpawnClassClientRpc(string name, string id)
+        public void SetNetworkObjectNameClientRpc(string name, ulong networkId)
         {
             if (IsServer)
                 return;
-
-            var newClass = new Class(name, id);
-            MainEditor.CreateNode(newClass, MainEditor.Source.RPC);
-        }
-
-        public void SetNodeName(string oldName, string newName)
-        {
-            if (IsServer)
-            {
-                SetClassNameClientRpc(oldName, newName);
-            }
-            else
-            {
-                SetClassNameServerRpc(oldName, newName);
-            }
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            objects[networkId].name = name;
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void SetClassNameServerRpc(string oldName, string newName)
+        public void CreateClassServerRpc(string className)
         {
-            MainEditor.UpdateNodeName(oldName, newName, true);
+            if (IsClient && !IsHost)
+                return;
+
+            var newClass = new Class(className, DiagramPool.Instance.ClassDiagram.NextClassId());
+            UIEditorManager.Instance.mainEditor.CreateNode(newClass);
         }
 
         [ClientRpc]
-        public void SetClassNameClientRpc(string oldName, string newName)
+        public void SetClassNameClientRpc(string name, ulong networkId)
         {
             if (IsServer)
                 return;
-            MainEditor.UpdateNodeName(oldName, newName, true);
-        }
-
-        public void AddAttribute(string targetClass, string name, string type)
-        {
-            if (IsServer)
-                AddAttributeClientRpc(targetClass, name, type);
-            else
-                AddAttributeServerRpc(targetClass, name, type);
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[networkId];
+            var go = obj.GetComponent<NetworkObject>().gameObject;
+            go.name = name;
+            var visualEditor = new VisualEditor();
+            visualEditor.UpdateNodeName(go);
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void AddAttributeServerRpc(string targetClass, string name, string type)
+        public void UpdateClassNameServerRpc(string oldName, string newName)
         {
-            var attribute = new AnimArch.Visualization.Diagrams.Attribute()
+            if (IsClient && !IsHost)
+                return;
+            UIEditorManager.Instance.mainEditor.UpdateNodeName(oldName, newName);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void DeleteClassServerRpc(string className)
+        {
+            if (IsClient && !IsHost)
+                return;
+            UIEditorManager.Instance.mainEditor.DeleteNode(className);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void DeleteRelationServerRpc(ulong relationNetworkId)
+        {
+            if (IsClient && !IsHost)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[relationNetworkId];
+            var classGo = obj.GetComponent<NetworkObject>().gameObject;
+            UIEditorManager.Instance.mainEditor.DeleteRelation(classGo);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+
+        public void AddAttributeServerRpc(string targetClass, string attributeName, string type)
+        {
+            if (IsClient && !IsHost)
+                return;
+
+            var attribute = new AnimArch.Visualization.Diagrams.Attribute
             {
-                Name = name,
+                Name = attributeName,
                 Type = type
             };
-            MainEditor.AddAttribute(targetClass, attribute, MainEditor.Source.RPC);
+            UIEditorManager.Instance.mainEditor.AddAttribute(targetClass, attribute);
         }
 
-        [ClientRpc]
-        public void AddAttributeClientRpc(string targetClass, string name, string type)
+        [ServerRpc(RequireOwnership = false)]
+        public void UpdateAttributeServerRpc(string targetClass, string oldAttribute, string attributeName, string type)
         {
-            if (IsServer)
+            if (IsClient && !IsHost)
                 return;
-            var attribute = new AnimArch.Visualization.Diagrams.Attribute()
+            var attribute = new AnimArch.Visualization.Diagrams.Attribute
             {
-                Name = name,
+                Name = attributeName,
                 Type = type
             };
-            MainEditor.AddAttribute(targetClass, attribute, MainEditor.Source.RPC);
-        }
-
-        public void AddMethod(string targetClass, string name, string returnValue)
-        {
-            if (IsServer)
-                AddMethodClientRpc(targetClass, name, returnValue);
-            else
-                AddMethodServerRpc(targetClass, name, returnValue);
+            UIEditorManager.Instance.mainEditor.UpdateAttribute(targetClass, oldAttribute, attribute);
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void AddMethodServerRpc(string targetClass, string name, string returnValue)
+        public void DeleteAttributeServerRpc(string className, string attributeName)
         {
-            var method = new Method
-            {
-                Name = name,
-                ReturnValue = returnValue
-            };
-            MainEditor.AddMethod(targetClass, method, MainEditor.Source.RPC);
-        }
-
-        [ClientRpc]
-        public void AddMethodClientRpc(string targetClass, string name, string returnValue)
-        {
-            if (IsServer)
+            if (IsClient && !IsHost)
                 return;
-            var method = new Method
-            {
-                Name = name,
-                ReturnValue = returnValue
-            };
-            MainEditor.AddMethod(targetClass, method, MainEditor.Source.RPC);
-        }
 
-        public void AddRelation(string sourceClass, string destinationClass, string relationType, string direction)
-        {
-            if (IsServer)
-            {
-                AddRelationClientRpc(sourceClass, destinationClass, relationType, direction);
-            }
-            else
-            {
-                AddRelationServerRpc(sourceClass, destinationClass, relationType, direction);
-            }
+            UIEditorManager.Instance.mainEditor.DeleteAttribute(className, attributeName);
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void AddRelationServerRpc(string sourceClass, string destinationClass, string relationType, string direction)
+        public void AddMethodServerRpc(string targetClass, string methodName, string methodReturnValue, string methodArguments)
         {
-            var relation = new Relation
-            {
-                SourceModelName = sourceClass,
-                TargetModelName = destinationClass,
-                PropertiesEaType = relationType,
-                PropertiesDirection = direction
-            };
-            MainEditor.CreateRelation(relation, MainEditor.Source.RPC);
-        }
-
-        [ClientRpc]
-        public void AddRelationClientRpc(string sourceClass, string destinationClass, string relationType, string direction)
-        {
-            if (IsServer)
+            if (IsClient && !IsHost)
                 return;
-            var relation = new Relation
-            {
-                SourceModelName = sourceClass,
-                TargetModelName = destinationClass,
-                PropertiesEaType = relationType,
-                PropertiesDirection = direction
-            };
-            MainEditor.CreateRelation(relation, MainEditor.Source.RPC);
-        }
 
-        public void SetPosition(string className, Vector3 position)
-        {
-            if (IsServer)
+            var newMethod = new Method
             {
-                SetPositionClientRpc(className, position);
-            }
-            else
-            {
-                SetPositionServerRpc(className, position);
-            }
+                Name = methodName,
+                ReturnValue = methodReturnValue,
+                arguments = methodArguments.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList() ?? new()
+            };
+            UIEditorManager.Instance.mainEditor.AddMethod(targetClass, newMethod);
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void SetPositionServerRpc(string className, Vector3 position)
+        public void UpdateMethodServerRpc(string targetClass, string oldMethod, string methodName, string methodReturnValue, string methodArguments)
         {
-            VisualEditor.SetPosition(className, position, true);
+            if (IsClient && !IsHost)
+                return;
+
+            var newMethod = new Method
+            {
+                Name = methodName,
+                ReturnValue = methodReturnValue,
+                arguments = methodArguments.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList() ?? new()
+            };
+            UIEditorManager.Instance.mainEditor.UpdateMethod(targetClass, oldMethod, newMethod);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void DeleteMethodServerRpc(string className, string methodName)
+        {
+            if (IsClient && !IsHost)
+                return;
+
+            UIEditorManager.Instance.mainEditor.DeleteMethod(className, methodName);
         }
 
         [ClientRpc]
-        public void SetPositionClientRpc(string className, Vector3 position)
+        public void AddAttributeClientRpc(string attributeName, string attributeText, ulong classNetworkId)
         {
             if (IsServer)
                 return;
-            VisualEditor.SetPosition(className, position, true);
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[classNetworkId];
+            var classGo = obj.GetComponent<NetworkObject>().gameObject;
+            var visualEditor = new VisualEditorClient();
+            visualEditor.AddAttribute(attributeName, attributeText, classGo);
+        }
+
+        [ClientRpc]
+        public void UpdateAttributeClientRpc(string oldAttributeName, string newAttributeName, string attributeText, ulong classNetworkId)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[classNetworkId];
+            var classGo = obj.GetComponent<NetworkObject>().gameObject;
+            var visualEditor = new VisualEditorClient();
+            visualEditor.UpdateAttribute(oldAttributeName, newAttributeName, attributeText, classGo);
+        }
+
+        [ClientRpc]
+        public void DeleteAttributeClientRpc(string attributeName, ulong classNetworkId)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[classNetworkId];
+            var classGo = obj.GetComponent<NetworkObject>().gameObject;
+            var visualEditor = new VisualEditorClient();
+            visualEditor.DeleteAttribute(attributeName, classGo);
+        }
+
+        [ClientRpc]
+        public void AddMethodClientRpc(string methodName, string methodText, ulong classNetworkId)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[classNetworkId];
+            var classGo = obj.GetComponent<NetworkObject>().gameObject;
+            var visualEditor = new VisualEditorClient();
+            visualEditor.AddMethod(methodName, methodText, classGo);
+        }
+
+        [ClientRpc]
+        public void UpdateMethodClientRpc(string oldMethodName, string newMethodName, string methodText, ulong classNetworkId)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[classNetworkId];
+            var classGo = obj.GetComponent<NetworkObject>().gameObject;
+            var visualEditor = new VisualEditorClient();
+            visualEditor.UpdateMethod(oldMethodName, newMethodName, methodText, classGo);
+        }
+
+        [ClientRpc]
+        public void DeleteMethodClientRpc(string methodName, ulong classNetworkId)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var obj = objects[classNetworkId];
+            var classGo = obj.GetComponent<NetworkObject>().gameObject;
+            var visualEditor = new VisualEditorClient();
+            visualEditor.DeleteMethod(methodName, classGo);
+        }
+
+        [ClientRpc]
+        public void SetButtonsActiveClientRpc(bool active = true)
+        {
+            if (IsServer)
+                return;
+            DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<GraphicRaycaster>()
+                .ForEach(x => x.enabled = active);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void CreateGraphServerRpc()
+        {
+            if (IsClient && !IsHost)
+                return;
+            UIEditorManager.Instance.InitializeCreation();
+            GraphCreatedClientRpc();
+            GameObject.Find("EditBtn").GetComponentInChildren<Button>().interactable = true;
+        }
+
+
+        [ClientRpc]
+        public void GraphCreatedClientRpc()
+        {
+            if (IsServer)
+                return;
+            DiagramPool.Instance.ClassDiagram.graph = GameObject.Find("Graph").GetComponent<Graph>();
+            DiagramPool.Instance.ClassDiagram.graph.enabled = false;
+
+            GameObject.Find("EditBtn").GetComponentInChildren<Button>().interactable = true;
+        }
+
+        [ClientRpc]
+        public void SetLinePointsClientRpc(ulong networkId, Vector2[] points)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            Debug.Assert(objects[networkId].GetComponent<UILineRenderer>());
+            var lineRenderer = objects[networkId].GetComponent<UILineRenderer>();
+            lineRenderer.Points = points;
+        }
+
+        [ClientRpc]
+        public void SetLineResolutionClientRpc(ulong networkId, float resolution)
+        {
+            if (IsServer)
+                return;
+            var objects = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            Debug.Assert(objects[networkId].GetComponent<UILineRenderer>());
+            var lineRenderer = objects[networkId].GetComponent<UILineRenderer>();
+            lineRenderer.Resoloution = resolution;
         }
     }
 }

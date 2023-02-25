@@ -18,7 +18,7 @@ public class UNode : Unit
 
 	protected override void OnDestroy()
 	{
-		graph.RemoveNode(gameObject);
+		_graph.RemoveNode(gameObject);
 	}
 
 	private void Start()
@@ -26,15 +26,15 @@ public class UNode : Unit
 		oldSize = GetComponent<RectTransform>().rect;
 	}
 
-	private void Update()
+	protected override void Update()
 	{
+		base.Update();
 		var size = GetComponent<RectTransform>().rect;
 		if (transform.hasChanged || oldSize != size)
 		{
-			graph.UpdateGraph();
+			_graph.UpdateGraph();
 			transform.hasChanged = false;
 			oldSize = size;
 		}
 	}
-
 }

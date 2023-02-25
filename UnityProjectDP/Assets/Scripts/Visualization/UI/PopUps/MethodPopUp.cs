@@ -75,7 +75,7 @@ namespace AnimArch.Visualization.UI
                     return;
                 }
 
-                MainEditor.AddMethod(className.text, newMethod, MainEditor.Source.Editor);
+                UIEditorManager.Instance.mainEditor.AddMethod(className.text, newMethod);
             }
             else
             {
@@ -85,7 +85,7 @@ namespace AnimArch.Visualization.UI
                     return;
                 }
 
-                MainEditor.UpdateMethod(className.text, _formerName, newMethod);
+                UIEditorManager.Instance.mainEditor.UpdateMethod(className.text, _formerName, newMethod);
                 _formerName = null;
             }
 

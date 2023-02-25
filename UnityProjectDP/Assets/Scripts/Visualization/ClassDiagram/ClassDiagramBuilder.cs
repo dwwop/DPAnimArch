@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using AnimArch.Parsing;
 using AnimArch.Visualization.Animating;
-using OALProgramControl;
+using AnimArch.Visualization.UI;
 using UnityEngine;
 
 namespace AnimArch.Visualization.Diagrams
 {
-    public class ClassDiagramBuilder : MonoBehaviour
+    public class ClassDiagramBuilder : IClassDiagramBuilder
     {
-        private static void ParseData()
+        protected void ParseData()
         {
             var path = AnimationData.Instance.GetDiagramPath();
             List<Class> classList;
@@ -44,7 +42,7 @@ namespace AnimArch.Visualization.Diagrams
             {
                 currentClass.Name = currentClass.Name.Replace(" ", "_");
 
-                MainEditor.CreateNode(currentClass, MainEditor.Source.Loader);
+                UIEditorManager.Instance.mainEditor.CreateNode(currentClass);
                 var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(currentClass.Name);
 
                 if (classInDiagram.ClassInfo == null)
@@ -53,14 +51,14 @@ namespace AnimArch.Visualization.Diagrams
                 currentClass.Attributes ??= new List<Attribute>();
                 foreach (var attribute in currentClass.Attributes)
                 {
-                    MainEditor.AddAttribute(currentClass.Name, attribute, MainEditor.Source.Loader);
+                    UIEditorManager.Instance.mainEditor.AddAttribute(currentClass.Name, attribute);
                 }
 
 
                 currentClass.Methods ??= new List<Method>();
                 foreach (var method in currentClass.Methods)
                 {
-                    MainEditor.AddMethod(currentClass.Name, method, MainEditor.Source.Loader);
+                    UIEditorManager.Instance.mainEditor.AddMethod(currentClass.Name, method);
                 }
 
                 currentClass.Top *= -1;
@@ -69,16 +67,17 @@ namespace AnimArch.Visualization.Diagrams
 
             foreach (var relation in relationList)
             {
-                MainEditor.CreateRelation(relation, MainEditor.Source.Loader);
+                UIEditorManager.Instance.mainEditor.CreateRelation(relation, MainEditor.Source.Loader);
             }
         }
 
-
-        public static void CreateGraph()
+        public override void CreateGraph()
         {
-            MainEditor.ClearDiagram();
-            var go = Instantiate(DiagramPool.Instance.graphPrefab);
-            DiagramPool.Instance.ClassDiagram.graph = go.GetComponent<Graph>();
+            UIEditorManager.Instance.mainEditor.ClearDiagram();
+            var graphGo = GameObject.Instantiate(DiagramPool.Instance.graphPrefab);
+            graphGo.name = "Graph";
+
+            DiagramPool.Instance.ClassDiagram.graph = graphGo.GetComponent<Graph>();
             DiagramPool.Instance.ClassDiagram.graph.nodePrefab = DiagramPool.Instance.classPrefab;
         }
 
@@ -88,22 +87,22 @@ namespace AnimArch.Visualization.Diagrams
             DiagramPool.Instance.ClassDiagram.graph.Layout();
         }
 
-
         //Set layout as close as possible to EA layout
-        private static void RenderClassesManual()
+        private void RenderClassesManual()
         {
             foreach (var classInDiagram in DiagramPool.Instance.ClassDiagram.Classes)
             {
                 var x = classInDiagram.ParsedClass.Left * 1.25f;
                 var y = classInDiagram.ParsedClass.Top * 1.25f;
                 var z = classInDiagram.VisualObject.GetComponent<RectTransform>().position.z;
-                VisualEditor.SetPosition(classInDiagram.ParsedClass.Name, new Vector3(x, y, z), false);
+                visualEditor.SetPosition(classInDiagram.ParsedClass.Name, new Vector3(x, y, z));
             }
         }
 
-        public static void LoadDiagram()
+        public override void LoadDiagram()
         {
             CreateGraph();
+            MakeNetworkedGraph();
             var k = 0;
             // A trick used to skip empty diagrams in XMI file from EA
             while (DiagramPool.Instance.ClassDiagram.Classes.Count < 1 && k < 10)

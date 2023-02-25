@@ -1,5 +1,4 @@
-﻿using System;
-using AnimArch.Visualization.Diagrams;
+﻿using AnimArch.Visualization.Diagrams;
 using TMPro;
 
 namespace AnimArch.Visualization.UI
@@ -8,7 +7,6 @@ namespace AnimArch.Visualization.UI
     {
         public TMP_Text confirm;
         private string _formerName;
-        private int _id;
 
         public override void ActivateCreation()
         {
@@ -32,9 +30,10 @@ namespace AnimArch.Visualization.UI
                 return;
             }
 
+            var inpClassName = inp.text.Replace(" ", "_");
             if (_formerName == null)
             {
-                var newClass = new Class(inp.text, _id.ToString());
+                var newClass = new Class(inpClassName, DiagramPool.Instance.ClassDiagram.NextClassId());
 
                 if (DiagramPool.Instance.ClassDiagram.FindClassByName(newClass.Name) != null)
                 {
@@ -42,19 +41,17 @@ namespace AnimArch.Visualization.UI
                     return;
                 }
 
-                MainEditor.CreateNode(newClass, MainEditor.Source.Editor);
-
-                _id++;
+                UIEditorManager.Instance.mainEditor.CreateNode(newClass);
             }
             else
             {
-                if (DiagramPool.Instance.ClassDiagram.FindClassByName(inp.text) != null)
+                if (DiagramPool.Instance.ClassDiagram.FindClassByName(inpClassName) != null)
                 {
                     errorMessage.gameObject.SetActive(true);
                     return;
                 }
 
-                MainEditor.UpdateNodeName(className.text, inp.text, false);
+                UIEditorManager.Instance.mainEditor.UpdateNodeName(className.text, inpClassName);
                 _formerName = null;
             }
 

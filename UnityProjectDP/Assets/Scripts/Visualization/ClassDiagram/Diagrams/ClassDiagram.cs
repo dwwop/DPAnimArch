@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using OALProgramControl;
 using AnimArch.Extensions;
+using AnimArch.Visualization.UI;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -16,7 +17,12 @@ namespace AnimArch.Visualization.Diagrams
         private void Awake()
         {
             DiagramPool.Instance.ClassDiagram = this;
-            MainEditor.ClearDiagram();
+            UIEditorManager.Instance.mainEditor.ClearDiagram();
+        }
+
+        public string NextClassId()
+        {
+            return (Classes.Count).ToString();
         }
 
         public ClassInDiagram FindClassByName(string className)

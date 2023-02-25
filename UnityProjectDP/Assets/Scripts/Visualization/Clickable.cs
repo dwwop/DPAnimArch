@@ -16,17 +16,16 @@ namespace AnimArch.Visualization
     {
         public GameObjectEvent triggerHighlighAction;
         public GameObjectEvent triggerUnhighlighAction;
-        private Vector3 _screenPoint;
-        private Vector3 _offset;
+        protected Vector3 _screenPoint;
+        protected Vector3 _offset;
 
-        private bool _selectedElement;
-        private bool _changedPos;
+        protected bool _selectedElement;
+        protected bool _changedPos;
 
 
         private void OnMouseDown()
         {
-            var temp = ToolManager.Instance.SelectedTool;
-            if (temp == "DiagramMovement")
+            if (ToolManager.Instance.SelectedTool == "DiagramMovement")
                 OnClassSelected();
         }
 
@@ -52,7 +51,7 @@ namespace AnimArch.Visualization
             _selectedElement = false;
         }
 
-        private void OnMouseDrag()
+        protected virtual void OnMouseDrag()
         {
             if (_selectedElement == false ||
                 (ToolManager.Instance.SelectedTool != "DiagramMovement" && !MenuManager.Instance.isSelectingNode)
@@ -60,10 +59,12 @@ namespace AnimArch.Visualization
                 return;
 
             var cursorPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z);
-            if (Camera.main == null) return;
+            if (Camera.main == null)
+                return;
             var cursorPosition = Camera.main.ScreenToWorldPoint(cursorPoint) + _offset;
             cursorPosition.z = transform.position.z;
-            if (transform.position == cursorPosition) return;
+            if (transform.position == cursorPosition)
+                return;
             _changedPos = true;
             transform.position = cursorPosition;
 
@@ -94,7 +95,7 @@ namespace AnimArch.Visualization
             }
         }
 
-        private static bool IsMouseOverUI()
+        protected static bool IsMouseOverUI()
         {
             return EventSystem.current.IsPointerOverGameObject();
         }

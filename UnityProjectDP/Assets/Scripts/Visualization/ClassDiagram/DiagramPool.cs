@@ -25,7 +25,17 @@ namespace AnimArch.Visualization.Diagrams
         public GameObject realisationPrefab;
         public GameObject interGraphLinePrefab;
         public GameObject interGraphArrowPrefab;
-        public GameObject relationDeleteButtonPrefab;
+
+        public GameObject networkGraphPrefab;
+        public GameObject networkUnitsPrefab;
+
+        public GameObject networkAssociationDSPrefab;
+        public GameObject networkAssociationFullPrefab;
+        public GameObject networkAssociationNonePrefab;
+        public GameObject networkAssociationSDPrefab;
+        public GameObject networkGeneralizationPrefab;
+        public GameObject networkDependsPrefab;
+        public GameObject networkRealisationPrefab;
 
         public ClassDiagram ClassDiagram;
         public ObjectDiagram ObjectDiagram;
