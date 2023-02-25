@@ -11,7 +11,7 @@ namespace AnimArch.Visualization
         protected override void OnMouseDrag()
         {
             if (_selectedElement == false ||
-                (ToolManager.Instance.SelectedTool != "DiagramMovement" && !MenuManager.Instance.isSelectingNode)
+                (ToolManager.Instance.SelectedTool != ToolManager.Tool.DiagramMovement && !MenuManager.Instance.isSelectingNode)
                 || IsMouseOverUI())
                 return;
 

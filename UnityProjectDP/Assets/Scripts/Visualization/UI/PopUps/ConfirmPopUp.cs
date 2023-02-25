@@ -16,8 +16,6 @@ namespace AnimArch.Visualization.UI
             confirmButton.onClick.AddListener(call);
         }
 
-        public override void Confirmation(){}
-
         public override void Deactivate()
         {
             base.Deactivate();

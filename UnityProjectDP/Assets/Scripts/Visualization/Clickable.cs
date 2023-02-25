@@ -25,7 +25,7 @@ namespace AnimArch.Visualization
 
         private void OnMouseDown()
         {
-            if (ToolManager.Instance.SelectedTool == "DiagramMovement")
+            if (ToolManager.Instance.SelectedTool == ToolManager.Tool.DiagramMovement)
                 OnClassSelected();
         }
 
@@ -36,8 +36,8 @@ namespace AnimArch.Visualization
             if (Camera.main == null) return;
             _screenPoint = Camera.main.WorldToScreenPoint(position);
             _offset = position -
-                     Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y,
-                         _screenPoint.z));
+                      Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y,
+                          _screenPoint.z));
         }
 
         private void OnMouseUp()
@@ -54,7 +54,8 @@ namespace AnimArch.Visualization
         protected virtual void OnMouseDrag()
         {
             if (_selectedElement == false ||
-                (ToolManager.Instance.SelectedTool != "DiagramMovement" && !MenuManager.Instance.isSelectingNode)
+                (ToolManager.Instance.SelectedTool != ToolManager.Tool.DiagramMovement &&
+                 !MenuManager.Instance.isSelectingNode)
                 || IsMouseOverUI())
                 return;
 
@@ -69,17 +70,20 @@ namespace AnimArch.Visualization
             transform.position = cursorPosition;
 
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(name);
-            classInDiagram.ParsedClass = ParsedEditor.UpdateNodeGeometry(classInDiagram.ParsedClass, classInDiagram.VisualObject);
+            classInDiagram.ParsedClass =
+                ParsedEditor.UpdateNodeGeometry(classInDiagram.ParsedClass, classInDiagram.VisualObject);
         }
 
         private void OnMouseOver()
         {
-            if (Input.GetMouseButtonDown(0) && ToolManager.Instance.SelectedTool == "Highlighter" && !IsMouseOverUI())
+            if (Input.GetMouseButtonDown(0) && ToolManager.Instance.SelectedTool == ToolManager.Tool.Highlighter &&
+                !IsMouseOverUI())
             {
                 triggerHighlighAction.Invoke(gameObject);
             }
 
-            if (Input.GetMouseButtonDown(1) && ToolManager.Instance.SelectedTool == "Highlighter" && !IsMouseOverUI())
+            if (Input.GetMouseButtonDown(1) && ToolManager.Instance.SelectedTool == ToolManager.Tool.Highlighter &&
+                !IsMouseOverUI())
             {
                 triggerUnhighlighAction.Invoke(gameObject);
             }

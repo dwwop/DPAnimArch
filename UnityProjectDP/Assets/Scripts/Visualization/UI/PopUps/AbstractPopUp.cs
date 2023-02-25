@@ -1,4 +1,5 @@
-﻿using AnimArch.Extensions;
+﻿using System.Linq;
+using AnimArch.Extensions;
 using AnimArch.Visualization.Diagrams;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,17 +11,25 @@ namespace AnimArch.Visualization.UI
     {
         public GameObject panel;
 
-        private void SetButtonsActive(bool active)
+        private static void SetButtonsActive(bool active)
         {
-            DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<GraphicRaycaster>()
+            if (DiagramPool.Instance.ClassDiagram.graph != null)
+                DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<GraphicRaycaster>()
+                    .ForEach(x => x.enabled = active);
+
+            var canvas = GameObject.Find("Canvas").transform;
+            canvas.Find("RightMenu").GetComponentsInChildren<Button>()
+                .Where(x => x.interactable)
                 .ForEach(x => x.enabled = active);
-            var parent = transform.parent.parent;
-            parent.Find("RightMenu").GetComponentsInChildren<Button>()
+            
+            canvas.Find("TopMenu").GetComponentsInChildren<Button>()
+                .Where(x => x.interactable)
                 .ForEach(x => x.enabled = active);
-            parent.Find("TopMenu").GetComponentsInChildren<Button>()
+            
+            canvas.Find("TopMenu").GetComponentsInChildren<EventTrigger>()
                 .ForEach(x => x.enabled = active);
-            parent.Find("TopMenu").GetComponentsInChildren<EventTrigger>()
-                .ForEach(x => x.enabled = active);
+            
+            ToolManager.Instance.SetActive(active);
         }
 
         public void OnEnable()
@@ -38,7 +47,9 @@ namespace AnimArch.Visualization.UI
             panel.SetActive(true);
         }
 
-        public abstract void Confirmation();
+        public virtual void Confirmation()
+        {
+        }
 
         public virtual void Deactivate()
         {

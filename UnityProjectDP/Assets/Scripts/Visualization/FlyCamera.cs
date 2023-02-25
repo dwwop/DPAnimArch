@@ -45,7 +45,8 @@ namespace AnimArch.Visualization
 
         void Update()
         {
-            if (Input.GetMouseButton(0) && ToolManager.Instance.SelectedTool == "3DMovement" && !IsMouseOverUI())
+            if (Input.GetMouseButton(0) && ToolManager.Instance.SelectedTool == ToolManager.Tool.Movement3D &&
+                !IsMouseOverUI())
             {
                 lastMouse = Input.mousePosition - lastMouse;
                 lastMouse = new Vector3(-lastMouse.y * camSens, lastMouse.x * camSens, 0);
@@ -90,7 +91,8 @@ namespace AnimArch.Visualization
                 ToolManager.Instance.IsJump = false;
             }
 
-            if (Input.GetMouseButton(0) && ToolManager.Instance.SelectedTool == "CameraMovement" && !IsMouseOverUI())
+            if (Input.GetMouseButton(0) && ToolManager.Instance.SelectedTool == ToolManager.Tool.CameraMovement &&
+                !IsMouseOverUI())
             {
                 //grab the rotation of the camera so we can move in a psuedo local XY space
                 //transform.rotation = transform.rotation;

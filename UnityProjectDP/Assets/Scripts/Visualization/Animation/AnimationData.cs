@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AnimArch.Visualization.Animating
 {
@@ -27,12 +28,14 @@ namespace AnimArch.Visualization.Animating
         public void AddAnim(Anim anim)
         {
             animations.Add(anim);
+            GameObject.Find("MainPanel").transform.Find("Edit").GetComponentInChildren<Button>().interactable = true;
         }
         public bool RemoveAnim(Anim anim)
         {
             if (animations.Count == 1)
             {
                 selectedAnim = new Anim("");
+                GameObject.Find("MainPanel").transform.Find("Edit").GetComponentInChildren<Button>().interactable = false;
             }
             return animations.Remove(anim);
         }

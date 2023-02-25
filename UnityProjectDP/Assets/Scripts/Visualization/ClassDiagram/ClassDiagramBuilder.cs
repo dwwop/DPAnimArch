@@ -4,6 +4,7 @@ using AnimArch.Parsing;
 using AnimArch.Visualization.Animating;
 using AnimArch.Visualization.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AnimArch.Visualization.Diagrams
 {
@@ -79,6 +80,7 @@ namespace AnimArch.Visualization.Diagrams
 
             DiagramPool.Instance.ClassDiagram.graph = graphGo.GetComponent<Graph>();
             DiagramPool.Instance.ClassDiagram.graph.nodePrefab = DiagramPool.Instance.classPrefab;
+            GameObject.Find("EditBtn").GetComponentInChildren<Button>().interactable = true;
         }
 
         //Auto arrange objects in space
