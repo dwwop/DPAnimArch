@@ -141,9 +141,6 @@ namespace AnimArch.Visualization.Diagrams
 
             var edge = DiagramPool.Instance.ClassDiagram.graph.AddEdge(sourceClassGo, destinationClassGo, prefab);
 
-            if (edge.gameObject.transform.childCount > 0)
-                DiagramPool.Instance.ClassDiagram.StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
-
             return edge;
         }
 
@@ -165,15 +162,6 @@ namespace AnimArch.Visualization.Diagrams
         public override void DeleteMethod(ClassInDiagram classInDiagram, string method)
         {
             Object.Destroy(GetMethodLayoutGroup(classInDiagram.VisualObject).Find(method).transform.gameObject);
-        }
-
-        //Fix used to minimize relation displaying bug
-        protected IEnumerator QuickFix(GameObject g)
-        {
-            yield return new WaitForSeconds(0.05f);
-            g.SetActive(false);
-            yield return new WaitForSeconds(0.05f);
-            g.SetActive(true);
         }
 
         protected Transform GetNodeHeader(GameObject classGo)

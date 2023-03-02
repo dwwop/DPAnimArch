@@ -110,17 +110,16 @@ namespace AnimArch.Visualization.Diagrams
             var edge = DiagramPool.Instance.ClassDiagram.graph.AddEdge(sourceClassGo, destinationClassGo, prefab);
 
             var edgeNo = edge.GetComponent<NetworkObject>();
-
-
-            if (edge.gameObject.transform.childCount > 0)
-                DiagramPool.Instance.ClassDiagram.StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
-
             edgeNo.Spawn();
+
 
             if (!edgeNo.TrySetParent(GetGraphUnits(), false))
             {
                 throw new InvalidParentException(edgeNo.name);
             }
+
+            edge.transform.localScale = new Vector3(1, 1, 1);
+            edge.transform.localPosition = new Vector3(0, 0, 0);
 
             return edge;
         }

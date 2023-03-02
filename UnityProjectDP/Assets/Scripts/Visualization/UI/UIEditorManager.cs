@@ -100,7 +100,6 @@ namespace AnimArch.Visualization.UI
             Animating.Animation.Instance.HighlightClass(_fromClass.name, false);
             _relType = null;
             _fromClass = null;
-            DiagramPool.Instance.ClassDiagram.graph.UpdateGraph();
             MenuManager.Instance.isSelectingNode = false;
             GameObject.Find("SelectionPanel").SetActive(false);
         }

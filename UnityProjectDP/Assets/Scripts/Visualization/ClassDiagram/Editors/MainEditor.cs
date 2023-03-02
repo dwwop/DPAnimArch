@@ -151,6 +151,7 @@ namespace AnimArch.Visualization.Diagrams
             var relationInDiagram = new RelationInDiagram
                 { ParsedRelation = relation, RelationInfo = cdRelation, VisualObject = relationGo };
             DiagramPool.Instance.ClassDiagram.Relations.Add(relationInDiagram);
+            DiagramPool.Instance.ClassDiagram.graph.UpdateGraph();
         }
 
         public virtual void DeleteRelation(GameObject relation)

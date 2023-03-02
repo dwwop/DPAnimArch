@@ -38,6 +38,8 @@ namespace AnimArch.Visualization.Diagrams
                 throw new InvalidParentException(unitsGo.name);
             }
             unitsGo.GetComponent<Transform>().localScale = new Vector3(1, 1, 1);
+            unitsGo.GetComponent<Transform>().position = new Vector3(0, 0, 0);
+            graphGo.GetComponent<Graph>().units = unitsGo.transform;
             Spawner.Instance.GraphCreatedClientRpc();
         }
     }
