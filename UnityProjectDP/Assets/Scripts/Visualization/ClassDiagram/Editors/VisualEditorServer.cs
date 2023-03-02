@@ -21,14 +21,6 @@ namespace AnimArch.Visualization.Diagrams
             var nodeGo = DiagramPool.Instance.ClassDiagram.graph.AddNode();
             nodeGo.name = newClass.Name;
 
-            SetDefaultPosition(nodeGo);
-            if (!UIEditorManager.Instance.NetworkEnabled)
-            {
-                var graphTransform = DiagramPool.Instance.ClassDiagram.graph.gameObject.GetComponent<Transform>();
-                var graphUnits = graphTransform.Find("Units");
-                nodeGo.GetComponent<Transform>().SetParent(graphUnits.GetComponent<Transform>());
-            }
-
             var nodeNo = nodeGo.GetComponent<NetworkObject>();
             nodeNo.Spawn();
             Spawner.Instance.SetNetworkObjectNameClientRpc(nodeNo.name, nodeNo.NetworkObjectId);
@@ -37,6 +29,7 @@ namespace AnimArch.Visualization.Diagrams
             {
                 throw new InvalidParentException(nodeNo.name);
             }
+            SetDefaultPosition(nodeGo);
             Spawner.Instance.SetClassNameClientRpc(nodeNo.name, nodeNo.NetworkObjectId);
 
             UpdateNodeName(nodeGo);
