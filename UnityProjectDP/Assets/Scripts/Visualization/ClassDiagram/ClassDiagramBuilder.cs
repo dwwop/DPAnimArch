@@ -67,7 +67,7 @@ namespace AnimArch.Visualization.Diagrams
 
             foreach (var relation in relationList)
             {
-                UIEditorManager.Instance.mainEditor.CreateRelation(relation, MainEditor.Source.Loader);
+                UIEditorManager.Instance.mainEditor.CreateRelation(relation);
             }
         }
 

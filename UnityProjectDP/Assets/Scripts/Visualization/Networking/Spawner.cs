@@ -67,6 +67,24 @@ namespace Networking
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void CreateRelationServerRpc(string fromClass, string toClass, string realtionType)
+        {
+            if (IsClient && !IsHost)
+                return;
+
+            var type = realtionType.Split();
+
+            var relation = new Relation
+            {
+                SourceModelName = fromClass,
+                TargetModelName = toClass,
+                PropertiesEaType = type.Length > 1 ? type[1] : type[0],
+                PropertiesDirection = type.Length > 1 ? "none" : "Source -> Destination"
+            };
+            UIEditorManager.Instance.mainEditor.CreateRelation(relation);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void DeleteRelationServerRpc(ulong relationNetworkId)
         {
             if (IsClient && !IsHost)

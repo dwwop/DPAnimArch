@@ -107,7 +107,8 @@ namespace AnimArch.Visualization.UI
 
         private void AddRelation(GameObject toClass)
         {
-            if (_fromClass == null || toClass == null) return;
+            if (_fromClass == null || toClass == null)
+                return;
             var type = _relType.Split();
 
             var relation = new Relation
@@ -118,7 +119,7 @@ namespace AnimArch.Visualization.UI
                 PropertiesDirection = type.Length > 1 ? "none" : "Source -> Destination"
             };
 
-            mainEditor.CreateRelation(relation, MainEditor.Source.Editor);
+            mainEditor.CreateRelation(relation);
             EndSelection();
         }
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AnimArch.Visualization.Diagrams
 {
-    public class IClassDiagramBuilder
+    public class IClassDiagramBuilder : Singleton<IClassDiagramBuilder>
     {
         public IVisualEditor visualEditor;
 

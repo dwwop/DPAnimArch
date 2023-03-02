@@ -140,7 +140,7 @@ namespace AnimArch.Visualization.Diagrams
             _visualEditor.UpdateMethod(classInDiagram, oldMethod, newMethod);
         }
 
-        private void CreateRelation(Relation relation)
+        public virtual void CreateRelation(Relation relation)
         {
             relation.FromClass = relation.SourceModelName.Replace(" ", "_");
             relation.ToClass = relation.TargetModelName.Replace(" ", "_");
@@ -151,21 +151,6 @@ namespace AnimArch.Visualization.Diagrams
             var relationInDiagram = new RelationInDiagram
                 { ParsedRelation = relation, RelationInfo = cdRelation, VisualObject = relationGo };
             DiagramPool.Instance.ClassDiagram.Relations.Add(relationInDiagram);
-        }
-
-
-        public void CreateRelation(Relation relation, Source source)
-        {
-            switch (source)
-            {
-                case Source.Loader:
-                case Source.Editor:
-                    CreateRelation(relation);
-                    break;
-                case Source.RPC:
-                    CreateRelation(relation);
-                    break;
-            }
         }
 
         public virtual void DeleteRelation(GameObject relation)

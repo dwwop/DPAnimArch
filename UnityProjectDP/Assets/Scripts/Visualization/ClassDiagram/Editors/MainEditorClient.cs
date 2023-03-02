@@ -27,6 +27,11 @@ namespace AnimArch.Visualization.Diagrams
             Spawner.Instance.UpdateClassNameServerRpc(oldName, newName);
         }
 
+        public override void CreateRelation(Relation relation)
+        {
+            Spawner.Instance.CreateRelationServerRpc(relation.SourceModelName, relation.TargetModelName, relation.PropertiesEaType);
+        }
+
         public override void DeleteRelation(GameObject relation)
         {
             var relationNetworkId = relation.GetComponent<NetworkObject>().NetworkObjectId;

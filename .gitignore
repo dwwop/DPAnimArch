@@ -65,3 +65,12 @@ UnityProjectDP/Assets/Resources/SAVETEST.json.meta
 UnityProjectDP/Assets/Resources/SAVETEST.xml
 UnityProjectDP/Assets/Resources/SAVETEST.xml.meta
 *.meta
+
+# UserSettings
+
+UnityProjectDP/UserSettings/*
+
+# Generated UML Class diagram
+
+UnityProjectDP/cld/*
+

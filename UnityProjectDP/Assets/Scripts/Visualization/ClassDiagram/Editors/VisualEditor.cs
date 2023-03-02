@@ -26,12 +26,9 @@ namespace AnimArch.Visualization.Diagrams
 
             SetDefaultPosition(nodeGo);
             UpdateNodeName(nodeGo);
-            if (!UIEditorManager.Instance.NetworkEnabled)
-            {
-                var graphTransform = DiagramPool.Instance.ClassDiagram.graph.gameObject.GetComponent<Transform>();
-                var graphUnits = graphTransform.Find("Units");
-                nodeGo.GetComponent<Transform>().SetParent(graphUnits.GetComponent<Transform>());
-            }
+            var graphTransform = DiagramPool.Instance.ClassDiagram.graph.gameObject.GetComponent<Transform>();
+            var graphUnits = graphTransform.Find("Units");
+            nodeGo.GetComponent<Transform>().SetParent(graphUnits.GetComponent<Transform>());
             return nodeGo;
         }
 
