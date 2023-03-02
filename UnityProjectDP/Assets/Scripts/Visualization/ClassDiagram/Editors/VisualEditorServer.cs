@@ -29,10 +29,11 @@ namespace AnimArch.Visualization.Diagrams
             {
                 throw new InvalidParentException(nodeNo.name);
             }
-            SetDefaultPosition(nodeGo);
-            Spawner.Instance.SetClassNameClientRpc(nodeNo.name, nodeNo.NetworkObjectId);
 
+            SetDefaultPosition(nodeGo);
+            nodeGo.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
             UpdateNodeName(nodeGo);
+            Spawner.Instance.SetClassNameClientRpc(nodeNo.name, nodeNo.NetworkObjectId);
 
             return nodeGo;
         }
