@@ -7,6 +7,8 @@ namespace Visualization.UI.PopUps
 {
     public class AttributePopUp : AbstractTypePopUp
     {
+        private const string ErrorAttributeNameExists = "Attribute with the same name already exists";
+        
         public TMP_Text confirm;
         private Attribute _formerAttribute;
 
@@ -36,7 +38,7 @@ namespace Visualization.UI.PopUps
         {
             if (inp.text == "")
             {
-                Deactivate();
+                DisplayError(ErrorEmptyName);
                 return;
             }
 
@@ -49,7 +51,7 @@ namespace Visualization.UI.PopUps
             {
                 if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(className.text, newAttribute.Name) != null)
                 {
-                    errorMessage.gameObject.SetActive(true);
+                    DisplayError(ErrorAttributeNameExists);
                     return;
                 }
 
@@ -62,7 +64,7 @@ namespace Visualization.UI.PopUps
                     DiagramPool.Instance.ClassDiagram.FindAttributeByName(className.text, newAttribute.Name);
                 if (attributeInDiagram != null && !_formerAttribute.Equals(attributeInDiagram))
                 {
-                    errorMessage.gameObject.SetActive(true);
+                    DisplayError(ErrorAttributeNameExists);
                     return;
                 }
 

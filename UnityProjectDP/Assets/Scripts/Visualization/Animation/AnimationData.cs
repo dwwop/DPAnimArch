@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Visualization.UI;
@@ -29,14 +30,13 @@ namespace Visualization.Animation
             animations.Add(anim);
             GameObject.Find("MainPanel").transform.Find("Edit").GetComponentInChildren<Button>().interactable = true;
             GameObject.Find("MainPanel").transform.Find("Play").GetComponentInChildren<Button>().interactable = true;
+            GameObject.Find("MainPanel").transform.Find("AnimationSelect").GetComponentInChildren<TMP_Dropdown>().interactable = true;
         }
         public bool RemoveAnim(Anim anim)
         {
             if (animations.Count == 1)
             {
                 selectedAnim = new Anim("");
-                GameObject.Find("MainPanel").transform.Find("Edit").GetComponentInChildren<Button>().interactable = false;
-                GameObject.Find("MainPanel").transform.Find("Play").GetComponentInChildren<Button>().interactable = true;
             }
             return animations.Remove(anim);
         }
@@ -68,6 +68,10 @@ namespace Visualization.Animation
             MenuManager.Instance.UpdateAnimations();
             selectedAnim = new Anim("");
             diagramId = 0;
+            
+            GameObject.Find("MainPanel").transform.Find("Edit").GetComponentInChildren<Button>().interactable = false;
+            GameObject.Find("MainPanel").transform.Find("Play").GetComponentInChildren<Button>().interactable = false;
+            GameObject.Find("MainPanel").transform.Find("AnimationSelect").GetComponentInChildren<TMP_Dropdown>().interactable = false;
         }
     }
 }

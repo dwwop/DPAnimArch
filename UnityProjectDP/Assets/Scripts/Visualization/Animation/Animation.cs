@@ -608,18 +608,25 @@ namespace Visualization.Animation
                 return;
             }
 
-            var objectRelation =
-                DiagramPool.Instance.ObjectDiagram.FindRelation(callerInstanceId, calledInstanceId).GameObject;
+            if (DiagramPool.Instance.ObjectDiagram == null)
+                return;
+
+            var objectRelation = DiagramPool.Instance.ObjectDiagram.FindRelation(callerInstanceId, calledInstanceId);
+            
+            if (objectRelation == null)
+                return;
+            
+            var objectRelationGO = objectRelation.GameObject;
 
             if (isToBeHighlighted)
             {
-                objectRelation.GetComponent<UEdge>().ChangeColor(relationColor);
-                objectRelation.GetComponent<UILineRenderer>().LineThickness = 8;
+                objectRelationGO.GetComponent<UEdge>().ChangeColor(relationColor);
+                objectRelationGO.GetComponent<UILineRenderer>().LineThickness = 8;
             }
             else
             {
-                objectRelation.GetComponent<UEdge>().ChangeColor(Color.white);
-                objectRelation.GetComponent<UILineRenderer>().LineThickness = 5;
+                objectRelationGO.GetComponent<UEdge>().ChangeColor(Color.white);
+                objectRelationGO.GetComponent<UILineRenderer>().LineThickness = 5;
             }
         }
 

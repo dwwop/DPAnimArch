@@ -24,6 +24,7 @@ namespace Visualization.UI
         public ClassPopUp classPopUp;
         public ParameterPopUp parameterPopUp;
         public ConfirmPopUp confirmPopUp;
+        public ErrorPopUp errorPopUp;
 
         public void InitializeCreation()
         {
@@ -93,7 +94,7 @@ namespace Visualization.UI
             }
         }
 
-        private void EndSelection()
+        public void EndSelection()
         {
             Animation.Animation.Instance.HighlightClass(_fromClass.name, false);
             _relType = null;
@@ -107,15 +108,22 @@ namespace Visualization.UI
         {
             if (_fromClass == null || toClass == null) return;
             var type = _relType.Split();
+            var relType = type.Length > 1 ? type[1] : type[0];
 
+            if (DiagramPool.Instance.ClassDiagram.FindRelationWithType(_fromClass.name, toClass.name, relType) != null)
+            {
+                errorPopUp.ActivateCreation();
+                return;
+            }
+            
             var relation = new Relation
             {
                 SourceModelName = _fromClass.name,
                 TargetModelName = toClass.name,
-                PropertiesEaType = type.Length > 1 ? type[1] : type[0],
+                PropertiesEaType = relType,
                 PropertiesDirection = type.Length > 1 ? "none" : "Source -> Destination"
             };
-
+            
             mainEditor.CreateRelation(relation, MainEditor.Source.Editor);
             EndSelection();
         }

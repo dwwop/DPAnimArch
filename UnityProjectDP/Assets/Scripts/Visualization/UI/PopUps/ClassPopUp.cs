@@ -7,6 +7,7 @@ namespace Visualization.UI.PopUps
 {
     public class ClassPopUp : AbstractClassPopUp
     {
+        private const string ErrorClassNameExists = "Class with the same name already exists";
         public TMP_Text confirm;
         private Class _formerClass;
 
@@ -28,7 +29,7 @@ namespace Visualization.UI.PopUps
         {
             if (inp.text == "")
             {
-                Deactivate();
+                DisplayError(ErrorEmptyName);
                 return;
             }
 
@@ -39,7 +40,7 @@ namespace Visualization.UI.PopUps
 
                 if (DiagramPool.Instance.ClassDiagram.FindClassByName(newClass.Name) != null)
                 {
-                    errorMessage.gameObject.SetActive(true);
+                    DisplayError(ErrorClassNameExists);
                     return;
                 }
 
@@ -47,10 +48,10 @@ namespace Visualization.UI.PopUps
             }
             else
             {
-                var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(inpClassName).ParsedClass;
-                if (classInDiagram != null && !_formerClass.Equals(classInDiagram))
+                var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(inpClassName);
+                if (classInDiagram != null && !_formerClass.Equals(classInDiagram.ParsedClass))
                 {
-                    errorMessage.gameObject.SetActive(true);
+                    DisplayError(ErrorClassNameExists);
                     return;
                 }
 

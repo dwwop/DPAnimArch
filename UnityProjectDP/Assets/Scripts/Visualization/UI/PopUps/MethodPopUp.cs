@@ -11,8 +11,9 @@ namespace Visualization.UI.PopUps
 {
     public class MethodPopUp : AbstractTypePopUp
     {
-        private const string VOID = "void";
-        
+        private const string ErrorMethodNameExists = "Method with the same name already exists";
+        private const string Void = "void";
+
         public TMP_Text confirm;
         [SerializeField] private Transform parameterContent;
         private Method _formerMethod;
@@ -25,7 +26,7 @@ namespace Visualization.UI.PopUps
             base.Awake();
             dropdown.onValueChanged.AddListener(delegate
             {
-                if (dropdown.options[dropdown.value].text == VOID)
+                if (dropdown.options[dropdown.value].text == Void)
                 {
                     options.transform.gameObject.SetActive(false);
                     isArray.transform.gameObject.SetActive(false);
@@ -60,7 +61,7 @@ namespace Visualization.UI.PopUps
         {
             ActivateCreation(classTxt);
 
-            var formerMethod = DiagramPool.Instance.ClassDiagram.FindMethodByName(className.text, 
+            var formerMethod = DiagramPool.Instance.ClassDiagram.FindMethodByName(className.text,
                 GetMethodNameFromString(methodTxt.text));
             inp.text = formerMethod.Name;
 
@@ -75,7 +76,7 @@ namespace Visualization.UI.PopUps
         {
             if (inp.text == "")
             {
-                Deactivate();
+                DisplayError(ErrorEmptyName);
                 return;
             }
 
@@ -89,7 +90,7 @@ namespace Visualization.UI.PopUps
             {
                 if (DiagramPool.Instance.ClassDiagram.FindMethodByName(className.text, newMethod.Name) != null)
                 {
-                    errorMessage.gameObject.SetActive(true);
+                    DisplayError(ErrorMethodNameExists);
                     return;
                 }
 
@@ -102,7 +103,7 @@ namespace Visualization.UI.PopUps
                     DiagramPool.Instance.ClassDiagram.FindMethodByName(className.text, newMethod.Name);
                 if (methodInDiagram != null && !_formerMethod.Equals(methodInDiagram))
                 {
-                    errorMessage.gameObject.SetActive(true);
+                    DisplayError(ErrorMethodNameExists);
                     return;
                 }
 

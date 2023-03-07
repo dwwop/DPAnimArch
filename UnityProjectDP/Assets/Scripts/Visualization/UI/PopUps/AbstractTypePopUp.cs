@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using OALProgramControl;
 using TMPro;
 using UnityEngine.UI;
 using Visualization.ClassDiagram;
@@ -9,21 +10,23 @@ namespace Visualization.UI.PopUps
 {
     public abstract class AbstractTypePopUp : AbstractClassPopUp
     {
-        private const string CUSTOM = "custom";
+        private const string ErrorTypeEmpty = "Type can't be empty";
+        private const string Custom = "custom";
+        
         public TMP_Dropdown dropdown;
         public TMP_Text customType;
         public TMP_InputField customTypeField;
         public Toggle isArray;
         private readonly HashSet<TMP_Dropdown.OptionData> _variableData = new();
 
-        protected void Awake()
+        protected new void Awake()
         {
             base.Awake();
             
             dropdown.onValueChanged.AddListener(delegate
             {
                 
-                if (dropdown.options[dropdown.value].text == CUSTOM)
+                if (dropdown.options[dropdown.value].text == Custom)
                 {
                     customType.transform.gameObject.SetActive(true);
                     customTypeField.transform.gameObject.SetActive(true);
@@ -58,7 +61,7 @@ namespace Visualization.UI.PopUps
             var typeIndex = dropdown.options.FindIndex(x => x.text == attributeType);
             if (typeIndex == -1)
             {
-                dropdown.value = dropdown.options.FindIndex(x => x.text == CUSTOM);
+                dropdown.value = dropdown.options.FindIndex(x => x.text == Custom);
                 customTypeField.text = attributeType;
             }
             else
@@ -69,10 +72,15 @@ namespace Visualization.UI.PopUps
 
         protected new string GetType()
         {
-            if (dropdown.options[dropdown.value].text == CUSTOM)
-                return (isArray.isOn ? "[]" : "") + customTypeField.text.Replace(" ", "_");
+            if (dropdown.options[dropdown.value].text != Custom)
+                return (isArray.isOn ? "[]" : "") + dropdown.options[dropdown.value].text;
+            if (customTypeField.text.Length == 0)
+                DisplayError(ErrorTypeEmpty);
 
-            return (isArray.isOn ? "[]" : "") + dropdown.options[dropdown.value].text;
+            if (isArray.isOn && customTypeField.text == "void")
+                isArray.isOn = false;
+            
+            return (isArray.isOn ? "[]" : "") + EXETypes.ConvertEATypeName(customTypeField.text.Replace(" ", "_"));
         }
 
         private void UpdateDropdown()

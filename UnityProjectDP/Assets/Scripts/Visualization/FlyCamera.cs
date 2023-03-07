@@ -2,6 +2,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Visualization.ClassDiagram;
 using Visualization.UI;
 
 namespace Visualization
@@ -45,6 +46,16 @@ namespace Visualization
 
         void Update()
         {
+            if (DiagramPool.Instance.ClassDiagram.graph == null)
+                return;
+
+            if (ToolManager.Instance.Reset)
+            {
+                transform.position = new Vector3(130, 20, -700);
+                transform.eulerAngles = new Vector3(0, 0, 0);
+                ToolManager.Instance.Reset = false;
+            }
+
             if (Input.GetMouseButton(0) && ToolManager.Instance.SelectedTool == ToolManager.Tool.Movement3D &&
                 !IsMouseOverUI())
             {
@@ -110,10 +121,15 @@ namespace Visualization
             if (ToolManager.Instance.ZoomingIn)
                 p_Velocity += new Vector3(0, 0, 1);
 
+            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetAxis("Mouse ScrollWheel") > 0)
+                p_Velocity += new Vector3(0, 0, 10);
+
             // Backwards
             if (ToolManager.Instance.ZoomingOut)
                 p_Velocity += new Vector3(0, 0, -1);
-
+            
+            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetAxis("Mouse ScrollWheel") < 0)
+                p_Velocity += new Vector3(0, 0, -10);
             // Left
             /*
             if (Input.GetKey(KeyCode.A))

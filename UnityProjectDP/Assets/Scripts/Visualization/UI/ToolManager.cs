@@ -19,6 +19,8 @@ namespace Visualization.UI
         public bool ZoomingIn { private set; get; }
         public bool ZoomingOut { private set; get; }
         public bool IsJump { set; get; }
+        
+        public bool Reset { set; get; }
         public int InterGraphJump { private set; get; }
         public Color SelectedColor { private set; get; }
         [SerializeField] private string startingSelectedColor;
@@ -107,6 +109,8 @@ namespace Visualization.UI
                 SelectTool(Tool.Movement3D);
                 OnButtonClicked(buttons[2]);
             });
+
+
             SelectTool(Tool.CameraMovement);
             OnButtonClicked(buttons[0]);
         }

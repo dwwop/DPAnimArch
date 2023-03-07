@@ -110,6 +110,14 @@ namespace Visualization.ClassDiagram.Diagrams
                 .FirstOrCustomDefault(
                     relationInDiagram => relationInDiagram.ParsedRelation.FromClass, "");
         }
+        public RelationInDiagram FindRelationWithType(string fromClass, string toClass, string type)
+        {
+            return Relations
+                .FirstOrDefault(relation => 
+                    ((relation.RelationInfo.FromClass == fromClass && relation.RelationInfo.ToClass == toClass) ||
+                    (relation.RelationInfo.FromClass == toClass && relation.RelationInfo.ToClass == fromClass)) &&
+                    relation.ParsedRelation.PropertiesEaType == type);
+        }
 
 
         public IEnumerable<Class> GetClassList()

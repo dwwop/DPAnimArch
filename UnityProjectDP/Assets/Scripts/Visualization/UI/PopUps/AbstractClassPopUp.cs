@@ -6,6 +6,8 @@ namespace Visualization.UI.PopUps
 {
     public abstract class AbstractClassPopUp : AbstractPopUp
     {
+        protected const string ErrorEmptyName = "Name can't be empty!";
+
         public TMP_InputField inp;
         protected TMP_Text className;
         public TMP_Text errorMessage;
@@ -23,6 +25,14 @@ namespace Visualization.UI.PopUps
                 else
                     inp.text = arg[..^1];
             });
+            
+            inp.onSubmit.AddListener(delegate { Confirmation(); });
+        }
+
+        protected void DisplayError(string message)
+        {
+            errorMessage.SetText(message);
+            errorMessage.gameObject.SetActive(true);
         }
 
         public virtual void ActivateCreation(TMP_Text classTxt)
@@ -30,7 +40,6 @@ namespace Visualization.UI.PopUps
             ActivateCreation();
             className = classTxt;
         }
-
 
         public override void Deactivate()
         {
