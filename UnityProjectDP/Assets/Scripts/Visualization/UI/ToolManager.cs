@@ -86,9 +86,9 @@ namespace Visualization.UI
             clickedButton.interactable = false;
         }
 
-        private void SelectTool(Tool toolName)
+        private void SelectTool(Tool tool)
         {
-            SelectedTool = toolName;
+            SelectedTool = tool;
             MenuManager.Instance.ActivatePanelColors(SelectedTool.Equals(Tool.Highlighter));
         }
 

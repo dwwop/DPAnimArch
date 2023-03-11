@@ -10,7 +10,7 @@ namespace Visualization.UI.PopUps
 {
     public abstract class AbstractTypePopUp : AbstractClassPopUp
     {
-        private const string ErrorTypeEmpty = "Type can't be empty";
+        private const string ErrorTypeEmpty = "Type can not be empty";
         private const string Custom = "custom";
         
         public TMP_Dropdown dropdown;

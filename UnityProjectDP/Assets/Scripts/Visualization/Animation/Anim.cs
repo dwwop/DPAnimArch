@@ -5,12 +5,6 @@ using System.IO;
 using System.Linq;
 using OALProgramControl;
 using UnityEngine;
-//Filip
-//Filip
-//Filip
-//Filip
-
-//Filip
 
 namespace Visualization.Animation
 {

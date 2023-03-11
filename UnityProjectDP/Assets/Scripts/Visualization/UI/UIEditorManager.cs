@@ -1,4 +1,6 @@
-﻿using AnimArch.Extensions;
+﻿using System;
+using AnimArch.Extensions;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using Visualization.ClassDiagram;
@@ -110,7 +112,7 @@ namespace Visualization.UI
             var type = _relType.Split();
             var relType = type.Length > 1 ? type[1] : type[0];
 
-            if (DiagramPool.Instance.ClassDiagram.FindRelationWithType(_fromClass.name, toClass.name, relType) != null)
+            if (DiagramPool.Instance.ClassDiagram.FindRelation(_fromClass.name, toClass.name, relType) != null)
             {
                 errorPopUp.ActivateCreation();
                 return;
@@ -118,6 +120,7 @@ namespace Visualization.UI
             
             var relation = new Relation
             {
+                ConnectorXmiId = Guid.NewGuid().ToString(),
                 SourceModelName = _fromClass.name,
                 TargetModelName = toClass.name,
                 PropertiesEaType = relType,

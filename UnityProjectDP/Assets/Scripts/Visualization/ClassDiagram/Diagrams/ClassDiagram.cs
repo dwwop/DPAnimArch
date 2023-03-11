@@ -110,7 +110,7 @@ namespace Visualization.ClassDiagram.Diagrams
                 .FirstOrCustomDefault(
                     relationInDiagram => relationInDiagram.ParsedRelation.FromClass, "");
         }
-        public RelationInDiagram FindRelationWithType(string fromClass, string toClass, string type)
+        public RelationInDiagram FindRelation(string fromClass, string toClass, string type)
         {
             return Relations
                 .FirstOrDefault(relation => 

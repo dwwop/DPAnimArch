@@ -36,7 +36,7 @@ namespace Visualization.UI.PopUps
             var inpClassName = inp.text.Replace(" ", "_");
             if (_formerClass == null)
             {
-                var newClass = new Class(inpClassName, DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString());
+                var newClass = new Class(inpClassName, Guid.NewGuid().ToString());
 
                 if (DiagramPool.Instance.ClassDiagram.FindClassByName(newClass.Name) != null)
                 {

@@ -6,7 +6,7 @@ namespace Visualization.UI.PopUps
 {
     public abstract class AbstractClassPopUp : AbstractPopUp
     {
-        protected const string ErrorEmptyName = "Name can't be empty!";
+        protected const string ErrorEmptyName = "Name can not be empty!";
 
         public TMP_InputField inp;
         protected TMP_Text className;

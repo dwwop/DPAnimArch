@@ -488,5 +488,12 @@ namespace Visualization.UI
                 }
             }
         }
+
+        public static void SetAnimationButtonsActive(bool active)
+        {
+            GameObject.Find("MainPanel").transform.Find("Edit").GetComponentInChildren<Button>().interactable = active;
+            GameObject.Find("MainPanel").transform.Find("Play").GetComponentInChildren<Button>().interactable = active;
+            GameObject.Find("MainPanel").transform.Find("AnimationSelect").GetComponentInChildren<TMP_Dropdown>().interactable = active;
+        }
     }
 }

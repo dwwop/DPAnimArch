@@ -28,9 +28,7 @@ namespace Visualization.Animation
         public void AddAnim(Anim anim)
         {
             animations.Add(anim);
-            GameObject.Find("MainPanel").transform.Find("Edit").GetComponentInChildren<Button>().interactable = true;
-            GameObject.Find("MainPanel").transform.Find("Play").GetComponentInChildren<Button>().interactable = true;
-            GameObject.Find("MainPanel").transform.Find("AnimationSelect").GetComponentInChildren<TMP_Dropdown>().interactable = true;
+            MenuManager.SetAnimationButtonsActive(true);
         }
         public bool RemoveAnim(Anim anim)
         {
@@ -69,9 +67,7 @@ namespace Visualization.Animation
             selectedAnim = new Anim("");
             diagramId = 0;
             
-            GameObject.Find("MainPanel").transform.Find("Edit").GetComponentInChildren<Button>().interactable = false;
-            GameObject.Find("MainPanel").transform.Find("Play").GetComponentInChildren<Button>().interactable = false;
-            GameObject.Find("MainPanel").transform.Find("AnimationSelect").GetComponentInChildren<TMP_Dropdown>().interactable = false;
+            MenuManager.SetAnimationButtonsActive(false);
         }
     }
 }

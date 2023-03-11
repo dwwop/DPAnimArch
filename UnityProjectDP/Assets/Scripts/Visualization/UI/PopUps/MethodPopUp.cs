@@ -94,7 +94,7 @@ namespace Visualization.UI.PopUps
                     return;
                 }
 
-                newMethod.Id = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
+                newMethod.Id = Guid.NewGuid().ToString();
                 UIEditorManager.Instance.mainEditor.AddMethod(className.text, newMethod);
             }
             else

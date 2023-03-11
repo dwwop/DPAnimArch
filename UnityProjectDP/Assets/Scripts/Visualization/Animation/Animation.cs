@@ -616,17 +616,17 @@ namespace Visualization.Animation
             if (objectRelation == null)
                 return;
             
-            var objectRelationGO = objectRelation.GameObject;
+            var objectRelationGo = objectRelation.GameObject;
 
             if (isToBeHighlighted)
             {
-                objectRelationGO.GetComponent<UEdge>().ChangeColor(relationColor);
-                objectRelationGO.GetComponent<UILineRenderer>().LineThickness = 8;
+                objectRelationGo.GetComponent<UEdge>().ChangeColor(relationColor);
+                objectRelationGo.GetComponent<UILineRenderer>().LineThickness = 8;
             }
             else
             {
-                objectRelationGO.GetComponent<UEdge>().ChangeColor(Color.white);
-                objectRelationGO.GetComponent<UILineRenderer>().LineThickness = 5;
+                objectRelationGo.GetComponent<UEdge>().ChangeColor(Color.white);
+                objectRelationGo.GetComponent<UILineRenderer>().LineThickness = 5;
             }
         }
 

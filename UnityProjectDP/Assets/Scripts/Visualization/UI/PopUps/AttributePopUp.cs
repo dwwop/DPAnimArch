@@ -55,7 +55,7 @@ namespace Visualization.UI.PopUps
                     return;
                 }
 
-                newAttribute.Id = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
+                newAttribute.Id = Guid.NewGuid().ToString();
                 UIEditorManager.Instance.mainEditor.AddAttribute(className.text, newAttribute);
             }
             else
