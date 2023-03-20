@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using AnimArch.Visualization.Animating;
+using Visualization.ClassDiagram.ComponentsInDiagram;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.Relations
 {
     public class InterGraphRelation : MonoBehaviour
     {
@@ -72,8 +72,8 @@ namespace AnimArch.Visualization.Diagrams
 
         public void Highlight()
         {
-            _lineRenderer.startColor = Animating.Animation.Instance.relationColor;
-            _lineRenderer.endColor = Animating.Animation.Instance.relationColor;
+            _lineRenderer.startColor = Animation.Animation.Instance.relationColor;
+            _lineRenderer.endColor = Animation.Animation.Instance.relationColor;
         }
         
         public void UnHighlight()

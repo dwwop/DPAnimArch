@@ -1,10 +1,6 @@
-using Networking;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEngine;
+using Visualization.Networking;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram
 {
     public class ClassDiagramBuilderClient : ClassDiagramBuilder
     {

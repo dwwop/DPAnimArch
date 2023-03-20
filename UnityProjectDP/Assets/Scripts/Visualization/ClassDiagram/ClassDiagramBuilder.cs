@@ -1,11 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using AnimArch.Parsing;
-using AnimArch.Visualization.Animating;
-using AnimArch.Visualization.UI;
+using Parsers;
+using UMSAGL.Scripts;
 using UnityEngine;
+using UnityEngine.UI;
+using Visualization.Animation;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.Editors;
+using Visualization.ClassDiagram.Relations;
+using Visualization.UI;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram
 {
     public class ClassDiagramBuilder : IClassDiagramBuilder
     {
@@ -79,6 +84,7 @@ namespace AnimArch.Visualization.Diagrams
 
             DiagramPool.Instance.ClassDiagram.graph = graphGo.GetComponent<Graph>();
             DiagramPool.Instance.ClassDiagram.graph.nodePrefab = DiagramPool.Instance.classPrefab;
+            GameObject.Find("EditBtn").GetComponentInChildren<Button>().interactable = true;
         }
 
         //Auto arrange objects in space

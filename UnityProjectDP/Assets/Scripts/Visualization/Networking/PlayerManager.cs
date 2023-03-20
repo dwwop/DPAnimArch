@@ -2,8 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
-namespace Networking
+namespace Visualization.Networking
 {
     public class PlayerManager : NetworkSingleton<PlayerManager>
     {

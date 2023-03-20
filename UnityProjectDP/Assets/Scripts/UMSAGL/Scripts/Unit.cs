@@ -1,38 +1,40 @@
-﻿using Microsoft.Msagl.Core.Layout;
-using UnityEngine;
+﻿using UnityEngine;
 
-public abstract class Unit : MonoBehaviour {
+namespace UMSAGL.Scripts
+{
+	public abstract class Unit : MonoBehaviour {
 
-	protected Graph _graph;
+		protected Graph _graph;
 
-	public object UserData
-	{
-		get; set;
-	}
-
-	// Use this for initialization
-	protected virtual void Awake ()
-	{
-		TryGetGraph();
-	}
-
-	protected virtual void Update()
-    {
-		if (!_graph)
-			TryGetGraph();
-    }
-
-	private bool TryGetGraph()
-    {
-		var graph = GetComponentInParent<Graph>();
-		if (!graph)
-			return false;
-		else
+		public object UserData
 		{
-			_graph = graph;
-			return true;
+			get; set;
 		}
-	}
 
-	protected abstract void OnDestroy();
+		// Use this for initialization
+		protected virtual void Awake ()
+		{
+			TryGetGraph();
+		}
+
+		protected virtual void Update()
+		{
+			if (!_graph)
+				TryGetGraph();
+		}
+
+		private bool TryGetGraph()
+		{
+			var graph = GetComponentInParent<Graph>();
+			if (!graph)
+				return false;
+			else
+			{
+				_graph = graph;
+				return true;
+			}
+		}
+
+		protected abstract void OnDestroy();
+	}
 }

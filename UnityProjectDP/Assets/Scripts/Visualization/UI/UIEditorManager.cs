@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using AnimArch.Extensions;
-using AnimArch.Visualization.Diagrams;
-using Networking;
-using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Visualization.ClassDiagram;
+using Visualization.ClassDiagram.Editors;
+using Visualization.ClassDiagram.Relations;
+using Visualization.UI.PopUps;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI
 {
     public class UIEditorManager : Singleton<UIEditorManager>
     {
@@ -26,6 +26,7 @@ namespace AnimArch.Visualization.UI
         public ClassPopUp classPopUp;
         public ParameterPopUp parameterPopUp;
         public ConfirmPopUp confirmPopUp;
+        public ErrorPopUp errorPopUp;
 
         public void InitializeCreation()
         {
@@ -81,13 +82,13 @@ namespace AnimArch.Visualization.UI
                 return;
             if (selected == _fromClass)
             {
-                Animating.Animation.Instance.HighlightClass(_fromClass.name, false);
+                Animation.Animation.Instance.HighlightClass(_fromClass.name, false);
                 _fromClass = null;
             }
             else if (_fromClass == null)
             {
                 _fromClass = selected;
-                Animating.Animation.Instance.HighlightClass(_fromClass.name, true);
+                Animation.Animation.Instance.HighlightClass(_fromClass.name, true);
             }
             else
             {
@@ -95,9 +96,9 @@ namespace AnimArch.Visualization.UI
             }
         }
 
-        private void EndSelection()
+        public void EndSelection()
         {
-            Animating.Animation.Instance.HighlightClass(_fromClass.name, false);
+            Animation.Animation.Instance.HighlightClass(_fromClass.name, false);
             _relType = null;
             _fromClass = null;
             DiagramPool.Instance.ClassDiagram.graph.UpdateGraph();
@@ -109,15 +110,23 @@ namespace AnimArch.Visualization.UI
         {
             if (_fromClass == null || toClass == null) return;
             var type = _relType.Split();
+            var relType = type.Length > 1 ? type[1] : type[0];
 
+            if (DiagramPool.Instance.ClassDiagram.FindRelation(_fromClass.name, toClass.name, relType) != null)
+            {
+                errorPopUp.ActivateCreation();
+                return;
+            }
+            
             var relation = new Relation
             {
+                ConnectorXmiId = Guid.NewGuid().ToString(),
                 SourceModelName = _fromClass.name,
                 TargetModelName = toClass.name,
-                PropertiesEaType = type.Length > 1 ? type[1] : type[0],
+                PropertiesEaType = relType,
                 PropertiesDirection = type.Length > 1 ? "none" : "Source -> Destination"
             };
-
+            
             mainEditor.CreateRelation(relation, MainEditor.Source.Editor);
             EndSelection();
         }

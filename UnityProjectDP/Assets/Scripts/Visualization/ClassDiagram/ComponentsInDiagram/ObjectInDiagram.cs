@@ -1,7 +1,7 @@
 ﻿using OALProgramControl;
 using UnityEngine;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.ComponentsInDiagram
 {
     public class ObjectInDiagram
     {

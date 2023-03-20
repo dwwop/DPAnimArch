@@ -1,34 +1,31 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using AnimArch.Extensions;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI
 {
     public class ToolManager : Singleton<ToolManager>
     {
-        //CameraMovement, DiagramMovement, Record 
-        public string SelectedTool { set; get; }
-        public bool ZoomingIn { set; get; } = false;
-        public bool ZoomingOut { set; get; } = false;
-        public bool IsJump { set; get; } = false;
-        public int InterGraphJump { set; get; } = 0;
-        public Color SelectedColor { set; get; }
-        public bool isAnimating = false;
-        public bool overUi = false;
-        [SerializeField] private string startingSelectedColor;
-
-        public void SelectTool(string toolName)
+        public enum Tool
         {
-            SelectedTool = toolName;
-            if (SelectedTool.Equals("Highlighter"))
-            {
-                MenuManager.Instance.ActivatePanelColors(true);
-            }
-            else
-            {
-                MenuManager.Instance.ActivatePanelColors(false);
-            }
+            NoToolSelected,
+            CameraMovement,
+            DiagramMovement,
+            Movement3D,
+            Highlighter
         }
+
+        public Tool SelectedTool { private set; get; }
+        public bool ZoomingIn { private set; get; }
+        public bool ZoomingOut { private set; get; }
+        public bool IsJump { set; get; }
+        
+        public bool Reset { set; get; }
+        public int InterGraphJump { private set; get; }
+        public Color SelectedColor { private set; get; }
+        [SerializeField] private string startingSelectedColor;
+        [SerializeField] private Button[] buttons;
+        private Tool _lastSelectedTool;
 
         public void ZoomIn(bool enabled)
         {
@@ -66,10 +63,56 @@ namespace AnimArch.Visualization.UI
             SelectedColor = c;
         }
 
-        protected override void OnAwake()
+        public void SetActive(bool active)
         {
-            base.OnAwake();
-            SelectedTool = "CameraMovement";
+            if (active)
+                SelectedTool = _lastSelectedTool;
+            else
+            {
+                _lastSelectedTool = SelectedTool;
+                SelectedTool = Tool.NoToolSelected;
+            }
+        }
+
+        private void OnButtonClicked(Button clickedButton)
+        {
+            var buttonIndex = System.Array.IndexOf(buttons, clickedButton);
+
+            if (buttonIndex == -1)
+                return;
+
+            buttons.ForEach(button => button.interactable = true);
+
+            clickedButton.interactable = false;
+        }
+
+        private void SelectTool(Tool tool)
+        {
+            SelectedTool = tool;
+            MenuManager.Instance.ActivatePanelColors(SelectedTool.Equals(Tool.Highlighter));
+        }
+
+        private void Awake()
+        {
+            buttons[0].onClick.AddListener(delegate
+            {
+                SelectTool(Tool.CameraMovement);
+                OnButtonClicked(buttons[0]);
+            });
+            buttons[1].onClick.AddListener(delegate
+            {
+                SelectTool(Tool.DiagramMovement);
+                OnButtonClicked(buttons[1]);
+            });
+            buttons[2].onClick.AddListener(delegate
+            {
+                SelectTool(Tool.Movement3D);
+                OnButtonClicked(buttons[2]);
+            });
+
+
+            SelectTool(Tool.CameraMovement);
+            OnButtonClicked(buttons[0]);
         }
     }
 }

@@ -1,10 +1,11 @@
 using AnimArch.Extensions;
-using AnimArch.Visualization.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Visualization.UI;
+using Visualization.UI.ClassComponentsManagers;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.Editors
 {
     public class VisualEditorClient : VisualEditor
     {

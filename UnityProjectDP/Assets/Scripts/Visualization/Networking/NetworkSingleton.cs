@@ -1,14 +1,13 @@
-﻿using UnityEngine;
-using System.Collections;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Unity.Netcode;
+using UnityEngine;
 
 /// <summary>
 /// Inherit from this base class to create a singleton.
 /// e.g. public class MyClassName : NetworkSingleton<MyClassName> {}
 /// </summary>
 
-namespace Networking
+namespace Visualization.Networking
 {
     public abstract class NetworkSingleton<T> : NetworkSingleton where T : NetworkBehaviour
     {

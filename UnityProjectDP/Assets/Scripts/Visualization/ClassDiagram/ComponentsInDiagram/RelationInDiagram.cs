@@ -1,9 +1,8 @@
 ﻿using OALProgramControl;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Visualization.ClassDiagram.Relations;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.ComponentsInDiagram
 {
     public class RelationInDiagram
     {

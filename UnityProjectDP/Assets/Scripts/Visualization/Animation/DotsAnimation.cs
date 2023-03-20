@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Linq;
 using TMPro;
-using System.Linq;
+using UnityEngine;
 
-namespace AnimArch.Visualization.Animating
+namespace Visualization.Animation
 {
     public class DotsAnimation : MonoBehaviour
     {

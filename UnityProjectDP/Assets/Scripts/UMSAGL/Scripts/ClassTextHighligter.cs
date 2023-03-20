@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Animation = Visualization.Animation.Animation;
 using Color = UnityEngine.Color;
 
 namespace UMSAGL.Scripts
@@ -21,7 +22,7 @@ namespace UMSAGL.Scripts
         public void HighlightClassLine(string line)
         {
             GetLineText(line).color =
-                AnimArch.Visualization.Animating.Animation.Instance.methodColor;
+                Animation.Instance.methodColor;
         }
 
         public void UnhighlightClassLine(string line)

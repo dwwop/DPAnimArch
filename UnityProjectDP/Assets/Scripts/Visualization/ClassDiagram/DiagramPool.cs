@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using Visualization.ClassDiagram.Diagrams;
+using Visualization.ClassDiagram.Relations;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram
 {
     public class DiagramPool : Singleton<DiagramPool>
     {
@@ -37,7 +35,7 @@ namespace AnimArch.Visualization.Diagrams
         public GameObject networkDependsPrefab;
         public GameObject networkRealisationPrefab;
 
-        public ClassDiagram ClassDiagram;
+        public Diagrams.ClassDiagram ClassDiagram;
         public ObjectDiagram ObjectDiagram;
 
         public List<InterGraphRelation> RelationsClassToObject = new();

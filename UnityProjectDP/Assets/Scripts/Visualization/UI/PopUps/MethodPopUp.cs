@@ -1,19 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AnimArch.Visualization.Diagrams;
 using TMPro;
 using UnityEngine;
+using Visualization.ClassDiagram;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.UI.ClassComponentsManagers;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI.PopUps
 {
     public class MethodPopUp : AbstractTypePopUp
     {
+        private const string ErrorMethodNameExists = "Method with the same name already exists";
+        private const string Void = "void";
+
         public TMP_Text confirm;
         [SerializeField] private Transform parameterContent;
-        private string _formerName;
+        private Method _formerMethod;
         private List<string> _parameters = new();
+        public TMP_Text options;
+        public TMP_Text isArrayText;
 
+        private new void Awake()
+        {
+            base.Awake();
+            dropdown.onValueChanged.AddListener(delegate
+            {
+                if (dropdown.options[dropdown.value].text == Void)
+                {
+                    options.transform.gameObject.SetActive(false);
+                    isArray.transform.gameObject.SetActive(false);
+                    isArrayText.transform.gameObject.SetActive(false);
+                }
+                else
+                {
+                    options.transform.gameObject.SetActive(true);
+                    isArray.transform.gameObject.SetActive(true);
+                    isArrayText.transform.gameObject.SetActive(true);
+                }
+            });
+        }
 
         public override void ActivateCreation(TMP_Text classTxt)
         {
@@ -22,20 +48,12 @@ namespace AnimArch.Visualization.UI
         }
 
 
-        private static Method GetMethodFromString(string str)
+        private static string GetMethodNameFromString(string str)
         {
-            var method = new Method();
-
             var parts = str.Split(new[] { ": ", "\n" }, StringSplitOptions.None);
 
             var nameAndArguments = parts[0].Split(new[] { "(", ")" }, StringSplitOptions.None);
-            method.Name = nameAndArguments[0];
-            method.ReturnValue = parts[1];
-
-
-            method.arguments = nameAndArguments[1].Split(", ").Where(x => x != "").ToList();
-
-            return method;
+            return nameAndArguments[0];
         }
 
 
@@ -43,12 +61,13 @@ namespace AnimArch.Visualization.UI
         {
             ActivateCreation(classTxt);
 
-            var formerMethod = GetMethodFromString(methodTxt.text);
+            var formerMethod = DiagramPool.Instance.ClassDiagram.FindMethodByName(className.text,
+                GetMethodNameFromString(methodTxt.text));
             inp.text = formerMethod.Name;
 
             SetType(formerMethod.ReturnValue);
             formerMethod.arguments.ForEach(AddArg);
-            _formerName = formerMethod.Name;
+            _formerMethod = formerMethod;
             confirm.text = "Edit";
         }
 
@@ -57,11 +76,9 @@ namespace AnimArch.Visualization.UI
         {
             if (inp.text == "")
             {
-                Deactivate();
+                DisplayError(ErrorEmptyName);
                 return;
             }
-
-
 
             var newMethod = new Method
             {
@@ -69,21 +86,29 @@ namespace AnimArch.Visualization.UI
                 ReturnValue = GetType(),
                 arguments = _parameters
             };
-
-            if (_formerName == null)
+            if (_formerMethod == null)
             {
                 if (DiagramPool.Instance.ClassDiagram.FindMethodByName(className.text, newMethod.Name) != null)
                 {
-                    errorMessage.gameObject.SetActive(true);
+                    DisplayError(ErrorMethodNameExists);
                     return;
                 }
 
+                newMethod.Id = Guid.NewGuid().ToString();
                 UIEditorManager.Instance.mainEditor.AddMethod(className.text, newMethod);
             }
             else
             {
-                UIEditorManager.Instance.mainEditor.UpdateMethod(className.text, _formerName, newMethod);
-                _formerName = null;
+                var methodInDiagram =
+                    DiagramPool.Instance.ClassDiagram.FindMethodByName(className.text, newMethod.Name);
+                if (methodInDiagram != null && !_formerMethod.Equals(methodInDiagram))
+                {
+                    DisplayError(ErrorMethodNameExists);
+                    return;
+                }
+
+                newMethod.Id = _formerMethod.Id;
+                UIEditorManager.Instance.mainEditor.UpdateMethod(className.text, _formerMethod.Name, newMethod);
             }
 
             Deactivate();
@@ -94,6 +119,7 @@ namespace AnimArch.Visualization.UI
             base.Deactivate();
             _parameters = new List<string>();
             parameterContent.DetachChildren();
+            _formerMethod = null;
         }
 
         public bool ArgExists(string parameter)

@@ -1,8 +1,7 @@
-﻿using AnimArch.Visualization.Diagrams;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI.ClassComponentsManagers
 {
     public class MethodManager : MonoBehaviour
     {

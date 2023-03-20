@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI
 {
     public class ConsolePanel : Singleton<ConsolePanel>
     {

@@ -1,9 +1,9 @@
-using AnimArch.Visualization.Diagrams;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.ComponentsInDiagram;
+using Visualization.ClassDiagram.Relations;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.Editors
 {
     public abstract class IVisualEditor
     {

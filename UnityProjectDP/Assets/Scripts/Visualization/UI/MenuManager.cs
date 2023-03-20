@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using OALProgramControl;
-using AnimArch.Visualization.Animating;
-using AnimArch.Visualization.Diagrams;
-using AnimArch.Visualization.Animation;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+using Visualization.Animation;
+using Visualization.ClassDiagram;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.ComponentsInDiagram;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI
 {
     public class MenuManager : Singleton<MenuManager>
     {
@@ -39,7 +40,6 @@ namespace AnimArch.Visualization.UI
         [SerializeField] private TMP_Text speedLabel;
         private string interactiveSource = "source";
         private string sourceClassName = "";
-        [SerializeField] public GameObject panelError;
         [SerializeField] public GameObject panelAnimationPlay;
         [SerializeField] public GameObject panelStepMode;
         [SerializeField] public GameObject panelPlayMode;
@@ -158,11 +158,11 @@ namespace AnimArch.Visualization.UI
 
                         if (interactiveData.fromClass != null)
                         {
-                            Animating.Animation.Instance.HighlightClass(interactiveData.fromClass, false, -1);
+                            Animation.Animation.Instance.HighlightClass(interactiveData.fromClass, false, -1);
                         }
 
                         interactiveData.fromClass = name;
-                        Animating.Animation.Instance.HighlightClass(interactiveData.fromClass, true);
+                        Animation.Animation.Instance.HighlightClass(interactiveData.fromClass, true);
                         i++;
                         if (sepInput.text.Length > 2 && !classTxt.text.Equals("class unselected") &&
                             !methodTxt.text.Equals("method unselected"))
@@ -185,11 +185,11 @@ namespace AnimArch.Visualization.UI
 
                         if (interactiveData.toClass != null)
                         {
-                            Animating.Animation.Instance.HighlightClass(interactiveData.toClass, false);
+                            Animation.Animation.Instance.HighlightClass(interactiveData.toClass, false);
                         }
 
                         interactiveData.toClass = name;
-                        Animating.Animation.Instance.HighlightClass(interactiveData.toClass, true);
+                        Animation.Animation.Instance.HighlightClass(interactiveData.toClass, true);
                         i++;
                     }
                 }
@@ -209,7 +209,7 @@ namespace AnimArch.Visualization.UI
                 InteractiveText.GetComponent<DotsAnimation>().currentText =
                     "Select target class\nfor call function\ndirectly in diagram\n.";
                 interactiveData.fromMethod = methodName;
-                Animating.Animation.Instance.HighlightMethod(interactiveData.fromClass, interactiveData.fromMethod,
+                Animation.Animation.Instance.HighlightMethod(interactiveData.fromClass, interactiveData.fromMethod,
                     true);
                 sepInput.interactable = true;
                 sepInput.text = createdAnim.GetMethodBody(interactiveData.fromClass, interactiveData.fromMethod);
@@ -223,9 +223,9 @@ namespace AnimArch.Visualization.UI
                     "Select source class\nfor call function\ndirectly in diagram\n.";
                 interactiveData.toMethod = methodName;
                 UpdateInteractiveShow();
-                Animating.Animation.Instance.HighlightClass(interactiveData.fromClass, false);
-                Animating.Animation.Instance.HighlightClass(interactiveData.toClass, false);
-                Animating.Animation.Instance.HighlightMethod(interactiveData.fromClass, interactiveData.fromMethod,
+                Animation.Animation.Instance.HighlightClass(interactiveData.fromClass, false);
+                Animation.Animation.Instance.HighlightClass(interactiveData.toClass, false);
+                Animation.Animation.Instance.HighlightMethod(interactiveData.fromClass, interactiveData.fromMethod,
                     false);
                 WriteCode();
             }
@@ -345,42 +345,36 @@ namespace AnimArch.Visualization.UI
 
         public void PlayAnimation()
         {
-            if (AnimationData.Instance.selectedAnim.AnimationName.Equals(""))
+            Debug.Assert(!AnimationData.Instance.selectedAnim.AnimationName.Equals(""));
+            isPlaying = true;
+            panelAnimationPlay.SetActive(true);
+            mainScreen.SetActive(false);
+            foreach (Button button in playBtns)
             {
-                panelError.SetActive(true);
+                button.gameObject.SetActive(false);
+            }
+
+            playIntroTexts.SetActive(true);
+            if (Animation.Animation.Instance.standardPlayMode)
+            {
+                panelStepMode.SetActive(false);
+                panelPlayMode.SetActive(true);
             }
             else
             {
-                isPlaying = true;
-                panelAnimationPlay.SetActive(true);
-                mainScreen.SetActive(false);
-                foreach (Button button in playBtns)
-                {
-                    button.gameObject.SetActive(false);
-                }
-
-                playIntroTexts.SetActive(true);
-                if (Animating.Animation.Instance.standardPlayMode)
-                {
-                    panelStepMode.SetActive(false);
-                    panelPlayMode.SetActive(true);
-                }
-                else
-                {
-                    panelPlayMode.SetActive(false);
-                    panelStepMode.SetActive(true);
-                }
+                panelPlayMode.SetActive(false);
+                panelStepMode.SetActive(true);
             }
         }
 
         public void ResetInteractiveSelection()
         {
             if (interactiveData.fromClass != null)
-                Animating.Animation.Instance.HighlightClass(interactiveData.fromClass, false);
+                Animation.Animation.Instance.HighlightClass(interactiveData.fromClass, false);
             if (interactiveData.toClass != null)
-                Animating.Animation.Instance.HighlightClass(interactiveData.toClass, false);
+                Animation.Animation.Instance.HighlightClass(interactiveData.toClass, false);
             if (interactiveData.fromMethod != null)
-                Animating.Animation.Instance.HighlightMethod(interactiveData.fromClass, interactiveData.fromMethod,
+                Animation.Animation.Instance.HighlightMethod(interactiveData.fromClass, interactiveData.fromMethod,
                     false);
             InteractiveText.GetComponent<DotsAnimation>().currentText =
                 "Select source class\nfor call function\ndirectly in diagram\n.";
@@ -392,17 +386,17 @@ namespace AnimArch.Visualization.UI
 
         public void ChangeMode()
         {
-            Animating.Animation.Instance.UnhighlightAll();
-            Animating.Animation.Instance.isPaused = false;
-            if (Animating.Animation.Instance.standardPlayMode)
+            Animation.Animation.Instance.UnhighlightAll();
+            Animation.Animation.Instance.isPaused = false;
+            if (Animation.Animation.Instance.standardPlayMode)
             {
-                Animating.Animation.Instance.standardPlayMode = false;
+                Animation.Animation.Instance.standardPlayMode = false;
                 panelPlayMode.SetActive(false);
                 panelStepMode.SetActive(true);
             }
             else
             {
-                Animating.Animation.Instance.standardPlayMode = true;
+                Animation.Animation.Instance.standardPlayMode = true;
                 panelStepMode.SetActive(false);
                 panelPlayMode.SetActive(true);
             }
@@ -413,11 +407,11 @@ namespace AnimArch.Visualization.UI
             DiagramPool.Instance.ObjectDiagram.ResetDiagram();
             DiagramPool.Instance.ObjectDiagram.LoadDiagram();
 
-            Animating.Animation.Instance.UnhighlightAll();
-            Animating.Animation.Instance.HighlightClass(name, true);
+            Animation.Animation.Instance.UnhighlightAll();
+            Animation.Animation.Instance.HighlightClass(name, true);
 
             playIntroTexts.SetActive(false);
-            Animating.Animation.Instance.startClassName = name;
+            Animation.Animation.Instance.startClassName = name;
             foreach (Button button in playBtns)
             {
                 button.gameObject.SetActive(false);
@@ -448,21 +442,21 @@ namespace AnimArch.Visualization.UI
 
         public void SelectPlayMethod(int id)
         {
-            Animating.Animation.Instance.startMethodName = animMethods[id].Name;
+            Animation.Animation.Instance.startMethodName = animMethods[id].Name;
             foreach (Button button in playBtns)
             {
                 button.gameObject.SetActive(false);
             }
 
             playIntroTexts.SetActive(true);
-            Debug.Log("Selected class: " + Animating.Animation.Instance.startClassName + "Selected Method: " +
-                      Animating.Animation.Instance.startMethodName);
-            Animating.Animation.Instance.HighlightClass(Animating.Animation.Instance.startClassName, false);
+            Debug.Log("Selected class: " + Animation.Animation.Instance.startClassName + "Selected Method: " +
+                      Animation.Animation.Instance.startMethodName);
+            Animation.Animation.Instance.HighlightClass(Animation.Animation.Instance.startClassName, false);
         }
 
         public void UnshowAnimation()
         {
-            Animating.Animation.Instance.UnhighlightAll();
+            Animation.Animation.Instance.UnhighlightAll();
         }
 
         public void EndPlay()
@@ -473,8 +467,8 @@ namespace AnimArch.Visualization.UI
                 button.gameObject.SetActive(false);
             }
 
-            Animating.Animation.Instance.startClassName = "";
-            Animating.Animation.Instance.startMethodName = "";
+            Animation.Animation.Instance.startClassName = "";
+            Animation.Animation.Instance.startMethodName = "";
         }
 
         public void HideGraphRelations()
@@ -493,6 +487,13 @@ namespace AnimArch.Visualization.UI
                     interGraphRelation.Hide();
                 }
             }
+        }
+
+        public static void SetAnimationButtonsActive(bool active)
+        {
+            GameObject.Find("MainPanel").transform.Find("Edit").GetComponentInChildren<Button>().interactable = active;
+            GameObject.Find("MainPanel").transform.Find("Play").GetComponentInChildren<Button>().interactable = active;
+            GameObject.Find("MainPanel").transform.Find("AnimationSelect").GetComponentInChildren<TMP_Dropdown>().interactable = active;
         }
     }
 }

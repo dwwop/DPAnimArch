@@ -1,9 +1,10 @@
-using AnimArch.Visualization.UI;
-using Networking;
+using UMSAGL.Scripts;
 using Unity.Netcode;
 using UnityEngine;
+using Visualization.Networking;
+using Visualization.UI;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram
 {
     public class ClassDiagramBuilderServer : ClassDiagramBuilder
     {

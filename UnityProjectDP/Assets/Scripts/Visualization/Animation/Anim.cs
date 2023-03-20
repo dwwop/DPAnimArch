@@ -1,12 +1,12 @@
 ﻿//Data structure for single animation
 
-using OALProgramControl;    //Filip
-using System.Collections.Generic;   //Filip
-using System.IO;  //Filip
-using System.Linq;//Filip
-using UnityEngine;  //Filip
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using OALProgramControl;
+using UnityEngine;
 
-namespace AnimArch.Visualization.Animating
+namespace Visualization.Animation
 {
     [System.Serializable]
     public struct Anim

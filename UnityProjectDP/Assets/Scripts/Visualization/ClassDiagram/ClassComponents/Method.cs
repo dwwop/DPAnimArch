@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.ClassComponents
 {
     [Serializable]
     public class Method
@@ -28,5 +26,21 @@ namespace AnimArch.Visualization.Diagrams
         }
         public Method() { }
 
+        protected bool Equals(Method other)
+        {
+            return Id == other.Id;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((Method)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name);
+        }
     }
 }

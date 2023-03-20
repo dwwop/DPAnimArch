@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace AnimArch.Visualization.Animating
+namespace Visualization.Animation
 {
     [System.Serializable]
     public class AnimMethod //Filip
