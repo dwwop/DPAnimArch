@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions.ColorPicker;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI
 {
     public class SelectColorFromPallete : MonoBehaviour
     { 
@@ -20,28 +18,28 @@ namespace AnimArch.Visualization.UI
             ToolManager.Instance.SelectColor(selectedColorCode.text);
             if (SelectedPreset.Equals("class"))
             {
-                Animating.Animation.Instance.classColor = ToolManager.Instance.SelectedColor;
+                Animation.Animation.Instance.classColor = ToolManager.Instance.SelectedColor;
                 SetButtonColor(classPreset, ToolManager.Instance.SelectedColor);
             }
             if (SelectedPreset.Equals("method"))
             {
-                Animating.Animation.Instance.methodColor = ToolManager.Instance.SelectedColor;
+                Animation.Animation.Instance.methodColor = ToolManager.Instance.SelectedColor;
                 SetButtonColor(methodPreset, ToolManager.Instance.SelectedColor);
             }
             if (SelectedPreset.Equals("relation"))
             {
-                Animating.Animation.Instance.relationColor = ToolManager.Instance.SelectedColor;
+                Animation.Animation.Instance.relationColor = ToolManager.Instance.SelectedColor;
                 SetButtonColor(relationPreset, ToolManager.Instance.SelectedColor);
             }
         }
         public void SetColor(Color c,Color m, Color r)
         {
                 SetButtonColor(classPreset, c);
-                Animating.Animation.Instance.classColor = c;
+                Animation.Animation.Instance.classColor = c;
                 SetButtonColor(methodPreset, m);
-                Animating.Animation.Instance.methodColor = m;
+                Animation.Animation.Instance.methodColor = m;
                 SetButtonColor(relationPreset, r); ;
-                Animating.Animation.Instance.relationColor = r;
+                Animation.Animation.Instance.relationColor = r;
         }
         public void RandomPallete()
         {
@@ -85,7 +83,7 @@ namespace AnimArch.Visualization.UI
         public void SetPreset(string type)
         {
             SelectedPreset = type;
-            colorInput.text = "#" + Animating.Animation.Instance.GetColorCode(type);
+            colorInput.text = "#" + Animation.Animation.Instance.GetColorCode(type);
             colorInput.GetComponent<HexColorField>().UpdateColor(colorInput.text);
         }
         public void SetButtonColor(GameObject b, Color c)

@@ -1,21 +1,23 @@
-using UnityEngine;
-using Microsoft.Msagl.Core.Geometry.Curves;
 using System.Collections.Generic;
-using Networking;
+using Microsoft.Msagl.Core.Geometry.Curves;
 using Unity.Netcode;
+using UnityEngine;
+using Visualization.Networking;
 
-public class NetworkGraph : Graph
+namespace UMSAGL.Scripts
 {
-    protected override void RedrawEdges()
+    public class NetworkGraph : Graph
     {
-        foreach (var edge in _graph.Edges)
+        protected override void RedrawEdges()
         {
-            var vertices = new List<Vector2>();
-            var go = (GameObject)edge.UserData;
-
-            switch (edge.Curve)
+            foreach (var edge in _graph.Edges)
             {
-                case Curve curve:
+                var vertices = new List<Vector2>();
+                var go = (GameObject)edge.UserData;
+
+                switch (edge.Curve)
+                {
+                    case Curve curve:
                     {
                         var p = curve[curve.ParStart];
                         vertices.Add(new Vector3(ToUnitySpace(p.X), ToUnitySpace(p.Y), 0));
@@ -27,7 +29,7 @@ public class NetworkGraph : Graph
 
                         break;
                     }
-                case LineSegment ls:
+                    case LineSegment ls:
                     {
                         var p = ls.Start;
                         vertices.Add(new Vector3(ToUnitySpace(p.X), ToUnitySpace(p.Y)));
@@ -35,28 +37,29 @@ public class NetworkGraph : Graph
                         vertices.Add(new Vector3(ToUnitySpace(p.X), ToUnitySpace(p.Y)));
                         break;
                     }
+                }
+
+                var verticesArray = vertices.ToArray();
+                go.GetComponent<UEdge>().Points = verticesArray;
+                var edgeNo = go.GetComponent<NetworkObject>();
+                Spawner.Instance.SetLinePointsClientRpc(edgeNo.NetworkObjectId, verticesArray);
+                Spawner.Instance.SetLineResolutionClientRpc(edgeNo.NetworkObjectId, go.GetComponent<UnityEngine.UI.Extensions.UILineRenderer>().Resoloution);
+            }
+        }
+
+        public override void RemoveNode(GameObject node)
+        {
+            if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost) // Only server can remove components
+                return;
+            var graphNode = node.GetComponent<UNode>().GraphNode;
+            foreach (var edge in graphNode.Edges)
+            {
+                Destroy((GameObject)edge.UserData);
+                //in MSAGL edges are automatically removed, only UnityObjects have to be removed
             }
 
-            var verticesArray = vertices.ToArray();
-            go.GetComponent<UEdge>().Points = verticesArray;
-            var edgeNo = go.GetComponent<NetworkObject>();
-            Spawner.Instance.SetLinePointsClientRpc(edgeNo.NetworkObjectId, verticesArray);
-            Spawner.Instance.SetLineResolutionClientRpc(edgeNo.NetworkObjectId, go.GetComponent<UnityEngine.UI.Extensions.UILineRenderer>().Resoloution);
+            _graph.Nodes.Remove(graphNode);
+            Destroy(node);
         }
-    }
-
-    public override void RemoveNode(GameObject node)
-    {
-        if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost) // Only server can remove components
-            return;
-        var graphNode = node.GetComponent<UNode>().GraphNode;
-        foreach (var edge in graphNode.Edges)
-        {
-            Destroy((GameObject)edge.UserData);
-            //in MSAGL edges are automatically removed, only UnityObjects have to be removed
-        }
-
-        _graph.Nodes.Remove(graphNode);
-        Destroy(node);
     }
 }

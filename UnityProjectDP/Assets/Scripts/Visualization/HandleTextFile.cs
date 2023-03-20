@@ -1,8 +1,7 @@
-﻿using UnityEngine;
-using UnityEditor;
-using System.IO;
+﻿using System.IO;
+using UnityEngine;
 
-namespace AnimArch.Visualization
+namespace Visualization
 {
     public static class HandleTextFile
     {

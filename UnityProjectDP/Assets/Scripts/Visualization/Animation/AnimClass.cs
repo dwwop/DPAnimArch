@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace AnimArch.Visualization.Animating
+namespace Visualization.Animation
 {
     [System.Serializable]
     public class AnimClass  //Filip

@@ -1,7 +1,11 @@
 ﻿using System;
 using OALProgramControl;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.ComponentsInDiagram;
+using Visualization.ClassDiagram.Relations;
+using Attribute = Visualization.ClassDiagram.ClassComponents.Attribute;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.Editors
 {
     public static class CDEditor
     {

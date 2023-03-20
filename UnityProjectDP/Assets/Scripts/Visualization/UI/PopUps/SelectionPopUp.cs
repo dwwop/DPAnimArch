@@ -1,6 +1,6 @@
 ﻿using TMPro;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI.PopUps
 {
     public class SelectionPopUp : AbstractPopUp
     {

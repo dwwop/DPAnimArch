@@ -1,14 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using AnimArch.Extensions;
-using AnimArch.Visualization.Animating;
-using Networking;
 using OALProgramControl;
 using UnityEngine;
+using Visualization.Animation;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.ComponentsInDiagram;
+using Visualization.ClassDiagram.Relations;
+using Attribute = Visualization.ClassDiagram.ClassComponents.Attribute;
 using Object = UnityEngine.Object;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.Editors
 {
     public class MainEditor
     {
@@ -68,6 +71,66 @@ namespace AnimArch.Visualization.Diagrams
                     relationInDiagram.RelationInfo.ToClass = newName;
                 }
             }
+
+            foreach (var otherClassInDiagram in DiagramPool.Instance.ClassDiagram.Classes)
+            {
+                var attributesWithOldNameAsType = new List<Attribute>(
+                    otherClassInDiagram.ParsedClass.Attributes
+                        .Where(x => x.Type.Contains(oldName)));
+                foreach (var attribute in attributesWithOldNameAsType)
+                {
+                    var formerArray = attribute.Type.Contains("[]");
+                    var formerType = Regex.Replace( attribute.Type, "[\\[\\]\\n]", "");
+                    if (formerType != oldName)
+                        continue;
+
+                    var newAttribute = new Attribute
+                    {
+                        Id = attribute.Id,
+                        Name = attribute.Name,
+                        Type = newName + (formerArray ? "[]" : "")
+                    };
+                    UpdateAttribute(otherClassInDiagram.ParsedClass.Name, attribute.Name, newAttribute);
+                }
+
+
+                var methodsWithOldNameAsType = new List<Method>(
+                    otherClassInDiagram.ParsedClass.Methods
+                        .Where(x => x.ReturnValue == oldName ||
+                                    x.arguments.Any(arg => arg.Split(" ")[0].Contains(oldName))));
+                foreach (var method in methodsWithOldNameAsType)
+                {
+                    var newMethod = new Method
+                    {
+                        Id = method.Id,
+                        Name = method.Name,
+                        arguments = method.arguments,
+                        ReturnValue = method.ReturnValue
+                    };
+                    
+                    var returnType = Regex.Replace( method.ReturnValue, "[\\[\\]\\n]", "");
+                    if (returnType == oldName)
+                    {
+                        newMethod.ReturnValue =  newName + (method.ReturnValue.Contains("[]") ? "[]" : "");
+                    }
+
+                    for (var i = 0; i < newMethod.arguments.Count; i++)
+                    {
+                        if (!newMethod.arguments[i].Contains(oldName))
+                            continue;
+                        var attributeType = newMethod.arguments[i].Split(" ")[0];
+                        var attributeName = newMethod.arguments[i].Split(" ")[1];
+                        var formerArray = attributeType.Contains("[]");
+                        attributeType = Regex.Replace(attributeType, "[\\[\\]\\n]", "");
+                        if (attributeType == oldName)
+                        {
+                            newMethod.arguments[i] = newName + (formerArray ? "[]" : "") + " " + attributeName;
+                        }
+                    }
+
+                    UpdateMethod(otherClassInDiagram.ParsedClass.Name, method.Name, newMethod);
+                }
+            }
         }
 
         public virtual void AddAttribute(string targetClass, Attribute attribute)
@@ -81,8 +144,6 @@ namespace AnimArch.Visualization.Diagrams
                 _visualEditor.AddAttribute(classInDiagram, attribute);
                 return;
             }
-
-            attribute.Id = (classInDiagram.ParsedClass.Attributes.Count + 1).ToString();
 
             ParsedEditor.AddAttribute(classInDiagram, attribute);
             CDEditor.AddAttribute(classInDiagram, attribute);
@@ -119,7 +180,6 @@ namespace AnimArch.Visualization.Diagrams
                 return;
             }
 
-            method.Id = (classInDiagram.ParsedClass.Methods.Count + 1).ToString();
 
             ParsedEditor.AddMethod(classInDiagram, method);
             CDEditor.AddMethod(classInDiagram, method);
@@ -167,18 +227,11 @@ namespace AnimArch.Visualization.Diagrams
 
         private void DeleteNodeFromRelations(ClassInDiagram classInDiagram)
         {
-            DiagramPool.Instance.ClassDiagram.Relations
+            new List<RelationInDiagram>(
+                    DiagramPool.Instance.ClassDiagram.Relations
                 .Where(x => x.ParsedRelation.FromClass == classInDiagram.ParsedClass.Name
-                            || x.ParsedRelation.ToClass == classInDiagram.ParsedClass.Name)
-                .ForEach(x =>
-                {
-                    CDEditor.DeleteRelation(x);
-                    _visualEditor.DeleteRelation(x);
-                });
-
-            DiagramPool.Instance.ClassDiagram.Relations
-                .RemoveAll(x => x.ParsedRelation.FromClass == classInDiagram.ParsedClass.Name
-                                || x.ParsedRelation.ToClass == classInDiagram.ParsedClass.Name);
+                            || x.ParsedRelation.ToClass == classInDiagram.ParsedClass.Name))
+                .ForEach(x => DeleteRelation(x.VisualObject));
         }
 
         public virtual void DeleteNode(string className)

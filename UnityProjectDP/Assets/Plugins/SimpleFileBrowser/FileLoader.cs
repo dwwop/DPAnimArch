@@ -2,10 +2,10 @@
 using UnityEngine;
 using SimpleFileBrowser;
 using System.IO;
-using AnimArch.Parsing;
-using AnimArch.Visualization.Animating;
-using AnimArch.Visualization.UI;
-using AnimArch.Visualization.Diagrams;
+using Parsers;
+using Visualization.Animation;
+using Visualization.ClassDiagram;
+using Visualization.UI;
 
 public class FileLoader : MonoBehaviour
 {

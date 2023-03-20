@@ -1,10 +1,11 @@
-using UnityEngine;
 using System.Linq;
 using TMPro;
+using UnityEngine;
 using UnityEngine.EventSystems;
-using AnimArch.Visualization.UI;
+using Visualization.ClassDiagram;
+using Visualization.UI;
 
-namespace AnimArch.Visualization
+namespace Visualization
 {
     public class FlyCamera : MonoBehaviour
     {
@@ -45,7 +46,18 @@ namespace AnimArch.Visualization
 
         void Update()
         {
-            if (Input.GetMouseButton(0) && ToolManager.Instance.SelectedTool == "3DMovement" && !IsMouseOverUI())
+            if (DiagramPool.Instance.ClassDiagram.graph == null)
+                return;
+
+            if (ToolManager.Instance.Reset)
+            {
+                transform.position = new Vector3(130, 20, -700);
+                transform.eulerAngles = new Vector3(0, 0, 0);
+                ToolManager.Instance.Reset = false;
+            }
+
+            if (Input.GetMouseButton(0) && ToolManager.Instance.SelectedTool == ToolManager.Tool.Movement3D &&
+                !IsMouseOverUI())
             {
                 lastMouse = Input.mousePosition - lastMouse;
                 lastMouse = new Vector3(-lastMouse.y * camSens, lastMouse.x * camSens, 0);
@@ -90,7 +102,8 @@ namespace AnimArch.Visualization
                 ToolManager.Instance.IsJump = false;
             }
 
-            if (Input.GetMouseButton(0) && ToolManager.Instance.SelectedTool == "CameraMovement" && !IsMouseOverUI())
+            if (Input.GetMouseButton(0) && ToolManager.Instance.SelectedTool == ToolManager.Tool.CameraMovement &&
+                !IsMouseOverUI())
             {
                 //grab the rotation of the camera so we can move in a psuedo local XY space
                 //transform.rotation = transform.rotation;
@@ -108,10 +121,15 @@ namespace AnimArch.Visualization
             if (ToolManager.Instance.ZoomingIn)
                 p_Velocity += new Vector3(0, 0, 1);
 
+            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetAxis("Mouse ScrollWheel") > 0)
+                p_Velocity += new Vector3(0, 0, 10);
+
             // Backwards
             if (ToolManager.Instance.ZoomingOut)
                 p_Velocity += new Vector3(0, 0, -1);
-
+            
+            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetAxis("Mouse ScrollWheel") < 0)
+                p_Velocity += new Vector3(0, 0, -10);
             // Left
             /*
             if (Input.GetKey(KeyCode.A))

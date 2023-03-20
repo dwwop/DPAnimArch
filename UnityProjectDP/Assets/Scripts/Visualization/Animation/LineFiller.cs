@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using UnityEngine.UI.Extensions;
 
-namespace AnimArch.Visualization.Animating
+namespace Visualization.Animation
 {
     public class LineFiller : UILineRenderer
     {

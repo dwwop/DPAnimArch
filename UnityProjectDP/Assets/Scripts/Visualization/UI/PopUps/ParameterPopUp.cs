@@ -1,9 +1,11 @@
 using TMPro;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI.PopUps
 {
     public class ParameterPopUp : AbstractTypePopUp
     {
+        private const string ErrorParameterNameExists = "Parameter with the same name already exists";
+        
         public TMP_Text confirm;
         private string _formerParam;
 
@@ -28,16 +30,16 @@ namespace AnimArch.Visualization.UI
         {
             if (inp.text == "")
             {
-                Deactivate();
+                DisplayError(ErrorEmptyName);
                 return;
             }
-
+            
             var parameter = GetType() + " " + inp.text.Replace(" ", "_");
             if (_formerParam == null)
             {
                 if (UIEditorManager.Instance.methodPopUp.ArgExists(parameter))
                 {
-                    errorMessage.gameObject.SetActive(true);
+                    DisplayError(ErrorParameterNameExists);
                     return;
                 }
 
@@ -47,15 +49,21 @@ namespace AnimArch.Visualization.UI
             {
                 if (UIEditorManager.Instance.methodPopUp.ArgExists(parameter))
                 {
-                    errorMessage.gameObject.SetActive(true);
+                    DisplayError(ErrorParameterNameExists);
                     return;
                 }
 
                 UIEditorManager.Instance.methodPopUp.EditArg(_formerParam, parameter);
-                _formerParam = null;
             }
 
             Deactivate();
+        }
+
+        public override void Deactivate()
+        {
+            base.Deactivate();
+            UIEditorManager.Instance.methodPopUp.gameObject.SetActive(true);
+            _formerParam = null;
         }
     }
 }

@@ -1,14 +1,16 @@
 ﻿using System;
-using AnimArch.Visualization.Diagrams;
 using TMPro;
-using Attribute = AnimArch.Visualization.Diagrams.Attribute;
+using Visualization.ClassDiagram;
+using Attribute = Visualization.ClassDiagram.ClassComponents.Attribute;
 
-namespace AnimArch.Visualization.UI
+namespace Visualization.UI.PopUps
 {
     public class AttributePopUp : AbstractTypePopUp
     {
+        private const string ErrorAttributeNameExists = "Attribute with the same name already exists";
+        
         public TMP_Text confirm;
-        private string _formerAttributeName;
+        private Attribute _formerAttribute;
 
         public override void ActivateCreation(TMP_Text classTxt)
         {
@@ -16,7 +18,7 @@ namespace AnimArch.Visualization.UI
             confirm.text = "Add";
         }
 
-
+        
         public void ActivateCreation(TMP_Text classTxt, TMP_Text attributeTxt)
         {
             ActivateCreation(classTxt);
@@ -25,9 +27,9 @@ namespace AnimArch.Visualization.UI
 
             var attributeType = text[1];
             SetType(attributeType);
-
+            
             inp.text = formerName;
-            _formerAttributeName = formerName;
+            _formerAttribute = DiagramPool.Instance.ClassDiagram.FindAttributeByName(className.text, formerName);
 
             confirm.text = "Edit";
         }
@@ -36,7 +38,7 @@ namespace AnimArch.Visualization.UI
         {
             if (inp.text == "")
             {
-                Deactivate();
+                DisplayError(ErrorEmptyName);
                 return;
             }
 
@@ -45,30 +47,38 @@ namespace AnimArch.Visualization.UI
                 Name = inp.text,
                 Type = GetType()
             };
-            if (_formerAttributeName == null)
+            if (_formerAttribute == null)
             {
                 if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(className.text, newAttribute.Name) != null)
                 {
-                    errorMessage.gameObject.SetActive(true);
+                    DisplayError(ErrorAttributeNameExists);
                     return;
                 }
 
+                newAttribute.Id = Guid.NewGuid().ToString();
                 UIEditorManager.Instance.mainEditor.AddAttribute(className.text, newAttribute);
             }
             else
             {
-                if (DiagramPool.Instance.ClassDiagram.FindAttributeByName(className.text, newAttribute.Name) !=
-                    null)
+                var attributeInDiagram =
+                    DiagramPool.Instance.ClassDiagram.FindAttributeByName(className.text, newAttribute.Name);
+                if (attributeInDiagram != null && !_formerAttribute.Equals(attributeInDiagram))
                 {
-                    errorMessage.gameObject.SetActive(true);
+                    DisplayError(ErrorAttributeNameExists);
                     return;
                 }
 
-                UIEditorManager.Instance.mainEditor.UpdateAttribute(className.text, _formerAttributeName, newAttribute);
-                _formerAttributeName = null;
+                newAttribute.Id = _formerAttribute.Id;
+                UIEditorManager.Instance.mainEditor.UpdateAttribute(className.text, _formerAttribute.Name, newAttribute);
             }
 
             Deactivate();
+        }
+
+        public override void Deactivate()
+        {
+            base.Deactivate();
+            _formerAttribute = null;
         }
     }
 }

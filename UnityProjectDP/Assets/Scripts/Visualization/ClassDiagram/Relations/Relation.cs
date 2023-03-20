@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.Relations
 {
     [Serializable]
     public class Relation

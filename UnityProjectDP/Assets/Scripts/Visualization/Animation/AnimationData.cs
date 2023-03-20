@@ -1,9 +1,10 @@
-﻿using AnimArch.Visualization.UI;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using Visualization.UI;
 
-namespace AnimArch.Visualization.Animating
+namespace Visualization.Animation
 {
     //Holds data for created animations
     //Implemets methods to find, create and remove animations
@@ -27,6 +28,7 @@ namespace AnimArch.Visualization.Animating
         public void AddAnim(Anim anim)
         {
             animations.Add(anim);
+            MenuManager.SetAnimationButtonsActive(true);
         }
         public bool RemoveAnim(Anim anim)
         {
@@ -64,6 +66,8 @@ namespace AnimArch.Visualization.Animating
             MenuManager.Instance.UpdateAnimations();
             selectedAnim = new Anim("");
             diagramId = 0;
+            
+            MenuManager.SetAnimationButtonsActive(false);
         }
     }
 }

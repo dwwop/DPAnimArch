@@ -1,10 +1,9 @@
-using AnimArch.Visualization.UI;
-using Networking;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.Networking;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.Editors
 {
     public class MainEditorClient : MainEditor
     {
@@ -14,7 +13,7 @@ namespace AnimArch.Visualization.Diagrams
 
         public override void CreateNode(Class newClass)
         {
-            Spawner.Instance.CreateClassServerRpc(newClass.Name);
+            Spawner.Instance.CreateClassServerRpc(newClass.Name, newClass.Id);
         }
 
         public override void DeleteNode(string className)

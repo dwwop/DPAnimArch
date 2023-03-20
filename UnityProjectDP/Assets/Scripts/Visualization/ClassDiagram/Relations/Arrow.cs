@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.Relations
 {
     public class Arrow : MonoBehaviour
     {

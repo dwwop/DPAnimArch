@@ -5,10 +5,13 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using AnimArch.Extensions;
+using UnityEngine.EventSystems;
+using Visualization.UI.PopUps;
 
 namespace SimpleFileBrowser
 {
-	public class FileBrowser : MonoBehaviour, IListViewAdapter
+	public class FileBrowser : AbstractPopUp, IListViewAdapter
 	{
 		public enum Permission { Denied = 0, Granted = 1, ShouldAsk = 2 };
 

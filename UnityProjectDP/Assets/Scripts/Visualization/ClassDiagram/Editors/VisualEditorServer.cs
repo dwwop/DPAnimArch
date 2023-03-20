@@ -1,12 +1,12 @@
-using AnimArch.Extensions;
-using AnimArch.Visualization.UI;
-using Networking;
-using TMPro;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UI;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.ComponentsInDiagram;
+using Visualization.ClassDiagram.Relations;
+using Visualization.Networking;
+using Visualization.UI;
 
-namespace AnimArch.Visualization.Diagrams
+namespace Visualization.ClassDiagram.Editors
 {
     public class VisualEditorServer : VisualEditor
     {

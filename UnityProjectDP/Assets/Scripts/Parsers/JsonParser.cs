@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using AnimArch.Visualization.Animating;
-using AnimArch.Visualization.Diagrams;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Visualization.Animation;
+using Visualization.ClassDiagram;
+using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.Editors;
+using Visualization.ClassDiagram.Relations;
 
-namespace AnimArch.Parsing
+namespace Parsers
 {
     public static class JsonParser
     {
