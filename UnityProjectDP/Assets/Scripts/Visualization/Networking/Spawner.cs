@@ -9,6 +9,7 @@ using UnityEngine.UI.Extensions;
 using Visualization.ClassDiagram;
 using Visualization.ClassDiagram.ClassComponents;
 using Visualization.ClassDiagram.Editors;
+using Visualization.ClassDiagram.Relations;
 using Visualization.UI;
 using Attribute = Visualization.ClassDiagram.ClassComponents.Attribute;
 

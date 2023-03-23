@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.Relations;
 using Visualization.Networking;
 
 namespace Visualization.ClassDiagram.Editors
