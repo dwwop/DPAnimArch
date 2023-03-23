@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -14,6 +15,7 @@ namespace UMSAGL.Scripts
 
         private TextMeshProUGUI GetLineText(string line)
         {
+            line = Regex.Replace(line, "[()]", "");
             return methodLayoutGroup.transform
                 .GetComponentsInChildren<TextMeshProUGUI>()
                 .First(x => x.text.Contains(line));
