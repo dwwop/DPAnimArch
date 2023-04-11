@@ -16,30 +16,12 @@ namespace Visualization.ClassDiagram
     {
         protected void ParseData()
         {
-            var path = AnimationData.Instance.GetDiagramPath();
-            List<Class> classList;
-            List<Relation> relationList;
-
-            switch (Path.GetExtension(path))
-            {
-                case ".xml":
-                {
-                    var xmlDocument = XMIParser.OpenDiagram();
-                    classList = XMIParser.ParseClasses(xmlDocument) ?? new List<Class>();
-                    relationList = XMIParser.ParseRelations(xmlDocument) ?? new List<Relation>();
-                    break;
-                }
-                case ".json":
-                {
-                    var jsonDocument = JsonParser.OpenDiagram();
-                    classList = JsonParser.ParseClasses(jsonDocument) ?? new List<Class>();
-                    relationList = JsonParser.ParseRelations(jsonDocument) ?? new List<Relation>();
-                    break;
-                }
-                default:
-                    return;
-            }
-
+            var parser = Parser.GetParser(Path.GetExtension(AnimationData.Instance.GetDiagramPath()));
+            
+            parser.LoadDiagram();
+            var classList = parser.ParseClasses() ?? new List<Class>();
+            var relationList = parser.ParseRelations() ?? new List<Relation>();
+            
             if (classList.Count == 0)
                 return;
             //Parse all data to our List of "Class" objects

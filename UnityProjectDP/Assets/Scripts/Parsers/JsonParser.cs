@@ -10,16 +10,18 @@ using Visualization.ClassDiagram.Relations;
 
 namespace Parsers
 {
-    public static class JsonParser
+    public class JsonParser : Parser
     {
-        public static JObject OpenDiagram()
+        private JObject _document;
+
+        public override void LoadDiagram()
         {
             var encoding = Encoding.GetEncoding("UTF-8");
             var jsonText = System.IO.File.ReadAllText(AnimationData.Instance.GetDiagramPath(), encoding);
-            return JObject.Parse(jsonText);
+            _document = JObject.Parse(jsonText);
         }
 
-        public static string SaveDiagramToJson()
+        public override string SaveDiagram()
         {
             ParsedEditor.ReverseNodesGeometry();
             var serializedClasses =
@@ -31,16 +33,16 @@ namespace Parsers
             return serializedDiagram;
         }
 
-        public static List<Class> ParseClasses(JObject jsonObject)
+        public override List<Class> ParseClasses()
         {
-            var classes = jsonObject["classes"];
-            return classes.ToObject<List<Class>>();
+            var classes = _document["classes"];
+            return classes?.ToObject<List<Class>>();
         }
 
-        public static List<Relation> ParseRelations(JObject jsonObject)
+        public override List<Relation> ParseRelations()
         {
-            var relations = jsonObject["relations"];
-            return relations.ToObject<List<Relation>>();
+            var relations = _document["relations"];
+            return relations?.ToObject<List<Relation>>();
         }
     }
 }

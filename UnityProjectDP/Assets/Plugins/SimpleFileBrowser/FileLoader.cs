@@ -98,9 +98,9 @@ public class FileLoader : MonoBehaviour
         yield return FileBrowser.WaitForSaveDialog(false, @"Assets\Resources\", "Save Diagram");
         if (!FileBrowser.Success) yield break;
         
-        var data = Path.GetExtension(FileBrowser.Result) == ".json"
-            ? JsonParser.SaveDiagramToJson()
-            : XMIParser.ParseDiagramIntoXmi().OuterXml;
+        var parser = Parser.GetParser(Path.GetExtension(FileBrowser.Result));
+        
+        var data = parser.SaveDiagram();
         File.WriteAllText(FileBrowser.Result, data);
     }
 

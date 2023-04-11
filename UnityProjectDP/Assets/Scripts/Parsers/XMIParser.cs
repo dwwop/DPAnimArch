@@ -11,17 +11,18 @@ using Attribute = Visualization.ClassDiagram.ClassComponents.Attribute;
 
 namespace Parsers
 {
-    public class XMIParser
+    public class XMIParser : Parser
     {
-        public static XmlDocument OpenDiagram()
+        private XmlDocument _document;
+
+        public override void LoadDiagram()
         {
-            var xmlDoc = new XmlDocument();
+            _document = new XmlDocument();
             var encoding = Encoding.GetEncoding("UTF-8");
             var xmlText = System.IO.File.ReadAllText(AnimationData.Instance.GetDiagramPath(), encoding);
-            xmlDoc.LoadXml(xmlText);
-            return xmlDoc;
+            _document.LoadXml(xmlText);
         }
-
+        
         private static List<string> ParseCurrentDiagramElementsIDs(XmlDocument xmlDoc)
         {
             var currDiagramID = AnimationData.Instance.diagramId.ToString();
@@ -50,18 +51,18 @@ namespace Parsers
             return currDiagramElements;
         }
 
-        public static List<Class> ParseClasses(XmlDocument xmlDoc)
+        public override List<Class> ParseClasses()
         {
             var XMIClassList = new List<Class>();
 
             var currDiagramID = AnimationData.Instance.diagramId.ToString();
             //string currDiagramID = System.IO.File.ReadAllText(currDiagramIDPath);
-            var currDiagramElements = ParseCurrentDiagramElementsIDs(xmlDoc);
+            var currDiagramElements = ParseCurrentDiagramElementsIDs(_document);
 
             // Get elements
             // var classNodeList = xmlDoc.GetElementsByTagName("UML:Class");
             // var classIndices = xmlDoc.GetElementsByTagName("UML:DiagramElement");
-            var elementClass = xmlDoc.GetElementsByTagName("elements");
+            var elementClass = _document.GetElementsByTagName("elements");
 
 
             var elementsClass = elementClass[0].ChildNodes;
@@ -165,10 +166,10 @@ namespace Parsers
                                                 foreach (XmlNode parameter in parameters)
                                                 {
                                                     if (count++ <= 0) continue;
-                                                    var nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
+                                                    var nsmgr = new XmlNamespaceManager(_document.NameTable);
                                                     nsmgr.AddNamespace("xmi", "http://schema.omg.org/spec/XMI/2.1");
                                                     var xmiID = parameter.Attributes["xmi:idref"].Value;
-                                                    var refnode = xmlDoc.SelectSingleNode(
+                                                    var refnode = _document.SelectSingleNode(
                                                         "//*[@xmi:id='" + xmiID + "']",
                                                         nsmgr);
                                                     // XmlNode refnode = xmlDoc.SelectSingleNode("//*[@xmi:id='EAID_855A1E81_E810_4e59_B919_A02E42179E4F']", nsmgr);
@@ -253,13 +254,13 @@ namespace Parsers
             return XMIClassList;
         }
 
-        public static List<Relation> ParseRelations(XmlDocument xmlDoc)
+        public override List<Relation> ParseRelations()
         {
             var connectorClassesList = new List<Relation>();
 
             // var currDiagramElements = ParseCurrentDiagramElementsIDs(xmlDoc);
 
-            var connectorClass = xmlDoc.GetElementsByTagName("connectors");
+            var connectorClass = _document.GetElementsByTagName("connectors");
 
 
             foreach (XmlNode connector in connectorClass)
@@ -472,7 +473,7 @@ namespace Parsers
         }
 
 
-        public static XmlDocument ParseDiagramIntoXmi()
+        public override string SaveDiagram()
         {
             var doc = new XmlDocument();
 
@@ -636,7 +637,7 @@ namespace Parsers
                 connectors.AppendChild(connector);
             }
 
-            return doc;
+            return doc.OuterXml;
         }
     }
 }
