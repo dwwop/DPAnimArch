@@ -17,7 +17,7 @@ namespace Visualization.ClassDiagram
             unitsGo.name = "Units";
 
             DiagramPool.Instance.ClassDiagram.graph = graphGo.GetComponent<Graph>();
-            DiagramPool.Instance.ClassDiagram.graph.nodePrefab = DiagramPool.Instance.classPrefab;
+            DiagramPool.Instance.ClassDiagram.graph.nodePrefab = DiagramPool.Instance.networkClassPrefab;
         }
 
         public override void MakeNetworkedGraph()
@@ -39,6 +39,8 @@ namespace Visualization.ClassDiagram
                 throw new InvalidParentException(unitsGo.name);
             }
             unitsGo.GetComponent<Transform>().localScale = new Vector3(1, 1, 1);
+            unitsGo.GetComponent<Transform>().position = new Vector3(0, 0, 0);
+            graphGo.GetComponent<Graph>().units = unitsGo.transform;
             Spawner.Instance.GraphCreatedClientRpc();
         }
     }

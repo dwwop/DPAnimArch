@@ -2,7 +2,7 @@ using Visualization.ClassDiagram.Editors;
 
 namespace Visualization.ClassDiagram
 {
-    public class IClassDiagramBuilder
+    public class IClassDiagramBuilder : Singleton<IClassDiagramBuilder>
     {
         public IVisualEditor visualEditor;
 

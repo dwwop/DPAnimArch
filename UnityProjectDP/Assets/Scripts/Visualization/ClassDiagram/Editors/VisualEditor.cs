@@ -27,12 +27,9 @@ namespace Visualization.ClassDiagram.Editors
 
             SetDefaultPosition(nodeGo);
             UpdateNodeName(nodeGo);
-            if (!UIEditorManager.Instance.NetworkEnabled)
-            {
-                var graphTransform = DiagramPool.Instance.ClassDiagram.graph.gameObject.GetComponent<Transform>();
-                var graphUnits = graphTransform.Find("Units");
-                nodeGo.GetComponent<Transform>().SetParent(graphUnits.GetComponent<Transform>());
-            }
+            var graphTransform = DiagramPool.Instance.ClassDiagram.graph.gameObject.GetComponent<Transform>();
+            var graphUnits = graphTransform.Find("Units");
+            nodeGo.GetComponent<Transform>().SetParent(graphUnits.GetComponent<Transform>());
             return nodeGo;
         }
 
@@ -145,9 +142,6 @@ namespace Visualization.ClassDiagram.Editors
 
             var edge = DiagramPool.Instance.ClassDiagram.graph.AddEdge(sourceClassGo, destinationClassGo, prefab);
 
-            if (edge.gameObject.transform.childCount > 0)
-                DiagramPool.Instance.ClassDiagram.StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
-
             return edge;
         }
 
@@ -169,15 +163,6 @@ namespace Visualization.ClassDiagram.Editors
         public override void DeleteMethod(ClassInDiagram classInDiagram, string method)
         {
             Object.Destroy(GetMethodLayoutGroup(classInDiagram.VisualObject).Find(method).transform.gameObject);
-        }
-
-        //Fix used to minimize relation displaying bug
-        protected IEnumerator QuickFix(GameObject g)
-        {
-            yield return new WaitForSeconds(0.05f);
-            g.SetActive(false);
-            yield return new WaitForSeconds(0.05f);
-            g.SetActive(true);
         }
 
         protected Transform GetNodeHeader(GameObject classGo)

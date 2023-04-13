@@ -101,14 +101,14 @@ namespace Visualization.UI
             Animation.Animation.Instance.HighlightClass(_fromClass.name, false);
             _relType = null;
             _fromClass = null;
-            DiagramPool.Instance.ClassDiagram.graph.UpdateGraph();
             MenuManager.Instance.isSelectingNode = false;
             GameObject.Find("SelectionPanel").SetActive(false);
         }
 
         private void AddRelation(GameObject toClass)
         {
-            if (_fromClass == null || toClass == null) return;
+            if (_fromClass == null || toClass == null)
+                return;
             var type = _relType.Split();
             var relType = type.Length > 1 ? type[1] : type[0];
 
@@ -126,8 +126,8 @@ namespace Visualization.UI
                 PropertiesEaType = relType,
                 PropertiesDirection = type.Length > 1 ? "none" : "Source -> Destination"
             };
-            
-            mainEditor.CreateRelation(relation, MainEditor.Source.Editor);
+
+            mainEditor.CreateRelation(relation);
             EndSelection();
         }
     }

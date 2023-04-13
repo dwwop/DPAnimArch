@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using Visualization.ClassDiagram.ClassComponents;
+using Visualization.ClassDiagram.Relations;
 using Visualization.Networking;
 
 namespace Visualization.ClassDiagram.Editors
@@ -24,6 +25,11 @@ namespace Visualization.ClassDiagram.Editors
         public override void UpdateNodeName(string oldName, string newName)
         {
             Spawner.Instance.UpdateClassNameServerRpc(oldName, newName);
+        }
+
+        public override void CreateRelation(Relation relation)
+        {
+            Spawner.Instance.CreateRelationServerRpc(relation.SourceModelName, relation.TargetModelName, relation.PropertiesEaType);
         }
 
         public override void DeleteRelation(GameObject relation)

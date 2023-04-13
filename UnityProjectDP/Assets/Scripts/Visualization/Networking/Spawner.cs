@@ -9,6 +9,7 @@ using UnityEngine.UI.Extensions;
 using Visualization.ClassDiagram;
 using Visualization.ClassDiagram.ClassComponents;
 using Visualization.ClassDiagram.Editors;
+using Visualization.ClassDiagram.Relations;
 using Visualization.UI;
 using Attribute = Visualization.ClassDiagram.ClassComponents.Attribute;
 
@@ -68,6 +69,24 @@ namespace Visualization.Networking
             if (IsClient && !IsHost)
                 return;
             UIEditorManager.Instance.mainEditor.DeleteNode(className);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void CreateRelationServerRpc(string fromClass, string toClass, string realtionType)
+        {
+            if (IsClient && !IsHost)
+                return;
+
+            var type = realtionType.Split();
+
+            var relation = new Relation
+            {
+                SourceModelName = fromClass,
+                TargetModelName = toClass,
+                PropertiesEaType = type.Length > 1 ? type[1] : type[0],
+                PropertiesDirection = type.Length > 1 ? "none" : "Source -> Destination"
+            };
+            UIEditorManager.Instance.mainEditor.CreateRelation(relation);
         }
 
         [ServerRpc(RequireOwnership = false)]

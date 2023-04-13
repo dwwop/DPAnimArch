@@ -21,14 +21,6 @@ namespace Visualization.ClassDiagram.Editors
             var nodeGo = DiagramPool.Instance.ClassDiagram.graph.AddNode();
             nodeGo.name = newClass.Name;
 
-            SetDefaultPosition(nodeGo);
-            if (!UIEditorManager.Instance.NetworkEnabled)
-            {
-                var graphTransform = DiagramPool.Instance.ClassDiagram.graph.gameObject.GetComponent<Transform>();
-                var graphUnits = graphTransform.Find("Units");
-                nodeGo.GetComponent<Transform>().SetParent(graphUnits.GetComponent<Transform>());
-            }
-
             var nodeNo = nodeGo.GetComponent<NetworkObject>();
             nodeNo.Spawn();
             Spawner.Instance.SetNetworkObjectNameClientRpc(nodeNo.name, nodeNo.NetworkObjectId);
@@ -37,9 +29,11 @@ namespace Visualization.ClassDiagram.Editors
             {
                 throw new InvalidParentException(nodeNo.name);
             }
-            Spawner.Instance.SetClassNameClientRpc(nodeNo.name, nodeNo.NetworkObjectId);
 
+            SetDefaultPosition(nodeGo);
+            nodeGo.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
             UpdateNodeName(nodeGo);
+            Spawner.Instance.SetClassNameClientRpc(nodeNo.name, nodeNo.NetworkObjectId);
 
             return nodeGo;
         }
@@ -116,17 +110,16 @@ namespace Visualization.ClassDiagram.Editors
             var edge = DiagramPool.Instance.ClassDiagram.graph.AddEdge(sourceClassGo, destinationClassGo, prefab);
 
             var edgeNo = edge.GetComponent<NetworkObject>();
-
-
-            if (edge.gameObject.transform.childCount > 0)
-                DiagramPool.Instance.ClassDiagram.StartCoroutine(QuickFix(edge.transform.GetChild(0).gameObject));
-
             edgeNo.Spawn();
+
 
             if (!edgeNo.TrySetParent(GetGraphUnits(), false))
             {
                 throw new InvalidParentException(edgeNo.name);
             }
+
+            edge.transform.localScale = new Vector3(1, 1, 1);
+            edge.transform.localPosition = new Vector3(0, 0, 0);
 
             return edge;
         }
