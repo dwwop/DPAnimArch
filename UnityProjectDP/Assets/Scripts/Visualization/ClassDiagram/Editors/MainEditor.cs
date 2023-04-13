@@ -36,7 +36,8 @@ namespace Visualization.ClassDiagram.Editors
 
             var classGo = _visualEditor.CreateNode(newClass);
 
-            newClass = ParsedEditor.UpdateNodeGeometry(newClass, classGo);
+            if (newClass.Left == 0) 
+                newClass = ParsedEditor.UpdateNodeGeometry(newClass, classGo);
 
             var classInDiagram = new ClassInDiagram
                 { ParsedClass = newClass, ClassInfo = newCdClass, VisualObject = classGo };

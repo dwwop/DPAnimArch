@@ -8,8 +8,6 @@ namespace Visualization.ClassDiagram.Editors
     {
         public static Class UpdateNodeGeometry(Class newClass, GameObject classGo)
         {
-            if (newClass.Left != 0)
-                return newClass;
             var position = classGo.transform.localPosition;
             newClass.Left = position.x / 2.5f;
             newClass.Top = position.y / 2.5f;
