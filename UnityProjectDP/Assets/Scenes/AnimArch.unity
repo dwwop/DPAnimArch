@@ -5758,6 +5758,8 @@ MonoBehaviour:
     type: 3}
   networkGraphPrefab: {fileID: 1889724182012266, guid: a7fcacb0848a8ac4898c34e492bf8dc8,
     type: 3}
+  networkClassPrefab: {fileID: 1226358218867430, guid: b80d38a1cb13a8b4d87eb98264d7984c,
+    type: 3}
   networkUnitsPrefab: {fileID: 1460369043516150375, guid: 87f2d64d43790a74bbb4e79a922a28c6,
     type: 3}
   networkAssociationDSPrefab: {fileID: 2080456151626043265, guid: c8196d89fb605954a9b75e82eae45185,

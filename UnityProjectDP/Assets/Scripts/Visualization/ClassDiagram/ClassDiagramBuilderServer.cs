@@ -17,7 +17,7 @@ namespace Visualization.ClassDiagram
             unitsGo.name = "Units";
 
             DiagramPool.Instance.ClassDiagram.graph = graphGo.GetComponent<Graph>();
-            DiagramPool.Instance.ClassDiagram.graph.nodePrefab = DiagramPool.Instance.classPrefab;
+            DiagramPool.Instance.ClassDiagram.graph.nodePrefab = DiagramPool.Instance.networkClassPrefab;
         }
 
         public override void MakeNetworkedGraph()

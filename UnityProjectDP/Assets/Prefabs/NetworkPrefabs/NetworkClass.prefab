@@ -89,12 +89,15 @@ GameObject:
   - component: {fileID: 114721600210392802}
   - component: {fileID: 114568245614193200}
   - component: {fileID: 114654169875532780}
+  - component: {fileID: 8009475719242403050}
   - component: {fileID: 54018352948757740}
   - component: {fileID: 2398271712557318398}
   - component: {fileID: 4761082860158751167}
-  - component: {fileID: -5366749914929387021}
+  - component: {fileID: -4716147790394896380}
+  - component: {fileID: 4087468759841164115}
+  - component: {fileID: 4412131507980739611}
   m_Layer: 5
-  m_Name: Class
+  m_Name: NetworkClass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,6 +188,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b68da0dcaa20fb43a878d4b9ed58a3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8009475719242403050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226358218867430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a187a21ffe51e464ea053077aae7ab2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerHighlighAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114654169875532780}
+        m_TargetAssemblyTypeName: BackgroundHighlighter, XDE
+        m_MethodName: HighlightBackground
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  triggerUnhighlighAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114654169875532780}
+        m_TargetAssemblyTypeName: BackgroundHighlighter, XDE
+        m_MethodName: UnhighlightBackground
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!54 &54018352948757740
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -227,7 +272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   methodLayoutGroup: {fileID: 6981091386270745030}
---- !u!114 &-5366749914929387021
+--- !u!114 &-4716147790394896380
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -236,39 +281,51 @@ MonoBehaviour:
   m_GameObject: {fileID: 1226358218867430}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1c73421490d37348863dfad679cb4a1, type: 3}
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerHighlighAction:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114654169875532780}
-        m_TargetAssemblyTypeName: UMSAGL.Scripts.BackgroundHighlighter, XDE
-        m_MethodName: HighlightBackground
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  triggerUnhighlighAction:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114654169875532780}
-        m_TargetAssemblyTypeName: UMSAGL.Scripts.BackgroundHighlighter, XDE
-        m_MethodName: UnhighlightBackground
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &4087468759841164115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226358218867430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 1
+  Interpolate: 1
+--- !u!114 &4412131507980739611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226358218867430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6c1e501907ea134e9ef84a6ecaf2f3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1634513748961536
 GameObject:
   m_ObjectHideFlags: 0
@@ -553,7 +610,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0, y: 0, z: 5}
+  m_Size: {x: 225, y: 35, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114240480170074018
 MonoBehaviour:
@@ -675,7 +732,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 205, y: 43.243, z: 5}
+  m_Size: {x: 200, y: 43.243, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114466928306324720
 MonoBehaviour:
@@ -876,7 +933,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0, y: 0, z: 5}
+  m_Size: {x: 225, y: 40, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114514521486588498
 MonoBehaviour:
@@ -951,8 +1008,8 @@ RectTransform:
   m_Father: {fileID: 224697516044451008}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 210, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
@@ -1245,8 +1302,8 @@ RectTransform:
   m_Father: {fileID: 224156231050812816}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 210, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}

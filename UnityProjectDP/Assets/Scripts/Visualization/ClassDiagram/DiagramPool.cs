@@ -25,6 +25,7 @@ namespace Visualization.ClassDiagram
         public GameObject interGraphArrowPrefab;
 
         public GameObject networkGraphPrefab;
+        public GameObject networkClassPrefab;
         public GameObject networkUnitsPrefab;
 
         public GameObject networkAssociationDSPrefab;
