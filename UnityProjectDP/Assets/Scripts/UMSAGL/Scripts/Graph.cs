@@ -11,7 +11,9 @@ using Microsoft.Msagl.Layout.Layered;
 using Microsoft.Msagl.Miscellaneous;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
 using Visualization.UI;
+using Object = UnityEngine.Object;
 
 namespace UMSAGL.Scripts
 {
@@ -120,7 +122,6 @@ namespace UMSAGL.Scripts
             go.name += edge.ToString();
             uEdge.GraphEdge = edge;
             _graph.Edges.Add(edge);
-
             return go;
         }
 
@@ -182,7 +183,15 @@ namespace UMSAGL.Scripts
             {
                 var vertices = new List<Vector2>();
                 var go = (GameObject)edge.UserData;
-
+                
+                // Dumb fix to display endCaps
+                go.transform.GetComponentsInChildren<UIPolygon>().ForEach(x =>
+                    x.GetComponent<RectTransform>().sizeDelta = new Vector2 (20.01f, 20.01f));
+                
+                go.transform.GetComponentsInChildren<UIPolygon>().ForEach(x =>
+                    x.GetComponent<RectTransform>().sizeDelta = new Vector2 (20, 20));
+                
+                
                 switch (edge.Curve)
                 {
                     case Curve curve:

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AnimArch.Extensions;
@@ -28,7 +29,7 @@ namespace Visualization.ClassDiagram.Editors
             Editor,
             Loader
         }
-
+        
         public virtual void CreateNode(Class newClass)
         {
             var newCdClass = CDEditor.CreateNode(newClass);
@@ -134,6 +135,13 @@ namespace Visualization.ClassDiagram.Editors
             }
         }
 
+        public virtual void UpdateNodeGeometry(string name)
+        {
+            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(name);
+            classInDiagram.ParsedClass =
+                ParsedEditor.UpdateNodeGeometry(classInDiagram.ParsedClass, classInDiagram.VisualObject);
+        }
+
         public virtual void AddAttribute(string targetClass, Attribute attribute)
         {
             var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(targetClass);
@@ -176,6 +184,7 @@ namespace Visualization.ClassDiagram.Editors
             if (DiagramPool.Instance.ClassDiagram.FindMethodByName(targetClass, method.Name) != null)
             {
                 //TODO: david skontrolovat - vetva kedy je diagram z loadera?
+                // yes toto je vetva co je z loadera
                 CDEditor.AddMethod(classInDiagram, method);
                 _visualEditor.AddMethod(classInDiagram, method);
                 return;

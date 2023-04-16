@@ -656,7 +656,7 @@ namespace Visualization.Animation
                             HighlightInstancesMethod(Call.CallerClassName, Call.CallerMethodName, true);
                             break;
                         case 2:
-                            yield return StartCoroutine(AnimateFill(Call));
+                            // yield return StartCoroutine(AnimateFill(Call));
                             timeModifier = 0f;
                             break;
                         case 3:

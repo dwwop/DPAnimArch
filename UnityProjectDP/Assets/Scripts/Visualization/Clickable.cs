@@ -69,10 +69,8 @@ namespace Visualization
                 return;
             _changedPos = true;
             transform.position = cursorPosition;
-
-            var classInDiagram = DiagramPool.Instance.ClassDiagram.FindClassByName(name);
-            classInDiagram.ParsedClass =
-                ParsedEditor.UpdateNodeGeometry(classInDiagram.ParsedClass, classInDiagram.VisualObject);
+            
+            UIEditorManager.Instance.mainEditor.UpdateNodeGeometry(name);
         }
 
         private void OnMouseOver()
