@@ -2,6 +2,7 @@
 using AnimArch.Extensions;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Visualization.ClassDiagram;
 using Visualization.ClassDiagram.Editors;
@@ -27,6 +28,7 @@ namespace Visualization.UI
         public ParameterPopUp parameterPopUp;
         public ConfirmPopUp confirmPopUp;
         public ErrorPopUp errorPopUp;
+        public ExitPopUp exitPopUp;
 
         public void InitializeCreation()
         {
@@ -129,6 +131,14 @@ namespace Visualization.UI
 
             mainEditor.CreateRelation(relation);
             EndSelection();
+        }
+        
+        private void Update()
+        {
+            if (Input.GetKey(KeyCode.Escape) && !exitPopUp.gameObject.activeSelf)
+            {
+                exitPopUp.ActivateCreation();
+            }
         }
     }
 }

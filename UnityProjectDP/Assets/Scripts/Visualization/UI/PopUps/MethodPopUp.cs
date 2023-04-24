@@ -29,6 +29,7 @@ namespace Visualization.UI.PopUps
                 if (dropdown.options[dropdown.value].text == Void)
                 {
                     options.transform.gameObject.SetActive(false);
+                    isArray.isOn = false;
                     isArray.transform.gameObject.SetActive(false);
                     isArrayText.transform.gameObject.SetActive(false);
                 }
@@ -80,10 +81,14 @@ namespace Visualization.UI.PopUps
                 return;
             }
 
+            var type = GetType();
+            if (type == null)
+                return;
+
             var newMethod = new Method
             {
                 Name = inp.text,
-                ReturnValue = GetType(),
+                ReturnValue = type,
                 arguments = _parameters
             };
             if (_formerMethod == null)

@@ -42,10 +42,13 @@ namespace Visualization.UI.PopUps
                 return;
             }
 
+            var type = GetType();
+            if (type == null)
+                return;
             var newAttribute = new Attribute
             {
                 Name = inp.text,
-                Type = GetType()
+                Type = type
             };
             if (_formerAttribute == null)
             {

@@ -33,8 +33,12 @@ namespace Visualization.UI.PopUps
                 DisplayError(ErrorEmptyName);
                 return;
             }
+
+            var type = GetType();
+            if (type == null)
+                return;
             
-            var parameter = GetType() + " " + inp.text.Replace(" ", "_");
+            var parameter = type + " " + inp.text.Replace(" ", "_");
             if (_formerParam == null)
             {
                 if (UIEditorManager.Instance.methodPopUp.ArgExists(parameter))

@@ -12,7 +12,7 @@ namespace Visualization.UI.PopUps
     {
         private const string ErrorTypeEmpty = "Type can not be empty";
         private const string Custom = "custom";
-        
+
         public TMP_Dropdown dropdown;
         public TMP_Text customType;
         public TMP_InputField customTypeField;
@@ -22,10 +22,9 @@ namespace Visualization.UI.PopUps
         protected new void Awake()
         {
             base.Awake();
-            
+
             dropdown.onValueChanged.AddListener(delegate
             {
-                
                 if (dropdown.options[dropdown.value].text == Custom)
                 {
                     customType.transform.gameObject.SetActive(true);
@@ -38,7 +37,7 @@ namespace Visualization.UI.PopUps
                     customTypeField.text = "";
                 }
             });
-            
+
             customTypeField.onValueChanged.AddListener(delegate(string arg)
             {
                 if (string.IsNullOrEmpty(arg))
@@ -74,13 +73,17 @@ namespace Visualization.UI.PopUps
         {
             if (dropdown.options[dropdown.value].text != Custom)
                 return (isArray.isOn ? "[]" : "") + dropdown.options[dropdown.value].text;
-            if (customTypeField.text.Length == 0)
+            if (customTypeField.text.Trim().Length == 0)
+            {
                 DisplayError(ErrorTypeEmpty);
+                return null;
+            }
 
             if (isArray.isOn && customTypeField.text == "void")
                 isArray.isOn = false;
-            
-            return (isArray.isOn ? "[]" : "") + EXETypes.ConvertEATypeName(customTypeField.text.Replace(" ", "_"));
+
+            return (isArray.isOn ? "[]" : "") +
+                   EXETypes.ConvertEATypeName(customTypeField.text.Trim().Replace(" ", "_"));
         }
 
         private void UpdateDropdown()

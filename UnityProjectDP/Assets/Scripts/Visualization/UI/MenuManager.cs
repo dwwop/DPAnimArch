@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using OALProgramControl;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Visualization.Animation;
 using Visualization.ClassDiagram;

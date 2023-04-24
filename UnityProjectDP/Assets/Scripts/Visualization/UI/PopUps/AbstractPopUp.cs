@@ -32,12 +32,12 @@ namespace Visualization.UI.PopUps
             ToolManager.Instance.SetActive(active);
         }
 
-        public void OnEnable()
+        public virtual void OnEnable()
         {
             SetButtonsActive(false);
         }
 
-        public void OnDisable()
+        public virtual void OnDisable()
         {
             SetButtonsActive(true);
         }
