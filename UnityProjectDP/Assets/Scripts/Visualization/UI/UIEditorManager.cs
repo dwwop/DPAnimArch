@@ -1,8 +1,6 @@
 ﻿using System;
 using AnimArch.Extensions;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Visualization.ClassDiagram;
 using Visualization.ClassDiagram.Editors;
@@ -14,13 +12,10 @@ namespace Visualization.UI
     public class UIEditorManager : Singleton<UIEditorManager>
     {
         public bool active;
-        private GameObject _fromClass;
-        private string _relType;
         private IClassDiagramBuilder _classDiagramBuilder;
         public MainEditor mainEditor;
 
-        [SerializeField]
-        public bool NetworkEnabled;
+        [SerializeField] public bool NetworkEnabled;
 
         public AttributePopUp attributePopUp;
         public MethodPopUp methodPopUp;
@@ -30,14 +25,15 @@ namespace Visualization.UI
         public ErrorPopUp errorPopUp;
         public ExitPopUp exitPopUp;
 
+        public State state;
+        public Relation relation;
+
         public void InitializeCreation()
         {
             Debug.Assert(_classDiagramBuilder != null);
-            if (DiagramPool.Instance.ClassDiagram.graph == null)
-            {
-                _classDiagramBuilder.CreateGraph();
-                _classDiagramBuilder.MakeNetworkedGraph();
-            }
+            if (DiagramPool.Instance.ClassDiagram.graph != null) return;
+            _classDiagramBuilder.CreateGraph();
+            _classDiagramBuilder.MakeNetworkedGraph();
         }
 
         private void Awake()
@@ -52,7 +48,7 @@ namespace Visualization.UI
             mainEditor.ClearDiagram();
             StartEditing();
         }
-        
+
         public void StartEditing()
         {
             if (DiagramPool.Instance.ClassDiagram.graph == null)
@@ -72,67 +68,52 @@ namespace Visualization.UI
                 .ForEach(x => x.gameObject.SetActive(false));
         }
 
-        public void StartSelection(string type)
+        public void StartSelection(string newRelationType)
         {
+            var type = newRelationType.Split();
+            var relType = type.Length > 1 ? type[1] : type[0];
+            relation = new Relation
+            {
+                ConnectorXmiId = Guid.NewGuid().ToString(),
+                PropertiesEaType = relType,
+                PropertiesDirection = type.Length > 1 ? "none" : "Source -> Destination"
+            };
+            state = new SelectFirstState();
             MenuManager.Instance.isSelectingNode = true;
-            _relType = type;
         }
 
         public void SelectNode(GameObject selected)
         {
-            if (!active || !MenuManager.Instance.isSelectingNode)
+            if (!active || state == null)
                 return;
-            if (selected == _fromClass)
-            {
-                Animation.Animation.Instance.HighlightClass(_fromClass.name, false);
-                _fromClass = null;
-            }
-            else if (_fromClass == null)
-            {
-                _fromClass = selected;
-                Animation.Animation.Instance.HighlightClass(_fromClass.name, true);
-            }
-            else
-            {
-                AddRelation(selected);
-            }
+            state.Select(selected);
         }
 
         public void EndSelection()
         {
-            Animation.Animation.Instance.HighlightClass(_fromClass.name, false);
-            _relType = null;
-            _fromClass = null;
+            Animation.Animation.Instance.HighlightClass(relation.SourceModelName, false);
             MenuManager.Instance.isSelectingNode = false;
+            relation = null;
+            state = null;
             GameObject.Find("SelectionPanel").SetActive(false);
         }
 
-        private void AddRelation(GameObject toClass)
+        public void AddRelation()
         {
-            if (_fromClass == null || toClass == null)
+            if (relation == null)
                 return;
-            var type = _relType.Split();
-            var relType = type.Length > 1 ? type[1] : type[0];
 
-            if (DiagramPool.Instance.ClassDiagram.FindRelation(_fromClass.name, toClass.name, relType) != null)
+            if (DiagramPool.Instance.ClassDiagram.FindRelation(relation.SourceModelName, relation.TargetModelName,
+                    relation.PropertiesEaType) != null)
             {
                 errorPopUp.ActivateCreation();
                 return;
             }
-            
-            var relation = new Relation
-            {
-                ConnectorXmiId = Guid.NewGuid().ToString(),
-                SourceModelName = _fromClass.name,
-                TargetModelName = toClass.name,
-                PropertiesEaType = relType,
-                PropertiesDirection = type.Length > 1 ? "none" : "Source -> Destination"
-            };
 
             mainEditor.CreateRelation(relation);
             EndSelection();
         }
-        
+
         private void Update()
         {
             if (Input.GetKey(KeyCode.Escape) && !exitPopUp.gameObject.activeSelf)
