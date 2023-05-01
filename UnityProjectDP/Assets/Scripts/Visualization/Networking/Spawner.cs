@@ -265,6 +265,8 @@ namespace Visualization.Networking
             UIEditorManager.Instance.InitializeCreation();
             GraphCreatedClientRpc();
             GameObject.Find("EditBtn").GetComponentInChildren<Button>().interactable = true;
+            GameObject.Find("Create").GetComponentInChildren<Button>().interactable = true;
+            GameObject.Find("Edit (1)").GetComponentInChildren<Button>().interactable = true;
         }
 
 
@@ -277,6 +279,8 @@ namespace Visualization.Networking
             DiagramPool.Instance.ClassDiagram.graph.enabled = false;
 
             GameObject.Find("EditBtn").GetComponentInChildren<Button>().interactable = true;
+            GameObject.Find("Create").GetComponentInChildren<Button>().interactable = true;
+            GameObject.Find("Edit (1)").GetComponentInChildren<Button>().interactable = true;
         }
 
         [ClientRpc]
