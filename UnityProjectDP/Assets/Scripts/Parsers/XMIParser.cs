@@ -23,7 +23,7 @@ namespace Parsers
             _document.LoadXml(xmlText);
         }
         
-        private static List<string> ParseCurrentDiagramElementsIDs(XmlDocument xmlDoc)
+        private List<string> ParseCurrentDiagramElementsIDs(XmlDocument xmlDoc)
         {
             var currDiagramID = AnimationData.Instance.diagramId.ToString();
             var currDiagramElements = new List<string>();

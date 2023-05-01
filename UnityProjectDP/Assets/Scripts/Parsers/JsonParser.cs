@@ -24,12 +24,10 @@ namespace Parsers
         public override string SaveDiagram()
         {
             ParsedEditor.ReverseNodesGeometry();
-            var serializedClasses =
-                JsonConvert.SerializeObject(DiagramPool.Instance.ClassDiagram.GetClassList());
+            var classes = DiagramPool.Instance.ClassDiagram.GetClassList();
+            var relations = DiagramPool.Instance.ClassDiagram.GetRelationList();
+            var serializedDiagram = JsonConvert.SerializeObject(new { classes, relations });
             ParsedEditor.ReverseNodesGeometry();
-
-            var serializedRelations = JsonConvert.SerializeObject(DiagramPool.Instance.ClassDiagram.GetRelationList());
-            var serializedDiagram = "{\"classes\":" + serializedClasses + ",\"relations\":" + serializedRelations + "}";
             return serializedDiagram;
         }
 
