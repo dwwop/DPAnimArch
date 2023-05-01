@@ -67,7 +67,7 @@ namespace Visualization.UI.PopUps
             inp.text = formerMethod.Name;
 
             SetType(formerMethod.ReturnValue);
-            formerMethod.arguments.ForEach(AddArg);
+            formerMethod.arguments?.ForEach(AddArg);
             _formerMethod = formerMethod;
             confirm.text = "Edit";
         }

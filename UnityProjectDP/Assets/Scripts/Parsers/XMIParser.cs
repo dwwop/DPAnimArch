@@ -573,6 +573,11 @@ namespace Parsers
                     var method = doc.CreateElement("operation");
                     method.SetAttribute("idref", xmiUri, xmiClassMethod.Id);
                     method.SetAttribute("name", xmiClassMethod.Name);
+                    
+                    var type = doc.CreateElement("type");
+                    type.SetAttribute("type", xmiClassMethod.ReturnValue);
+                    method.AppendChild(type);
+                    
                     XmlElement parameters = null;
                     if (xmiClassMethod.arguments.Any())
                     {
@@ -585,23 +590,20 @@ namespace Parsers
                     foreach (var argument in xmiClassMethod.arguments)
                     {
                         var parameter = doc.CreateElement("parameter");
-                        var nameAndType = argument.Split(" ");
+                        var typeAndName = argument.Split(" ");
                         var argumentId = xmiClass.Id + xmiClassMethod.Id + argument;
                         parameter.SetAttribute("idref", xmiUri, argumentId);
 
                         var ownedParameter = doc.CreateElement("ownedParameter");
-                        ownedParameter.SetAttribute("name", nameAndType[0]);
-                        ownedParameter.SetAttribute("type", nameAndType[1]);
+                        ownedParameter.SetAttribute("name", typeAndName[1]);
+                        ownedParameter.SetAttribute("type", typeAndName[0]);
                         ownedParameter.SetAttribute("id", xmiUri, argumentId);
                         xmiModel.AppendChild(ownedParameter);
 
-                        parameter.SetAttribute("name", nameAndType[0]);
-                        var type = doc.CreateElement("type");
-                        type.SetAttribute("type", nameAndType[1]);
-                        method.AppendChild(type);
+                        parameter.SetAttribute("name", typeAndName[1]);
 
                         var properties = doc.CreateElement("properties");
-                        properties.SetAttribute("type", nameAndType[1]);
+                        properties.SetAttribute("type", typeAndName[0]);
                         parameter.AppendChild(properties);
 
                         parameters?.AppendChild(parameter);
