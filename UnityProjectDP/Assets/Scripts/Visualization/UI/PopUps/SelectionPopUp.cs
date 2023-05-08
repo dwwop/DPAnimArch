@@ -11,6 +11,7 @@ namespace Visualization.UI.PopUps
             UIEditorManager.Instance.StartSelection(dropdown.options[dropdown.value].text);
             dropdown.SetValueWithoutNotify(0);
             Deactivate();
+            UIEditorManager.SetDiagramButtonsActive(false);
         }
     }
 }

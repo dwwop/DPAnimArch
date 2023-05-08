@@ -4,8 +4,6 @@ namespace Visualization.UI
 {
     public class SelectSecondState : State
     {
-        private GameObject _firstNode;
-
         public override void Select(GameObject selectedNode)
         {
             if (selectedNode.name == UIEditorManager.Instance.relation.SourceModelName)

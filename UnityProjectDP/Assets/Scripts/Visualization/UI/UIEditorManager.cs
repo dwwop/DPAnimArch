@@ -67,6 +67,13 @@ namespace Visualization.UI
                 .ForEach(x => x.gameObject.SetActive(false));
         }
 
+        public static void SetDiagramButtonsActive(bool enable)
+        {
+            if (DiagramPool.Instance.ClassDiagram.graph != null)
+                DiagramPool.Instance.ClassDiagram.graph.GetComponentsInChildren<GraphicRaycaster>()
+                    .ForEach(x => x.enabled = enable);
+        }
+        
         public void StartSelection(string newRelationType)
         {
             var type = newRelationType.Split();
@@ -90,6 +97,7 @@ namespace Visualization.UI
 
         public void EndSelection()
         {
+            SetDiagramButtonsActive(true);
             if (relation.SourceModelName != null)
                 Animation.Animation.Instance.HighlightClass(relation.SourceModelName, false);
             MenuManager.Instance.isSelectingNode = false;
