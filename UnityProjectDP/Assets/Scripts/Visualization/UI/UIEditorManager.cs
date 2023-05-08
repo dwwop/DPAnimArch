@@ -30,6 +30,7 @@ namespace Visualization.UI
 
         public void InitializeCreation()
         {
+            Debug.Assert(_classDiagramBuilder != null);
             if (DiagramPool.Instance.ClassDiagram.graph != null) return;
             _classDiagramBuilder.CreateGraph();
             _classDiagramBuilder.MakeNetworkedGraph();
@@ -90,8 +91,7 @@ namespace Visualization.UI
 
         public void EndSelection()
         {
-            if (relation.SourceModelName != null)
-                Animation.Animation.Instance.HighlightClass(relation.SourceModelName, false);
+            Animation.Animation.Instance.HighlightClass(relation.SourceModelName, false);
             MenuManager.Instance.isSelectingNode = false;
             relation = null;
             state = null;
