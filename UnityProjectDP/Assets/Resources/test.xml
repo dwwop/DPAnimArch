@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1">
+    <xmi:Documentation/>
+    <xmi:Model>
+        <ownedParameter name="test" type="bool"
+                        xmi:id="7f497568-59c6-4bb9-8ebb-6ed47814bd08170dc0d1-e16d-435b-a05f-4ff34a6486a1bool test"/>
+        <ownedParameter name="test2" type="float"
+                        xmi:id="7f497568-59c6-4bb9-8ebb-6ed47814bd08170dc0d1-e16d-435b-a05f-4ff34a6486a1float test2"/>
+        <ownedParameter name="newState" type="OrderState"
+                        xmi:id="f00ff12d-bfbb-4eb3-994e-91af8ca97f127ab822fd-7a60-49b8-bc86-73f6516d7126OrderState newState"/>
+    </xmi:Model>
+    <xmi:Extension extender="Enterprise Architect" extenderID="6.5">
+        <elements>
+            <element xmi:Type="uml:Package" name="SAVETEST" scope="public"/>
+            <element xmi:type="uml:Class" name="Car" xmi:idref="b76dac42-0af2-439d-aa77-470d979a8604">
+                <attributes>
+                    <attribute xmi:idref="58625033-0bd0-4a8e-9a46-6e1176b8f44f" name="brand">
+                        <properties type="string"/>
+                    </attribute>
+                    <attribute xmi:idref="13a1d0d7-44c0-4ffa-86d9-bb321cc3d4c3" name="color">
+                        <properties type="string"/>
+                    </attribute>
+                    <attribute xmi:idref="4d2c9b42-5083-4260-940b-8048b36844b8" name="price">
+                        <properties type="int"/>
+                    </attribute>
+                </attributes>
+            </element>
+            <element xmi:type="uml:Class" name="OrderState" xmi:idref="7f497568-59c6-4bb9-8ebb-6ed47814bd08">
+                <operations>
+                    <operation xmi:idref="170dc0d1-e16d-435b-a05f-4ff34a6486a1" name="Cancel">
+                        <type type="void"/>
+                        <parameters>
+                            <parameter/>
+                            <parameter
+                                    xmi:idref="7f497568-59c6-4bb9-8ebb-6ed47814bd08170dc0d1-e16d-435b-a05f-4ff34a6486a1bool test"
+                                    name="test">
+                                <properties type="bool"/>
+                            </parameter>
+                            <parameter
+                                    xmi:idref="7f497568-59c6-4bb9-8ebb-6ed47814bd08170dc0d1-e16d-435b-a05f-4ff34a6486a1float test2"
+                                    name="test2">
+                                <properties type="float"/>
+                            </parameter>
+                        </parameters>
+                    </operation>
+                </operations>
+            </element>
+            <element xmi:type="uml:Class" name="Order" xmi:idref="f00ff12d-bfbb-4eb3-994e-91af8ca97f12">
+                <operations>
+                    <operation xmi:idref="7ab822fd-7a60-49b8-bc86-73f6516d7126" name="changeState">
+                        <type type="OrderState"/>
+                        <parameters>
+                            <parameter/>
+                            <parameter
+                                    xmi:idref="f00ff12d-bfbb-4eb3-994e-91af8ca97f127ab822fd-7a60-49b8-bc86-73f6516d7126OrderState newState"
+                                    name="newState">
+                                <properties type="OrderState"/>
+                            </parameter>
+                        </parameters>
+                    </operation>
+                </operations>
+            </element>
+        </elements>
+        <connectors>
+            <connector xmi:idref="OrderCarAssociation">
+                <source>
+                    <model type="Class" name="Order"/>
+                </source>
+                <target>
+                    <model type="Class" name="Car"/>
+                </target>
+                <properties ea_type="Association" direction="Source -&gt; Destination"/>
+            </connector>
+            <connector xmi:idref="OrderOrderStateAssociation">
+                <source>
+                    <model type="Class" name="Order"/>
+                </source>
+                <target>
+                    <model type="Class" name="OrderState"/>
+                </target>
+                <properties ea_type="Association" direction="Source -&gt; Destination"/>
+            </connector>
+        </connectors>
+        <primitivetypes/>
+        <diagrams>
+            <diagram>
+                <model localID="1"/>
+                <elements>
+                    <element subject="b76dac42-0af2-439d-aa77-470d979a8604"
+                             geometry="Left=79;Top=-160;Right=0;Bottom=0;"/>
+                    <element subject="7f497568-59c6-4bb9-8ebb-6ed47814bd08"
+                             geometry="Left=324;Top=-13;Right=0;Bottom=0;"/>
+                    <element subject="f00ff12d-bfbb-4eb3-994e-91af8ca97f12"
+                             geometry="Left=79;Top=-4;Right=0;Bottom=0;"/>
+                </elements>
+            </diagram>
+        </diagrams>
+    </xmi:Extension>
+</xmi:XMI>
